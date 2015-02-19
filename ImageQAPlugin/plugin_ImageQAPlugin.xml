@@ -1,0 +1,5 @@
+<config_plugin>
+	<numberOfImagesPerPage>10</numberOfImagesPerPage>
+	<thumbnailsize>200</thumbnailsize>
+	<imagesize>800</imagesize>
+</config_plugin>

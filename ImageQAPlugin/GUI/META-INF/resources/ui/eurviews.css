@@ -1,0 +1,79 @@
+table.myFaces_panelTabbedPane {
+    border-spacing: 0;
+    border-style: none;
+    empty-cells: show;
+    padding: 0;
+    float: left;
+}
+
+.second-column input {
+    width: 100%;
+}
+
+.second-column select {
+    width: 100%;
+}
+
+.first-column {
+    vertical-align: top;
+}
+
+.div-image {
+    float: right;
+}
+
+.img-select {
+    width: 100%;
+}
+
+.thumbnail {
+    float: left;
+}
+
+.ui-inputfield {
+    padding: 0px;
+    font-size: 1.4em;
+    width: 90%;
+}
+
+.center {
+    text-align: center;
+    margin: 2 2 2 2;
+    padding: 2px;
+}
+
+.center img {
+    margin: 2 2 2 2;
+    padding: 2px;
+}
+
+.image-navigation img {
+    vertical-align: middle;
+}
+
+.ui-editor {
+    width:90%;
+}
+
+.ui-autocomplete-multiple-container.ui-inputfield {
+    width: 100%;
+}
+
+.ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active {
+    font-weight: normal;
+    color: black;
+}
+
+.ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active {
+    background: -moz-linear-gradient(center top, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.4)) repeat scroll 0 0 #f4bba5;
+}
+
+.second-column input {
+    width: 90%;
+}
+
+.second-column select {
+    width: 90%;
+}
+
+
