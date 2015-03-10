@@ -1,0 +1,194 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://xmlns.jcp.org/jsf/facelets" xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:o="http://omnifaces.org/ui" xmlns:of="http://omnifaces.org/functions" template="/uii/template/template.html" xmlns:x="http://myfaces.apache.org/tomahawk" xmlns:intranda="http://xmlns.jcp.org/jsf/composite/composites">
+
+
+
+    <ui:param name="myPageTitle" value="#{msgs.ImageQAPlugin}" />
+
+    <ui:define name="breadcrumb">
+        <intranda:breadcrumb label="#{msgs.startseite}" action="index" navId="a0" />
+        <intranda:breadcrumb label="#{msgs.aktuelleSchritte}" action="#{AktuelleSchritteForm.paginator.returnToPreviousPage}" />
+        <intranda:breadcrumb label="#{AktuelleSchritteForm.mySchritt.prozess.titel}" noSeparator="#{true}" />
+    </ui:define>
+
+    <ui:define name="info">
+    </ui:define>
+
+    <ui:define name="content">
+
+        <style>
+/* Thumbnails */
+.goobi-thumbnail {
+    float: left;
+    min-width: 100px;
+    min-height: 100px;
+    margin: 0 7px 7px 0;
+}
+
+.goobi-thumbnail .goobi-thumbnail-image {
+    float: left;
+    width: 100%;
+    min-height: 100px;
+    overflow: hidden;
+}
+
+.goobi-thumbnail .goobi-thumbnail-image a img {
+    display: block;
+    max-width: 100%;
+    border: solid 1px;
+    border-color: lightgrey;
+}
+
+.goobi-thumbnail .goobi-thumbnail-caption {
+    float: left;
+    width: 100%;
+    height: 20px;
+    line-height: 20px;
+}
+
+.div-image img {
+    float: right;
+    border: solid 1px;
+    border-color: lightgrey;
+}
+</style>
+        <h:form id="annotationform">
+
+
+            <div class="box box-color lightgrey box-bordered">
+                <div class="box-title">
+                    <h3>
+                        <h:outputText id="id9" value="#{msgs.details}" />
+                    </h3>
+                    <div class="actions">
+                        <h:commandLink id="id10" action="#{NavigationForm.Reload}" styleClass="btn btn-mini">
+                            <i class="fa fa-angle-down" />
+                        </h:commandLink>
+
+                    </div>
+                </div>
+                <div class="box-content">
+
+                    <div class="row">
+                        <div class="col-sm-7">
+
+                            <h:commandLink styleClass="btn font-size-s margin-sides-10" action="#{AktuelleSchritteForm.myPlugin.cmdMoveFirst}" id="navfirst">
+                                <i class="fa fa-double-angle-left"></i>
+                            </h:commandLink>
+                            <h:commandLink styleClass="btn btn-primary font-size-s" action="#{AktuelleSchritteForm.myPlugin.cmdMovePrevious}" id="navprev">
+                                <i class="fa fa-angle-left"></i>
+                                <h:outputText value=" #{msgs.pagePrevious}" />
+                            </h:commandLink>
+
+                            <div class="margin-sides-10">
+                                <x:outputText id="txtMoveTo1" forceId="true" value="#{msgs.seite} #{AktuelleSchritteForm.myPlugin.pageNumberCurrent} #{msgs.von} #{AktuelleSchritteForm.myPlugin.pageNumberLast}" onclick="document.getElementById('txtMoveTo2').style.display='inline';
+                   document.getElementById('txtMoveTo1').style.display='none'; 
+                   document.getElementById('txtMoveTo2').focus();
+                   document.getElementById('txtMoveTo2').select();" />
+                                <!-- Seite direkt anspringen -->
+                                <x:inputText id="txtMoveTo2" forceId="true" value="#{AktuelleSchritteForm.myPlugin.txtMoveTo}" style="display:none;font-size:9px;width:30px" required="true" onblur="document.getElementById('txtMoveTo2').style.display='none';
+                     document.getElementById('txtMoveTo1').style.display='inline';" onkeypress="return submitEnter('cmdMoveTo',event)" />
+                                <x:commandButton action="#{NavigationForm.Reload}" id="cmdMoveTo" forceId="true" value="go" style="display:none" />
+                            </div>
+
+                            <h:commandLink styleClass="btn btn-primary font-size-s" action="#{AktuelleSchritteForm.myPlugin.cmdMoveNext}" id="navnext">
+                                <h:outputText value="#{msgs.pageNext} " />
+                                <i class="fa fa-angle-right"></i>
+                            </h:commandLink>
+                            <h:commandLink styleClass="btn font-size-s margin-sides-10" action="#{AktuelleSchritteForm.myPlugin.cmdMoveLast}" id="navlast">
+                                <i class="fa fa-double-angle-right"></i>
+                            </h:commandLink>
+
+                        </div>
+
+                        <div class="col-sm-5">
+
+
+                            <h:commandLink styleClass="btn font-size-s margin-sides-10" title="#{msgs.firstImage}">
+                                <i class="fa fa-double-angle-left"></i>
+                                <x:updateActionListener value="0" property="#{AktuelleSchritteForm.myPlugin.imageIndex}" />
+                            </h:commandLink>
+                            <h:commandLink styleClass="btn btn-primary font-size-s" title="#{msgs.previousImage}">
+                                <i class="fa fa-angle-left"></i>
+                                <h:outputText value=" #{msgs.pagePrevious}" />
+                                <x:updateActionListener value="#{AktuelleSchritteForm.myPlugin.imageIndex - 1}" property="#{AktuelleSchritteForm.myPlugin.imageIndex}" />
+                            </h:commandLink>
+                            <div class="margin-sides-10">
+                            
+                           <h:outputText value="#{msgs.seite} #{AktuelleSchritteForm.myPlugin.imageIndex +1} #{msgs.von}  #{AktuelleSchritteForm.myPlugin.sizeOfImageList}" />
+                            
+                            </div>
+
+                            <h:commandLink styleClass="btn btn-primary font-size-s" title="#{msgs.nextImage}">
+                                <h:outputText value="#{msgs.pageNext} " />
+                                <i class="fa fa-angle-right"></i>
+                                <x:updateActionListener value="#{AktuelleSchritteForm.myPlugin.imageIndex + 1}" property="#{AktuelleSchritteForm.myPlugin.imageIndex}" />
+
+                            </h:commandLink>
+                            <h:commandLink styleClass="btn font-size-s margin-sides-10" title="#{msgs.lastImage}">
+                                <i class="fa fa-double-angle-right"></i>
+                                <x:updateActionListener value="#{AktuelleSchritteForm.myPlugin.sizeOfImageList}" property="#{AktuelleSchritteForm.myPlugin.imageIndex}" />
+
+                            </h:commandLink>
+
+
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-7">
+                            <ui:repeat var="image" value="#{AktuelleSchritteForm.myPlugin.paginatorList}">
+                                <div class="goobi-thumbnail">
+                                    <div class="goobi-thumbnail-image">
+                                        <h:commandLink title="#{image.tooltip}">
+
+                                            <h:graphicImage value="#{image.thumbnailUrl}" title="#{image.tooltip}" />
+                                            <x:updateActionListener value="#{image.order -1}" property="#{AktuelleSchritteForm.myPlugin.imageIndex}" />
+                                        </h:commandLink>
+                                    </div>
+                                    <div class="goobi-thumbnail-caption">
+                                        <h:outputText value="#{image.imageName}"></h:outputText>
+                                    </div>
+                                </div>
+                            </ui:repeat>
+                        </div>
+
+                        <div class="col-sm-5">
+                            <h:panelGroup styleClass="div-image" layout="block">
+                                <h:graphicImage value="#{AktuelleSchritteForm.myPlugin.bild}" rendered="#{AktuelleSchritteForm.myPlugin.image != null}" width="100%" />
+
+
+                            </h:panelGroup>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+
+                    <!-- Save -->
+                    <h:commandLink styleClass="btn btn-success" id="absenden" action="#{AktuelleSchritteForm.myPlugin.cancel}">
+                        <i class="fa fa-save margin-right-5"></i>
+                        <h:outputText value="#{msgs.quit}" />
+                    </h:commandLink>
+                </div>
+
+            </div>
+
+
+
+        </h:form>
+
+        <script type="text/javascript">
+$( document ).ready(function() {
+	var height = #{AktuelleSchritteForm.myPlugin.thumbnailSize};
+	$('.goobi-thumbnail').css('max-width', height + 2 + 'px');
+	$('.goobi-thumbnail').css('max-height', height + 18 + 'px');
+
+	$('.goobi-thumbnail .goobi-thumbnail-image').css('max-height', height + 2 + 'px');
+
+});
+</script>
+
+    </ui:define>
+
+</ui:composition>

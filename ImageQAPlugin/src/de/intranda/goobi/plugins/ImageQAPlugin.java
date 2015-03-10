@@ -38,8 +38,9 @@ public class ImageQAPlugin implements IStepPlugin {
     private static final Logger logger = Logger.getLogger(ImageQAPlugin.class);
     private Step step;
     private String returnPath = "/ui/task_edit.xhtml";
+
     private static final String PLUGIN_NAME = "ImageQAPlugin";
-    private static final String GUI_PATH = "/ui/ImageQAPlugin.xhtml";
+    private String GUI_PATH = "/ui/ImageQAPlugin.xhtml";
 
     private int NUMBER_OF_IMAGES_PER_PAGE = 10;
     private int THUMBNAIL_SIZE_IN_PIXEL = 200;
@@ -57,6 +58,12 @@ public class ImageQAPlugin implements IStepPlugin {
 
     @Override
     public void initialize(Step step, String returnPath) {
+
+        FacesContext context = FacesContextHelper.getCurrentFacesContext();
+        if (context.getExternalContext().getRequestServletPath().startsWith("/uii")) {
+            this.returnPath = "/uii/task_edit.xhtml";
+            GUI_PATH = "/uii/ImageQAPlugin.xhtml";
+        }
 
         NUMBER_OF_IMAGES_PER_PAGE = ConfigPlugins.getPluginConfig(this).getInt("numberOfImagesPerPage", 50);
         THUMBNAIL_SIZE_IN_PIXEL = ConfigPlugins.getPluginConfig(this).getInt("thumbnailsize", 200);
@@ -312,12 +319,12 @@ public class ImageQAPlugin implements IStepPlugin {
     public int getSizeOfImageList() {
         return allImages.size();
     }
-    
+
     public int getThumbnailSize() {
         return THUMBNAIL_SIZE_IN_PIXEL;
     }
-    
+
     public void setThumbnailSize(int value) {
-        
+
     }
 }
