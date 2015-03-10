@@ -312,4 +312,12 @@ public class ImageQAPlugin implements IStepPlugin {
     public int getSizeOfImageList() {
         return allImages.size();
     }
+    
+    public int getThumbnailSize() {
+        return THUMBNAIL_SIZE_IN_PIXEL;
+    }
+    
+    public void setThumbnailSize(int value) {
+        
+    }
 }

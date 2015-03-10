@@ -37,33 +37,29 @@
                     <td class="eingabeBoxen_row2" style="width: 60%; vertical-align: top">
 
                         <ui:repeat var="image" value="#{AktuelleSchritteForm.myPlugin.paginatorList}">
-                            <h:panelGrid id="thumb" styleClass="thumbnail" columns="1">
-                                <h:commandLink title="#{image.tooltip}">
+                            <div class="goobi-thumbnail">
+                                <div class="goobi-thumbnail-image">
+                                    <h:commandLink title="#{image.tooltip}">
 
-                                    <h:graphicImage value="#{image.thumbnailUrl}" title="#{image.tooltip}" />
-                                    <x:updateActionListener value="#{image.order -1}" property="#{AktuelleSchritteForm.myPlugin.imageIndex}" />
-                                </h:commandLink>
-
-                                <h:outputText value="#{image.imageName}"></h:outputText>
-
-                            </h:panelGrid>
-
+                                        <h:graphicImage value="#{image.thumbnailUrl}" title="#{image.tooltip}" />
+                                        <x:updateActionListener value="#{image.order -1}" property="#{AktuelleSchritteForm.myPlugin.imageIndex}" />
+                                    </h:commandLink>
+                                </div>
+                                <div class="goobi-thumbnail-caption">
+                                    <h:outputText value="#{image.imageName}"></h:outputText>
+                                </div>
+                            </div>
                         </ui:repeat>
-
-
 
                     </td>
                     <td class="eingabeBoxen_row2" style="vertical-align: top">
-
                         <h:panelGroup styleClass="div-image" layout="block">
-
-
                             <h:graphicImage value="#{AktuelleSchritteForm.myPlugin.bild}" rendered="#{AktuelleSchritteForm.myPlugin.image != null}" width="100%" />
-                            
-                             <h:panelGroup layout="block" styleClass="center">
+
+                            <h:panelGroup layout="block" styleClass="center">
 
                                 <h:commandLink title="#{msgs.firstImage}" styleClass="image-navigation">
-                                    <h:graphicImage value="images/datascroller/arrow-first.gif"  />
+                                    <h:graphicImage value="images/datascroller/arrow-first.gif" />
                                     <x:updateActionListener value="0" property="#{AktuelleSchritteForm.myPlugin.imageIndex}" />
                                 </h:commandLink>
 
@@ -133,7 +129,17 @@
 
         </h:form>
 
-    </ui:define>
+        <script type="text/javascript">
+$( document ).ready(function() {
+	var height = #{AktuelleSchritteForm.myPlugin.thumbnailSize};
+	$('.goobi-thumbnail').css('max-width', height +  'px');
+	$('.goobi-thumbnail').css('max-height', height + 20 + 'px');
 
+	$('.goobi-thumbnail .goobi-thumbnail-image').css('max-height', height + 'px');
+
+});
+</script>
+
+    </ui:define>
 
 </ui:composition>
