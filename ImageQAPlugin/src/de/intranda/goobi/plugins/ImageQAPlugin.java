@@ -37,10 +37,8 @@ public class ImageQAPlugin implements IStepPlugin {
 
     private static final Logger logger = Logger.getLogger(ImageQAPlugin.class);
     private Step step;
-    private String returnPath = "/ui/task_edit.xhtml";
 
     private static final String PLUGIN_NAME = "ImageQAPlugin";
-    private String GUI_PATH = "/ui/ImageQAPlugin.xhtml";
 
     private int NUMBER_OF_IMAGES_PER_PAGE = 10;
     private int THUMBNAIL_SIZE_IN_PIXEL = 200;
@@ -58,13 +56,7 @@ public class ImageQAPlugin implements IStepPlugin {
 
     @Override
     public void initialize(Step step, String returnPath) {
-
-        FacesContext context = FacesContextHelper.getCurrentFacesContext();
-        if (context.getExternalContext().getRequestServletPath().startsWith("/uii")) {
-            this.returnPath = "/uii/task_edit.xhtml";
-            GUI_PATH = "/uii/ImageQAPlugin.xhtml";
-        }
-
+        
         NUMBER_OF_IMAGES_PER_PAGE = ConfigPlugins.getPluginConfig(this).getInt("numberOfImagesPerPage", 50);
         THUMBNAIL_SIZE_IN_PIXEL = ConfigPlugins.getPluginConfig(this).getInt("thumbnailsize", 200);
         IMAGE_SIZE_IN_PIXEL = ConfigPlugins.getPluginConfig(this).getInt("imagesize", 800);
@@ -145,7 +137,7 @@ public class ImageQAPlugin implements IStepPlugin {
 
     @Override
     public String getPagePath() {
-        return GUI_PATH;
+        return "/" + getTheme() + "/ImageQAPlugin.xhtml";
     }
 
     @Override
@@ -165,12 +157,12 @@ public class ImageQAPlugin implements IStepPlugin {
 
     @Override
     public String cancel() {
-        return returnPath;
+        return "/" + getTheme() + "/task_edit.xhtml";
     }
 
     @Override
     public String finish() {
-        return returnPath;
+        return "/" + getTheme() + "/task_edit.xhtml";
     }
 
     @Override
@@ -326,5 +318,15 @@ public class ImageQAPlugin implements IStepPlugin {
 
     public void setThumbnailSize(int value) {
 
+    }
+    
+    private String getTheme() {
+        FacesContext context = FacesContextHelper.getCurrentFacesContext();
+        String completePath = context.getExternalContext().getRequestServletPath();
+        if (StringUtils.isNotBlank(completePath)) {
+            String[] parts = completePath.split("/");
+            return parts[1];
+        }
+        return "";
     }
 }
