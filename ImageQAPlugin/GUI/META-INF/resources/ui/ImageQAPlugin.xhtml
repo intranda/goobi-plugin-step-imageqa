@@ -15,7 +15,7 @@
     </ui:define>
 
     <ui:define name="content">
- <style>
+        <style>
 /* Thumbnails */
 .goobi-thumbnail {
     float: left;
@@ -28,12 +28,12 @@
     float: left;
     width: 100%;
     min-height: 100px;
-    overflow: hidden;    
+    overflow: hidden;
 }
 
 .goobi-thumbnail .goobi-thumbnail-image a img {
     display: block;
-    max-width: 100%;    
+    max-width: 100%;
 }
 
 .goobi-thumbnail .goobi-thumbnail-caption {
@@ -43,6 +43,13 @@
     line-height: 20px;
 }
 
+.center {
+    text-align: center;
+}
+
+.image-navigation img {
+    vertical-align: middle;
+}
 </style>
 
         <h:form id="annotationform">
@@ -60,63 +67,10 @@
                     </td>
                 </tr>
 
-                <!-- Formular für die Bearbeitung der Texte -->
-                <tr>
-                    <td class="eingabeBoxen_row2" style="width: 60%; vertical-align: top">
-
-                        <ui:repeat var="image" value="#{AktuelleSchritteForm.myPlugin.paginatorList}">
-                            <div class="goobi-thumbnail">
-                                <div class="goobi-thumbnail-image">
-                                    <h:commandLink title="#{image.tooltip}">
-
-                                        <h:graphicImage value="#{image.thumbnailUrl}" title="#{image.tooltip}" />
-                                        <x:updateActionListener value="#{image.order -1}" property="#{AktuelleSchritteForm.myPlugin.imageIndex}" />
-                                    </h:commandLink>
-                                </div>
-                                <div class="goobi-thumbnail-caption">
-                                    <h:outputText value="#{image.imageName}"></h:outputText>
-                                </div>
-                            </div>
-                        </ui:repeat>
-
-                    </td>
-                    <td class="eingabeBoxen_row2" style="vertical-align: top">
-                        <h:panelGroup styleClass="div-image" layout="block">
-                            <h:graphicImage value="#{AktuelleSchritteForm.myPlugin.bild}" rendered="#{AktuelleSchritteForm.myPlugin.image != null}" width="100%" />
-
-                            <h:panelGroup layout="block" styleClass="center">
-
-                                <h:commandLink title="#{msgs.firstImage}" styleClass="image-navigation">
-                                    <h:graphicImage value="images/datascroller/arrow-first.gif" />
-                                    <x:updateActionListener value="0" property="#{AktuelleSchritteForm.myPlugin.imageIndex}" />
-                                </h:commandLink>
-
-                                <h:commandLink title="#{msgs.previousImage}" styleClass="image-navigation">
-                                    <h:graphicImage value="images/datascroller/arrow-previous.gif" />
-                                    <x:updateActionListener value="#{AktuelleSchritteForm.myPlugin.imageIndex - 1}" property="#{AktuelleSchritteForm.myPlugin.imageIndex}" />
-                                </h:commandLink>
-
-                                <h:outputText value="#{AktuelleSchritteForm.myPlugin.imageIndex +1} / #{AktuelleSchritteForm.myPlugin.sizeOfImageList}" />
-
-                                <h:commandLink title="#{msgs.nextImage}" styleClass="image-navigation">
-                                    <h:graphicImage value="images/datascroller/arrow-next.gif" />
-                                    <x:updateActionListener value="#{AktuelleSchritteForm.myPlugin.imageIndex + 1}" property="#{AktuelleSchritteForm.myPlugin.imageIndex}" />
-                                </h:commandLink>
-
-                                <h:commandLink title="#{msgs.lastImage}" styleClass="image-navigation">
-                                    <h:graphicImage value="images/datascroller/arrow-last.gif" />
-                                    <x:updateActionListener value="#{AktuelleSchritteForm.myPlugin.sizeOfImageList}" property="#{AktuelleSchritteForm.myPlugin.imageIndex}" />
-                                </h:commandLink>
-
-                            </h:panelGroup>
-                        </h:panelGroup>
-                    </td>
-
-                </tr>
 
                 <tr>
-                    <td colspan="2" class="eingabeBoxen_row2">
-                        <h:panelGroup>
+                    <td class="eingabeBoxen_row2">
+                        <h:panelGroup layout="block" styleClass="center">
                             <!-- erste und vorherige Seite -->
                             <h:commandLink action="#{AktuelleSchritteForm.myPlugin.cmdMoveFirst}" id="gofirst">
                                 <h:graphicImage url="images/datascroller/arrow-first.gif" style="margin-right:4px;vertical-align: middle;" />
@@ -146,7 +100,68 @@
                         </h:panelGroup>
 
                     </td>
+
+
+                    <td class="eingabeBoxen_row2">
+                        <h:panelGroup layout="block" styleClass="center">
+
+                            <h:commandLink title="#{msgs.firstImage}" styleClass="image-navigation">
+                                <h:graphicImage value="images/datascroller/arrow-first.gif" />
+                                <x:updateActionListener value="0" property="#{AktuelleSchritteForm.myPlugin.imageIndex}" />
+                            </h:commandLink>
+
+                            <h:commandLink title="#{msgs.previousImage}" styleClass="image-navigation">
+                                <h:graphicImage value="images/datascroller/arrow-previous.gif" />
+                                <x:updateActionListener value="#{AktuelleSchritteForm.myPlugin.imageIndex - 1}" property="#{AktuelleSchritteForm.myPlugin.imageIndex}" />
+                            </h:commandLink>
+                            <span>
+                                <x:outputText value="#{AktuelleSchritteForm.myPlugin.imageIndex +1} / #{AktuelleSchritteForm.myPlugin.sizeOfImageList}" />
+                            </span>
+                            <h:commandLink title="#{msgs.nextImage}" styleClass="image-navigation">
+                                <h:graphicImage value="images/datascroller/arrow-next.gif" />
+                                <x:updateActionListener value="#{AktuelleSchritteForm.myPlugin.imageIndex + 1}" property="#{AktuelleSchritteForm.myPlugin.imageIndex}" />
+                            </h:commandLink>
+
+                            <h:commandLink title="#{msgs.lastImage}" styleClass="image-navigation">
+                                <h:graphicImage value="images/datascroller/arrow-last.gif" />
+                                <x:updateActionListener value="#{AktuelleSchritteForm.myPlugin.sizeOfImageList}" property="#{AktuelleSchritteForm.myPlugin.imageIndex}" />
+                            </h:commandLink>
+
+                        </h:panelGroup>
+                    </td>
                 </tr>
+
+                <!-- Formular für die Bearbeitung der Texte -->
+                <tr>
+                    <td class="eingabeBoxen_row2" style="width: 60%; vertical-align: top">
+
+                        <ui:repeat var="image" value="#{AktuelleSchritteForm.myPlugin.paginatorList}">
+                            <div class="goobi-thumbnail">
+                                <div class="goobi-thumbnail-image">
+                                    <h:commandLink title="#{image.tooltip}">
+
+                                        <h:graphicImage value="#{image.thumbnailUrl}" title="#{image.tooltip}" />
+                                        <x:updateActionListener value="#{image.order -1}" property="#{AktuelleSchritteForm.myPlugin.imageIndex}" />
+                                    </h:commandLink>
+                                </div>
+                                <div class="goobi-thumbnail-caption">
+                                    <h:outputText value="#{image.imageName}"></h:outputText>
+                                </div>
+                            </div>
+                        </ui:repeat>
+
+                    </td>
+                    <td class="eingabeBoxen_row2" style="vertical-align: top">
+                        <h:panelGroup styleClass="div-image" layout="block">
+                            <h:graphicImage value="#{AktuelleSchritteForm.myPlugin.bild}" rendered="#{AktuelleSchritteForm.myPlugin.image != null}" width="100%" />
+
+
+                        </h:panelGroup>
+                    </td>
+
+                </tr>
+
+
 
                 <tr>
                     <td class="eingabeBoxen_row3" colspan="2">

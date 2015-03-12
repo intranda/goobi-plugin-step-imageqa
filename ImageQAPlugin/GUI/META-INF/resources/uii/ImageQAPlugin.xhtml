@@ -50,6 +50,10 @@
     border: solid 1px;
     border-color: lightgrey;
 }
+
+.img-active {
+    border-color: #368ee0 !important;
+}
 </style>
         <h:form id="annotationform">
 
@@ -113,9 +117,9 @@
                                 <x:updateActionListener value="#{AktuelleSchritteForm.myPlugin.imageIndex - 1}" property="#{AktuelleSchritteForm.myPlugin.imageIndex}" />
                             </h:commandLink>
                             <div class="margin-sides-10">
-                            
-                           <h:outputText value="#{msgs.seite} #{AktuelleSchritteForm.myPlugin.imageIndex +1} #{msgs.von}  #{AktuelleSchritteForm.myPlugin.sizeOfImageList}" />
-                            
+
+                                <h:outputText value="#{msgs.seite} #{AktuelleSchritteForm.myPlugin.imageIndex +1} #{msgs.von}  #{AktuelleSchritteForm.myPlugin.sizeOfImageList}" />
+
                             </div>
 
                             <h:commandLink styleClass="btn btn-primary font-size-s" title="#{msgs.nextImage}">
@@ -129,8 +133,6 @@
                                 <x:updateActionListener value="#{AktuelleSchritteForm.myPlugin.sizeOfImageList}" property="#{AktuelleSchritteForm.myPlugin.imageIndex}" />
 
                             </h:commandLink>
-
-
                         </div>
                     </div>
 
@@ -140,8 +142,7 @@
                                 <div class="goobi-thumbnail">
                                     <div class="goobi-thumbnail-image">
                                         <h:commandLink title="#{image.tooltip}">
-
-                                            <h:graphicImage value="#{image.thumbnailUrl}" title="#{image.tooltip}" />
+                                            <h:graphicImage value="#{image.thumbnailUrl}" title="#{image.tooltip}" styleClass="#{image.imageName == AktuelleSchritteForm.myPlugin.image.imageName ? 'img-active' : ''}"/>
                                             <x:updateActionListener value="#{image.order -1}" property="#{AktuelleSchritteForm.myPlugin.imageIndex}" />
                                         </h:commandLink>
                                     </div>
@@ -154,8 +155,13 @@
 
                         <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
                             <h:panelGroup styleClass="div-image" layout="block">
+
+
                                 <h:graphicImage value="#{AktuelleSchritteForm.myPlugin.bild}" rendered="#{AktuelleSchritteForm.myPlugin.image != null}" width="100%" />
 
+                                <div class="goobi-thumbnail-caption pull-center">
+                                    <h:outputText value="#{AktuelleSchritteForm.myPlugin.image.imageName}" />
+                                </div>
 
                             </h:panelGroup>
 
