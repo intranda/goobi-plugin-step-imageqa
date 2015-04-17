@@ -7,7 +7,7 @@
     <!-- ================================= 
 	        properties             
 	     ================================= -->
-    <property name="filename" value="Image-QA-plugin" />
+    <property name="filename" value="intranda-step-imageQA-Plugin" />
     <property name="dir.build" value="bin" />
     <property name="dir.deploy" value="deploy" />
     <property name="pluginFolderWin" value="C:/Goobi/plugins/step/" />
