@@ -189,8 +189,8 @@ public class ImageQAPlugin implements IStepPlugin {
         if (this.imageIndex < 0) {
             this.imageIndex = 0;
         }
-        if (this.imageIndex > getSizeOfImageList()) {
-            this.imageIndex = getSizeOfImageList();
+        if (this.imageIndex >= getSizeOfImageList()) {
+            this.imageIndex = getSizeOfImageList() -1;
         }
         setImage(allImages.get(this.imageIndex));
     }
