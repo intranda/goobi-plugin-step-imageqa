@@ -38,7 +38,7 @@ public class ImageQAPlugin implements IStepPlugin {
     private static final Logger logger = Logger.getLogger(ImageQAPlugin.class);
     private Step step;
 
-    private static final String PLUGIN_NAME = "intranda-step-imageQA-Plugin";
+    private static final String PLUGIN_NAME = "intranda_step_imageQA";
 
     private int NUMBER_OF_IMAGES_PER_PAGE = 10;
     private int THUMBNAIL_SIZE_IN_PIXEL = 200;

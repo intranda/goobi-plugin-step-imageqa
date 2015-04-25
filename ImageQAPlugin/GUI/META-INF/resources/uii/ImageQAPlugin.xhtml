@@ -2,13 +2,13 @@
 	xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:o="http://omnifaces.org/ui" xmlns:of="http://omnifaces.org/functions"
 	template="/uii/template/template.html" xmlns:x="http://myfaces.apache.org/tomahawk" xmlns:intranda="http://xmlns.jcp.org/jsf/composite/composites">
 
-	<ui:param name="myPageTitle" value="#{msgs.plugin}: #{msgs[AktuelleSchritteForm.myPlugin.title]}" />
+	<ui:param name="myPageTitle" value="#{msgs.plugin}: #{msgs[('plugin_').concat(AktuelleSchritteForm.myPlugin.title)]}" />
 
 	<ui:define name="breadcrumb">
 		<intranda:breadcrumb label="#{msgs.startseite}" action="index" navId="a0" />
 		<intranda:breadcrumb label="#{msgs.aktuelleSchritte}" action="#{AktuelleSchritteForm.paginator.returnToPreviousPage}" />
 		<intranda:breadcrumb label="#{AktuelleSchritteForm.mySchritt.prozess.titel}" action="task_edit" />
-		<intranda:breadcrumb label="#{msgs.plugin}: #{msgs[AktuelleSchritteForm.myPlugin.title]}" noSeparator="#{true}" />
+		<intranda:breadcrumb label="#{myPageTitle}" noSeparator="#{true}" />
 	</ui:define>
 
 	<ui:define name="info">
