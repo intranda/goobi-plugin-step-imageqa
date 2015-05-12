@@ -56,13 +56,17 @@ public class ImageQAPlugin implements IStepPlugin {
 
     @Override
     public void initialize(Step step, String returnPath) {
-        
+
         NUMBER_OF_IMAGES_PER_PAGE = ConfigPlugins.getPluginConfig(this).getInt("numberOfImagesPerPage", 50);
         THUMBNAIL_SIZE_IN_PIXEL = ConfigPlugins.getPluginConfig(this).getInt("thumbnailsize", 200);
         IMAGE_SIZE_IN_PIXEL = ConfigPlugins.getPluginConfig(this).getInt("imagesize", 800);
         this.step = step;
         try {
-            imageFolderName = step.getProzess().getImagesTifDirectory(false);
+            if (ConfigPlugins.getPluginConfig(this).getBoolean("useOrigFolder", false)) {
+                imageFolderName = step.getProzess().getImagesOrigDirectory(false);
+            } else {
+                imageFolderName = step.getProzess().getImagesTifDirectory(false);
+            }
             File folder = new File(imageFolderName);
             if (folder.exists()) {
                 String[] imageNameArray = folder.list();
@@ -190,7 +194,7 @@ public class ImageQAPlugin implements IStepPlugin {
             this.imageIndex = 0;
         }
         if (this.imageIndex >= getSizeOfImageList()) {
-            this.imageIndex = getSizeOfImageList() -1;
+            this.imageIndex = getSizeOfImageList() - 1;
         }
         setImage(allImages.get(this.imageIndex));
     }
@@ -319,7 +323,7 @@ public class ImageQAPlugin implements IStepPlugin {
     public void setThumbnailSize(int value) {
 
     }
-    
+
     private String getTheme() {
         FacesContext context = FacesContextHelper.getCurrentFacesContext();
         String completePath = context.getExternalContext().getRequestServletPath();

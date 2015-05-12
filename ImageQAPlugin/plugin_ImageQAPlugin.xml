@@ -2,4 +2,5 @@
 	<numberOfImagesPerPage>10</numberOfImagesPerPage>
 	<thumbnailsize>200</thumbnailsize>
 	<imagesize>800</imagesize>
+    <useOrigFolder>false</useOrigFolder>
 </config_plugin>
