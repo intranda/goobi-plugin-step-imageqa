@@ -14,7 +14,7 @@
     <property name="pluginFolderUnix" value="/opt/digiverso/goobi/plugins/step/" />
 
     <path id="classpath">
-        <fileset dir="/opt/digiverso/goobi-jsf2/lib" />
+        <fileset dir="/opt/digiverso/goobilibs/lib"/>
         <fileset dir="/opt/digiverso/libs" />
     </path>
 
@@ -86,7 +86,7 @@
 
     <target name="compile">
         <echo>Using eclipse compiler</echo>
-        <javac destdir="${dir.build}" includeantruntime="false">
+        <javac destdir="${dir.build}" includeantruntime="false" target="7" encoding="UTF8" source="7" debug="true" debuglevel="lines,vars,source">
             <classpath refid="classpath" />
             <compilerarg value="-Xlint" />
             <src path="src" />
