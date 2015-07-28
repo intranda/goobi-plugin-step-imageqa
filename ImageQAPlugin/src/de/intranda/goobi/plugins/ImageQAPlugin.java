@@ -101,18 +101,23 @@ public class ImageQAPlugin implements IStepPlugin {
 
     private void createImage(Image currentImage) {
 
-        String myPfad = ConfigurationHelper.getTempImagesPathAsCompleteDirectory();
+//        String myPfad = ConfigurationHelper.getTempImagesPathAsCompleteDirectory();
+//
+//        FacesContext context = FacesContext.getCurrentInstance();
+//        HttpSession session = (HttpSession) context.getExternalContext().getSession(false);
+//        String mySession = session.getId() + "_" + currentImage.getImageName() + ".png";
+//        try {
+//            scaleFile(imageFolderName + currentImage.getImageName(), myPfad + mySession, THUMBNAIL_SIZE_IN_PIXEL);
+//        } catch (ContentLibImageException | IOException e) {
+//            logger.error(e);
+//        }
+//
+        StringBuilder url = new StringBuilder(); 
 
-        FacesContext context = FacesContext.getCurrentInstance();
-        HttpSession session = (HttpSession) context.getExternalContext().getSession(false);
-        String mySession = session.getId() + "_" + currentImage.getImageName() + ".png";
-        try {
-            scaleFile(imageFolderName + currentImage.getImageName(), myPfad + mySession, THUMBNAIL_SIZE_IN_PIXEL);
-        } catch (ContentLibImageException | IOException e) {
-            logger.error(e);
-        }
-
-        currentImage.setThumbnailUrl(ConfigurationHelper.getTempImagesPath() + mySession);
+        url.append("/cs").append("?action=").append("image").append("&format=").append("png").append("&sourcepath=").append("file:///opt/digiverso/goobi/metadata/3142/images/xqz_b18030634_media/" + currentImage.getImageName())
+        .append("&width=").append(THUMBNAIL_SIZE_IN_PIXEL).append("&height=").append(THUMBNAIL_SIZE_IN_PIXEL);
+        
+        currentImage.setThumbnailUrl(url.toString());
 
     }
 
