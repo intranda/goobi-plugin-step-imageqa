@@ -114,7 +114,7 @@ public class ImageQAPlugin implements IStepPlugin {
 //
         StringBuilder url = new StringBuilder(); 
 
-        url.append("/cs").append("?action=").append("image").append("&format=").append("png").append("&sourcepath=").append("file:///opt/digiverso/goobi/metadata/3142/images/xqz_b18030634_media/" + currentImage.getImageName())
+        url.append("/cs").append("?action=").append("image").append("&format=").append("png").append("&sourcepath=").append("file://" + imageFolderName + currentImage.getImageName())
         .append("&width=").append(THUMBNAIL_SIZE_IN_PIXEL).append("&height=").append(THUMBNAIL_SIZE_IN_PIXEL);
         
         currentImage.setThumbnailUrl(url.toString());
