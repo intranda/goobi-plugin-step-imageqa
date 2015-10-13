@@ -70,14 +70,16 @@ public class ImageQAPlugin implements IStepPlugin {
             File folder = new File(imageFolderName);
             if (folder.exists()) {
                 String[] imageNameArray = folder.list();
-                List<String> imageNameList = Arrays.asList(imageNameArray);
-                Collections.sort(imageNameList);
-                int order = 1;
-                for (String imagename : imageNameList) {
-                    Image currentImage = new Image(imagename, order++, "", imagename);
-                    allImages.add(currentImage);
+                if (imageNameArray != null && imageNameArray.length > 0) {
+                    List<String> imageNameList = Arrays.asList(imageNameArray);
+                    Collections.sort(imageNameList);
+                    int order = 1;
+                    for (String imagename : imageNameList) {
+                        Image currentImage = new Image(imagename, order++, "", imagename);
+                        allImages.add(currentImage);
+                    }
+                    setImageIndex(0);
                 }
-                setImageIndex(0);
             }
         } catch (SwapException | DAOException | IOException | InterruptedException e) {
             logger.error(e);
@@ -101,22 +103,23 @@ public class ImageQAPlugin implements IStepPlugin {
 
     private void createImage(Image currentImage) {
 
-//        String myPfad = ConfigurationHelper.getTempImagesPathAsCompleteDirectory();
-//
-//        FacesContext context = FacesContext.getCurrentInstance();
-//        HttpSession session = (HttpSession) context.getExternalContext().getSession(false);
-//        String mySession = session.getId() + "_" + currentImage.getImageName() + ".png";
-//        try {
-//            scaleFile(imageFolderName + currentImage.getImageName(), myPfad + mySession, THUMBNAIL_SIZE_IN_PIXEL);
-//        } catch (ContentLibImageException | IOException e) {
-//            logger.error(e);
-//        }
-//
-        StringBuilder url = new StringBuilder(); 
+        //        String myPfad = ConfigurationHelper.getTempImagesPathAsCompleteDirectory();
+        //
+        //        FacesContext context = FacesContext.getCurrentInstance();
+        //        HttpSession session = (HttpSession) context.getExternalContext().getSession(false);
+        //        String mySession = session.getId() + "_" + currentImage.getImageName() + ".png";
+        //        try {
+        //            scaleFile(imageFolderName + currentImage.getImageName(), myPfad + mySession, THUMBNAIL_SIZE_IN_PIXEL);
+        //        } catch (ContentLibImageException | IOException e) {
+        //            logger.error(e);
+        //        }
+        //
+        StringBuilder url = new StringBuilder();
 
-        url.append("/cs").append("?action=").append("image").append("&format=").append("png").append("&sourcepath=").append("file://" + imageFolderName + currentImage.getImageName())
-        .append("&width=").append(THUMBNAIL_SIZE_IN_PIXEL).append("&height=").append(THUMBNAIL_SIZE_IN_PIXEL);
-        
+        url.append("/cs").append("?action=").append("image").append("&format=").append("png").append("&sourcepath=").append(
+                "file://" + imageFolderName + currentImage.getImageName()).append("&width=").append(THUMBNAIL_SIZE_IN_PIXEL).append("&height=")
+                .append(THUMBNAIL_SIZE_IN_PIXEL);
+
         currentImage.setThumbnailUrl(url.toString());
 
     }
