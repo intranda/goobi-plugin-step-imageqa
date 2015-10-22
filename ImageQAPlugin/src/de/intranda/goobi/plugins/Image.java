@@ -46,4 +46,5 @@ public class Image {
     public void setTooltip(String tooltip) {
         this.tooltip = tooltip;
     }
+
 }

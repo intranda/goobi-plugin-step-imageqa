@@ -66,9 +66,25 @@
     background-color: #368ee0;
     color: white;
 }
+
+#mainImage {
+	widht:100%;
+}
 </style>
 
-
+		<h:outputScript library="javascript/openseadragon" name="openseadragon.js" />
+		<h:outputScript library="javascript/openseadragon" name="openseadragon-viewerinputhook.js" />
+		<script type="text/javascript"
+			src="#{HelperForm.applicationWebsiteUrl}/uii/plugins/step/#{AktuelleSchritteForm.myPlugin.title}/javascript/openseadragon/openseadragon.min.js"></script>
+			<script type="text/javascript"
+			src="#{HelperForm.applicationWebsiteUrl}/uii/plugins/step/#{AktuelleSchritteForm.myPlugin.title}/javascript/openseadragon/openseadragon-viewerinputhook.js"></script>
+			<script type="text/javascript"
+			src="#{HelperForm.applicationWebsiteUrl}/uii/plugins/step/#{AktuelleSchritteForm.myPlugin.title}/javascript/viewImage.js"></script>
+		<script type="text/javascript"
+			src="#{HelperForm.applicationWebsiteUrl}/uii/plugins/step/#{AktuelleSchritteForm.myPlugin.title}/javascript/viewImage.controls.js"></script>
+		<script type="text/javascript"
+			src="#{HelperForm.applicationWebsiteUrl}/uii/plugins/step/#{AktuelleSchritteForm.myPlugin.title}/javascript/viewImage.zoomSlider.js"></script>
+			
         <h:form id="qaform">
             <div class="box box-color lightgrey box-bordered">
                 <div class="box-title">
@@ -98,7 +114,7 @@
                                         <h:commandLink title="#{image.tooltip}">
                                             <h:graphicImage value="#{image.thumbnailUrl}" title="#{image.tooltip}" styleClass="#{image.imageName == AktuelleSchritteForm.myPlugin.image.imageName ? 'img-active' : ''}" />
                                             <x:updateActionListener value="#{image.order -1}" property="#{AktuelleSchritteForm.myPlugin.imageIndex}" />
-                                            <f:ajax execute="@form" render="@form :bigimage" />
+                                            <f:ajax execute="@form" render="@form :bigimage"/>
                                         </h:commandLink>
                                     </div>
                                     <div class="goobi-thumbnail-caption">
@@ -120,15 +136,38 @@
 
                             <div class="row pull-center">
                                 <ui:include src="ImageQAPlugin_include_imagenavigation.xhtml" />
+                                <ui:include src="ImageQAPlugin_include_imageControls.xhtml" />
                             </div>
 
                             <!-- big image -->
                             <div class="row margin-top-most margin-bottom-most">
                                 <h:panelGroup styleClass="div-image" layout="block">
-                                    <h:graphicImage class="margin-bottom-regular" value="#{AktuelleSchritteForm.myPlugin.bild}" rendered="#{AktuelleSchritteForm.myPlugin.image != null}" width="100%" />
+<!--                                     <h:graphicImage class="margin-bottom-regular" value="#{AktuelleSchritteForm.myPlugin.bild}" rendered="#{AktuelleSchritteForm.myPlugin.image != null}" width="100%" /> -->
+                                   	<div id="mainImage" class="margin-bottom-regular" rendered="#{AktuelleSchritteForm.myPlugin.image != null}"/>
                                     <div class="big-image-caption margin-top-regular font-light">
                                         <h:outputText value="#{AktuelleSchritteForm.myPlugin.image.imageName}" />
                                     </div>
+                                    <script type="text/javascript">
+                                    $('#mainImage').height($('#mainImage').width() * #{AktuelleSchritteForm.myPlugin.imageSideRatio});
+                                    var imageViewConfig = {
+                            			    global: {
+                            			        divId : 'mainImage',
+                            			        zoomSlider : 'zoomSlider',
+                            			        maxZoomLevel: 10
+                            			    },
+                            			    image: {
+                            			        mimeType: "image/jpg",
+                            			        imageLevels: #{AktuelleSchritteForm.myPlugin.imageLevels},
+                            			        imageOriginalWidth: #{AktuelleSchritteForm.myPlugin.imageWidth},
+                            			        imageOriginalHeight: #{AktuelleSchritteForm.myPlugin.imageHeight},
+                            			        imageViewWidth: $('#mainImage').width(),
+                            			        imageViewHeight: $('#mainImage').height(),
+                            			        tileUrl: null
+                            			    }
+                            			}; 
+                                    viewImage.close();
+                                    viewImage.init(imageViewConfig);
+                                    </script>
                                 </h:panelGroup>
                             </div>
                             <!-- // big image -->
