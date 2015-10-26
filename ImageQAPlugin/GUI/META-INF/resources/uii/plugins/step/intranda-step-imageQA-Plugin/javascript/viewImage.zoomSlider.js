@@ -39,7 +39,7 @@ var viewImage = (function (osViewer) {
             });
             _zoomSlider.buttonPosition = newPos;
             var factor = (newPos / (_zoomSlider.absoluteWidth - offset * 2));
-            var newScale = osViewer.viewer.viewport.getHomeZoom() + (osViewer.viewer.viewport.getMaxZoom() - osViewer.viewer.viewport.getMinZoom()) * factor;
+            var newScale = osViewer.viewer.viewport.getMinZoom() + (osViewer.viewer.viewport.getMaxZoom() - osViewer.viewer.viewport.getMinZoom()) * factor;
 
             if (_debug) {
                 console.log('osViewer.zoomSlider.buttonToMouse: newScale - ' + newScale);
@@ -55,7 +55,7 @@ var viewImage = (function (osViewer) {
             if (!_zoomSlider || !osViewer.viewer.viewport) {
                 return;
             }
-            var newPos = ((scale - osViewer.viewer.viewport.getHomeZoom()) / (osViewer.viewer.viewport.getMaxZoom() - osViewer.viewer.viewport.getMinZoom())) * (_zoomSlider.absoluteWidth - _zoomSlider.$button.width());
+            var newPos = ((scale - osViewer.viewer.viewport.getMinZoom()) / (osViewer.viewer.viewport.getMaxZoom() - osViewer.viewer.viewport.getMinZoom())) * (_zoomSlider.absoluteWidth - _zoomSlider.$button.width());
 
             if (Math.abs(osViewer.viewer.viewport.getMaxZoom() - scale) < 0.0000000001) {
                 newPos = _zoomSlider.absoluteWidth - _zoomSlider.$button.width();

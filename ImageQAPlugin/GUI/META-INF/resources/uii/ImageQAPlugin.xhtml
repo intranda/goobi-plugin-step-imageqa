@@ -148,7 +148,7 @@
                                         <h:outputText value="#{AktuelleSchritteForm.myPlugin.image.imageName}" />
                                     </div>
                                     <script type="text/javascript">
-                                    $('#mainImage').height($('#mainImage').width() * #{AktuelleSchritteForm.myPlugin.imageSideRatio});
+                                    $('#mainImage').height($('#mainImage').width() * #{AktuelleSchritteForm.myPlugin.imageHeight}/#{AktuelleSchritteForm.myPlugin.imageWidth});
                                     var imageViewConfig = {
                             			    global: {
                             			        divId : 'mainImage',
@@ -157,7 +157,7 @@
                             			    },
                             			    image: {
                             			        mimeType: "image/jpg",
-                            			        imageLevels: #{AktuelleSchritteForm.myPlugin.imageLevels},
+                            			        imageLevels: #{AktuelleSchritteForm.myPlugin.image.imageLevels},
                             			        imageOriginalWidth: #{AktuelleSchritteForm.myPlugin.imageWidth},
                             			        imageOriginalHeight: #{AktuelleSchritteForm.myPlugin.imageHeight},
                             			        imageViewWidth: $('#mainImage').width(),
