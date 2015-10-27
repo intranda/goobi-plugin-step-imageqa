@@ -24,16 +24,12 @@ var viewImage = (function (osViewer) {
 
             osViewer.viewer.setFullScreen(enable);
         },
-        goHome: function (resetRotation) {
+        goHome: function (bool) {
             if (_debug) {
                 console.log('osViewer.controls.goHome: bool - ' + bool);
             }
 
-            osViewer.viewer.viewport.goHome(true);
-            osViewer.viewer.viewport.zoomTo(osViewer.viewer.viewport.getMinZoom(), null, true);
-            if(resetRotation) {                
-                osViewer.controls.rotateTo(0);
-            }
+            osViewer.viewer.viewport.goHome(bool);
         },
         zoomIn: function () {
             if (_debug) {
@@ -69,38 +65,22 @@ var viewImage = (function (osViewer) {
             if (_debug) {
                 console.log('osViewer.controls.rotateTo: newRotation - ' + newRotation);
             }
-            
-            var zoomedOut = false;
-            var zoomDiffToHomeZoom = osViewer.viewer.viewport.getZoom() - osViewer.viewer.viewport.getHomeZoom();
-            var zoomDiffToMinZoom = osViewer.viewer.viewport.getZoom() - osViewer.viewer.viewport.getMinZoom();
-            if(Math.abs(zoomDiffToMinZoom) < 0.000000001 || Math.abs(zoomDiffToHomeZoom) < 0.000000001 || zoomDiffToHomeZoom < 0) {
-                osViewer.viewer.viewport.zoomTo(osViewer.viewer.viewport.getMinZoom(), null, true);
-                zoomedOut = true;
-            }
 
-            
             osViewer.viewer.viewport.setRotation(newRotation);
-            
-            if (newRotation % 180 !== 0 ) {
-                var imageBounds = osViewer.viewer.viewport.imageToViewportCoordinates(osViewer.viewer.viewport.contentSize);
-                var minZoom = imageBounds.x / imageBounds.y;
-                //console.log("minZoom = " + imageBounds.x + "/" + imageBounds.y + " = " + minZoom);
-                if (minZoom < 1) {
-                    osViewer.viewer.viewport.minZoomLevel = minZoom;
-                    if(zoomedOut) {                        
-                        osViewer.viewer.viewport.zoomTo(minZoom, null, true);
-                    }
+            var zoomDiff = osViewer.viewer.viewport.getZoom() - osViewer.viewer.viewport.getHomeZoom();
+
+            if (newRotation % 180 !== 0 && (Math.abs(zoomDiff) < 0.000000001 || zoomDiff < 0)) {
+                var imageBounds = osViewer.viewer.viewport.imageToViewportRectangle(osViewer.fullImageBounds);
+                var destZoom = imageBounds.width / imageBounds.height;
+                if (destZoom < 1) {
+                    osViewer.viewer.viewport.minZoomLevel = destZoom;
+                    osViewer.viewer.viewport.zoomTo(destZoom, null, true);
                 } else {
-                    osViewer.viewer.viewport.minZoomLevel = 1/minZoom;
-                    if(zoomedOut) {                        
-                        osViewer.viewer.viewport.zoomTo(1/minZoom, null, true);
-                    }
-                }
-            } else {
-                osViewer.viewer.viewport.minZoomLevel = 1;
-                if(zoomedOut) {                    
                     osViewer.viewer.viewport.fitHorizontally(true);
                 }
+            } else if (Math.abs(zoomDiff) < 0.000000001 || zoomDiff < 0) {
+                osViewer.viewer.viewport.fitHorizontally(true);
+                osViewer.viewer.viewport.minZoomLevel = 1;
             }
 
             if (osViewer.overlays) {

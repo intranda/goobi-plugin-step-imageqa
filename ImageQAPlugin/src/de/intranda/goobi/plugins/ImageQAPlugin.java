@@ -6,7 +6,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -30,6 +29,7 @@ import org.goobi.production.enums.PluginType;
 import org.goobi.production.enums.StepReturnValue;
 import org.goobi.production.plugin.interfaces.IStepPlugin;
 
+import de.intranda.goobi.imageview.ImageLevel;
 import de.sub.goobi.config.ConfigPlugins;
 import de.sub.goobi.config.ConfigurationHelper;
 import de.sub.goobi.helper.FacesContextHelper;
@@ -40,7 +40,6 @@ import de.unigoettingen.sub.commons.contentlib.exceptions.ImageManagerException;
 import de.unigoettingen.sub.commons.contentlib.exceptions.ImageManipulatorException;
 import de.unigoettingen.sub.commons.contentlib.imagelib.ImageManager;
 import de.unigoettingen.sub.commons.contentlib.imagelib.JpegInterpreter;
-import de.unigoettingen.sub.commons.contentlib.servlet.controller.GetImageDimensionAction;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 
 @PluginImplementation
@@ -53,9 +52,7 @@ public class ImageQAPlugin implements IStepPlugin {
 
     private int NUMBER_OF_IMAGES_PER_PAGE = 10;
     private int THUMBNAIL_SIZE_IN_PIXEL = 200;
-    private String THUMBNAIL_FORMAT = "png";
-    private String MAINIMAGE_FORMAT = "jpg";
-
+    //    private int IMAGE_SIZE_IN_PIXEL = 800;
 
     private int pageNo = 0;
 
@@ -66,6 +63,7 @@ public class ImageQAPlugin implements IStepPlugin {
     private List<Image> allImages = new ArrayList<Image>();
 
     private Image image = null;
+    private Dimension imageSize = null;
     private List<String> imageSizes;
 
     private ExecutorService executor;
@@ -120,55 +118,26 @@ public class ImageQAPlugin implements IStepPlugin {
     }
 
     private void createImage(Image currentImage) {
-        
-        if(currentImage.getSize() == null) {
-            currentImage.setSize(getActualImageSize(currentImage));
-        }
-        
-        String thumbUrl = createImageUrl(currentImage, THUMBNAIL_SIZE_IN_PIXEL, THUMBNAIL_FORMAT, "");
-        currentImage.setThumbnailUrl(thumbUrl);
-        
-        String contextPath = getContextPath();
-        for (String sizeString : imageSizes) {
-            try {                
-                int size = Integer.parseInt(sizeString);
-                String imageUrl = createImageUrl(currentImage, size, MAINIMAGE_FORMAT, contextPath);
-                currentImage.addImageLevel(imageUrl, size);
-            } catch(NullPointerException | NumberFormatException e) {
-                logger.error("Cannot build image with size " + sizeString);
-            }
-        }
-        Collections.sort(currentImage.getImageLevels());
-    }
-    
-    private String getContextPath() {
-        FacesContext context = FacesContextHelper.getCurrentFacesContext();
-        HttpSession session = (HttpSession) context.getExternalContext().getSession(false);
-        String baseUrl = session.getServletContext().getContextPath();
-        return baseUrl;
-    }
-    
-    private Dimension getActualImageSize(Image image) {
-        Dimension dim;
-        try {
-            String imagePath = imageFolderName + image.getImageName();
-            String dimString = new GetImageDimensionAction().getDimensions(imagePath);
-            int width = Integer.parseInt(dimString.replaceAll("::.*", ""));
-            int height = Integer.parseInt(dimString.replaceAll(".*::", ""));
-            dim = new Dimension(width, height);
-        } catch (NullPointerException | NumberFormatException | ContentLibImageException | URISyntaxException | IOException e) {
-           logger.error("Could not retrieve actual image size", e);
-           dim  = new Dimension(0, 0);
-        }
-        return dim;
-    }
 
-    private String createImageUrl(Image currentImage, Integer size, String format, String baseUrl) {
-        StringBuilder url = new StringBuilder(baseUrl);
-        url.append("/cs").append("?action=").append("image").append("&format=").append(format).append("&sourcepath=").append("file://"
-                + imageFolderName + currentImage.getImageName()).append("&width=").append(size).append("&height=").append(
-                        size);
-        return url.toString();
+        //        String myPfad = ConfigurationHelper.getTempImagesPathAsCompleteDirectory();
+        //
+        //        FacesContext context = FacesContext.getCurrentInstance();
+        //        HttpSession session = (HttpSession) context.getExternalContext().getSession(false);
+        //        String mySession = session.getId() + "_" + currentImage.getImageName() + ".png";
+        //        try {
+        //            scaleFile(imageFolderName + currentImage.getImageName(), myPfad + mySession, THUMBNAIL_SIZE_IN_PIXEL);
+        //        } catch (ContentLibImageException | IOException e) {
+        //            logger.error(e);
+        //        }
+        //
+        StringBuilder url = new StringBuilder();
+
+        url.append("/cs").append("?action=").append("image").append("&format=").append("png").append("&sourcepath=").append("file://"
+                + imageFolderName + currentImage.getImageName()).append("&width=").append(THUMBNAIL_SIZE_IN_PIXEL).append("&height=").append(
+                        THUMBNAIL_SIZE_IN_PIXEL);
+
+        currentImage.setThumbnailUrl(url.toString());
+
     }
 
     private Dimension scaleFile(String inFileName, String outFileName, List<String> sizes) throws IOException, ContentLibImageException {
@@ -326,21 +295,52 @@ public class ImageQAPlugin implements IStepPlugin {
         return image;
     }
 
+    public List<ImageLevel> getImageLevels() {
+        List<ImageLevel> levels = new ArrayList<ImageLevel>();
+        for (String sizeString : imageSizes) {
+            int size = Integer.parseInt(sizeString);
+            int width = 0;
+            int height = 0;
+            if (getImageSideRatio() > 1) {
+                height = size;
+                width = (int) (size / getImageSideRatio());
+            } else {
+                width = size;
+                height = (int) (size * getImageSideRatio());
+            }
+            ImageLevel large = new ImageLevel(getImageUrl(image, sizeString), width, height);
+            levels.add(large);
+        }
+        return levels;
+    }
+
     public int getImageWidth() {
-        if(image == null) {
-            logger.error("Must set image before querying image size");
-            return 0; 
+        if (imageSize != null) {
+            return (int) imageSize.getWidth();
         } else {
-            return image.getSize().width;
+            logger.error("Must set image before querying image size");
+            return 0;
         }
     }
 
     public int getImageHeight() {
-        if(image == null) {
-            logger.error("Must set image before querying image size");
-            return 0; 
+        if (imageSize != null) {
+            return (int) imageSize.getHeight();
         } else {
-            return image.getSize().height;
+            logger.error("Must set image before querying image size");
+            return 0;
+        }
+    }
+
+    /**
+     * @return imageHeight/imageWidth
+     */
+    public double getImageSideRatio() {
+        if (imageSize != null) {
+            return imageSize.getHeight() / imageSize.getWidth();
+        } else {
+            logger.error("Must set image before querying image size");
+            return 1.0;
         }
     }
 
@@ -361,6 +361,15 @@ public class ImageQAPlugin implements IStepPlugin {
 
     public void setImage(final Image image) {
         this.image = image;
+        logger.debug("Creating scaled images for " + image.getImageName());
+        try {
+            final String currentImageURL = getImagePath(image);
+            if (currentImageURL != null) {
+                this.imageSize = scaleFile(imageFolderName + image.getImageName(), currentImageURL, imageSizes);
+            }
+        } catch (ContentLibImageException | IOException e) {
+            logger.error(e.getMessage(), e);
+        }
     }
 
     public int getPageNo() {

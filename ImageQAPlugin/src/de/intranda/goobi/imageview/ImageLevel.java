@@ -15,7 +15,7 @@
  * is expressly forbidden and a violation of international copyright law.
  * 
  *************************************************************************/
-package de.intranda.goobi.plugins;
+package de.intranda.goobi.imageview;
 
 import java.awt.Dimension;
 
@@ -77,7 +77,7 @@ public class ImageLevel implements Comparable<ImageLevel>{
 
     @Override
     public int compareTo(ImageLevel other) {
-        return Integer.compare(size.width*size.height, other.size.width*other.size.height);
+        return Integer.compare(size.width, other.size.width);
     }
     
 }
