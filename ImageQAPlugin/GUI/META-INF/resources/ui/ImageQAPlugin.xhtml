@@ -50,7 +50,29 @@
 .image-navigation img {
     vertical-align: middle;
 }
+
+#mainImage {
+	widht:100%;
+}
+
+#imageControlsWrapper {
+	margin-top: -30px;
+	margin-bottom: 20px;
+}
+
 </style>
+
+		<script type="text/javascript"
+			src="#{HelperForm.applicationWebsiteUrl}/ui/plugins/step/#{AktuelleSchritteForm.myPlugin.title}/javascript/openseadragon/openseadragon.min.js"></script>
+		<script type="text/javascript"
+			src="#{HelperForm.applicationWebsiteUrl}/ui/plugins/step/#{AktuelleSchritteForm.myPlugin.title}/javascript/openseadragon/openseadragon-viewerinputhook.js"></script>
+		<script type="text/javascript"
+			src="#{HelperForm.applicationWebsiteUrl}/ui/plugins/step/#{AktuelleSchritteForm.myPlugin.title}/javascript/viewImage.js"></script>
+		<script type="text/javascript"
+			src="#{HelperForm.applicationWebsiteUrl}/ui/plugins/step/#{AktuelleSchritteForm.myPlugin.title}/javascript/viewImage.controls.js"></script>
+		<script type="text/javascript"
+			src="#{HelperForm.applicationWebsiteUrl}/ui/plugins/step/#{AktuelleSchritteForm.myPlugin.title}/javascript/viewImage.zoomSlider.js"></script>
+		
 
         <h:form id="annotationform">
 
@@ -151,12 +173,39 @@
                         </ui:repeat>
 
                     </td>
+
                     <td class="eingabeBoxen_row2" style="vertical-align: top">
-                        <h:panelGroup styleClass="div-image" layout="block">
-                            <h:graphicImage value="#{AktuelleSchritteForm.myPlugin.bild}" rendered="#{AktuelleSchritteForm.myPlugin.image != null}" width="100%" />
-
-
-                        </h:panelGroup>
+                             <div class="row pull-center" id="imageControlsWrapper">
+                                <ui:include src="ImageQAPlugin_include_imageControls.xhtml" />
+                  			</div>
+                           <h:panelGroup styleClass="div-image" layout="block">
+<!--                                     <h:graphicImage class="margin-bottom-regular" value="#{AktuelleSchritteForm.myPlugin.bild}" rendered="#{AktuelleSchritteForm.myPlugin.image != null}" width="100%" /> -->
+                                   	<div id="mainImage" class="margin-bottom-regular" rendered="#{AktuelleSchritteForm.myPlugin.image != null}"/>
+                                    <div class="big-image-caption margin-top-regular font-light">
+                                        <h:outputText value="#{AktuelleSchritteForm.myPlugin.image.imageName}" />
+                                    </div>
+                                    <script type="text/javascript">
+                                    $('#mainImage').height($('#mainImage').width() * #{AktuelleSchritteForm.myPlugin.imageHeight}/#{AktuelleSchritteForm.myPlugin.imageWidth});
+                                    var imageViewConfig = {
+                            			    global: {
+                            			        divId : 'mainImage',
+                            			        zoomSlider : 'zoomSlider',
+                            			        maxZoomLevel: 10
+                            			    },
+                            			    image: {
+                            			        mimeType: "image/jpg",
+                            			        imageLevels: #{AktuelleSchritteForm.myPlugin.image.imageLevels},
+                            			        imageOriginalWidth: #{AktuelleSchritteForm.myPlugin.imageWidth},
+                            			        imageOriginalHeight: #{AktuelleSchritteForm.myPlugin.imageHeight},
+                            			        imageViewWidth: $('#mainImage').width(),
+                            			        imageViewHeight: $('#mainImage').height(),
+                            			        tileUrl: null
+                            			    }
+                            			}; 
+                                    viewImage.close();
+                                    viewImage.init(imageViewConfig);
+                                    </script>
+                                </h:panelGroup>
                     </td>
 
                 </tr>
