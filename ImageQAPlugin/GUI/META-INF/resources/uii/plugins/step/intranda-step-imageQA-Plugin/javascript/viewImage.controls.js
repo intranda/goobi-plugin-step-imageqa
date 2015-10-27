@@ -86,18 +86,18 @@ var viewImage = (function (osViewer) {
                 var minZoom = imageBounds.x / imageBounds.y;
                 //console.log("minZoom = " + imageBounds.x + "/" + imageBounds.y + " = " + minZoom);
                 if (minZoom < 1) {
-                    osViewer.viewer.viewport.minZoomLevel = minZoom*osViewer.defaults.global.minZoomLevel;
+                    osViewer.viewer.viewport.minZoomLevel = minZoom;
                     if(zoomedOut) {                        
-                        osViewer.viewer.viewport.zoomTo(minZoom*osViewer.defaults.global.minZoomLevel, null, true);
+                        osViewer.viewer.viewport.zoomTo(minZoom, null, true);
                     }
                 } else {
-                    osViewer.viewer.viewport.minZoomLevel = 1/minZoom*osViewer.defaults.global.minZoomLevel;
+                    osViewer.viewer.viewport.minZoomLevel = 1/minZoom;
                     if(zoomedOut) {                        
-                        osViewer.viewer.viewport.zoomTo(1/minZoom*osViewer.defaults.global.minZoomLevel, null, true);
+                        osViewer.viewer.viewport.zoomTo(1/minZoom, null, true);
                     }
                 }
             } else {
-                osViewer.viewer.viewport.minZoomLevel = osViewer.defaults.global.minZoomLevel;
+                osViewer.viewer.viewport.minZoomLevel = 1;
                 if(zoomedOut) {                    
                     osViewer.viewer.viewport.fitHorizontally(true);
                 }

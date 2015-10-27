@@ -2,7 +2,7 @@ var viewImage = ( function() {
     'use strict';
     
     var osViewer = {};
-    var _debug = false;
+    var _debug = true;
     
     osViewer.viewer = null;
     osViewer.fullImageBounds = new OpenSeadragon.Rect( 0, 0, 0, 0 );
@@ -20,7 +20,6 @@ var viewImage = ( function() {
             } ],
             zoomSpeed: 1.1,
             maxZoomLevel: 6,
-            minZoomLevel: 0.9,
             imageControlsActive: true
         },
         image: {},
@@ -104,7 +103,6 @@ var viewImage = ( function() {
             prefixUrl: "/openseadragon-bin/images/",
             zoomPerClick: 1,
             maxZoomLevel: osViewer.defaults.global.maxZoomLevel,
-            minZoomLevel: osViewer.defaults.global.minZoomLevel,
             zoomPerScroll: osViewer.defaults.global.zoomSpeed,
             mouseNavEnabled: osViewer.defaults.global.zoomSpeed > 1,
             showNavigationControl: false,
