@@ -1,7 +1,7 @@
 var viewImage = (function (osViewer) {
     'use strict';
 
-    var _debug = true;
+    var _debug = false;
     var _zoomSlider = {};
 
     osViewer.zoomSlider = {
