@@ -111,7 +111,7 @@ public class ImageQAPlugin implements IStepPlugin {
         } else {
             subList = allImages.subList(pageNo * NUMBER_OF_IMAGES_PER_PAGE, allImages.size());
         }
-        for (Image currentImage : subList) {
+        for (Image currentImage : allImages) {
             if (StringUtils.isEmpty(currentImage.getThumbnailUrl())) {
                 createImage(currentImage);
             }
@@ -327,7 +327,7 @@ public class ImageQAPlugin implements IStepPlugin {
     }
 
     public int getImageWidth() {
-        if(image == null) {
+        if(image == null  || image.getSize() == null) {
             logger.error("Must set image before querying image size");
             return 0; 
         } else {
@@ -336,7 +336,7 @@ public class ImageQAPlugin implements IStepPlugin {
     }
 
     public int getImageHeight() {
-        if(image == null) {
+        if(image == null || image.getSize() == null) {
             logger.error("Must set image before querying image size");
             return 0; 
         } else {
