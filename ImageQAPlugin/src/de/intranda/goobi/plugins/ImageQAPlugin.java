@@ -77,6 +77,10 @@ public class ImageQAPlugin implements IStepPlugin {
         THUMBNAIL_SIZE_IN_PIXEL = ConfigPlugins.getPluginConfig(this).getInt("thumbnailsize", 200);
         //        IMAGE_SIZE_IN_PIXEL = ConfigPlugins.getPluginConfig(this).getInt("imagesize", 800);
         imageSizes = ConfigPlugins.getPluginConfig(this).getList("imagesize");
+        if(imageSizes == null || imageSizes.isEmpty()) {
+            imageSizes = new ArrayList<>();
+            imageSizes.add("600");
+        }
         executor = Executors.newFixedThreadPool(imageSizes.size());
         this.step = step;
         try {
