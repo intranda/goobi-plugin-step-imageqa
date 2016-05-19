@@ -3,4 +3,5 @@
 	<thumbnailsize>200</thumbnailsize>
 	<imagesize>800</imagesize>
     <useOrigFolder>false</useOrigFolder>
+    <useJpegFolder>false</useJpegFolder>
 </config_plugin>
