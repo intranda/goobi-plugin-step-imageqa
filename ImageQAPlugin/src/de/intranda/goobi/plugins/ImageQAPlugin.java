@@ -5,6 +5,8 @@ import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -25,6 +27,7 @@ import org.goobi.production.plugin.interfaces.IStepPlugin;
 import de.sub.goobi.config.ConfigPlugins;
 import de.sub.goobi.config.ConfigurationHelper;
 import de.sub.goobi.helper.FacesContextHelper;
+import de.sub.goobi.helper.NIOFileUtils;
 import de.sub.goobi.helper.exceptions.DAOException;
 import de.sub.goobi.helper.exceptions.SwapException;
 import de.unigoettingen.sub.commons.contentlib.exceptions.ContentLibImageException;
@@ -64,6 +67,10 @@ public class ImageQAPlugin implements IStepPlugin {
         try {
             if (ConfigPlugins.getPluginConfig(this).getBoolean("useOrigFolder", false)) {
                 imageFolderName = step.getProzess().getImagesOrigDirectory(false);
+            } else if (ConfigPlugins.getPluginConfig(this).getBoolean("useJpegFolder", false)) {
+                String oldSuffix = ConfigurationHelper.getInstance().getMediaDirectorySuffix();
+                String newSuffix = ConfigurationHelper.getInstance().getMetsEditorDefaultSuffix();
+                imageFolderName = step.getProzess().getImagesOrigDirectory(false).replace(oldSuffix, newSuffix);
             } else {
                 imageFolderName = step.getProzess().getImagesTifDirectory(false);
             }
@@ -162,7 +169,7 @@ public class ImageQAPlugin implements IStepPlugin {
         return PLUGIN_NAME;
     }
 
-    @Override
+    
     public String getDescription() {
         return PLUGIN_NAME;
     }
