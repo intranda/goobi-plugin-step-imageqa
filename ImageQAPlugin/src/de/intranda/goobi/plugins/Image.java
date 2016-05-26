@@ -24,6 +24,14 @@ public class Image {
     public String getImageName() {
         return imageName;
     }
+    
+    public String getImageNameShort() {
+        if (imageName.length()>25){
+        	return "..." + imageName.substring(imageName.length()-25, imageName.length());
+        }else{
+        	return imageName;
+        }
+    }
 
     public int getOrder() {
         return order;
