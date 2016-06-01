@@ -5,11 +5,8 @@ import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -74,20 +71,31 @@ public class ImageQAPlugin implements IStepPlugin {
             } else {
                 imageFolderName = step.getProzess().getImagesTifDirectory(false);
             }
-            File folder = new File(imageFolderName);
-            if (folder.exists()) {
-                String[] imageNameArray = folder.list();
-                if (imageNameArray != null && imageNameArray.length > 0) {
-                    List<String> imageNameList = Arrays.asList(imageNameArray);
-                    Collections.sort(imageNameList);
-                    int order = 1;
-                    for (String imagename : imageNameList) {
-                        Image currentImage = new Image(imagename, order++, "", imagename);
-                        allImages.add(currentImage);
-                    }
-                    setImageIndex(0);
+            Path path = Paths.get(imageFolderName);
+            if (Files.exists(path)) {
+                List<String> imageNameList = NIOFileUtils.list(imageFolderName);
+                int order = 1;
+                for (String imagename : imageNameList) {
+                    Image currentImage = new Image(imagename, order++, "", imagename);
+                    allImages.add(currentImage);
                 }
+                setImageIndex(0);
             }
+
+            //            File folder = new File(imageFolderName);
+            //            if (folder.exists()) {
+            //                String[] imageNameArray = folder.list();
+            //                if (imageNameArray != null && imageNameArray.length > 0) {
+            //                    List<String> imageNameList = Arrays.asList(imageNameArray);
+            //                    Collections.sort(imageNameList);
+            //                    int order = 1;
+            //                    for (String imagename : imageNameList) {
+            //                        Image currentImage = new Image(imagename, order++, "", imagename);
+            //                        allImages.add(currentImage);
+            //                    }
+            //                    setImageIndex(0);
+            //                }
+            //            }
         } catch (SwapException | DAOException | IOException | InterruptedException e) {
             logger.error(e);
         }
@@ -132,15 +140,28 @@ public class ImageQAPlugin implements IStepPlugin {
     }
 
     private void scaleFile(String inFileName, String outFileName, int size) throws IOException, ContentLibImageException {
-
-        ImageManager im = new ImageManager(new File(inFileName).toURI().toURL());
-        Dimension dim = new Dimension();
-        dim.setSize(size, size);
-        RenderedImage ri = im.scaleImageByPixel(dim, ImageManager.SCALE_TO_BOX, 0);
-        JpegInterpreter pi = new JpegInterpreter(ri);
-        FileOutputStream outputFileStream = new FileOutputStream(outFileName);
-        pi.writeToStream(null, outputFileStream);
-        outputFileStream.close();
+        ImageManager im = null;
+        JpegInterpreter pi = null;
+        FileOutputStream outputFileStream = null;
+        try {
+            im = new ImageManager(new File(inFileName).toURI().toURL());
+            Dimension dim = new Dimension();
+            dim.setSize(size, size);
+            RenderedImage ri = im.scaleImageByPixel(dim, ImageManager.SCALE_TO_BOX, 0);
+            pi = new JpegInterpreter(ri);
+            outputFileStream = new FileOutputStream(outFileName);
+            pi.writeToStream(null, outputFileStream);
+        } finally {
+            if (outputFileStream != null) {
+                outputFileStream.close();
+            }
+            if (im != null) {
+                im.close();
+            }
+            if (pi != null) {
+                pi.close();
+            }
+        }
 
     }
 
@@ -169,7 +190,6 @@ public class ImageQAPlugin implements IStepPlugin {
         return PLUGIN_NAME;
     }
 
-    
     public String getDescription() {
         return PLUGIN_NAME;
     }
