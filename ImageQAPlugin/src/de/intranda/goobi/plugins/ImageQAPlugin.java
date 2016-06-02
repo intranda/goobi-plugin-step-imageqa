@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -33,6 +34,7 @@ import org.goobi.production.plugin.interfaces.IStepPlugin;
 import de.sub.goobi.config.ConfigPlugins;
 import de.sub.goobi.config.ConfigurationHelper;
 import de.sub.goobi.helper.FacesContextHelper;
+import de.sub.goobi.helper.NIOFileUtils;
 import de.sub.goobi.helper.exceptions.DAOException;
 import de.sub.goobi.helper.exceptions.SwapException;
 import de.unigoettingen.sub.commons.contentlib.exceptions.ContentLibImageException;
@@ -89,19 +91,15 @@ public class ImageQAPlugin implements IStepPlugin {
             } else {
                 imageFolderName = step.getProzess().getImagesTifDirectory(false);
             }
-            File folder = new File(imageFolderName);
-            if (folder.exists()) {
-                String[] imageNameArray = folder.list();
-                if (imageNameArray != null && imageNameArray.length > 0) {
-                    List<String> imageNameList = Arrays.asList(imageNameArray);
-                    Collections.sort(imageNameList);
-                    int order = 1;
-                    for (String imagename : imageNameList) {
-                        Image currentImage = new Image(imagename, order++, "", imagename);
-                        allImages.add(currentImage);
-                    }
-                    setImageIndex(0);
+            Path path = Paths.get(imageFolderName);
+            if (Files.exists(path)) {
+                List<String> imageNameList = NIOFileUtils.list(imageFolderName);
+                int order = 1;
+                for (String imagename : imageNameList) {
+                    Image currentImage = new Image(imagename, order++, "", imagename);
+                    allImages.add(currentImage);
                 }
+                setImageIndex(0);
             }
         } catch (SwapException | DAOException | IOException | InterruptedException e) {
             logger.error(e);
@@ -269,7 +267,6 @@ public class ImageQAPlugin implements IStepPlugin {
         return PLUGIN_NAME;
     }
 
-    @Override
     public String getDescription() {
         return PLUGIN_NAME;
     }
