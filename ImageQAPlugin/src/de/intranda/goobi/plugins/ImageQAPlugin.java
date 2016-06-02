@@ -113,7 +113,7 @@ public class ImageQAPlugin implements IStepPlugin {
         } else {
             subList = allImages.subList(pageNo * NUMBER_OF_IMAGES_PER_PAGE, allImages.size());
         }
-        for (Image currentImage : allImages) {
+        for (Image currentImage : subList) {
             if (StringUtils.isEmpty(currentImage.getThumbnailUrl())) {
                 createImage(currentImage);
             }
