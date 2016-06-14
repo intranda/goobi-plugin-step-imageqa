@@ -34,7 +34,9 @@ import org.goobi.production.plugin.interfaces.IStepPlugin;
 import de.sub.goobi.config.ConfigPlugins;
 import de.sub.goobi.config.ConfigurationHelper;
 import de.sub.goobi.helper.FacesContextHelper;
+import de.sub.goobi.helper.Helper;
 import de.sub.goobi.helper.NIOFileUtils;
+import de.sub.goobi.helper.ShellScript;
 import de.sub.goobi.helper.exceptions.DAOException;
 import de.sub.goobi.helper.exceptions.SwapException;
 import de.unigoettingen.sub.commons.contentlib.exceptions.ContentLibImageException;
@@ -57,7 +59,8 @@ public class ImageQAPlugin implements IStepPlugin {
     private int THUMBNAIL_SIZE_IN_PIXEL = 200;
     private String THUMBNAIL_FORMAT = "png";
     private String MAINIMAGE_FORMAT = "jpg";
-
+    private boolean allowDeletion = false;
+    private boolean allowRotation = false;
 
     private int pageNo = 0;
 
@@ -75,6 +78,8 @@ public class ImageQAPlugin implements IStepPlugin {
     @Override
     public void initialize(Step step, String returnPath) {
 
+    	allowDeletion = ConfigPlugins.getPluginConfig(this).getBoolean("allowDeletion", false);
+    	allowRotation = ConfigPlugins.getPluginConfig(this).getBoolean("allowRotation", false);
         NUMBER_OF_IMAGES_PER_PAGE = ConfigPlugins.getPluginConfig(this).getInt("numberOfImagesPerPage", 50);
         THUMBNAIL_SIZE_IN_PIXEL = ConfigPlugins.getPluginConfig(this).getInt("thumbnailsize", 200);
         //        IMAGE_SIZE_IN_PIXEL = ConfigPlugins.getPluginConfig(this).getInt("imagesize", 800);
@@ -468,4 +473,76 @@ public class ImageQAPlugin implements IStepPlugin {
         }
         return "";
     }
+    
+    public void deleteImage(Image image){
+    	int myindex = getImageIndex();
+    	if (myindex==allImages.indexOf(image)){
+    		myindex--;
+    	}
+    	
+    	Path path = Paths.get(imageFolderName + image.getImageName());
+        if (Files.exists(path)) {
+            NIOFileUtils.deleteDir(path);
+        }
+        allImages = new ArrayList<Image>();
+        initialize(this.step,"");
+        
+        setImageIndex(myindex);
+    }
+    
+    public void rotateRight(Image image){
+    	int myindex = getImageIndex();
+    	String command = "/usr/local/bin/mogrify -rotate 90 " + imageFolderName + image.getImageName();
+    	//System.out.println(command);
+		try {
+			Process process = Runtime.getRuntime().exec(command);
+			int result = process.waitFor();
+	    	if(result != 0) {
+	    	    System.out.println("a problem occured");
+	    	} 
+		} catch (IOException e) {
+			logger.error("IOException in rotateRight()", e);
+          Helper.setFehlerMeldung("Aborted Command '" + command + "' in rotateRight()!");
+		} catch (InterruptedException e) {
+			logger.error("InterruptedException in rotateRight()", e);
+          Helper.setFehlerMeldung("Command '" + command + "' is interrupted in rotateRight()!");
+		}
+    	
+        allImages = new ArrayList<Image>();
+        initialize(this.step,"");
+        
+        setImageIndex(myindex);
+    }
+    
+    public void rotateLeft(Image image){
+    	int myindex = getImageIndex();
+    	String command = "/usr/local/bin/mogrify -rotate -90 " + imageFolderName + image.getImageName();
+    	//System.out.println(command);
+		try {
+			Process process = Runtime.getRuntime().exec(command);
+			int result = process.waitFor();
+	    	if(result != 0) {
+	    	    System.out.println("a problem occured");
+	    	} 
+		} catch (IOException e) {
+			logger.error("IOException in rotateRight()", e);
+          Helper.setFehlerMeldung("Aborted Command '" + command + "' in rotateRight()!");
+		} catch (InterruptedException e) {
+			logger.error("InterruptedException in rotateRight()", e);
+          Helper.setFehlerMeldung("Command '" + command + "' is interrupted in rotateRight()!");
+		}
+    	
+        allImages = new ArrayList<Image>();
+        initialize(this.step,"");
+        
+        setImageIndex(myindex);
+    }
+    
+    public boolean isAllowDeletion() {
+		return allowDeletion;
+	}
+    
+    public boolean isAllowRotation() {
+		return allowRotation;
+	}
 }

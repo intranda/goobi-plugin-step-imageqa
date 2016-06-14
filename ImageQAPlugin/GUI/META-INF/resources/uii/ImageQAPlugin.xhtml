@@ -130,6 +130,18 @@
                                     <div class="goobi-thumbnail-caption">
                                         <h:outputText value="#{image.imageNameShort}"></h:outputText>
                                     </div>
+                                    
+                                    <div>
+                                         <h:commandLink title="#{msgs.deleteImage}: #{image.tooltip}" action="#{AktuelleSchritteForm.myPlugin.deleteImage(image)}" rendered="#{AktuelleSchritteForm.myPlugin.allowDeletion}">
+                                        	<i class="fa fa-trash"></i>
+                                        </h:commandLink>
+                                        <h:commandLink title="#{msgs.rotateImageLeft}: #{image.tooltip}" action="#{AktuelleSchritteForm.myPlugin.rotateLeft(image)}" rendered="#{AktuelleSchritteForm.myPlugin.allowRotation}">
+                                        	<i class="fa fa-undo"></i>
+                                        </h:commandLink>
+                                        <h:commandLink title="#{msgs.rotateImageRight}: #{image.tooltip}" action="#{AktuelleSchritteForm.myPlugin.rotateRight(image)}" rendered="#{AktuelleSchritteForm.myPlugin.allowRotation}">
+                                        	<i class="fa fa-repeat"></i>
+                                        </h:commandLink>
+                                    </div>
                                 </div>
                             </ui:repeat>
                         </div>
