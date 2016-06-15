@@ -4,4 +4,6 @@
 	<imagesize>800</imagesize>
 	<imagesize>3000</imagesize>
     <useOrigFolder>false</useOrigFolder>
+    <allowDeletion>false</allowDeletion>
+	<allowRotation>false</allowRotation>
 </config_plugin>
