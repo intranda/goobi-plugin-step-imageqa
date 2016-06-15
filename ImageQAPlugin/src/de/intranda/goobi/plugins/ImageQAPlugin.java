@@ -492,7 +492,7 @@ public class ImageQAPlugin implements IStepPlugin {
     
     public void rotateRight(Image image){
     	int myindex = getImageIndex();
-    	String command = "/usr/local/bin/mogrify -rotate 90 " + imageFolderName + image.getImageName();
+    	String command = "/usr/bin/mogrify -rotate 90 " + imageFolderName + image.getImageName();
     	//System.out.println(command);
 		try {
 			Process process = Runtime.getRuntime().exec(command);
@@ -516,7 +516,7 @@ public class ImageQAPlugin implements IStepPlugin {
     
     public void rotateLeft(Image image){
     	int myindex = getImageIndex();
-    	String command = "/usr/local/bin/mogrify -rotate -90 " + imageFolderName + image.getImageName();
+    	String command = "/usr/bin/mogrify -rotate -90 " + imageFolderName + image.getImageName();
     	//System.out.println(command);
 		try {
 			Process process = Runtime.getRuntime().exec(command);

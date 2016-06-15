@@ -45,7 +45,7 @@
 
 .goobi-thumbnail a {
     display: block;
-    width: 100%;
+/*     width: 100%; */
     text-align: center;
 }
 
@@ -132,14 +132,14 @@
                                     </div>
                                     
                                     <div>
-                                         <h:commandLink title="#{msgs.deleteImage}: #{image.tooltip}" action="#{AktuelleSchritteForm.myPlugin.deleteImage(image)}" rendered="#{AktuelleSchritteForm.myPlugin.allowDeletion}">
-                                        	<i class="fa fa-trash"></i>
+                                         <h:commandLink styleClass="pull-left" style="margin-left:40px;" title="#{msgs.deleteImage}: #{image.tooltip}" action="#{AktuelleSchritteForm.myPlugin.deleteImage(image)}" rendered="#{AktuelleSchritteForm.myPlugin.allowDeletion}">
+                                        	<i class="btn fa fa-trash"></i>
                                         </h:commandLink>
-                                        <h:commandLink title="#{msgs.rotateImageLeft}: #{image.tooltip}" action="#{AktuelleSchritteForm.myPlugin.rotateLeft(image)}" rendered="#{AktuelleSchritteForm.myPlugin.allowRotation}">
-                                        	<i class="fa fa-undo"></i>
+                                        <h:commandLink styleClass="pull-right" style="margin-right:40px; margin-left:5px;" title="#{msgs.rotateImageRight}: #{image.tooltip}" action="#{AktuelleSchritteForm.myPlugin.rotateRight(image)}" rendered="#{AktuelleSchritteForm.myPlugin.allowRotation}">
+                                        	<i class="btn fa fa-repeat"></i>
                                         </h:commandLink>
-                                        <h:commandLink title="#{msgs.rotateImageRight}: #{image.tooltip}" action="#{AktuelleSchritteForm.myPlugin.rotateRight(image)}" rendered="#{AktuelleSchritteForm.myPlugin.allowRotation}">
-                                        	<i class="fa fa-repeat"></i>
+                                        <h:commandLink styleClass="pull-right" title="#{msgs.rotateImageLeft}: #{image.tooltip}" action="#{AktuelleSchritteForm.myPlugin.rotateLeft(image)}" rendered="#{AktuelleSchritteForm.myPlugin.allowRotation}">
+                                        	<i class="btn fa fa-undo"></i>
                                         </h:commandLink>
                                     </div>
                                 </div>
