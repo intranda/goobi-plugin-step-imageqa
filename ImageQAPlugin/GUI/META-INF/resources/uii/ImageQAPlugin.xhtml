@@ -55,6 +55,7 @@
 .goobi-thumbnail .goobi-thumbnail-controls {
     float: left;
     width: 100%;
+    margin-top:5px;
 }
 
 .goobi-thumbnail .goobi-thumbnail-controls .thumbnail-control.delete {
@@ -131,7 +132,7 @@
                         <div class="row">
                             <ui:include src="ImageQAPlugin_include_thumbnavigation.xhtml" />
                         </div>
-
+		
                         <!-- Thumbnail list -->
                         <div class="row margin-top-most margin-bottom-most">
                             <ui:repeat var="image" value="#{AktuelleSchritteForm.myPlugin.paginatorList}">
@@ -148,13 +149,38 @@
                                     </div>
                                     
                                     <div class="goobi-thumbnail-controls">
-                                         <h:commandLink styleClass="thumbnail-control delete" title="#{msgs.deleteImage}: #{image.tooltip}" action="#{AktuelleSchritteForm.myPlugin.deleteImage(image)}" rendered="#{AktuelleSchritteForm.myPlugin.allowDeletion}">
+                                         <h:commandLink styleClass="thumbnail-control delete" title="#{msgs.plugin_intranda_step_imageQA_delete} #{image.tooltip}" 
+                                         	action="#{AktuelleSchritteForm.myPlugin.deleteImage(image)}" 
+                                         	rendered="#{AktuelleSchritteForm.myPlugin.allowDeletion and NavigationForm.uiStatus.plugin_qa_confirmation != false}" 
+                                         	onclick="if (!confirm('#{msgs.wirklichAusfuehren}')) return false">
                                         	<i class="btn fa fa-trash"></i>
                                         </h:commandLink>
-                                        <h:commandLink styleClass="thumbnail-control rotate-right" title="#{msgs.rotateImageRight}: #{image.tooltip}" action="#{AktuelleSchritteForm.myPlugin.rotateRight(image)}" rendered="#{AktuelleSchritteForm.myPlugin.allowRotation}">
+                                        <h:commandLink styleClass="thumbnail-control rotate-right" title="#{msgs.plugin_intranda_step_imageQA_rotateRight} #{image.tooltip}" 
+                                        	action="#{AktuelleSchritteForm.myPlugin.rotateRight(image)}" 
+                                        	rendered="#{AktuelleSchritteForm.myPlugin.allowRotation and NavigationForm.uiStatus.plugin_qa_confirmation != false}" 
+                                        	onclick="if (!confirm('#{msgs.wirklichAusfuehren}')) return false">
                                         	<i class="btn fa fa-repeat"></i>
                                         </h:commandLink>
-                                        <h:commandLink styleClass="thumbnail-control rotate-left" title="#{msgs.rotateImageLeft}: #{image.tooltip}" action="#{AktuelleSchritteForm.myPlugin.rotateLeft(image)}" rendered="#{AktuelleSchritteForm.myPlugin.allowRotation}">
+                                        <h:commandLink styleClass="thumbnail-control rotate-left" title="#{msgs.plugin_intranda_step_imageQA_rotateLeft} #{image.tooltip}" 
+                                        	action="#{AktuelleSchritteForm.myPlugin.rotateLeft(image)}" 
+                                        	rendered="#{AktuelleSchritteForm.myPlugin.allowRotation and NavigationForm.uiStatus.plugin_qa_confirmation != false}" 
+                                        	onclick="if (!confirm('#{msgs.wirklichAusfuehren}')) return false">
+                                        	<i class="btn fa fa-undo"></i>
+                                        </h:commandLink>
+                                        
+                                         <h:commandLink styleClass="thumbnail-control delete" title="#{msgs.plugin_intranda_step_imageQA_delete} #{image.tooltip}" 
+                                         	action="#{AktuelleSchritteForm.myPlugin.deleteImage(image)}" 
+                                         	rendered="#{AktuelleSchritteForm.myPlugin.allowDeletion and NavigationForm.uiStatus.plugin_qa_confirmation == false}">
+                                        	<i class="btn fa fa-trash"></i>
+                                        </h:commandLink>
+                                        <h:commandLink styleClass="thumbnail-control rotate-right" title="#{msgs.plugin_intranda_step_imageQA_rotateRight} #{image.tooltip}" 
+                                        	action="#{AktuelleSchritteForm.myPlugin.rotateRight(image)}" 
+                                        	rendered="#{AktuelleSchritteForm.myPlugin.allowRotation and NavigationForm.uiStatus.plugin_qa_confirmation == false}">
+                                        	<i class="btn fa fa-repeat"></i>
+                                        </h:commandLink>
+                                        <h:commandLink styleClass="thumbnail-control rotate-left" title="#{msgs.plugin_intranda_step_imageQA_rotateLeft} #{image.tooltip}" 
+                                        	action="#{AktuelleSchritteForm.myPlugin.rotateLeft(image)}" 
+                                        	rendered="#{AktuelleSchritteForm.myPlugin.allowRotation and NavigationForm.uiStatus.plugin_qa_confirmation == false}">
                                         	<i class="btn fa fa-undo"></i>
                                         </h:commandLink>
                                     </div>

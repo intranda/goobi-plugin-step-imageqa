@@ -6,4 +6,8 @@
     <useOrigFolder>false</useOrigFolder>
     <allowDeletion>false</allowDeletion>
 	<allowRotation>false</allowRotation>
+	<rotationCommands>
+		<left>/usr/local/bin/mogrify -rotate -90 IMAGE_FILE</left>
+		<right>/usr/local/bin/mogrify -rotate 90 IMAGE_FILE</right>
+	</rotationCommands>
 </config_plugin>
