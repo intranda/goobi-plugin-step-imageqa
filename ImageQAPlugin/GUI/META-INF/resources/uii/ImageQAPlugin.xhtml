@@ -18,42 +18,58 @@
 /* Thumbnails */
 .goobi-thumbnail {
     float: left;
-    margin: 7px 7px 7px 7px;
-    min-height: 200px;
-    min-width: 200px;
+    margin: 7px;
+    width: #{AktuelleSchritteForm.myPlugin.thumbnailSize +2}px; 
+    height: #{AktuelleSchritteForm.myPlugin.thumbnailSize +28}px;
 }
 
-.goobi-thumbnail a img {
-    max-height: 175px;
-}
 
 .goobi-thumbnail .goobi-thumbnail-image {
     float: left;
+    width: 100%;
     min-height: 100px;
     overflow: hidden;
+    max-height: #{AktuelleSchritteForm.myPlugin.thumbnailSize +2}px; 
+}
+
+.goobi-thumbnail .goobi-thumbnail-image a {
+    display: block;
 }
 
 .goobi-thumbnail .goobi-thumbnail-image a img {
     display: block;
-    border: solid 1px;
-    border-color: lightgrey;
-}
-
-.goobi-thumbnail .goobi-thumbnail-image a {
-    display: inline-block;
-}
-
-.goobi-thumbnail a {
-    display: block;
-/*     width: 100%; */
-    text-align: center;
+    max-width: 100%;
+    max-height: 175px;
+    margin: 0 auto;
+    border: 1px solid lightgrey;
 }
 
 .goobi-thumbnail .goobi-thumbnail-caption {
     float: left;
     width: 100%;
+    min-height: 20px;
     line-height: 20px;
     text-align: center;
+}
+
+.goobi-thumbnail .goobi-thumbnail-controls {
+    float: left;
+    width: 100%;
+}
+
+.goobi-thumbnail .goobi-thumbnail-controls .thumbnail-control.delete {
+    float: left;
+    margin-left: 30px;
+}
+
+.goobi-thumbnail .goobi-thumbnail-controls .thumbnail-control.rotate-left {
+    float: right;
+    margin-right: 5px;
+}
+
+.goobi-thumbnail .goobi-thumbnail-controls .thumbnail-control.rotate-right {
+    float: right;
+    margin-right: 30px;
 }
 
 .big-image-caption {
@@ -120,7 +136,7 @@
                         <div class="row margin-top-most margin-bottom-most">
                             <ui:repeat var="image" value="#{AktuelleSchritteForm.myPlugin.paginatorList}">
                                 <div class="goobi-thumbnail #{AktuelleSchritteForm.myPlugin.image.imageName eq image.imageName?'img-active':'font-light'}">
-                                    <div>
+                                    <div class="goobi-thumbnail-image">
                                         <h:commandLink title="#{image.tooltip}">
                                             <h:graphicImage value="#{image.thumbnailUrl}" title="#{image.tooltip}" styleClass="#{image.imageName == AktuelleSchritteForm.myPlugin.image.imageName ? 'img-active' : ''}" />
                                             <x:updateActionListener value="#{image.order -1}" property="#{AktuelleSchritteForm.myPlugin.imageIndex}" />
@@ -131,14 +147,14 @@
                                         <h:outputText value="#{image.imageNameShort}"></h:outputText>
                                     </div>
                                     
-                                    <div>
-                                         <h:commandLink styleClass="pull-left" style="margin-left:40px;" title="#{msgs.deleteImage}: #{image.tooltip}" action="#{AktuelleSchritteForm.myPlugin.deleteImage(image)}" rendered="#{AktuelleSchritteForm.myPlugin.allowDeletion}">
+                                    <div class="goobi-thumbnail-controls">
+                                         <h:commandLink styleClass="thumbnail-control delete" title="#{msgs.deleteImage}: #{image.tooltip}" action="#{AktuelleSchritteForm.myPlugin.deleteImage(image)}" rendered="#{AktuelleSchritteForm.myPlugin.allowDeletion}">
                                         	<i class="btn fa fa-trash"></i>
                                         </h:commandLink>
-                                        <h:commandLink styleClass="pull-right" style="margin-right:40px; margin-left:5px;" title="#{msgs.rotateImageRight}: #{image.tooltip}" action="#{AktuelleSchritteForm.myPlugin.rotateRight(image)}" rendered="#{AktuelleSchritteForm.myPlugin.allowRotation}">
+                                        <h:commandLink styleClass="thumbnail-control rotate-right" title="#{msgs.rotateImageRight}: #{image.tooltip}" action="#{AktuelleSchritteForm.myPlugin.rotateRight(image)}" rendered="#{AktuelleSchritteForm.myPlugin.allowRotation}">
                                         	<i class="btn fa fa-repeat"></i>
                                         </h:commandLink>
-                                        <h:commandLink styleClass="pull-right" title="#{msgs.rotateImageLeft}: #{image.tooltip}" action="#{AktuelleSchritteForm.myPlugin.rotateLeft(image)}" rendered="#{AktuelleSchritteForm.myPlugin.allowRotation}">
+                                        <h:commandLink styleClass="thumbnail-control rotate-left" title="#{msgs.rotateImageLeft}: #{image.tooltip}" action="#{AktuelleSchritteForm.myPlugin.rotateLeft(image)}" rendered="#{AktuelleSchritteForm.myPlugin.allowRotation}">
                                         	<i class="btn fa fa-undo"></i>
                                         </h:commandLink>
                                     </div>
@@ -220,16 +236,7 @@
 
         </h:form>
 
-        <script type="text/javascript">
-$( document ).ready(function() {
-	var height = #{AktuelleSchritteForm.myPlugin.thumbnailSize};
-	$('.goobi-thumbnail').css('max-width', height + 2 + 'px');
-	$('.goobi-thumbnail').css('max-height', height + 18 + 'px');
-
-	$('.goobi-thumbnail .goobi-thumbnail-image').css('max-height', height + 2 + 'px');
-
-});
-</script>
+        
 
     </ui:define>
 
