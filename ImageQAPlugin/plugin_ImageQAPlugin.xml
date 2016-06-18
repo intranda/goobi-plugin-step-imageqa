@@ -6,6 +6,7 @@
     <useOrigFolder>false</useOrigFolder>
     <allowDeletion>false</allowDeletion>
 	<allowRotation>false</allowRotation>
+	<deletionCommand>/opt/digiverso/goobi/scripts/deleteImage.sh IMAGE_FOLDER IMAGE_FILE</deletionCommand>
 	<rotationCommands>
 		<left>/usr/local/bin/mogrify -rotate -90 IMAGE_FILE</left>
 		<right>/usr/local/bin/mogrify -rotate 90 IMAGE_FILE</right>

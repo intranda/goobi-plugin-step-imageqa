@@ -63,6 +63,7 @@ public class ImageQAPlugin implements IStepPlugin {
     private boolean allowRotation = false;
     private String rotationCommandLeft = "";
     private String rotationCommandRight = "";
+    private String deletionCommand = "";
     boolean askForConfirmation = true;
 
     private int pageNo = 0;
@@ -83,6 +84,7 @@ public class ImageQAPlugin implements IStepPlugin {
 
     	allowDeletion = ConfigPlugins.getPluginConfig(this).getBoolean("allowDeletion", false);
     	allowRotation = ConfigPlugins.getPluginConfig(this).getBoolean("allowRotation", false);
+    	deletionCommand = ConfigPlugins.getPluginConfig(this).getString("deletionCommand", "-");
     	rotationCommandLeft = ConfigPlugins.getPluginConfig(this).getString("rotationCommands.left", "-");
     	rotationCommandRight = ConfigPlugins.getPluginConfig(this).getString("rotationCommands.right", "-");
         
@@ -311,7 +313,6 @@ public class ImageQAPlugin implements IStepPlugin {
     }
 
     public void setImageIndex(int imageIndex) {
-
         this.imageIndex = imageIndex;
         if (this.imageIndex < 0) {
             this.imageIndex = 0;
@@ -319,7 +320,9 @@ public class ImageQAPlugin implements IStepPlugin {
         if (this.imageIndex >= getSizeOfImageList()) {
             this.imageIndex = getSizeOfImageList() - 1;
         }
-        setImage(allImages.get(this.imageIndex));
+        if (this.imageIndex>=0){
+        	setImage(allImages.get(this.imageIndex));
+        }
     }
 
     public String getBild() {
@@ -481,47 +484,38 @@ public class ImageQAPlugin implements IStepPlugin {
     }
     
     public void deleteImage(Image image){
-    	int myindex = getImageIndex();
-    	if (myindex==allImages.indexOf(image)){
-    		myindex--;
-    	}
-    	
-    	Path path = Paths.get(imageFolderName + image.getImageName());
-        if (Files.exists(path)) {
-            NIOFileUtils.deleteDir(path);
-        }
-        allImages = new ArrayList<Image>();
-        initialize(this.step,"");
-        
-        setImageIndex(myindex);
+        callScript(image, deletionCommand, true);
     }
     
     public void rotateRight(Image image){
-    	rotate(image, rotationCommandRight);
+    	callScript(image, rotationCommandRight, false);
     }
     
     public void rotateLeft(Image image){
-    	rotate(image, rotationCommandLeft);
+    	callScript(image, rotationCommandLeft, false);
     }
     
-    public void rotate(Image image, String rotationCommand){
+    public void callScript(Image image, String rotationCommand, boolean selectOtherImage){
     	int myindex = getImageIndex();
-//    	String command = "/usr/bin/mogrify -rotate -90 " + imageFolderName + image.getImageName();
+    	if (selectOtherImage && myindex==allImages.indexOf(image)){
+    		myindex--;
+    	}
     	String command = rotationCommand.replace("IMAGE_FILE", imageFolderName + image.getImageName());
-    			
-    	//System.out.println(command);
-		try {
+    	command = command.replace("IMAGE_FOLDER", imageFolderName);
+    	logger.debug(command);
+    	
+    	try {
 			Process process = Runtime.getRuntime().exec(command);
 			int result = process.waitFor();
 	    	if(result != 0) {
-	    	    System.out.println("a problem occured");
+	    		logger.debug("A problem occured while calling command '"+ command +"'. Error code was " + result);
 	    	} 
 		} catch (IOException e) {
 			logger.error("IOException in rotate()", e);
-          Helper.setFehlerMeldung("Aborted Command '" + command + "' in rotate()!");
+			Helper.setFehlerMeldung("Aborted Command '" + command + "' in callScript()!");
 		} catch (InterruptedException e) {
-			logger.error("InterruptedException in rotate()", e);
-          Helper.setFehlerMeldung("Command '" + command + "' is interrupted in rotate()!");
+			logger.error("InterruptedException in callScript()", e);
+			Helper.setFehlerMeldung("Command '" + command + "' is interrupted in callScript()!");
 		}
     	
         allImages = new ArrayList<Image>();
