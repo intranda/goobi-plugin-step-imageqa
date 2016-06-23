@@ -1,14 +1,51 @@
 <config_plugin>
-	<numberOfImagesPerPage>10</numberOfImagesPerPage>
-	<thumbnailsize>200</thumbnailsize>
-	<imagesize>800</imagesize>
-	<imagesize>3000</imagesize>
-    <useOrigFolder>false</useOrigFolder>
-    <allowDeletion>false</allowDeletion>
-	<allowRotation>false</allowRotation>
-	<deletionCommand>/opt/digiverso/goobi/scripts/deleteImage.sh IMAGE_FOLDER IMAGE_FILE</deletionCommand>
-	<rotationCommands>
-		<left>/usr/local/bin/mogrify -rotate -90 IMAGE_FILE</left>
-		<right>/usr/local/bin/mogrify -rotate 90 IMAGE_FILE</right>
-	</rotationCommands>
+	<config>
+		<!-- which projects to use for (can be more then one, otherwise use *) -->
+		<project>*</project>
+		<!-- which images to use -->
+		<useOrigFolder>true</useOrigFolder>
+	    <!-- how to display the tumbnails -->
+		<numberOfImagesPerPage>10</numberOfImagesPerPage>
+		<thumbnailsize>200</thumbnailsize>
+		<!-- which image sizes to use for the big image -->
+		<imagesize>800</imagesize>
+		<imagesize>3000</imagesize>
+	    <!-- allow deletion of images -->
+		<allowDeletion>false</allowDeletion>
+		<deletionCommand>/opt/digiverso/goobi/scripts/deleteImage.sh IMAGE_FOLDER IMAGE_FILE</deletionCommand>
+		<!-- allow rotation of images -->
+		<allowRotation>false</allowRotation>
+		<rotationCommands>
+			<left>/usr/local/bin/mogrify -rotate -90 IMAGE_FILE</left>
+			<right>/usr/local/bin/mogrify -rotate 90 IMAGE_FILE</right>
+		</rotationCommands>
+		<!-- allow renaming of images -->
+		<allowRenaming>false</allowRenaming>
+	</config>
+	
+	<config>
+		<!-- which projects to use for (can be more then one, otherwise use *) -->
+		<project>My special project</project>
+		<project>Archive_Project</project>
+		<!-- which images to use -->
+		<useOrigFolder>true</useOrigFolder>
+	    <!-- how to display the tumbnails -->
+		<numberOfImagesPerPage>10</numberOfImagesPerPage>
+		<thumbnailsize>200</thumbnailsize>
+		<!-- which image sizes to use for the big image -->
+		<imagesize>800</imagesize>
+		<imagesize>3000</imagesize>
+	    <!-- allow deletion of images -->
+		<allowDeletion>false</allowDeletion>
+		<deletionCommand>/opt/digiverso/goobi/scripts/deleteImage.sh IMAGE_FOLDER IMAGE_FILE</deletionCommand>
+		<!-- allow rotation of images -->
+		<allowRotation>true</allowRotation>
+		<rotationCommands>
+			<left>/usr/local/bin/mogrify -rotate -90 IMAGE_FILE</left>
+			<right>/usr/local/bin/mogrify -rotate 90 IMAGE_FILE</right>
+		</rotationCommands>
+		<!-- allow renaming of images -->
+		<allowRenaming>true</allowRenaming>
+		
+	</config>
 </config_plugin>

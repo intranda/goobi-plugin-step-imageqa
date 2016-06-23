@@ -59,6 +59,10 @@
 }
 
 .goobi-thumbnail .goobi-thumbnail-controls .thumbnail-control.delete {
+    margin-right:5px;
+}
+
+.goobi-thumbnail .goobi-thumbnail-controls .thumbnail-control.left {
     float: left;
     margin-left: 30px;
 }
@@ -149,12 +153,20 @@
                                     </div>
                                     
                                     <div class="goobi-thumbnail-controls">
-                                         <h:commandLink styleClass="thumbnail-control delete" title="#{msgs.plugin_intranda_step_imageQA_delete} #{image.tooltip}" 
-                                         	action="#{AktuelleSchritteForm.myPlugin.deleteImage(image)}" 
-                                         	rendered="#{AktuelleSchritteForm.myPlugin.allowDeletion and NavigationForm.uiStatus.plugin_qa_confirmation != false}" 
-                                         	onclick="if (!confirm('#{msgs.wirklichAusfuehren}')) return false">
-                                        	<i class="btn fa fa-trash"></i>
-                                        </h:commandLink>
+                                    	<div class="thumbnail-control left">
+	                                         <h:commandLink styleClass="thumbnail-control rename" title="#{msgs.plugin_intranda_step_imageQA_rename} #{image.tooltip}" 
+	                                         	action="#{AktuelleSchritteForm.myPlugin.renameImages(image)}" 
+	                                         	rendered="#{AktuelleSchritteForm.myPlugin.allowRenaming and NavigationForm.uiStatus.plugin_qa_confirmation != false}" 
+	                                         	onclick="if (!confirm('#{msgs.wirklichAusfuehren}')) return false">
+	                                        	<i class="btn fa fa-eye"></i>
+	                                        </h:commandLink>
+	                                        <h:commandLink styleClass="thumbnail-control delete" title="#{msgs.plugin_intranda_step_imageQA_delete} #{image.tooltip}" 
+	                                         	action="#{AktuelleSchritteForm.myPlugin.deleteImage(image)}" 
+	                                         	rendered="#{AktuelleSchritteForm.myPlugin.allowDeletion and NavigationForm.uiStatus.plugin_qa_confirmation != false}" 
+	                                         	onclick="if (!confirm('#{msgs.wirklichAusfuehren}')) return false">
+	                                        	<i class="btn fa fa-trash"></i>
+	                                        </h:commandLink>
+                                        </div>
                                         <h:commandLink styleClass="thumbnail-control rotate-right" title="#{msgs.plugin_intranda_step_imageQA_rotateRight} #{image.tooltip}" 
                                         	action="#{AktuelleSchritteForm.myPlugin.rotateRight(image)}" 
                                         	rendered="#{AktuelleSchritteForm.myPlugin.allowRotation and NavigationForm.uiStatus.plugin_qa_confirmation != false}" 
@@ -168,11 +180,18 @@
                                         	<i class="btn fa fa-undo"></i>
                                         </h:commandLink>
                                         
-                                         <h:commandLink styleClass="thumbnail-control delete" title="#{msgs.plugin_intranda_step_imageQA_delete} #{image.tooltip}" 
-                                         	action="#{AktuelleSchritteForm.myPlugin.deleteImage(image)}" 
-                                         	rendered="#{AktuelleSchritteForm.myPlugin.allowDeletion and NavigationForm.uiStatus.plugin_qa_confirmation == false}">
-                                        	<i class="btn fa fa-trash"></i>
-                                        </h:commandLink>
+                                        <div class="thumbnail-control left">
+	                                        <h:commandLink styleClass="thumbnail-control rename" title="#{msgs.plugin_intranda_step_imageQA_rename} #{image.tooltip}" 
+	                                         	action="#{AktuelleSchritteForm.myPlugin.renameImages(image)}" 
+	                                         	rendered="#{AktuelleSchritteForm.myPlugin.allowRenaming and NavigationForm.uiStatus.plugin_qa_confirmation == false}">
+	                                        	<i class="btn fa fa-eye"></i>
+	                                        </h:commandLink>
+	                                        <h:commandLink styleClass="thumbnail-control delete" title="#{msgs.plugin_intranda_step_imageQA_delete} #{image.tooltip}" 
+	                                         	action="#{AktuelleSchritteForm.myPlugin.deleteImage(image)}" 
+	                                         	rendered="#{AktuelleSchritteForm.myPlugin.allowDeletion and NavigationForm.uiStatus.plugin_qa_confirmation == false}">
+	                                        	<i class="btn fa fa-trash"></i>
+	                                        </h:commandLink>
+                                        </div>
                                         <h:commandLink styleClass="thumbnail-control rotate-right" title="#{msgs.plugin_intranda_step_imageQA_rotateRight} #{image.tooltip}" 
                                         	action="#{AktuelleSchritteForm.myPlugin.rotateRight(image)}" 
                                         	rendered="#{AktuelleSchritteForm.myPlugin.allowRotation and NavigationForm.uiStatus.plugin_qa_confirmation == false}">

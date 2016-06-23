@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -22,6 +23,7 @@ import java.util.concurrent.Future;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -61,6 +63,7 @@ public class ImageQAPlugin implements IStepPlugin {
     private String MAINIMAGE_FORMAT = "jpg";
     private boolean allowDeletion = false;
     private boolean allowRotation = false;
+    private boolean allowRenaming = false;
     private String rotationCommandLeft = "";
     private String rotationCommandRight = "";
     private String deletionCommand = "";
@@ -82,16 +85,31 @@ public class ImageQAPlugin implements IStepPlugin {
     @Override
     public void initialize(Step step, String returnPath) {
 
-    	allowDeletion = ConfigPlugins.getPluginConfig(this).getBoolean("allowDeletion", false);
-    	allowRotation = ConfigPlugins.getPluginConfig(this).getBoolean("allowRotation", false);
-    	deletionCommand = ConfigPlugins.getPluginConfig(this).getString("deletionCommand", "-");
-    	rotationCommandLeft = ConfigPlugins.getPluginConfig(this).getString("rotationCommands.left", "-");
-    	rotationCommandRight = ConfigPlugins.getPluginConfig(this).getString("rotationCommands.right", "-");
+    	String projectName = step.getProzess().getProjekt().getTitel();
+    	HierarchicalConfiguration myconfig = null;
+    	
+    	// get the correct configuration for the right project
+    	List<HierarchicalConfiguration> configs = ConfigPlugins.getPluginConfig(this).configurationsAt("config");
+        for (HierarchicalConfiguration hc : configs) {
+        	List<HierarchicalConfiguration> projects = hc.configurationsAt("project");
+            for (HierarchicalConfiguration project : projects) {
+            	if (myconfig == null || project.getString("").equals("*") || project.getString("").equals(projectName) ){
+            		myconfig = hc;
+            	}
+            }
+        }
+    	
+    	allowDeletion = myconfig.getBoolean("allowDeletion", false);
+    	allowRotation = myconfig.getBoolean("allowRotation", false);
+    	allowRenaming = myconfig.getBoolean("allowRenaming", false);
+    	deletionCommand = myconfig.getString("deletionCommand", "-");
+    	rotationCommandLeft = myconfig.getString("rotationCommands.left", "-");
+    	rotationCommandRight = myconfig.getString("rotationCommands.right", "-");
         
-    	NUMBER_OF_IMAGES_PER_PAGE = ConfigPlugins.getPluginConfig(this).getInt("numberOfImagesPerPage", 50);
-        THUMBNAIL_SIZE_IN_PIXEL = ConfigPlugins.getPluginConfig(this).getInt("thumbnailsize", 200);
-        //        IMAGE_SIZE_IN_PIXEL = ConfigPlugins.getPluginConfig(this).getInt("imagesize", 800);
-        imageSizes = ConfigPlugins.getPluginConfig(this).getList("imagesize");
+    	NUMBER_OF_IMAGES_PER_PAGE = myconfig.getInt("numberOfImagesPerPage", 50);
+        THUMBNAIL_SIZE_IN_PIXEL = myconfig.getInt("thumbnailsize", 200);
+        //        IMAGE_SIZE_IN_PIXEL = myconfig.getInt("imagesize", 800);
+        imageSizes = myconfig.getList("imagesize");
         if(imageSizes == null || imageSizes.isEmpty()) {
             imageSizes = new ArrayList<>();
             imageSizes.add("600");
@@ -99,7 +117,7 @@ public class ImageQAPlugin implements IStepPlugin {
         executor = Executors.newFixedThreadPool(imageSizes.size());
         this.step = step;
         try {
-            if (ConfigPlugins.getPluginConfig(this).getBoolean("useOrigFolder", false)) {
+            if (myconfig.getBoolean("useOrigFolder", false)) {
                 imageFolderName = step.getProzess().getImagesOrigDirectory(false);
             } else {
                 imageFolderName = step.getProzess().getImagesTifDirectory(false);
@@ -483,24 +501,37 @@ public class ImageQAPlugin implements IStepPlugin {
         return "";
     }
     
-    public void deleteImage(Image image){
-        callScript(image, deletionCommand, true);
-    }
-    
-    public void rotateRight(Image image){
-    	callScript(image, rotationCommandRight, false);
-    }
-    
-    public void rotateLeft(Image image){
-    	callScript(image, rotationCommandLeft, false);
-    }
-    
-    public void callScript(Image image, String rotationCommand, boolean selectOtherImage){
+    public void renameImages(Image startImage){
     	int myindex = getImageIndex();
-    	if (selectOtherImage && myindex==allImages.indexOf(image)){
+    	
+    	Path path = Paths.get(imageFolderName + image.getImageName());
+        if (Files.exists(path)) {
+            NIOFileUtils.deleteDir(path);
+        }
+        allImages = new ArrayList<Image>();
+        initialize(this.step,"");
+        
+        setImageIndex(myindex);
+    }
+    
+    public void deleteImage(Image myimage){
+        callScript(myimage, deletionCommand, true);
+    }
+    
+    public void rotateRight(Image myimage){
+    	callScript(myimage, rotationCommandRight, false);
+    }
+    
+    public void rotateLeft(Image myimage){
+    	callScript(myimage, rotationCommandLeft, false);
+    }
+    
+    public void callScript(Image myimage, String rotationCommand, boolean selectOtherImage){
+    	int myindex = getImageIndex();
+    	if (selectOtherImage && myindex==allImages.indexOf(myimage)){
     		myindex--;
     	}
-    	String command = rotationCommand.replace("IMAGE_FILE", imageFolderName + image.getImageName());
+    	String command = rotationCommand.replace("IMAGE_FILE", imageFolderName + myimage.getImageName());
     	command = command.replace("IMAGE_FOLDER", imageFolderName);
     	logger.debug(command);
     	
@@ -530,6 +561,10 @@ public class ImageQAPlugin implements IStepPlugin {
     
     public boolean isAllowRotation() {
 		return allowRotation;
+	}
+    
+    public boolean isAllowRenaming() {
+		return allowRenaming;
 	}
     
     public boolean isAskForConfirmation() {
