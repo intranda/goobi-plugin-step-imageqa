@@ -1,6 +1,7 @@
 package de.intranda.goobi.plugins;
 
 import java.awt.Dimension;
+import java.awt.font.ImageGraphicAttribute;
 import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -8,6 +9,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.*;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -58,7 +60,7 @@ public class ImageQAPlugin implements IStepPlugin {
     private static final String PLUGIN_NAME = "intranda_step_imageQA";
 
     private int NUMBER_OF_IMAGES_PER_PAGE = 10;
-    private int THUMBNAIL_SIZE_IN_PIXEL = 200;
+    private int THUMBNAIL_SIZE_IN_PIXEL = 175;
     private String THUMBNAIL_FORMAT = "png";
     private String MAINIMAGE_FORMAT = "jpg";
     private boolean allowDeletion = false;
@@ -68,7 +70,7 @@ public class ImageQAPlugin implements IStepPlugin {
     private String rotationCommandRight = "";
     private String deletionCommand = "";
     boolean askForConfirmation = true;
-
+ 
     private int pageNo = 0;
 
     private int imageIndex = 0;
@@ -160,6 +162,9 @@ public class ImageQAPlugin implements IStepPlugin {
         
         String thumbUrl = createImageUrl(currentImage, THUMBNAIL_SIZE_IN_PIXEL, THUMBNAIL_FORMAT, "");
         currentImage.setThumbnailUrl(thumbUrl);
+        
+        String largeThumbUrl = createImageUrl(currentImage, THUMBNAIL_SIZE_IN_PIXEL*4, THUMBNAIL_FORMAT, "");
+        currentImage.setLargeThumbnailUrl(largeThumbUrl);
         
         String contextPath = getContextPath();
         for (String sizeString : imageSizes) {
@@ -501,17 +506,58 @@ public class ImageQAPlugin implements IStepPlugin {
         return "";
     }
     
-    public void renameImages(Image startImage){
-    	int myindex = getImageIndex();
+    public String renameImages(Image myimage){
+    	DecimalFormat myFormatter = new DecimalFormat("0000");
     	
-    	Path path = Paths.get(imageFolderName + image.getImageName());
-        if (Files.exists(path)) {
-            NIOFileUtils.deleteDir(path);
-        }
+
+    	
+    	int myindex = getImageIndex();
+    	int generalCounter = 1;
+    	int fileCounter = 1;
+    	boolean imageFound = false;
+    	
+    	System.out.println("Dateien werden jetzt umbenannt auf der Basis von: " + myimage.getTempName());
+    	
+    	//Path path = Paths.get(imageFolderName + myimage.getImageName());
+    	for (Path f : NIOFileUtils.listFiles(imageFolderName)) {
+			String filenameold = f.getFileName().toString();
+			String prefix = myFormatter.format(generalCounter) + "_";
+			String suffix =filenameold.substring(filenameold.lastIndexOf("."), filenameold.length());
+			
+			if (!imageFound && myimage.getImageName().equals(filenameold)){
+				imageFound = true;
+				System.out.println("Bild gefunden: " + filenameold);
+			}
+			
+			if (imageFound){
+				String filenamenew = prefix + myimage.getTempName() + "_" + myFormatter.format(fileCounter) + suffix;
+				System.out.println(filenameold + " will be renamed to " + filenamenew);
+				try {
+					NIOFileUtils.renameTo(f, filenamenew);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				fileCounter++;
+			}else{
+				System.out.println(filenameold + " will not be renamed");
+			}
+			
+			generalCounter++;
+			
+		}
+//        if (Files.exists(path)) {
+//            NIOFileUtils.deleteDir(path);
+//        }
         allImages = new ArrayList<Image>();
         initialize(this.step,"");
         
+        for (Image image : allImages) {
+			image.setTempName(myimage.getTempName());
+		}
+        
         setImageIndex(myindex);
+        return "";
     }
     
     public void deleteImage(Image myimage){
@@ -574,4 +620,5 @@ public class ImageQAPlugin implements IStepPlugin {
     public void setAskForConfirmation(boolean askForConfirmation) {
 		this.askForConfirmation = askForConfirmation;
 	}
+    
 }

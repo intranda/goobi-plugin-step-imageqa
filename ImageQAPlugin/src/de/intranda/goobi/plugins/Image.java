@@ -9,9 +9,11 @@ public class Image {
     private String imageName;
     private int order;
     private String thumbnailUrl;
+    private String largeThumbnailUrl;
     private List<ImageLevel> imageLevels = new ArrayList<ImageLevel>();
     private String tooltip;
     private Dimension size = null;
+    private String tempName;
     
 
     public Image(String imageName, int order, String thumbnailUrl, String tooltip) {
@@ -81,6 +83,19 @@ public class Image {
         this.size = size;
     }
     
+    public String getTempName() {
+		return tempName;
+	}
     
+    public void setTempName(String tempName) {
+		this.tempName = tempName;
+	}
 
+    public String getLargeThumbnailUrl() {
+		return largeThumbnailUrl;
+	}
+    
+    public void setLargeThumbnailUrl(String largeThumbnailUrl) {
+		this.largeThumbnailUrl = largeThumbnailUrl;
+	}
 }

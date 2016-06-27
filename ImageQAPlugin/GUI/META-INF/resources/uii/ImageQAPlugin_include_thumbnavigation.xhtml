@@ -46,7 +46,7 @@
 		
 		<!-- // navigation buttons for Thumbnail list -->
 
-		<h:commandLink styleClass="btn font-size-s pull-right" style="margin-right:50px;" rendered="#{AktuelleSchritteForm.myPlugin.allowDeletion or AktuelleSchritteForm.myPlugin.allowRotation}">
+		<h:commandLink styleClass="btn font-size-s pull-right" style="margin-right:50px;" rendered="#{AktuelleSchritteForm.myPlugin.allowDeletion or AktuelleSchritteForm.myPlugin.allowRotation or AktuelleSchritteForm.myPlugin.allowRenaming}">
 			<i class="fa #{NavigationForm.uiStatus.plugin_qa_confirmation == false?'fa fa-square-o':'fa fa-check-square-o'} margin-right-5"/>
 			<h:outputText styleClass="font-size-s" value="#{msgs.plugin_intranda_step_imageQA_confirmImageManipulation}"/>
 			<f:setPropertyActionListener value="#{NavigationForm.uiStatus.plugin_qa_confirmation == false?true:false}" target="#{NavigationForm.uiStatus.plugin_qa_confirmation}"/>
