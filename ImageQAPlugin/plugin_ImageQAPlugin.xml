@@ -30,13 +30,13 @@
 		<!-- which images to use -->
 		<useOrigFolder>true</useOrigFolder>
 	    <!-- how to display the tumbnails -->
-		<numberOfImagesPerPage>10</numberOfImagesPerPage>
+		<numberOfImagesPerPage>12</numberOfImagesPerPage>
 		<thumbnailsize>200</thumbnailsize>
 		<!-- which image sizes to use for the big image -->
 		<imagesize>800</imagesize>
 		<imagesize>3000</imagesize>
 	    <!-- allow deletion of images -->
-		<allowDeletion>false</allowDeletion>
+		<allowDeletion>true</allowDeletion>
 		<deletionCommand>/opt/digiverso/goobi/scripts/deleteImage.sh IMAGE_FOLDER IMAGE_FILE</deletionCommand>
 		<!-- allow rotation of images -->
 		<allowRotation>true</allowRotation>
@@ -45,7 +45,6 @@
 			<right>/usr/local/bin/mogrify -rotate 90 IMAGE_FILE</right>
 		</rotationCommands>
 		<!-- allow renaming of images -->
-		<allowRenaming>true</allowRenaming>
-		
+		<allowRenaming>true</allowRenaming>	
 	</config>
 </config_plugin>
