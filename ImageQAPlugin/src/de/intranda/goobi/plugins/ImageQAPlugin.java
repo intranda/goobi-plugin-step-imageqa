@@ -43,6 +43,7 @@ import de.sub.goobi.helper.NIOFileUtils;
 import de.sub.goobi.helper.ShellScript;
 import de.sub.goobi.helper.exceptions.DAOException;
 import de.sub.goobi.helper.exceptions.SwapException;
+import de.unigoettingen.sub.commons.contentlib.exceptions.ContentLibException;
 import de.unigoettingen.sub.commons.contentlib.exceptions.ContentLibImageException;
 import de.unigoettingen.sub.commons.contentlib.exceptions.ImageManagerException;
 import de.unigoettingen.sub.commons.contentlib.exceptions.ImageManipulatorException;
@@ -263,7 +264,7 @@ public class ImageQAPlugin implements IStepPlugin {
     }
 
     private File scaleToSize(ImageManager im, Dimension dim, String filename, boolean overwrite) throws ImageManipulatorException, FileNotFoundException,
-            ImageManagerException, IOException {
+            ImageManagerException, IOException, ContentLibException {
         File outputFile = new File(filename);
         if(!overwrite && outputFile.isFile()) {
             return outputFile;
