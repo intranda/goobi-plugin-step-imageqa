@@ -19,9 +19,9 @@
 					<x:updateActionListener value="0" property="#{AktuelleSchritteForm.myPlugin.imageIndex}" />
 				</h:commandLink>
 					
-				<h:commandLink styleClass="btn btn-primary font-size-s" title="#{msgs.previousImage}">
+				<h:commandLink styleClass="btn btn-primary font-size-s" title="#{msgs.lw_previousImage}">
 					<i class="fa fa-angle-left"></i>
-					<h:outputText value=" #{msgs.pagePrevious}" />
+					<h:outputText value=" #{msgs.lw_previousImage}" />
 					<f:ajax execute="@form" render="@form :bigimage" />
 					<x:updateActionListener value="#{AktuelleSchritteForm.myPlugin.imageIndex - 1}" property="#{AktuelleSchritteForm.myPlugin.imageIndex}" />
 				</h:commandLink>
@@ -29,8 +29,8 @@
 					<h:outputText
 						value="#{msgs.seite} #{AktuelleSchritteForm.myPlugin.imageIndex +1} #{msgs.von}  #{AktuelleSchritteForm.myPlugin.sizeOfImageList}" />
 				</div>
-				<h:commandLink styleClass="btn btn-primary font-size-s" title="#{msgs.nextImage}">
-					<h:outputText value="#{msgs.pageNext} " />
+				<h:commandLink styleClass="btn btn-primary font-size-s" title="#{msgs.lw_nextImage}">
+					<h:outputText value="#{msgs.lw_nextImage} " />
 					<i class="fa fa-angle-right"></i>
 					<f:ajax execute="@form" render="@form :bigimage" />
 					<x:updateActionListener value="#{AktuelleSchritteForm.myPlugin.imageIndex + 1}" property="#{AktuelleSchritteForm.myPlugin.imageIndex}" />
