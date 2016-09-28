@@ -71,7 +71,7 @@ public class ImageQAPlugin implements IStepPlugin {
     private String rotationCommandRight = "";
     private String deletionCommand = "";
     boolean askForConfirmation = true;
- 
+
     private int pageNo = 0;
 
     private int imageIndex = 0;
@@ -88,32 +88,33 @@ public class ImageQAPlugin implements IStepPlugin {
     @Override
     public void initialize(Step step, String returnPath) {
 
-    	String projectName = step.getProzess().getProjekt().getTitel();
-    	HierarchicalConfiguration myconfig = null;
-    	
-    	// get the correct configuration for the right project
-    	List<HierarchicalConfiguration> configs = ConfigPlugins.getPluginConfig(this).configurationsAt("config");
+        String projectName = step.getProzess().getProjekt().getTitel();
+        HierarchicalConfiguration myconfig = null;
+
+        // get the correct configuration for the right project
+        List<HierarchicalConfiguration> configs = ConfigPlugins.getPluginConfig(this).configurationsAt("config");
         for (HierarchicalConfiguration hc : configs) {
-        	List<HierarchicalConfiguration> projects = hc.configurationsAt("project");
+            List<HierarchicalConfiguration> projects = hc.configurationsAt("project");
             for (HierarchicalConfiguration project : projects) {
-            	if (myconfig == null || project.getString("").equals("*") || project.getString("").equals(projectName) ){
-            		myconfig = hc;
-            	}
+                if (myconfig == null || project.getString("").equals("*") || project.getString("").equals(projectName)) {
+                    myconfig = hc;
+                }
             }
         }
-    	
-    	allowDeletion = myconfig.getBoolean("allowDeletion", false);
-    	allowRotation = myconfig.getBoolean("allowRotation", false);
-    	allowRenaming = myconfig.getBoolean("allowRenaming", false);
-    	deletionCommand = myconfig.getString("deletionCommand", "-");
-    	rotationCommandLeft = myconfig.getString("rotationCommands.left", "-");
-    	rotationCommandRight = myconfig.getString("rotationCommands.right", "-");
-        
-    	NUMBER_OF_IMAGES_PER_PAGE = myconfig.getInt("numberOfImagesPerPage", 50);
+
+        allowDeletion = myconfig.getBoolean("allowDeletion", false);
+        allowRotation = myconfig.getBoolean("allowRotation", false);
+        allowRenaming = myconfig.getBoolean("allowRenaming", false);
+        deletionCommand = myconfig.getString("deletionCommand", "-");
+        rotationCommandLeft = myconfig.getString("rotationCommands.left", "-");
+        rotationCommandRight = myconfig.getString("rotationCommands.right", "-");
+
+        NUMBER_OF_IMAGES_PER_PAGE = myconfig.getInt("numberOfImagesPerPage", 50);
         THUMBNAIL_SIZE_IN_PIXEL = myconfig.getInt("thumbnailsize", 200);
-        //        IMAGE_SIZE_IN_PIXEL = myconfig.getInt("imagesize", 800);
+        THUMBNAIL_FORMAT = myconfig.getString("thumbnailFormat", "png");
+        MAINIMAGE_FORMAT = myconfig.getString("mainImageFormat", "jpg");
         imageSizes = myconfig.getList("imagesize");
-        if(imageSizes == null || imageSizes.isEmpty()) {
+        if (imageSizes == null || imageSizes.isEmpty()) {
             imageSizes = new ArrayList<>();
             imageSizes.add("600");
         }
@@ -156,37 +157,37 @@ public class ImageQAPlugin implements IStepPlugin {
     }
 
     private void createImage(Image currentImage) {
-        
-        if(currentImage.getSize() == null) {
+
+        if (currentImage.getSize() == null) {
             currentImage.setSize(getActualImageSize(currentImage));
         }
-        
+
         String thumbUrl = createImageUrl(currentImage, THUMBNAIL_SIZE_IN_PIXEL, THUMBNAIL_FORMAT, "");
         currentImage.setThumbnailUrl(thumbUrl);
-        
-        String largeThumbUrl = createImageUrl(currentImage, THUMBNAIL_SIZE_IN_PIXEL*4, THUMBNAIL_FORMAT, "");
+
+        String largeThumbUrl = createImageUrl(currentImage, THUMBNAIL_SIZE_IN_PIXEL * 4, THUMBNAIL_FORMAT, "");
         currentImage.setLargeThumbnailUrl(largeThumbUrl);
-        
+
         String contextPath = getContextPath();
         for (String sizeString : imageSizes) {
-            try {                
+            try {
                 int size = Integer.parseInt(sizeString);
                 String imageUrl = createImageUrl(currentImage, size, MAINIMAGE_FORMAT, contextPath);
                 currentImage.addImageLevel(imageUrl, size);
-            } catch(NullPointerException | NumberFormatException e) {
+            } catch (NullPointerException | NumberFormatException e) {
                 logger.error("Cannot build image with size " + sizeString);
             }
         }
         Collections.sort(currentImage.getImageLevels());
     }
-    
+
     private String getContextPath() {
         FacesContext context = FacesContextHelper.getCurrentFacesContext();
         HttpSession session = (HttpSession) context.getExternalContext().getSession(false);
         String baseUrl = session.getServletContext().getContextPath();
         return baseUrl;
     }
-    
+
     private Dimension getActualImageSize(Image image) {
         Dimension dim;
         try {
@@ -196,8 +197,8 @@ public class ImageQAPlugin implements IStepPlugin {
             int height = Integer.parseInt(dimString.replaceAll(".*::", ""));
             dim = new Dimension(width, height);
         } catch (NullPointerException | NumberFormatException | ContentLibImageException | URISyntaxException | IOException e) {
-           logger.error("Could not retrieve actual image size", e);
-           dim  = new Dimension(0, 0);
+            logger.error("Could not retrieve actual image size", e);
+            dim = new Dimension(0, 0);
         }
         return dim;
     }
@@ -205,8 +206,7 @@ public class ImageQAPlugin implements IStepPlugin {
     private String createImageUrl(Image currentImage, Integer size, String format, String baseUrl) {
         StringBuilder url = new StringBuilder(baseUrl);
         url.append("/cs").append("?action=").append("image").append("&format=").append(format).append("&sourcepath=").append("file://"
-                + imageFolderName + currentImage.getImageName()).append("&width=").append(size).append("&height=").append(
-                        size);
+                + imageFolderName + currentImage.getImageName()).append("&width=").append(size).append("&height=").append(size);
         return url.toString();
     }
 
@@ -238,11 +238,11 @@ public class ImageQAPlugin implements IStepPlugin {
         return originalImageSize;
 
     }
-    
+
     private boolean allImagesFinished(List<Future<File>> createdFiles) {
         for (Future<File> future : createdFiles) {
             try {
-                if(!future.isDone() || future.get() == null) {
+                if (!future.isDone() || future.get() == null) {
                     return false;
                 }
             } catch (InterruptedException | ExecutionException e) {
@@ -254,7 +254,7 @@ public class ImageQAPlugin implements IStepPlugin {
     private boolean oneImageFinished(List<Future<File>> createdFiles) {
         for (Future<File> future : createdFiles) {
             try {
-                if(future.isDone() && future.get() != null) {
+                if (future.isDone() && future.get() != null) {
                     return true;
                 }
             } catch (InterruptedException | ExecutionException e) {
@@ -263,10 +263,10 @@ public class ImageQAPlugin implements IStepPlugin {
         return false;
     }
 
-    private File scaleToSize(ImageManager im, Dimension dim, String filename, boolean overwrite) throws ImageManipulatorException, FileNotFoundException,
-            ImageManagerException, IOException, ContentLibException {
+    private File scaleToSize(ImageManager im, Dimension dim, String filename, boolean overwrite) throws ImageManipulatorException,
+            FileNotFoundException, ImageManagerException, IOException, ContentLibException {
         File outputFile = new File(filename);
-        if(!overwrite && outputFile.isFile()) {
+        if (!overwrite && outputFile.isFile()) {
             return outputFile;
         }
         try (FileOutputStream outputFileStream = new FileOutputStream(outputFile);) {
@@ -344,8 +344,8 @@ public class ImageQAPlugin implements IStepPlugin {
         if (this.imageIndex >= getSizeOfImageList()) {
             this.imageIndex = getSizeOfImageList() - 1;
         }
-        if (this.imageIndex>=0){
-        	setImage(allImages.get(this.imageIndex));
+        if (this.imageIndex >= 0) {
+            setImage(allImages.get(this.imageIndex));
         }
     }
 
@@ -366,21 +366,23 @@ public class ImageQAPlugin implements IStepPlugin {
     }
 
     public int getImageWidth() {
-        if(image == null  || image.getSize() == null) {
+        if (image == null) {
             logger.error("Must set image before querying image size");
-            return 0; 
-        } else {
-            return image.getSize().width;
+            return 0;
+        } else if (image.getSize() == null) {
+            createImage(image);
         }
+        return image.getSize().width;
     }
 
     public int getImageHeight() {
-        if(image == null || image.getSize() == null) {
+        if (image == null) {
             logger.error("Must set image before querying image size");
-            return 0; 
-        } else {
-            return image.getSize().height;
+            return 0;
+        } else if (image.getSize() == null) {
+            createImage(image);
         }
+        return image.getSize().height;
     }
 
     private String getImageUrl(Image image, String size) {
@@ -506,120 +508,118 @@ public class ImageQAPlugin implements IStepPlugin {
         }
         return "";
     }
-    
-    public String renameImages(Image myimage){
-    	DecimalFormat myFormatter = new DecimalFormat("0000");
-    	
 
-    	
-    	int myindex = getImageIndex();
-    	int generalCounter = 1;
-    	int fileCounter = 1;
-    	boolean imageFound = false;
-    	
-    	System.out.println("Dateien werden jetzt umbenannt auf der Basis von: " + myimage.getTempName());
-    	
-    	//Path path = Paths.get(imageFolderName + myimage.getImageName());
-    	for (Path f : NIOFileUtils.listFiles(imageFolderName)) {
-			String filenameold = f.getFileName().toString();
-			String prefix = myFormatter.format(generalCounter) + "_";
-			String suffix =filenameold.substring(filenameold.lastIndexOf("."), filenameold.length());
-			
-			if (!imageFound && myimage.getImageName().equals(filenameold)){
-				imageFound = true;
-				System.out.println("Bild gefunden: " + filenameold);
-			}
-			
-			if (imageFound){
-				String filenamenew = prefix + myimage.getTempName() + "_" + myFormatter.format(fileCounter) + suffix;
-				System.out.println(filenameold + " will be renamed to " + filenamenew);
-				try {
-					NIOFileUtils.renameTo(f, filenamenew);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				fileCounter++;
-			}else{
-				System.out.println(filenameold + " will not be renamed");
-			}
-			
-			generalCounter++;
-			
-		}
-//        if (Files.exists(path)) {
-//            NIOFileUtils.deleteDir(path);
-//        }
+    public String renameImages(Image myimage) {
+        DecimalFormat myFormatter = new DecimalFormat("0000");
+
+        int myindex = getImageIndex();
+        int generalCounter = 1;
+        int fileCounter = 1;
+        boolean imageFound = false;
+
+        System.out.println("Dateien werden jetzt umbenannt auf der Basis von: " + myimage.getTempName());
+
+        //Path path = Paths.get(imageFolderName + myimage.getImageName());
+        for (Path f : NIOFileUtils.listFiles(imageFolderName)) {
+            String filenameold = f.getFileName().toString();
+            String prefix = myFormatter.format(generalCounter) + "_";
+            String suffix = filenameold.substring(filenameold.lastIndexOf("."), filenameold.length());
+
+            if (!imageFound && myimage.getImageName().equals(filenameold)) {
+                imageFound = true;
+                System.out.println("Bild gefunden: " + filenameold);
+            }
+
+            if (imageFound) {
+                String filenamenew = prefix + myimage.getTempName() + "_" + myFormatter.format(fileCounter) + suffix;
+                System.out.println(filenameold + " will be renamed to " + filenamenew);
+                try {
+                    NIOFileUtils.renameTo(f, filenamenew);
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+                fileCounter++;
+            } else {
+                System.out.println(filenameold + " will not be renamed");
+            }
+
+            generalCounter++;
+
+        }
+        //        if (Files.exists(path)) {
+        //            NIOFileUtils.deleteDir(path);
+        //        }
         allImages = new ArrayList<Image>();
-        initialize(this.step,"");
-        
+        initialize(this.step, "");
+
         for (Image image : allImages) {
-			image.setTempName(myimage.getTempName());
-		}
-        
+            image.setTempName(myimage.getTempName());
+        }
+
         setImageIndex(myindex);
         return "";
     }
-    
-    public void deleteImage(Image myimage){
+
+    public void deleteImage(Image myimage) {
         callScript(myimage, deletionCommand, true);
     }
-    
-    public void rotateRight(Image myimage){
-    	callScript(myimage, rotationCommandRight, false);
+
+    public void rotateRight(Image myimage) {
+        callScript(myimage, rotationCommandRight, false);
     }
-    
-    public void rotateLeft(Image myimage){
-    	callScript(myimage, rotationCommandLeft, false);
+
+    public void rotateLeft(Image myimage) {
+        callScript(myimage, rotationCommandLeft, false);
     }
-    
-    public void callScript(Image myimage, String rotationCommand, boolean selectOtherImage){
-    	int myindex = getImageIndex();
-    	if (selectOtherImage && myindex==allImages.indexOf(myimage)){
-    		myindex--;
-    	}
-    	String command = rotationCommand.replace("IMAGE_FILE", imageFolderName + myimage.getImageName());
-    	command = command.replace("IMAGE_FOLDER", imageFolderName);
-    	logger.debug(command);
-    	
-    	try {
-			Process process = Runtime.getRuntime().exec(command);
-			int result = process.waitFor();
-	    	if(result != 0) {
-	    		logger.debug("A problem occured while calling command '"+ command +"'. Error code was " + result);
-	    	} 
-		} catch (IOException e) {
-			logger.error("IOException in rotate()", e);
-			Helper.setFehlerMeldung("Aborted Command '" + command + "' in callScript()!");
-		} catch (InterruptedException e) {
-			logger.error("InterruptedException in callScript()", e);
-			Helper.setFehlerMeldung("Command '" + command + "' is interrupted in callScript()!");
-		}
-    	
+
+    public void callScript(Image myimage, String rotationCommand, boolean selectOtherImage) {
+        int myindex = getImageIndex();
+        if (selectOtherImage && myindex == allImages.indexOf(myimage)) {
+            myindex--;
+        }
+        String command = rotationCommand.replace("IMAGE_FILE", imageFolderName + myimage.getImageName());
+        command = command.replace("IMAGE_FOLDER", imageFolderName);
+        logger.debug(command);
+
+        try {
+            Process process = Runtime.getRuntime().exec(command);
+            int result = process.waitFor();
+            if (result != 0) {
+                logger.debug("A problem occured while calling command '" + command + "'. Error code was " + result);
+            }
+        } catch (IOException e) {
+            logger.error("IOException in rotate()", e);
+            Helper.setFehlerMeldung("Aborted Command '" + command + "' in callScript()!");
+        } catch (InterruptedException e) {
+            logger.error("InterruptedException in callScript()", e);
+            Helper.setFehlerMeldung("Command '" + command + "' is interrupted in callScript()!");
+        }
+
         allImages = new ArrayList<Image>();
-        initialize(this.step,"");
-        
+        initialize(this.step, "");
+
         setImageIndex(myindex);
     }
-    
+
     public boolean isAllowDeletion() {
-		return allowDeletion;
-	}
-    
+        return allowDeletion;
+    }
+
     public boolean isAllowRotation() {
-		return allowRotation;
-	}
-    
+        return allowRotation;
+    }
+
     public boolean isAllowRenaming() {
-		return allowRenaming;
-	}
-    
+        return allowRenaming;
+    }
+
     public boolean isAskForConfirmation() {
-		return askForConfirmation;
-	}
-    
+        return askForConfirmation;
+    }
+
     public void setAskForConfirmation(boolean askForConfirmation) {
-		this.askForConfirmation = askForConfirmation;
-	}
-    
+        this.askForConfirmation = askForConfirmation;
+    }
+
 }

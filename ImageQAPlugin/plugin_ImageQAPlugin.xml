@@ -10,6 +10,8 @@
 		<!-- which image sizes to use for the big image -->
 		<imagesize>800</imagesize>
 		<imagesize>3000</imagesize>
+		<thumbnailFormat>jpg</thumbnailFormat>
+		<mainImageFormat>jpg</mainImageFormat>
 	    <!-- allow deletion of images -->
 		<allowDeletion>false</allowDeletion>
 		<deletionCommand>/opt/digiverso/goobi/scripts/deleteImage.sh IMAGE_FOLDER IMAGE_FILE</deletionCommand>
