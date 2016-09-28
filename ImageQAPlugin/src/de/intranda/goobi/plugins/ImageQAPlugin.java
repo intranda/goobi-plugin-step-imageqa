@@ -5,7 +5,9 @@ import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,6 +29,7 @@ import de.sub.goobi.helper.FacesContextHelper;
 import de.sub.goobi.helper.NIOFileUtils;
 import de.sub.goobi.helper.exceptions.DAOException;
 import de.sub.goobi.helper.exceptions.SwapException;
+import de.unigoettingen.sub.commons.contentlib.exceptions.ContentLibException;
 import de.unigoettingen.sub.commons.contentlib.exceptions.ContentLibImageException;
 import de.unigoettingen.sub.commons.contentlib.imagelib.ImageManager;
 import de.unigoettingen.sub.commons.contentlib.imagelib.JpegInterpreter;
@@ -139,7 +142,7 @@ public class ImageQAPlugin implements IStepPlugin {
 
     }
 
-    private void scaleFile(String inFileName, String outFileName, int size) throws IOException, ContentLibImageException {
+    private void scaleFile(String inFileName, String outFileName, int size) throws IOException, ContentLibException {
         ImageManager im = null;
         JpegInterpreter pi = null;
         FileOutputStream outputFileStream = null;
@@ -259,7 +262,7 @@ public class ImageQAPlugin implements IStepPlugin {
             if (currentImageURL != null) {
                 scaleFile(imageFolderName + image.getImageName(), currentImageURL, IMAGE_SIZE_IN_PIXEL);
             }
-        } catch (ContentLibImageException | IOException e) {
+        } catch (ContentLibException | IOException e) {
             logger.error(e);
         }
     }
