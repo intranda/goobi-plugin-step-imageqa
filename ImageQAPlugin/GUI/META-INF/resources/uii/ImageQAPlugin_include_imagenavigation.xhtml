@@ -26,8 +26,19 @@
 					<x:updateActionListener value="#{AktuelleSchritteForm.myPlugin.imageIndex - 1}" property="#{AktuelleSchritteForm.myPlugin.imageIndex}" />
 				</h:commandLink>
 				<div class="margin-sides-10">
-					<h:outputText
-						value="#{msgs.seite} #{AktuelleSchritteForm.myPlugin.imageIndex +1} #{msgs.von}  #{AktuelleSchritteForm.myPlugin.sizeOfImageList}" />
+                
+                <x:outputText id="txtImageMoveTo1"
+                    value="#{msgs.seite} #{AktuelleSchritteForm.myPlugin.imageIndex +1} #{msgs.von}  #{AktuelleSchritteForm.myPlugin.sizeOfImageList}"
+                    onclick="document.getElementById(this.id).nextSibling.style.display='inline';
+                    document.getElementById(this.id).style.display='none';  
+                    document.getElementById(this.id).nextSibling.focus(); 
+                    document.getElementById(this.id).nextSibling.select();" /> 
+<!--                 Seite direkt anspringen -->
+                <x:inputText value="#{AktuelleSchritteForm.myPlugin.imageMoveTo}" style="display:none;font-size:9px;width:30px"
+                    required="true" id="txtImageMoveTo2"
+                    onblur="document.getElementById(this.id).style.display='none';document.getElementById(this.id).previousSibling.style.display='inline';"
+                    onkeypress="copyValue(this,event);" />
+                <x:commandButton action="#{NavigationForm.Reload}" value="go" style="display:none" />
 				</div>
 				<h:commandLink styleClass="btn btn-primary font-size-s" title="#{msgs.lw_nextImage}">
 					<h:outputText value="#{msgs.lw_nextImage} " />

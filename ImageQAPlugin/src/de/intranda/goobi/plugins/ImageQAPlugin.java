@@ -1,7 +1,6 @@
 package de.intranda.goobi.plugins;
 
 import java.awt.Dimension;
-import java.awt.font.ImageGraphicAttribute;
 import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -11,10 +10,8 @@ import java.net.URISyntaxException;
 import java.nio.file.*;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -40,7 +37,6 @@ import de.sub.goobi.config.ConfigurationHelper;
 import de.sub.goobi.helper.FacesContextHelper;
 import de.sub.goobi.helper.Helper;
 import de.sub.goobi.helper.NIOFileUtils;
-import de.sub.goobi.helper.ShellScript;
 import de.sub.goobi.helper.exceptions.DAOException;
 import de.sub.goobi.helper.exceptions.SwapException;
 import de.unigoettingen.sub.commons.contentlib.exceptions.ContentLibException;
@@ -210,6 +206,7 @@ public class ImageQAPlugin implements IStepPlugin {
         return url.toString();
     }
 
+    @SuppressWarnings("unused")
     private Dimension scaleFile(String inFileName, String outFileName, List<String> sizes) throws IOException, ContentLibImageException {
 
         final ImageManager im = new ImageManager(new File(inFileName).toURI().toURL());
@@ -239,6 +236,7 @@ public class ImageQAPlugin implements IStepPlugin {
 
     }
 
+    @SuppressWarnings("unused")
     private boolean allImagesFinished(List<Future<File>> createdFiles) {
         for (Future<File> future : createdFiles) {
             try {
@@ -269,13 +267,14 @@ public class ImageQAPlugin implements IStepPlugin {
         if (!overwrite && outputFile.isFile()) {
             return outputFile;
         }
-        try (FileOutputStream outputFileStream = new FileOutputStream(outputFile);) {
+        try (FileOutputStream outputFileStream = new FileOutputStream(outputFile)) {
             RenderedImage ri = im.scaleImageByPixel(dim, ImageManager.SCALE_TO_BOX, 0);
-            JpegInterpreter pi = new JpegInterpreter(ri);
-            pi.writeToStream(null, outputFileStream);
-            outputFileStream.close();
-            logger.debug("Written file " + outputFile);
-            return outputFile;
+            try (JpegInterpreter pi = new JpegInterpreter(ri)) {
+                pi.writeToStream(null, outputFileStream);
+                outputFileStream.close();
+                logger.debug("Written file " + outputFile);
+                return outputFile;
+            }
         }
     }
 
@@ -385,6 +384,7 @@ public class ImageQAPlugin implements IStepPlugin {
         return image.getSize().height;
     }
 
+    @SuppressWarnings("unused")
     private String getImageUrl(Image image, String size) {
         FacesContext context = FacesContextHelper.getCurrentFacesContext();
         HttpSession session = (HttpSession) context.getExternalContext().getSession(false);
@@ -393,6 +393,7 @@ public class ImageQAPlugin implements IStepPlugin {
         return currentImageURL;
     }
 
+    @SuppressWarnings("unused")
     private String getImagePath(Image image) {
         FacesContext context = FacesContextHelper.getCurrentFacesContext();
         HttpSession session = (HttpSession) context.getExternalContext().getSession(false);
@@ -454,7 +455,17 @@ public class ImageQAPlugin implements IStepPlugin {
     public int getTxtMoveTo() {
         return this.pageNo + 1;
     }
-
+    
+    public void setImageMoveTo(int page) {
+        if ((this.imageIndex != page - 1) && page > 0 && page <= getSizeOfImageList() + 1) {
+           setImageIndex(page -1);
+        }
+    }
+    
+    public int getImageMoveTo() {
+        return this.imageIndex + 1;
+    }
+    
     public int getLastPageNumber() {
         int ret = new Double(Math.floor(this.allImages.size() / NUMBER_OF_IMAGES_PER_PAGE)).intValue();
         if (this.allImages.size() % NUMBER_OF_IMAGES_PER_PAGE == 0) {
@@ -536,8 +547,7 @@ public class ImageQAPlugin implements IStepPlugin {
                 try {
                     NIOFileUtils.renameTo(f, filenamenew);
                 } catch (IOException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
+                    logger.error(e);
                 }
                 fileCounter++;
             } else {
