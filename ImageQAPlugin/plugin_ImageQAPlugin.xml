@@ -23,6 +23,8 @@
 		</rotationCommands>
 		<!-- allow renaming of images -->
 		<allowRenaming>false</allowRenaming>
+        <!-- allow selection of images -->
+        <allowSelection>false</allowSelection>        
 	</config>
 	
 	<config>
@@ -48,5 +50,7 @@
 		</rotationCommands>
 		<!-- allow renaming of images -->
 		<allowRenaming>true</allowRenaming>	
+        <!-- allow selection of images -->
+        <allowSelection>true</allowSelection>     
 	</config>
 </config_plugin>

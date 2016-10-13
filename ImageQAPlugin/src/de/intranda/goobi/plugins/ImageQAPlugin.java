@@ -46,8 +46,10 @@ import de.unigoettingen.sub.commons.contentlib.exceptions.ImageManipulatorExcept
 import de.unigoettingen.sub.commons.contentlib.imagelib.ImageManager;
 import de.unigoettingen.sub.commons.contentlib.imagelib.JpegInterpreter;
 import de.unigoettingen.sub.commons.contentlib.servlet.controller.GetImageDimensionAction;
+import lombok.Data;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 
+@Data
 @PluginImplementation
 public class ImageQAPlugin implements IStepPlugin {
 
@@ -63,6 +65,7 @@ public class ImageQAPlugin implements IStepPlugin {
     private boolean allowDeletion = false;
     private boolean allowRotation = false;
     private boolean allowRenaming = false;
+    private boolean allowSelection = false;
     private String rotationCommandLeft = "";
     private String rotationCommandRight = "";
     private String deletionCommand = "";
@@ -101,6 +104,8 @@ public class ImageQAPlugin implements IStepPlugin {
         allowDeletion = myconfig.getBoolean("allowDeletion", false);
         allowRotation = myconfig.getBoolean("allowRotation", false);
         allowRenaming = myconfig.getBoolean("allowRenaming", false);
+        allowSelection = myconfig.getBoolean("allowSelection", false);
+
         deletionCommand = myconfig.getString("deletionCommand", "-");
         rotationCommandLeft = myconfig.getString("rotationCommands.left", "-");
         rotationCommandRight = myconfig.getString("rotationCommands.right", "-");
@@ -322,19 +327,6 @@ public class ImageQAPlugin implements IStepPlugin {
         return null;
     }
 
-    @Override
-    public Step getStep() {
-        return step;
-    }
-
-    public List<Image> getAllImages() {
-        return allImages;
-    }
-
-    public int getImageIndex() {
-        return imageIndex;
-    }
-
     public void setImageIndex(int imageIndex) {
         this.imageIndex = imageIndex;
         if (this.imageIndex < 0) {
@@ -358,10 +350,6 @@ public class ImageQAPlugin implements IStepPlugin {
                     + image.getImageName() + "_large_" + ".jpg";
             return currentImageURL;
         }
-    }
-
-    public Image getImage() {
-        return image;
     }
 
     public int getImageWidth() {
@@ -399,18 +387,6 @@ public class ImageQAPlugin implements IStepPlugin {
         HttpSession session = (HttpSession) context.getExternalContext().getSession(false);
         String path = ConfigurationHelper.getTempImagesPathAsCompleteDirectory() + session.getId() + "_" + image.getImageName() + "_large" + ".jpg";
         return path;
-    }
-
-    public void setImage(final Image image) {
-        this.image = image;
-    }
-
-    public int getPageNo() {
-        return pageNo;
-    }
-
-    public void setPageNo(int pageNo) {
-        this.pageNo = pageNo;
     }
 
     public String cmdMoveFirst() {
@@ -455,17 +431,17 @@ public class ImageQAPlugin implements IStepPlugin {
     public int getTxtMoveTo() {
         return this.pageNo + 1;
     }
-    
+
     public void setImageMoveTo(int page) {
         if ((this.imageIndex != page - 1) && page > 0 && page <= getSizeOfImageList() + 1) {
-           setImageIndex(page -1);
+            setImageIndex(page - 1);
         }
     }
-    
+
     public int getImageMoveTo() {
         return this.imageIndex + 1;
     }
-    
+
     public int getLastPageNumber() {
         int ret = new Double(Math.floor(this.allImages.size() / NUMBER_OF_IMAGES_PER_PAGE)).intValue();
         if (this.allImages.size() % NUMBER_OF_IMAGES_PER_PAGE == 0) {
@@ -583,6 +559,31 @@ public class ImageQAPlugin implements IStepPlugin {
         callScript(myimage, rotationCommandLeft, false);
     }
 
+    public void  deleteSelection() {
+        for (Image image : allImages) {
+            if (image.isSelected()) {
+                callScript(image, deletionCommand, true);
+            }
+        }
+    }
+
+    public void rotateSelectionRight() {
+        for (Image image : allImages) {
+            if (image.isSelected()) {
+                callScript(image, rotationCommandRight, false);
+            }
+        }
+    }
+    
+    public void rotateSelectionLeft() {
+        for (Image image : allImages) {
+            if (image.isSelected()) {
+                callScript(image, rotationCommandLeft, false);
+            }
+        }
+    }
+
+
     public void callScript(Image myimage, String rotationCommand, boolean selectOtherImage) {
         int myindex = getImageIndex();
         if (selectOtherImage && myindex == allImages.indexOf(myimage)) {
@@ -610,26 +611,6 @@ public class ImageQAPlugin implements IStepPlugin {
         initialize(this.step, "");
 
         setImageIndex(myindex);
-    }
-
-    public boolean isAllowDeletion() {
-        return allowDeletion;
-    }
-
-    public boolean isAllowRotation() {
-        return allowRotation;
-    }
-
-    public boolean isAllowRenaming() {
-        return allowRenaming;
-    }
-
-    public boolean isAskForConfirmation() {
-        return askForConfirmation;
-    }
-
-    public void setAskForConfirmation(boolean askForConfirmation) {
-        this.askForConfirmation = askForConfirmation;
     }
 
 }

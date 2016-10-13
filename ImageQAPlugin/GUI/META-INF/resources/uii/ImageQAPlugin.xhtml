@@ -20,8 +20,9 @@
     float: left;
     margin: 7px;
     width: #{AktuelleSchritteForm.myPlugin.thumbnailSize +2}px;
-    height:#{AktuelleSchritteForm.myPlugin.thumbnailSize+55}px;
-    }
+    height: #{AktuelleSchritteForm .myPlugin.thumbnailSize+55}px;
+}
+
 .goobi-thumbnail .goobi-thumbnail-image {
     float: left;
     width: 100%;
@@ -29,6 +30,7 @@
     overflow: hidden;
     max-height: #{AktuelleSchritteForm.myPlugin.thumbnailSize +2}px;
 }
+
 .goobi-thumbnail .goobi-thumbnail-image a {
     display: block;
 }
@@ -55,23 +57,70 @@
     margin-top: 5px;
 }
 
-.goobi-thumbnail .goobi-thumbnail-controls .thumbnail-control.delete {
-    margin-right: 5px;
+.goobi-thumbnail-controls-left {
+    width: 60%;    
 }
 
-.goobi-thumbnail .goobi-thumbnail-controls .thumbnail-control.left {
-    float: left;
-    margin-left: 30px;
+.goobi-thumbnail-controls-right {
+    width: 40%;
 }
 
-.goobi-thumbnail .goobi-thumbnail-controls .thumbnail-control.rotate-left {
-    float: right;
-    margin-right: 5px;
+.goobi-thumbnail-controls-left {
+    padding-left: 25px;
 }
 
-.goobi-thumbnail .goobi-thumbnail-controls .thumbnail-control.rotate-right {
-    float: right;
-    margin-right: 30px;
+.goobi-thumbnail-controls-left .thumbnail-control {
+    margin-right: 3px;
+}
+
+.goobi-thumbnail-controls-right {
+    padding-right: 25px;
+    text-align: right;
+}
+
+.goobi-thumbnail-controls-right .thumbnail-control {
+    margin-left: 3px;
+}
+
+.thumbnail-control {
+    padding: 3px 5px;
+}
+
+.thumbnail-control.checkbox {
+    position: relative;
+    margin: 0 3px 0 0;
+}
+
+.thumbnail-control.checkbox label {
+    margin: 0;
+    padding: 0;
+}
+
+.thumbnail-control.checkbox .control-indicator .fa-square-o, .thumbnail-control.checkbox .control-indicator .fa-check-square-o {
+    margin-top: 4px;
+}
+
+.thumbnail-control.checkbox .control-indicator .fa-square-o {
+    padding-right: 2px;
+}
+
+.thumbnail-control.checkbox .control-indicator .fa-check-square-o {
+    display: none;
+}
+
+.thumbnail-control.checkbox input[type="checkbox"] {
+    position: absolute;
+    margin: 0;
+    visibility: hidden;
+    z-index: -1;
+}
+
+.thumbnail-control.checkbox input:checked ~ .control-indicator .fa-check-square-o {
+    display: inline-block;
+}
+
+.thumbnail-control.checkbox input:checked ~ .control-indicator .fa-square-o {
+    display: none;
 }
 
 .big-image-caption {
@@ -163,43 +212,72 @@
                                     <h:panelGroup styleClass="goobi-thumbnail-controls" rendered="#{NavigationForm.uiStatus.plugin_qa_confirmation == false}">
 
                                         <div class="thumbnail-control left">
+                                            <!-- select current image -->
+                                            <h:panelGroup rendered="#{AktuelleSchritteForm.myPlugin.allowSelection}">
+                                                <span class="btn thumbnail-control checkbox">
+                                                    <label class="control checkbox">
+                                                        <h:selectBooleanCheckbox value="#{image.selected}" />
+                                                        <span class="control-indicator">
+                                                            <i class="fa fa fa-check-square-o"></i>
+                                                            <i class="fa fa fa-square-o"></i>
+                                                        </span>
+                                                    </label>
+
+                                                </span>
+                                            </h:panelGroup>
                                             <!--  modal rendern  -->
                                             <h:panelGroup rendered="#{AktuelleSchritteForm.myPlugin.allowRenaming}">
-                                                <a class="thumbnail-control rename" title="#{msgs.plugin_intranda_step_imageQA_rename} #{image.tooltip}" href="#" data-toggle="modal" data-target="#myModal-#{status.index}">
-                                                    <i class="btn fa fa-eye " />
+                                                <a class="btn thumbnail-control rename" title="#{msgs.plugin_intranda_step_imageQA_rename} #{image.tooltip}" href="#" data-toggle="modal" data-target="#myModal-#{status.index}">
+                                                    <i class="fa fa-eye " />
                                                 </a>
                                             </h:panelGroup>
-                                            <h:commandLink styleClass="thumbnail-control delete" title="#{msgs.plugin_intranda_step_imageQA_delete} #{image.tooltip}" action="#{AktuelleSchritteForm.myPlugin.deleteImage(image)}" rendered="#{AktuelleSchritteForm.myPlugin.allowDeletion}">
-                                                <i class="btn fa fa-trash"></i>
+                                            <h:commandLink styleClass="btn thumbnail-control delete" title="#{msgs.plugin_intranda_step_imageQA_delete} #{image.tooltip}" action="#{AktuelleSchritteForm.myPlugin.deleteImage(image)}" rendered="#{AktuelleSchritteForm.myPlugin.allowDeletion}">
+                                                <i class="fa fa-trash"></i>
                                             </h:commandLink>
                                         </div>
-                                        <h:commandLink styleClass="thumbnail-control rotate-right" title="#{msgs.plugin_intranda_step_imageQA_rotateRight} #{image.tooltip}" action="#{AktuelleSchritteForm.myPlugin.rotateRight(image)}" rendered="#{AktuelleSchritteForm.myPlugin.allowRotation}">
-                                            <i class="btn fa fa-repeat"></i>
+                                        <h:commandLink styleClass="btn thumbnail-control rotate-right" title="#{msgs.plugin_intranda_step_imageQA_rotateRight} #{image.tooltip}" action="#{AktuelleSchritteForm.myPlugin.rotateRight(image)}" rendered="#{AktuelleSchritteForm.myPlugin.allowRotation}">
+                                            <i class="fa fa-repeat"></i>
                                         </h:commandLink>
-                                        <h:commandLink styleClass="thumbnail-control rotate-left" title="#{msgs.plugin_intranda_step_imageQA_rotateLeft} #{image.tooltip}" action="#{AktuelleSchritteForm.myPlugin.rotateLeft(image)}" rendered="#{AktuelleSchritteForm.myPlugin.allowRotation}">
-                                            <i class="btn fa fa-undo"></i>
+                                        <h:commandLink styleClass="btn thumbnail-control rotate-left" title="#{msgs.plugin_intranda_step_imageQA_rotateLeft} #{image.tooltip}" action="#{AktuelleSchritteForm.myPlugin.rotateLeft(image)}" rendered="#{AktuelleSchritteForm.myPlugin.allowRotation}">
+                                            <i class="fa fa-undo"></i>
                                         </h:commandLink>
                                     </h:panelGroup>
 
                                     <h:panelGroup styleClass="goobi-thumbnail-controls" rendered="#{NavigationForm.uiStatus.plugin_qa_confirmation != false}">
+                                        <div class="goobi-thumbnail-controls-left pull-left">
+                                            <!-- select current image -->
+                                            <h:panelGroup rendered="#{AktuelleSchritteForm.myPlugin.allowSelection}">
+                                                <span class="btn thumbnail-control checkbox">
+                                                    <label class="control checkbox">
+                                                        <h:selectBooleanCheckbox value="#{image.selected}" />
+                                                        <span class="control-indicator">
+                                                            <i class="fa fa fa-check-square-o"></i>
+                                                            <i class="fa fa fa-square-o"></i>
+                                                        </span>
+                                                    </label>
 
-                                        <div class="thumbnail-control left">
+                                                </span>
+                                            </h:panelGroup>
+
                                             <!--  modal rendern  -->
                                             <h:panelGroup rendered="#{AktuelleSchritteForm.myPlugin.allowRenaming}">
-                                                <a class="thumbnail-control rename" title="#{msgs.plugin_intranda_step_imageQA_rename} #{image.tooltip}" href="#" data-toggle="modal" data-target="#myModal-#{status.index}">
-                                                    <i class="btn fa fa-eye " />
+                                                <a class="btn thumbnail-control rename" title="#{msgs.plugin_intranda_step_imageQA_rename} #{image.tooltip}" href="#" data-toggle="modal" data-target="#myModal-#{status.index}">
+                                                    <i class="fa fa-eye " />
                                                 </a>
                                             </h:panelGroup>
-                                            <h:commandLink styleClass="thumbnail-control delete" title="#{msgs.plugin_intranda_step_imageQA_delete} #{image.tooltip}" action="#{AktuelleSchritteForm.myPlugin.deleteImage(image)}" rendered="#{AktuelleSchritteForm.myPlugin.allowDeletion}" onclick="if (!confirm('#{msgs.wirklichAusfuehren}')) return false">
-                                                <i class="btn fa fa-trash"></i>
+                                            <h:commandLink styleClass="btn thumbnail-control delete" title="#{msgs.plugin_intranda_step_imageQA_delete} #{image.tooltip}" action="#{AktuelleSchritteForm.myPlugin.deleteImage(image)}" rendered="#{AktuelleSchritteForm.myPlugin.allowDeletion}" onclick="if (!confirm('#{msgs.wirklichAusfuehren}')) return false">
+                                                <i class="fa fa-trash"></i>
                                             </h:commandLink>
                                         </div>
-                                        <h:commandLink styleClass="thumbnail-control rotate-right" title="#{msgs.plugin_intranda_step_imageQA_rotateRight} #{image.tooltip}" action="#{AktuelleSchritteForm.myPlugin.rotateRight(image)}" rendered="#{AktuelleSchritteForm.myPlugin.allowRotation}" onclick="if (!confirm('#{msgs.wirklichAusfuehren}')) return false">
-                                            <i class="btn fa fa-repeat"></i>
-                                        </h:commandLink>
-                                        <h:commandLink styleClass="thumbnail-control rotate-left" title="#{msgs.plugin_intranda_step_imageQA_rotateLeft} #{image.tooltip}" action="#{AktuelleSchritteForm.myPlugin.rotateLeft(image)}" rendered="#{AktuelleSchritteForm.myPlugin.allowRotation}" onclick="if (!confirm('#{msgs.wirklichAusfuehren}')) return false">
-                                            <i class="btn fa fa-undo"></i>
-                                        </h:commandLink>
+
+                                        <div class="goobi-thumbnail-controls-right pull-right">
+                                            <h:commandLink styleClass="btn thumbnail-control rotate-right" title="#{msgs.plugin_intranda_step_imageQA_rotateRight} #{image.tooltip}" action="#{AktuelleSchritteForm.myPlugin.rotateRight(image)}" rendered="#{AktuelleSchritteForm.myPlugin.allowRotation}" onclick="if (!confirm('#{msgs.wirklichAusfuehren}')) return false">
+                                                <i class="fa fa-repeat"></i>
+                                            </h:commandLink>
+                                            <h:commandLink styleClass="btn thumbnail-control rotate-left" title="#{msgs.plugin_intranda_step_imageQA_rotateLeft} #{image.tooltip}" action="#{AktuelleSchritteForm.myPlugin.rotateLeft(image)}" rendered="#{AktuelleSchritteForm.myPlugin.allowRotation}" onclick="if (!confirm('#{msgs.wirklichAusfuehren}')) return false">
+                                                <i class="fa fa-undo"></i>
+                                            </h:commandLink>
+                                        </div>
                                     </h:panelGroup>
 
                                 </div>
