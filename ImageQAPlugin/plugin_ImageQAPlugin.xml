@@ -5,7 +5,7 @@
 		<!-- which images to use -->
 		<useOrigFolder>true</useOrigFolder>
 	    <!-- how to display the tumbnails -->
-		<numberOfImagesPerPage>10</numberOfImagesPerPage>
+		<numberOfImagesPerPage>12</numberOfImagesPerPage>
 		<thumbnailsize>200</thumbnailsize>
 		<!-- which image sizes to use for the big image -->
 		<imagesize>800</imagesize>
