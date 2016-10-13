@@ -421,25 +421,33 @@ public class ImageQAPlugin implements IStepPlugin {
         return "";
     }
 
-    public void setTxtMoveTo(int neueSeite) {
-        if ((this.pageNo != neueSeite - 1) && neueSeite > 0 && neueSeite <= getLastPageNumber() + 1) {
-            this.pageNo = neueSeite - 1;
-            getPaginatorList();
+    public void setTxtMoveTo(String neueSeite) {
+        try {
+            int pageNumber = Integer.parseInt(neueSeite);
+            if ((this.pageNo != pageNumber - 1) && pageNumber > 0 && pageNumber <= getLastPageNumber() + 1) {
+                this.pageNo = pageNumber - 1;
+                getPaginatorList();
+            }
+        } catch (NumberFormatException e) {
         }
     }
 
-    public int getTxtMoveTo() {
-        return this.pageNo + 1;
+    public String getTxtMoveTo() {
+        return this.pageNo + 1 + "";
     }
 
-    public void setImageMoveTo(int page) {
-        if ((this.imageIndex != page - 1) && page > 0 && page <= getSizeOfImageList() + 1) {
-            setImageIndex(page - 1);
+    public void setImageMoveTo(String page) {
+        try {
+            int pageNumber = Integer.parseInt(page);
+            if ((this.imageIndex != pageNumber - 1) && pageNumber > 0 && pageNumber <= getSizeOfImageList() + 1) {
+                setImageIndex(pageNumber - 1);
+            }
+        } catch (NumberFormatException e) {
         }
     }
 
-    public int getImageMoveTo() {
-        return this.imageIndex + 1;
+    public String getImageMoveTo() {
+        return this.imageIndex + 1 + "";
     }
 
     public int getLastPageNumber() {
@@ -559,7 +567,7 @@ public class ImageQAPlugin implements IStepPlugin {
         callScript(myimage, rotationCommandLeft, false);
     }
 
-    public void  deleteSelection() {
+    public void deleteSelection() {
         for (Image image : allImages) {
             if (image.isSelected()) {
                 callScript(image, deletionCommand, true);
@@ -574,7 +582,7 @@ public class ImageQAPlugin implements IStepPlugin {
             }
         }
     }
-    
+
     public void rotateSelectionLeft() {
         for (Image image : allImages) {
             if (image.isSelected()) {
@@ -582,7 +590,6 @@ public class ImageQAPlugin implements IStepPlugin {
             }
         }
     }
-
 
     public void callScript(Image myimage, String rotationCommand, boolean selectOtherImage) {
         int myindex = getImageIndex();
