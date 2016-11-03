@@ -2,10 +2,13 @@ package de.intranda.goobi.plugins;
 
 import java.awt.Dimension;
 import java.awt.image.RenderedImage;
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.URISyntaxException;
 import java.nio.file.*;
 import java.text.DecimalFormat;
@@ -18,7 +21,10 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
 
@@ -66,6 +72,8 @@ public class ImageQAPlugin implements IStepPlugin {
     private boolean allowRotation = false;
     private boolean allowRenaming = false;
     private boolean allowSelection = false;
+    private boolean allowDownload = false;
+
     private String rotationCommandLeft = "";
     private String rotationCommandRight = "";
     private String deletionCommand = "";
@@ -85,7 +93,7 @@ public class ImageQAPlugin implements IStepPlugin {
     private ExecutorService executor;
 
     private String returnPath;
-    
+
     @Override
     public void initialize(Step step, String returnPath) {
         this.returnPath = returnPath;
@@ -107,6 +115,7 @@ public class ImageQAPlugin implements IStepPlugin {
         allowRotation = myconfig.getBoolean("allowRotation", false);
         allowRenaming = myconfig.getBoolean("allowRenaming", false);
         allowSelection = myconfig.getBoolean("allowSelection", false);
+        allowDownload = myconfig.getBoolean("allowDownload", false);
 
         deletionCommand = myconfig.getString("deletionCommand", "-");
         rotationCommandLeft = myconfig.getString("rotationCommands.left", "-");
@@ -622,4 +631,73 @@ public class ImageQAPlugin implements IStepPlugin {
         setImageIndex(myindex);
     }
 
+    public void selectAllImages() {
+        for (Image image : allImages) {
+            image.setSelected(true);
+        }
+    }
+
+    public void unselectAllImages() {
+        for (Image image : allImages) {
+            image.setSelected(false);
+        }
+    }
+
+    public void downloadSelectedImages() {
+
+        BufferedInputStream buf = null;
+
+        try {
+            Path tempfile = Files.createTempFile(step.getProzess().getTitel(), ".zip");
+
+            ZipOutputStream out = new ZipOutputStream(new FileOutputStream(tempfile.toFile()));
+
+            for (Image image : allImages) {
+                if (image.isSelected()) {
+                    Path currentImagePath = Paths.get(imageFolderName, image.getImageName());
+                    FileInputStream in = new FileInputStream(currentImagePath.toFile());
+                    out.putNextEntry(new ZipEntry(image.getImageName()));
+                    byte[] b = new byte[1024];
+                    int count;
+
+                    while ((count = in.read(b)) > 0) {
+                        out.write(b, 0, count);
+                    }
+                    in.close();
+                }
+            }
+            out.close();
+
+            FacesContext facesContext = FacesContextHelper.getCurrentFacesContext();
+            ExternalContext ec = facesContext.getExternalContext();
+            ec.responseReset();
+            ec.setResponseContentType("application/zip");
+            ec.setResponseContentLength((int) Files.size(tempfile));
+
+            ec.setResponseHeader("Content-Disposition", "attachment; filename=" + step.getProzess().getTitel() + ".zip");
+            OutputStream responseOutputStream = ec.getResponseOutputStream();
+
+            FileInputStream input = new FileInputStream(tempfile.toString());
+            buf = new BufferedInputStream(input);
+            int readBytes = 0;
+
+            //read from the file; write to the ServletOutputStream
+            while ((readBytes = buf.read()) != -1) {
+                responseOutputStream.write(readBytes);
+            }
+            responseOutputStream.flush();
+            responseOutputStream.close();
+            facesContext.responseComplete();
+        } catch (IOException e) {
+            logger.error(e);
+        } finally {
+            if (buf != null) {
+                try {
+                    buf.close();
+                } catch (IOException e) {
+                    logger.error(e);
+                }
+            }
+        }
+    }
 }

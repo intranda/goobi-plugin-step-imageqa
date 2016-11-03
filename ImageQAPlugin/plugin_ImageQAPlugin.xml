@@ -1,56 +1,58 @@
 <config_plugin>
-	<config>
+    <config>
 		<!-- which projects to use for (can be more then one, otherwise use *) -->
-		<project>*</project>
+        <project>*</project>
 		<!-- which images to use -->
-		<useOrigFolder>true</useOrigFolder>
+        <useOrigFolder>true</useOrigFolder>
 	    <!-- how to display the tumbnails -->
-		<numberOfImagesPerPage>12</numberOfImagesPerPage>
-		<thumbnailsize>200</thumbnailsize>
+        <numberOfImagesPerPage>12</numberOfImagesPerPage>
+        <thumbnailsize>200</thumbnailsize>
 		<!-- which image sizes to use for the big image -->
-		<imagesize>800</imagesize>
-		<imagesize>3000</imagesize>
-		<thumbnailFormat>jpg</thumbnailFormat>
-		<mainImageFormat>jpg</mainImageFormat>
+        <imagesize>800</imagesize>
+        <imagesize>3000</imagesize>
+        <thumbnailFormat>jpg</thumbnailFormat>
+        <mainImageFormat>jpg</mainImageFormat>
 	    <!-- allow deletion of images -->
-		<allowDeletion>false</allowDeletion>
-		<deletionCommand>/opt/digiverso/goobi/scripts/deleteImage.sh IMAGE_FOLDER IMAGE_FILE</deletionCommand>
+        <allowDeletion>false</allowDeletion>
+        <deletionCommand>/opt/digiverso/goobi/scripts/deleteImage.sh IMAGE_FOLDER IMAGE_FILE</deletionCommand>
 		<!-- allow rotation of images -->
-		<allowRotation>false</allowRotation>
-		<rotationCommands>
-			<left>/usr/local/bin/mogrify -rotate -90 IMAGE_FILE</left>
-			<right>/usr/local/bin/mogrify -rotate 90 IMAGE_FILE</right>
-		</rotationCommands>
+        <allowRotation>false</allowRotation>
+        <rotationCommands>
+            <left>/usr/local/bin/mogrify -rotate -90 IMAGE_FILE</left>
+            <right>/usr/local/bin/mogrify -rotate 90 IMAGE_FILE</right>
+        </rotationCommands>
 		<!-- allow renaming of images -->
-		<allowRenaming>false</allowRenaming>
+        <allowRenaming>false</allowRenaming>
         <!-- allow selection of images -->
-        <allowSelection>false</allowSelection>        
-	</config>
-	
-	<config>
+        <allowSelection>false</allowSelection>
+        <allowDownload>true</allowDownload>
+    </config>
+
+    <config>
 		<!-- which projects to use for (can be more then one, otherwise use *) -->
-		<project>My special project</project>
-		<project>Archive_Project</project>
+        <project>My special project</project>
+        <project>Archive_Project</project>
 		<!-- which images to use -->
-		<useOrigFolder>true</useOrigFolder>
+        <useOrigFolder>true</useOrigFolder>
 	    <!-- how to display the tumbnails -->
-		<numberOfImagesPerPage>12</numberOfImagesPerPage>
-		<thumbnailsize>200</thumbnailsize>
+        <numberOfImagesPerPage>12</numberOfImagesPerPage>
+        <thumbnailsize>200</thumbnailsize>
 		<!-- which image sizes to use for the big image -->
-		<imagesize>800</imagesize>
-		<imagesize>3000</imagesize>
+        <imagesize>800</imagesize>
+        <imagesize>3000</imagesize>
 	    <!-- allow deletion of images -->
-		<allowDeletion>true</allowDeletion>
-		<deletionCommand>/opt/digiverso/goobi/scripts/deleteImage.sh IMAGE_FOLDER IMAGE_FILE</deletionCommand>
+        <allowDeletion>true</allowDeletion>
+        <deletionCommand>/opt/digiverso/goobi/scripts/deleteImage.sh IMAGE_FOLDER IMAGE_FILE</deletionCommand>
 		<!-- allow rotation of images -->
-		<allowRotation>true</allowRotation>
-		<rotationCommands>
-			<left>/usr/local/bin/mogrify -rotate -90 IMAGE_FILE</left>
-			<right>/usr/local/bin/mogrify -rotate 90 IMAGE_FILE</right>
-		</rotationCommands>
+        <allowRotation>true</allowRotation>
+        <rotationCommands>
+            <left>/usr/local/bin/mogrify -rotate -90 IMAGE_FILE</left>
+            <right>/usr/local/bin/mogrify -rotate 90 IMAGE_FILE</right>
+        </rotationCommands>
 		<!-- allow renaming of images -->
-		<allowRenaming>true</allowRenaming>	
+        <allowRenaming>true</allowRenaming>	
         <!-- allow selection of images -->
-        <allowSelection>true</allowSelection>     
-	</config>
+        <allowSelection>true</allowSelection>
+        <allowDownload>true</allowDownload>
+    </config>
 </config_plugin>
