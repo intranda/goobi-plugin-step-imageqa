@@ -84,9 +84,11 @@ public class ImageQAPlugin implements IStepPlugin {
 
     private ExecutorService executor;
 
+    private String returnPath;
+    
     @Override
     public void initialize(Step step, String returnPath) {
-
+        this.returnPath = returnPath;
         String projectName = step.getProzess().getProjekt().getTitel();
         HierarchicalConfiguration myconfig = null;
 
@@ -314,12 +316,12 @@ public class ImageQAPlugin implements IStepPlugin {
 
     @Override
     public String cancel() {
-        return "/" + getTheme() + "/task_edit.xhtml";
+        return "/" + getTheme() + returnPath;
     }
 
     @Override
     public String finish() {
-        return "/" + getTheme() + "/task_edit.xhtml";
+        return "/" + getTheme() + returnPath;
     }
 
     @Override
