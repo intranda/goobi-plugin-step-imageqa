@@ -45,7 +45,8 @@
                 <h:outputText styleClass="font-size-s" value="#{msgs.plugin_intranda_step_imageQA_confirmImageManipulation}" />
                 <f:setPropertyActionListener value="#{NavigationForm.uiStatus.plugin_qa_confirmation == false?true:false}" target="#{NavigationForm.uiStatus.plugin_qa_confirmation}" />
             </h:commandLink>
-            <div class="btn-group margin-right-10 pull-right" title="#{msgs.options}" data-toggle="tooltip">
+            <h:panelGroup styleClass="btn-group margin-right-10 pull-right" title="#{msgs.options}" data-toggle="tooltip" 
+            	rendered="#{AktuelleSchritteForm.myPlugin.allowSelection and (AktuelleSchritteForm.myPlugin.allowDeletion or AktuelleSchritteForm.myPlugin.allowRotation or AktuelleSchritteForm.myPlugin.allowDownload)}">
 
                 <a class="btn dropdown-toggle fa fa-cog" data-toggle="dropdown">
                     <span class="caret"></span>
@@ -92,7 +93,7 @@
                     </li>
 
                 </ul>
-            </div>
+            </h:panelGroup>
 
         </div>
     </composite:implementation>
