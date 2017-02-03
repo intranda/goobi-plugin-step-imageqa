@@ -140,7 +140,7 @@ public class ImageQAPlugin implements IStepPlugin {
             }
             Path path = Paths.get(imageFolderName);
             if (Files.exists(path)) {
-                List<String> imageNameList = NIOFileUtils.list(imageFolderName);
+                List<String> imageNameList = NIOFileUtils.list(imageFolderName, NIOFileUtils.imageNameFilter);
                 int order = 1;
                 for (String imagename : imageNameList) {
                     Image currentImage = new Image(imagename, order++, "", imagename);
