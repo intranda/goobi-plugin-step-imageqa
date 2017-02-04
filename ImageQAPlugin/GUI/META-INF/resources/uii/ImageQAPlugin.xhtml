@@ -5,7 +5,7 @@
     <ui:define name="breadcrumb">
         <intranda:breadcrumb label="#{msgs.startseite}" action="index" navId="a0" />
         <intranda:breadcrumb label="#{msgs.aktuelleSchritte}" action="#{AktuelleSchritteForm.paginator.returnToPreviousPage}" />
-        <intranda:breadcrumb label="#{AktuelleSchritteForm.mySchritt.prozess.titel}" action="task_edit" />
+       	<intranda:breadcrumb label="#{AktuelleSchritteForm.mySchritt.prozess.titel}" action="#{AktuelleSchritteForm.myPlugin.cancel}" />
         <intranda:breadcrumb label="#{myPageTitle}" noSeparator="#{true}" />
     </ui:define>
 
