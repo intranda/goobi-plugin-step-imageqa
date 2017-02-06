@@ -556,7 +556,7 @@ public class ImageQAPlugin implements IStepPlugin {
         //            NIOFileUtils.deleteDir(path);
         //        }
         allImages = new ArrayList<Image>();
-        initialize(this.step, "");
+        initialize(this.step, returnPath);
 
         for (Image image : allImages) {
             image.setTempName(myimage.getTempName());
@@ -626,7 +626,7 @@ public class ImageQAPlugin implements IStepPlugin {
         }
 
         allImages = new ArrayList<Image>();
-        initialize(this.step, "");
+        initialize(this.step, returnPath);
 
         setImageIndex(myindex);
     }
