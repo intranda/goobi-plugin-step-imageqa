@@ -25,6 +25,7 @@
         <allowRenaming>false</allowRenaming>
         <!-- allow selection of images -->
         <allowSelection>false</allowSelection>
+        <allowSelectionAll>false</allowSelectionAll>
         <allowDownload>true</allowDownload>
     </config>
 

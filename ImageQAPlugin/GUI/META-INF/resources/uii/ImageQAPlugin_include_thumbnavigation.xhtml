@@ -53,14 +53,14 @@
                 </a>
                 <ul class="dropdown-menu pull-right">
                     <li>
-                        <h:commandLink styleClass="thumbnail-control rotate-right" action="#{AktuelleSchritteForm.myPlugin.selectAllImages}" rendered="#{AktuelleSchritteForm.myPlugin.allowSelection}">
+                        <h:commandLink styleClass="thumbnail-control rotate-right" action="#{AktuelleSchritteForm.myPlugin.selectAllImages}" rendered="#{AktuelleSchritteForm.myPlugin.allowSelectionAll}">
                             <i class="btn fa fa-check-square-o margin-right-10"></i>
                             <h:outputText value="#{msgs.plugin_intranda_step_imageQA_selectAllImages}" />
                         </h:commandLink>
                     </li>
 
                     <li>
-                        <h:commandLink styleClass="thumbnail-control rotate-right" action="#{AktuelleSchritteForm.myPlugin.unselectAllImages}" rendered="#{AktuelleSchritteForm.myPlugin.allowSelection}">
+                        <h:commandLink styleClass="thumbnail-control rotate-right" action="#{AktuelleSchritteForm.myPlugin.unselectAllImages}" rendered="#{AktuelleSchritteForm.myPlugin.allowSelectionAll}">
                             <i class="btn fa fa-square-o margin-right-10"></i>
                             <h:outputText value="#{msgs.plugin_intranda_step_imageQA_unselectAllImages}" />
                         </h:commandLink>

@@ -72,6 +72,7 @@ public class ImageQAPlugin implements IStepPlugin {
     private boolean allowRotation = false;
     private boolean allowRenaming = false;
     private boolean allowSelection = false;
+    private boolean allowSelectionAll = false;
     private boolean allowDownload = false;
 
     private String rotationCommandLeft = "";
@@ -115,6 +116,7 @@ public class ImageQAPlugin implements IStepPlugin {
         allowRotation = myconfig.getBoolean("allowRotation", false);
         allowRenaming = myconfig.getBoolean("allowRenaming", false);
         allowSelection = myconfig.getBoolean("allowSelection", false);
+        allowSelectionAll = myconfig.getBoolean("allowSelectionAll", false);
         allowDownload = myconfig.getBoolean("allowDownload", false);
 
         deletionCommand = myconfig.getString("deletionCommand", "-");
