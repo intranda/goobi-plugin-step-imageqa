@@ -29,6 +29,8 @@ import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.configuration.HierarchicalConfiguration;
+import org.apache.commons.configuration.XMLConfiguration;
+import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -101,16 +103,38 @@ public class ImageQAPlugin implements IStepPlugin {
         String projectName = step.getProzess().getProjekt().getTitel();
         HierarchicalConfiguration myconfig = null;
 
-        // get the correct configuration for the right project
-        List<HierarchicalConfiguration> configs = ConfigPlugins.getPluginConfig(this).configurationsAt("config");
-        for (HierarchicalConfiguration hc : configs) {
-            List<HierarchicalConfiguration> projects = hc.configurationsAt("project");
-            for (HierarchicalConfiguration project : projects) {
-                if (myconfig == null || project.getString("").equals("*") || project.getString("").equals(projectName)) {
-                    myconfig = hc;
+        XMLConfiguration xmlConfig = ConfigPlugins.getPluginConfig(this);
+        xmlConfig.setExpressionEngine(new XPathExpressionEngine());
+
+        // order of configuration is:
+        //        1.) project name and step name matches
+        //        2.) step name matches and project is *
+        //        3.) project name matches and step name is *
+        //        4.) project name and step name are *
+        try {
+            myconfig = xmlConfig.configurationAt("//config[./project = '" + projectName + "'][./step = '" + step.getTitel() + "']");
+        } catch (IllegalArgumentException e) {
+            try {
+                myconfig = xmlConfig.configurationAt("//config[./project = '*'][./step = '" + step.getTitel() + "']");
+            } catch (IllegalArgumentException e1) {
+                try {
+                    myconfig = xmlConfig.configurationAt("//config[./project = '" + projectName + "'][./step = '*']");
+                } catch (IllegalArgumentException e2) {
+                    myconfig = xmlConfig.configurationAt("//config[./project = '*'][./step = '*']");
                 }
             }
         }
+
+        //        // get the correct configuration for the right project
+        //        List<HierarchicalConfiguration> configs = ConfigPlugins.getPluginConfig(this).configurationsAt("config");
+        //        for (HierarchicalConfiguration hc : configs) {
+        //            List<HierarchicalConfiguration> projects = hc.configurationsAt("project");
+        //            for (HierarchicalConfiguration project : projects) {
+        //                if (myconfig == null || project.getString("").equals("*") || project.getString("").equals(projectName)) {
+        //                    myconfig = hc;
+        //                }
+        //            }
+        //        }
 
         allowDeletion = myconfig.getBoolean("allowDeletion", false);
         allowRotation = myconfig.getBoolean("allowRotation", false);

@@ -11,9 +11,9 @@
 	<classpathentry kind="lib" path="/Goobi/webapp/WEB-INF/lib/commons-configuration-1.6.jar"/>
 	<classpathentry kind="lib" path="/Goobi/webapp/WEB-INF/lib/log4j-1.2.16.jar"/>
 	<classpathentry kind="lib" path="/Goobi/webapp/WEB-INF/lib/ics.jar"/>
-	<classpathentry kind="lib" path="/Goobi/webapp/WEB-INF/lib/commons-io-1.4.jar"/>
 	<classpathentry kind="lib" path="/Goobi/webapp/WEB-INF/lib/jsf-api-2.2.12.jar"/>
 	<classpathentry kind="lib" path="/Goobi/webapp/WEB-INF/lib/lombok.jar"/>
 	<classpathentry kind="lib" path="/Goobi/webapp/WEB-INF/lib/cdi-api-1.2.jar"/>
+	<classpathentry kind="lib" path="/Goobi/webapp/WEB-INF/lib/commons-io-2.5.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
