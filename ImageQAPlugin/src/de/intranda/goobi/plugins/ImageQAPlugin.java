@@ -245,7 +245,7 @@ public class ImageQAPlugin implements IStepPlugin {
         StringBuilder url = new StringBuilder(baseUrl);
         url.append("/cs").append("?action=").append("image").append("&format=").append(format).append("&sourcepath=").append("file://"
                 + imageFolderName + currentImage.getImageName()).append("&width=").append(size).append("&height=").append(size);
-        return url.toString();
+        return url.toString().replaceAll("\\\\", "/");
     }
 
     @SuppressWarnings("unused")
@@ -385,7 +385,7 @@ public class ImageQAPlugin implements IStepPlugin {
             HttpSession session = (HttpSession) context.getExternalContext().getSession(false);
             String currentImageURL = session.getServletContext().getContextPath() + ConfigurationHelper.getTempImagesPath() + session.getId() + "_"
                     + image.getImageName() + "_large_" + ".jpg";
-            return currentImageURL;
+            return currentImageURL.replaceAll("\\\\", "/");
         }
     }
 
@@ -415,7 +415,7 @@ public class ImageQAPlugin implements IStepPlugin {
         HttpSession session = (HttpSession) context.getExternalContext().getSession(false);
         String currentImageURL = session.getServletContext().getContextPath() + ConfigurationHelper.getTempImagesPath() + session.getId() + "_"
                 + image.getImageName() + "_large_" + size + ".jpg";
-        return currentImageURL;
+        return currentImageURL.replaceAll("\\\\", "/");
     }
 
     @SuppressWarnings("unused")
