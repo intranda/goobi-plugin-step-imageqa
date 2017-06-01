@@ -155,11 +155,20 @@
 }
 </style>
 
+	<!-- image navigation -->
+<!-- 	<script src="template/js/reactiveX/rx.lite.min.js"></script> -->
+<!-- 	<script src="template/js/q-promises/q.min.js"></script> -->
+<!-- 	<script src="template/js/openseadragon/openseadragon.min.js"></script> -->
+<!-- 	<script -->
+<!-- 		src="template/js/openseadragon/openseadragon-viewerinputhook.js"></script> -->
+	
+        <script type="text/javascript" src="#{HelperForm.applicationWebsiteUrl}/uii/plugins/step/#{AktuelleSchritteForm.myPlugin.title}/javascript/rx.lite.min.js"></script>
+        <script type="text/javascript" src="#{HelperForm.applicationWebsiteUrl}/uii/plugins/step/#{AktuelleSchritteForm.myPlugin.title}/javascript/q.min.js"></script>
         <script type="text/javascript" src="#{HelperForm.applicationWebsiteUrl}/uii/plugins/step/#{AktuelleSchritteForm.myPlugin.title}/javascript/openseadragon/openseadragon.min.js"></script>
         <script type="text/javascript" src="#{HelperForm.applicationWebsiteUrl}/uii/plugins/step/#{AktuelleSchritteForm.myPlugin.title}/javascript/openseadragon/openseadragon-viewerinputhook.js"></script>
-        <script type="text/javascript" src="#{HelperForm.applicationWebsiteUrl}/uii/plugins/step/#{AktuelleSchritteForm.myPlugin.title}/javascript/viewImage.js"></script>
-        <script type="text/javascript" src="#{HelperForm.applicationWebsiteUrl}/uii/plugins/step/#{AktuelleSchritteForm.myPlugin.title}/javascript/viewImage.controls.js"></script>
-        <script type="text/javascript" src="#{HelperForm.applicationWebsiteUrl}/uii/plugins/step/#{AktuelleSchritteForm.myPlugin.title}/javascript/viewImage.zoomSlider.js"></script>
+		<script type="text/javascript" src="#{HelperForm.applicationWebsiteUrl}/uii/plugins/step/#{AktuelleSchritteForm.myPlugin.title}/javascript/viewImage.js"></script>
+
+<!--         <script type="text/javascript" src="#{HelperForm.applicationWebsiteUrl}/uii/plugins/step/#{AktuelleSchritteForm.myPlugin.title}/javascript/viewImage.zoomSlider.js"></script> -->
 
         <h:form id="qaform">
             <div class="box box-color lightgrey box-bordered">
@@ -362,25 +371,28 @@
                                         <h:outputText value="#{AktuelleSchritteForm.myPlugin.image.imageName}" />
                                     </div>
                                     <script type="text/javascript">
-                                    $('#mainImage').height($('#mainImage').width() * #{AktuelleSchritteForm.myPlugin.imageHeight}/#{AktuelleSchritteForm.myPlugin.imageWidth});
-                                    var imageViewConfig = {
-                            			    global: {
-                            			        divId : 'mainImage',
-                            			        zoomSlider : 'zoomSlider',
-                            			        maxZoomLevel: 10
-                            			    },
-                            			    image: {
-                            			        mimeType: "image/jpg",
-                            			        imageLevels: #{AktuelleSchritteForm.myPlugin.image.imageLevels},
-                            			        imageOriginalWidth: #{AktuelleSchritteForm.myPlugin.imageWidth},
-                            			        imageOriginalHeight: #{AktuelleSchritteForm.myPlugin.imageHeight},
-                            			        imageViewWidth: $('#mainImage').width(),
-                            			        imageViewHeight: $('#mainImage').height(),
-                            			        tileUrl: null
-                            			    }
-                            			}; 
-                                    viewImage.close();
-                                    viewImage.init(imageViewConfig);
+									var configViewer = {
+									    global: {
+									    	divId: 'mainImage',
+									        useTiles: false,
+									        footerHeight: 0,
+									        adaptContainerHeight: true,
+									        zoomSlider: "#zoomSlider"
+									    },
+									    image: {
+									        mimeType: "image/jpeg",
+ 									        tileSource : #{AktuelleSchritteForm.myPlugin.image},
+									    }
+									};									
+									    viewImage.init( configViewer )
+									    .then(function(osViewer) {
+									    	console.info( 'viewer opened' );
+									        //TODO: Hide loader?
+									    })
+									    .catch(function(error){
+									        console.error( 'Error opening image', error );
+									        $('#' + configViewer.global.divId).html( 'Failed to load image: "' + error + '"' );
+									    });
                                     </script>
                                 </h:panelGroup>
                             </div>

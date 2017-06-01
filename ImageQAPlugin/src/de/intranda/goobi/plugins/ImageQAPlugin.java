@@ -10,7 +10,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URISyntaxException;
-import java.nio.file.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -40,6 +42,8 @@ import org.goobi.production.enums.PluginType;
 import org.goobi.production.enums.StepReturnValue;
 import org.goobi.production.plugin.interfaces.IStepPlugin;
 
+import de.intranda.goobi.Image;
+import de.intranda.goobi.SelectableImage;
 import de.sub.goobi.config.ConfigPlugins;
 import de.sub.goobi.config.ConfigurationHelper;
 import de.sub.goobi.helper.FacesContextHelper;
@@ -88,7 +92,7 @@ public class ImageQAPlugin implements IStepPlugin {
 
     private String imageFolderName = "";
 
-    private List<Image> allImages = new ArrayList<Image>();
+    private List<SelectableImage> allImages = new ArrayList<>();
 
     private Image image = null;
     private List<String> imageSizes;
@@ -169,7 +173,7 @@ public class ImageQAPlugin implements IStepPlugin {
                 List<String> imageNameList = NIOFileUtils.list(imageFolderName, NIOFileUtils.imageNameFilter);
                 int order = 1;
                 for (String imagename : imageNameList) {
-                    Image currentImage = new Image(imagename, order++, "", imagename);
+                    SelectableImage currentImage = new SelectableImage(imagename, order++, "", imagename, "");
                     allImages.add(currentImage);
                 }
                 setImageIndex(0);
@@ -179,8 +183,8 @@ public class ImageQAPlugin implements IStepPlugin {
         }
     }
 
-    public List<Image> getPaginatorList() {
-        List<Image> subList = new ArrayList<Image>();
+    public List<SelectableImage> getPaginatorList() {
+        List<SelectableImage> subList = new ArrayList<>();
         if (allImages.size() > (pageNo * NUMBER_OF_IMAGES_PER_PAGE) + NUMBER_OF_IMAGES_PER_PAGE) {
             subList = allImages.subList(pageNo * NUMBER_OF_IMAGES_PER_PAGE, (pageNo * NUMBER_OF_IMAGES_PER_PAGE) + NUMBER_OF_IMAGES_PER_PAGE);
         } else {
@@ -541,7 +545,7 @@ public class ImageQAPlugin implements IStepPlugin {
         return "";
     }
 
-    public String renameImages(Image myimage) {
+    public String renameImages(SelectableImage myimage) {
         DecimalFormat myFormatter = new DecimalFormat("0000");
 
         int myindex = getImageIndex();
@@ -581,10 +585,10 @@ public class ImageQAPlugin implements IStepPlugin {
         //        if (Files.exists(path)) {
         //            NIOFileUtils.deleteDir(path);
         //        }
-        allImages = new ArrayList<Image>();
+        allImages = new ArrayList<SelectableImage>();
         initialize(this.step, returnPath);
 
-        for (Image image : allImages) {
+        for (SelectableImage image : allImages) {
             image.setTempName(myimage.getTempName());
         }
 
@@ -605,7 +609,7 @@ public class ImageQAPlugin implements IStepPlugin {
     }
 
     public void deleteSelection() {
-        for (Image image : allImages) {
+        for (SelectableImage image : allImages) {
             if (image.isSelected()) {
                 callScript(image, deletionCommand, true);
             }
@@ -613,7 +617,7 @@ public class ImageQAPlugin implements IStepPlugin {
     }
 
     public void rotateSelectionRight() {
-        for (Image image : allImages) {
+        for (SelectableImage image : allImages) {
             if (image.isSelected()) {
                 callScript(image, rotationCommandRight, false);
             }
@@ -621,7 +625,7 @@ public class ImageQAPlugin implements IStepPlugin {
     }
 
     public void rotateSelectionLeft() {
-        for (Image image : allImages) {
+        for (SelectableImage image : allImages) {
             if (image.isSelected()) {
                 callScript(image, rotationCommandLeft, false);
             }
@@ -651,20 +655,20 @@ public class ImageQAPlugin implements IStepPlugin {
             Helper.setFehlerMeldung("Command '" + command + "' is interrupted in callScript()!");
         }
 
-        allImages = new ArrayList<Image>();
+        allImages = new ArrayList<SelectableImage>();
         initialize(this.step, returnPath);
 
         setImageIndex(myindex);
     }
 
     public void selectAllImages() {
-        for (Image image : allImages) {
+        for (SelectableImage image : allImages) {
             image.setSelected(true);
         }
     }
 
     public void unselectAllImages() {
-        for (Image image : allImages) {
+        for (SelectableImage image : allImages) {
             image.setSelected(false);
         }
     }
@@ -678,7 +682,7 @@ public class ImageQAPlugin implements IStepPlugin {
 
             ZipOutputStream out = new ZipOutputStream(new FileOutputStream(tempfile.toFile()));
 
-            for (Image image : allImages) {
+            for (SelectableImage image : allImages) {
                 if (image.isSelected()) {
                     Path currentImagePath = Paths.get(imageFolderName, image.getImageName());
                     FileInputStream in = new FileInputStream(currentImagePath.toFile());
