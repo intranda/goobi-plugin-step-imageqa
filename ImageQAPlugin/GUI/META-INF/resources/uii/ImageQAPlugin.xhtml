@@ -317,7 +317,9 @@
                                                             <h:outputText value="#{msgs.plugin_intranda_step_imageQA_renameLabel}" />
                                                         </div>
                                                         <div class="col-sm-9">
-                                                            <x:inputText styleClass="form-control" value="#{image.tempName}" />
+                                                        <ui:repeat var="namePart" value="#{image.nameParts}">
+                                                            <x:inputText styleClass="form-control" value="#{namePart.value}" />
+                                                        </ui:repeat>
                                                         </div>
                                                     </div>
                                                 </div>

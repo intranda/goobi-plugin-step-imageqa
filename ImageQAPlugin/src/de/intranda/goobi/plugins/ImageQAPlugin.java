@@ -17,6 +17,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -30,8 +31,11 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.configuration.ConfigurationRuntimeException;
 import org.apache.commons.configuration.HierarchicalConfiguration;
+import org.apache.commons.configuration.SubnodeConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
+import org.apache.commons.configuration.reloading.FileChangedReloadingStrategy;
 import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
@@ -43,6 +47,7 @@ import org.goobi.production.enums.StepReturnValue;
 import org.goobi.production.plugin.interfaces.IStepPlugin;
 
 import de.intranda.goobi.Image;
+import de.intranda.goobi.NamePart;
 import de.intranda.goobi.SelectableImage;
 import de.sub.goobi.config.ConfigPlugins;
 import de.sub.goobi.config.ConfigurationHelper;
@@ -64,6 +69,9 @@ import net.xeoh.plugins.base.annotations.PluginImplementation;
 @Data
 @PluginImplementation
 public class ImageQAPlugin implements IStepPlugin {
+
+    private static final DecimalFormat PAGENUMBERFORMAT = new DecimalFormat("0000");
+    private static final DecimalFormat FILENUMBERFORMAT = new DecimalFormat("00000000");
 
     private static final Logger logger = Logger.getLogger(ImageQAPlugin.class);
     private Step step;
@@ -105,10 +113,12 @@ public class ImageQAPlugin implements IStepPlugin {
     public void initialize(Step step, String returnPath) {
         this.returnPath = returnPath;
         String projectName = step.getProzess().getProjekt().getTitel();
-        HierarchicalConfiguration myconfig = null;
 
         XMLConfiguration xmlConfig = ConfigPlugins.getPluginConfig(this);
         xmlConfig.setExpressionEngine(new XPathExpressionEngine());
+        xmlConfig.setReloadingStrategy(new FileChangedReloadingStrategy());
+
+        SubnodeConfiguration myconfig = null;
 
         // order of configuration is:
         //        1.) project name and step name matches
@@ -128,17 +138,6 @@ public class ImageQAPlugin implements IStepPlugin {
                 }
             }
         }
-
-        //        // get the correct configuration for the right project
-        //        List<HierarchicalConfiguration> configs = ConfigPlugins.getPluginConfig(this).configurationsAt("config");
-        //        for (HierarchicalConfiguration hc : configs) {
-        //            List<HierarchicalConfiguration> projects = hc.configurationsAt("project");
-        //            for (HierarchicalConfiguration project : projects) {
-        //                if (myconfig == null || project.getString("").equals("*") || project.getString("").equals(projectName)) {
-        //                    myconfig = hc;
-        //                }
-        //            }
-        //        }
 
         allowDeletion = myconfig.getBoolean("allowDeletion", false);
         allowRotation = myconfig.getBoolean("allowRotation", false);
@@ -169,17 +168,33 @@ public class ImageQAPlugin implements IStepPlugin {
                 imageFolderName = step.getProzess().getImagesTifDirectory(false);
             }
             Path path = Paths.get(imageFolderName);
+            List<NamePart> nameParts = initImageNameParts(myconfig);
             if (Files.exists(path)) {
                 List<String> imageNameList = NIOFileUtils.list(imageFolderName, NIOFileUtils.imageNameFilter);
                 int order = 1;
                 for (String imagename : imageNameList) {
                     SelectableImage currentImage = new SelectableImage(imagename, order++, "", imagename, "");
+                    currentImage.initNameParts(nameParts);
                     allImages.add(currentImage);
                 }
                 setImageIndex(0);
             }
         } catch (SwapException | DAOException | IOException | InterruptedException e) {
             logger.error(e);
+        }
+    }
+
+    private List<NamePart> initImageNameParts(HierarchicalConfiguration config) {
+        try {
+            HierarchicalConfiguration patternList = config.configurationAt("renamingPattern");
+            List<HierarchicalConfiguration> fields = patternList.configurationsAt("field");
+            List<NamePart> nameParts = new ArrayList<>();
+            for (HierarchicalConfiguration fieldConfig : fields) {
+                nameParts.add(new NamePart(fieldConfig, getStep()));
+            }
+            return nameParts;
+        } catch (IllegalArgumentException | ConfigurationRuntimeException e) {
+            return Collections.singletonList(new NamePart(""));
         }
     }
 
@@ -247,8 +262,8 @@ public class ImageQAPlugin implements IStepPlugin {
 
     private String createImageUrl(Image currentImage, Integer size, String format, String baseUrl) {
         StringBuilder url = new StringBuilder(baseUrl);
-        url.append("/cs").append("?action=").append("image").append("&format=").append(format).append("&sourcepath=").append("file://"
-                + imageFolderName + currentImage.getImageName()).append("&width=").append(size).append("&height=").append(size);
+        url.append("/cs").append("?action=").append("image").append("&format=").append(format).append("&sourcepath=").append(
+                "file://" + imageFolderName + currentImage.getImageName()).append("&width=").append(size).append("&height=").append(size);
         return url.toString().replaceAll("\\\\", "/");
     }
 
@@ -546,53 +561,43 @@ public class ImageQAPlugin implements IStepPlugin {
     }
 
     public String renameImages(SelectableImage myimage) {
-        DecimalFormat myFormatter = new DecimalFormat("0000");
 
-        int myindex = getImageIndex();
-        int generalCounter = 1;
-        int fileCounter = 1;
-        boolean imageFound = false;
+        System.out.println("Dateien werden jetzt umbenannt auf der Basis von: " + myimage.getNameParts());
 
-        System.out.println("Dateien werden jetzt umbenannt auf der Basis von: " + myimage.getTempName());
+        int imageIndex = getAllImages().indexOf(myimage);
+        Iterator<SelectableImage> iterator = getAllImages().listIterator();
 
-        //Path path = Paths.get(imageFolderName + myimage.getImageName());
-        for (Path f : NIOFileUtils.listFiles(imageFolderName)) {
-            String filenameold = f.getFileName().toString();
-            String prefix = myFormatter.format(generalCounter) + "_";
-            String suffix = filenameold.substring(filenameold.lastIndexOf("."), filenameold.length());
+        int pageCounter = 0;
+        String myCombinedName = myimage.getCombinedName();
+        String myPreviousCombinedName = myimage.getCombinedNameFromFilename();
+        boolean imageNameFound = false;
+        while (iterator.hasNext()) {
+            SelectableImage currentImage = iterator.next();
+            int currentImageIndex = getAllImages().indexOf(currentImage);
+            String suffix = currentImage.getImageName().substring(currentImage.getImageName().lastIndexOf("."));
+            String currentCombinedName = currentImage.getCombinedName();
 
-            if (!imageFound && myimage.getImageName().equals(filenameold)) {
-                imageFound = true;
-                System.out.println("Bild gefunden: " + filenameold);
+             if (currentImageIndex >= imageIndex && (myPreviousCombinedName.equals(currentCombinedName) || myCombinedName.equals(currentCombinedName) || currentImage.isNotYetNamed())) {
+                imageNameFound = true;
+                currentImage.setNameParts(myimage.getNameParts());
+                String currentPageCounter = PAGENUMBERFORMAT.format(++pageCounter);
+                currentImage.setPageCounterLabel(currentPageCounter);
+                String newFilename = currentImage.getNamePrefix() + "_" + myCombinedName + currentPageCounter + suffix;
+                File imageFile = new File(imageFolderName, currentImage.getImageName());
+                imageFile.renameTo(new File(imageFolderName, newFilename));
+                currentImage.setImageName(newFilename);
+            } else if (myCombinedName.equals(currentCombinedName)) {
+                pageCounter++;
+            }  else if (imageNameFound) {
+                break;
             }
-
-            if (imageFound) {
-                String filenamenew = prefix + myimage.getTempName() + "_" + myFormatter.format(fileCounter) + suffix;
-                System.out.println(filenameold + " will be renamed to " + filenamenew);
-                try {
-                    NIOFileUtils.renameTo(f, filenamenew);
-                } catch (IOException e) {
-                    logger.error(e);
-                }
-                fileCounter++;
-            } else {
-                System.out.println(filenameold + " will not be renamed");
-            }
-
-            generalCounter++;
-
         }
-        //        if (Files.exists(path)) {
-        //            NIOFileUtils.deleteDir(path);
-        //        }
+
         allImages = new ArrayList<SelectableImage>();
+
         initialize(this.step, returnPath);
 
-        for (SelectableImage image : allImages) {
-            image.setTempName(myimage.getTempName());
-        }
-
-        setImageIndex(myindex);
+        setImageIndex(imageIndex);
         return "";
     }
 
@@ -609,7 +614,9 @@ public class ImageQAPlugin implements IStepPlugin {
     }
 
     public void deleteSelection() {
-        for (SelectableImage image : allImages) {
+        Iterator<SelectableImage> iterator = allImages.iterator();
+        while (iterator.hasNext()) {
+            SelectableImage image = iterator.next();
             if (image.isSelected()) {
                 callScript(image, deletionCommand, true);
             }

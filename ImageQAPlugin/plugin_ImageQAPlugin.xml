@@ -66,4 +66,27 @@
         <allowSelection>true</allowSelection>
         <allowDownload>true</allowDownload>
     </config>
+    
+    <config>
+    	<project>*</project>
+    	<step>ImageQA</step>
+    	<useOrigFolder>true</useOrigFolder>
+	    <!-- how to display the tumbnails -->
+        <numberOfImagesPerPage>12</numberOfImagesPerPage>
+        <thumbnailsize>200</thumbnailsize>
+		<!-- which image sizes to use for the big image -->
+        <imagesize>800</imagesize>
+        <imagesize>3000</imagesize>
+
+		<!-- allow renaming of images -->
+        <allowRenaming>true</allowRenaming>	
+        <renamingPattern>
+        	<field defaultValue="${process:Archive}"></field>
+        	<field defaultValue="${process:Object}"></field>
+        	<field defaultValue="1" number="true" format="0000"></field>
+        </renamingPattern>
+        
+
+    </config>
+    
 </config_plugin>

@@ -15,5 +15,6 @@
 	<classpathentry kind="lib" path="/Goobi/webapp/WEB-INF/lib/lombok.jar"/>
 	<classpathentry kind="lib" path="/Goobi/webapp/WEB-INF/lib/cdi-api-1.2.jar"/>
 	<classpathentry kind="lib" path="/Goobi/webapp/WEB-INF/lib/commons-io-2.5.jar"/>
+	<classpathentry kind="lib" path="/Goobi/webapp/WEB-INF/lib/ugh-3.0.jar" sourcepath="/ugh_new"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
