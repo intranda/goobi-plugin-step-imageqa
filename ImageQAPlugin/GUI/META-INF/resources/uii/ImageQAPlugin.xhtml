@@ -153,6 +153,15 @@
 #mainImage {
     widht: 100%;
 }
+
+.namePart {
+	display: inline-block;
+	width: auto;
+	min-width: 20px;
+	margin-left: 15px;
+	margin-bottom: 10px;
+}
+
 </style>
 
 	<!-- image navigation -->
@@ -312,16 +321,9 @@
                                                 <h:outputText value="#{msgs.plugin_intranda_step_imageQA_renameDescription}" />
 
                                                 <div class="row" style="margin-top: 15px;">
-                                                    <div class="form-group">
-                                                        <div class="col-sm-3 control-label">
-                                                            <h:outputText value="#{msgs.plugin_intranda_step_imageQA_renameLabel}" />
-                                                        </div>
-                                                        <div class="col-sm-9">
-                                                        <ui:repeat var="namePart" value="#{image.nameParts}">
-                                                            <x:inputText styleClass="form-control" value="#{namePart.value}" />
-                                                        </ui:repeat>
-                                                        </div>
-                                                    </div>
+	                                                    <ui:repeat var="namePart" value="#{image.nameParts}">
+		                                                    	<x:inputText styleClass="form-control namePart" value="#{namePart.value}" />
+	                                                    </ui:repeat>
                                                 </div>
 
                                             </div>
