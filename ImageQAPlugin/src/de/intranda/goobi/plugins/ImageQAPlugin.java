@@ -159,7 +159,7 @@ public class ImageQAPlugin implements IStepPlugin {
      * @param myconfig
      * @param imageFolder
      */
-    private void initImageList(SubnodeConfiguration myconfig, String imageFolder) {
+    public void initImageList(SubnodeConfiguration myconfig, String imageFolder) {
         this.imageFolderName = imageFolder;
         Path path = Paths.get(imageFolderName);
         List<NamePart> nameParts = initImageNameParts(myconfig);
@@ -178,7 +178,7 @@ public class ImageQAPlugin implements IStepPlugin {
     /**
      * @param myconfig
      */
-    private void initConfig(SubnodeConfiguration myconfig) {
+    public void initConfig(SubnodeConfiguration myconfig) {
         allowDeletion = myconfig.getBoolean("allowDeletion", false);
         allowRotation = myconfig.getBoolean("allowRotation", false);
         allowRenaming = myconfig.getBoolean("allowRenaming", false);

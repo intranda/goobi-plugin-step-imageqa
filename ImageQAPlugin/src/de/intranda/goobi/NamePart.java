@@ -23,9 +23,9 @@ public class NamePart {
         setValue(string);
     }
     public NamePart(Configuration config, Step step) {
-        this.number = config.getBoolean("@number", false);
-        this.format = config.getString("@format", "");
-        setValue(config.getString("@defaultValue", ""));
+        this.number = config.getBoolean("number", false);
+        this.format = config.getString("number/@format", "");
+        setValue(config.getString("defaultValue", ""));
         replaceVariables(step);
     }
     public NamePart(NamePart blueprint) {
