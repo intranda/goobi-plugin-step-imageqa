@@ -112,6 +112,8 @@ public class ImageQAPlugin implements IStepPlugin {
     @Override
     public void initialize(Step step, String returnPath) {
         this.returnPath = returnPath;
+        this.step = step;
+        
         String projectName = step.getProzess().getProjekt().getTitel();
 
         XMLConfiguration xmlConfig = ConfigPlugins.getPluginConfig(this);
@@ -139,6 +141,44 @@ public class ImageQAPlugin implements IStepPlugin {
             }
         }
 
+        initConfig(myconfig);
+        try {
+            String imageFolder;
+            if (myconfig.getBoolean("useOrigFolder", false)) {
+                imageFolder = step.getProzess().getImagesOrigDirectory(false);
+            } else {
+                imageFolder = step.getProzess().getImagesTifDirectory(false);
+            }
+            initImageList(myconfig, imageFolder);
+        } catch (SwapException | DAOException | IOException | InterruptedException e) {
+            logger.error(e);
+        }
+    }
+
+    /**
+     * @param myconfig
+     * @param imageFolder
+     */
+    private void initImageList(SubnodeConfiguration myconfig, String imageFolder) {
+        this.imageFolderName = imageFolder;
+        Path path = Paths.get(imageFolderName);
+        List<NamePart> nameParts = initImageNameParts(myconfig);
+        if (Files.exists(path)) {
+            List<String> imageNameList = NIOFileUtils.list(imageFolderName, NIOFileUtils.imageNameFilter);
+            int order = 1;
+            for (String imagename : imageNameList) {
+                SelectableImage currentImage = new SelectableImage(imagename, order++, "", imagename, "");
+                currentImage.initNameParts(nameParts);
+                allImages.add(currentImage);
+            }
+            setImageIndex(0);
+        }
+    }
+
+    /**
+     * @param myconfig
+     */
+    private void initConfig(SubnodeConfiguration myconfig) {
         allowDeletion = myconfig.getBoolean("allowDeletion", false);
         allowRotation = myconfig.getBoolean("allowRotation", false);
         allowRenaming = myconfig.getBoolean("allowRenaming", false);
@@ -160,28 +200,6 @@ public class ImageQAPlugin implements IStepPlugin {
             imageSizes.add("600");
         }
         executor = Executors.newFixedThreadPool(imageSizes.size());
-        this.step = step;
-        try {
-            if (myconfig.getBoolean("useOrigFolder", false)) {
-                imageFolderName = step.getProzess().getImagesOrigDirectory(false);
-            } else {
-                imageFolderName = step.getProzess().getImagesTifDirectory(false);
-            }
-            Path path = Paths.get(imageFolderName);
-            List<NamePart> nameParts = initImageNameParts(myconfig);
-            if (Files.exists(path)) {
-                List<String> imageNameList = NIOFileUtils.list(imageFolderName, NIOFileUtils.imageNameFilter);
-                int order = 1;
-                for (String imagename : imageNameList) {
-                    SelectableImage currentImage = new SelectableImage(imagename, order++, "", imagename, "");
-                    currentImage.initNameParts(nameParts);
-                    allImages.add(currentImage);
-                }
-                setImageIndex(0);
-            }
-        } catch (SwapException | DAOException | IOException | InterruptedException e) {
-            logger.error(e);
-        }
     }
 
     private List<NamePart> initImageNameParts(HierarchicalConfiguration config) {
