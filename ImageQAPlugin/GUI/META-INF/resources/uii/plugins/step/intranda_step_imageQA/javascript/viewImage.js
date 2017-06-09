@@ -1,18 +1,30 @@
 /*!
- * Goobi Viewer 3.2.0
+ * This file is part of the Goobi Viewer - a content presentation and management application for digitized objects.
+ *
+ * Visit these websites for more information.
+ * - http://www.intranda.com
+ * - http://digiverso.com
+ *
+ * This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free
+ * Software Foundation; either version 2 of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with this program. If not, see <http://www.gnu.org/licenses/>.
  */var viewImage = ( function() {
     'use strict';
     
     var osViewer = {};
-    var _debug = true;
+    var _debug = false;
     var _footerImage = null;
     var _canvasScale;
     var _container;
     var _defaults = {  
         global: {
             divId: "map",
-            zoomSlider: "#slider-id",
-            zoomSliderHandle: '.zoomslider-handle',
+            zoomSlider: ".zoom-slider",
+            zoomSliderHandle: '.zoom-slider-handle',
             overlayGroups: [ {
                 name: "searchHighlighting",
                 styleClass: "searchHighlight",
@@ -74,7 +86,7 @@
 			// iiif calls
             _defaults.image.mimeType = _defaults.image.mimeType.replace("jpeg","jpg");
             _container = $( "#" + _defaults.global.divId );
-                        
+            
             var sources = _defaults.image.tileSource;
             if(typeof sources === 'string' && sources.startsWith("[")) {
             	sources = JSON.parse(sources);
@@ -89,9 +101,8 @@
                 // rejects the promise
             	var promise = viewImage.createTileSource(source);
             	promises.push(promise);	
-            }
+	                }                
             return Q.all(promises).then(function(tileSources) {
-            	console.log("tilesources ", tileSources);
             	var minWidth = Number.MAX_VALUE;  
             	var minHeight = Number.MAX_VALUE;
             	var minAspectRatio = Number.MAX_VALUE;
@@ -100,10 +111,10 @@
             		minWidth = Math.min(minWidth, tileSource.width);
             		minHeight = Math.min(minHeight, tileSource.height);
             		minAspectRatio = Math.min(minAspectRatio, tileSource.aspectRatio);
-            	}
-            	if ( _debug ) {
+	                }
+	                    if(_debug) {                    
             	    console.log("Min aspect ratio = " + minAspectRatio);            	    
-            	} 
+	                    }
             	var x = 0;
             	for ( var i=0; i<tileSources.length; i++) {
 	        		var tileSource = tileSources[i];
@@ -113,9 +124,9 @@
 // height: minHeight/tileSource.height,
 	                		x : x,
 	                		y: 0,
-	        		}
+	                    }
 	        		x += tileSources[i].width;
-	        	}
+	                }              
             	return viewImage.loadImage(tileSources);
             });
             
@@ -156,10 +167,11 @@
                 }
             } );
 
-            var result = Q.defer();                
+            var result = Q.defer();
+                
             osViewer.observables = createObservables(window, osViewer.viewer);  
-                          
-            osViewer.observables.viewerOpen.subscribe(function(openevent, loadevent) {           
+                
+            osViewer.observables.viewerOpen.subscribe(function(openevent, loadevent) {            
                 result.resolve(osViewer);                
             }, function(error) {            
                 result.reject(error);                
@@ -168,7 +180,7 @@
                 
             // Calculate sizes if redraw is required
             
-            osViewer.observables.redrawRequired.subscribe(function(event) {     
+            osViewer.observables.redrawRequired.subscribe(function(event) {            
                 if(_debug) {
                     console.log("viewer " + event.osState + "ed with target location ", event.targetLocation);                    
                 }
@@ -197,6 +209,7 @@
             }                
             
             osViewer.observables.redrawRequired.connect();                
+            
             return result.promise;
         },
         getObservables: function() {
@@ -243,25 +256,25 @@
             fileExtension = fileExtension.replace("jpeg", "jpg").replace("tiff", "tif");
             var imageLevels = [];
             var tileSource;
-            console.log("image info = ", imageInfo);
-            if(imageInfo.sizes) {
+            if(Array.isArray(imageInfo)) {
+            	imageInfo.forEach(function(level) {
+            		level.mimetype = _defaults.image.mimeType;
+            	});
+            	tileSource = new OpenSeadragon.LegacyTileSource(imageInfo);
+            } else if(imageInfo.sizes) {
 	            imageInfo.sizes.forEach(function(size) {
 	                if(_debug) {                    
 	                    console.log("Image level width = ", size.width)
 	                    console.log("Image level height = ", size.height)
 	                }
 	                
-	                var url = size.url;
-	            	if(!url) {
-	            		url = imageInfo["@id"].replace( "/info.json", "" ) + "/full/" + size.width + ",/0/default." + fileExtension;
-	            	}
+	                var level = {
+	                    mimetype: _defaults.image.mimeType,
+	                    url: imageInfo["@id"].replace( "/info.json", "" ) + "/full/" + size.width + ",/0/default." + fileExtension,
+	                    width: imageInfo.width,
+	                    height: imageInfo.height
+	                };
 	                
-		                var level = {
-		                    mimetype: _defaults.image.mimeType,
-		                    url: url,
-		                    width: imageInfo.width,
-		                    height: imageInfo.height
-		                };
 	                if(_debug) {
 	                    console.log("Created level ", level);
 	                }
@@ -271,14 +284,8 @@
 	            
 	            tileSource = new OpenSeadragon.LegacyTileSource(imageLevels);
             } else {
-            	
-            	var url = imageInfo.url;
-            	if(!url) {
-            		url = imageInfo["@id"].replace( "/info.json", "" ) + "/full/full/0/default." + fileExtension;
-            	}
-            	
             	tileSource = new OpenSeadragon.ImageTileSource({
-            		url: url,
+            		url: imageInfo["@id"].replace( "/info.json", "" ) + "/full/full/0/default." + fileExtension,
             		crossOriginPolicy: "Anonymous",
             		buildPyramid: false
             	});
@@ -384,17 +391,17 @@
         	}
         },
         setTileSizes: function(imageInfo, tiles) {
-        	if(tiles) {
-				var tileString = configViewer.global.tileSizes.replace(/(\d+)/, '"$1"').replace("=", ":");
-				var tiles = JSON.parse(tileString);
-				var iiifTiles = [];
-				
-				Object.keys(tiles).forEach(function(size) {
-					var scaleFactors = tiles[size];
-					iiifTiles.push({"width": parseInt(size), "height": parseInt(size), "scaleFactors": scaleFactors})
-				});
-				
-				imageInfo.tiles = iiifTiles;
+        	if(tiles) {        		
+        		var tileString = configViewer.global.tileSizes.replace(/(\d+)/, '"$1"').replace("=", ":");
+        		var tiles = JSON.parse(tileString);
+        		var iiifTiles = [];
+        		
+        		Object.keys(tiles).forEach(function(size) {
+        			var scaleFactors = tiles[size];
+        			iiifTiles.push({"width": parseInt(size), "height": parseInt(size), "scaleFactors": scaleFactors})
+        		});
+        		
+        		imageInfo.tiles = iiifTiles;
         	}
         },
         onFirstTileLoaded: function() {
@@ -451,7 +458,7 @@
 		                    
 		                    if(_debug) {                    
 		                        console.log(errorMsg);                        
-		                    }
+        }
 		                    
 		                    return Q.reject(errorMsg);
 		                    
@@ -472,6 +479,7 @@
         observables.viewerOpen = Rx.Observable.create(function(observer) {
             viewer.addOnceHandler( 'open', function( event ) {
                 event.osState = "open";
+                
                 if(Number.isNaN(event.eventSource.viewport.getHomeBounds().x)) {
                     return observer.onError("Unknow error loading image from ", _defaults.image.tileSource);
                 } else {                    
@@ -937,7 +945,7 @@ if(!Number.isNaN) {
 ;var viewImage = ( function( osViewer ) {
     'use strict';
     
-    var _debug = false;
+    var _debug = false; 
     
     osViewer.controls.persistence = {
         
@@ -1597,11 +1605,11 @@ if(!Number.isNaN) {
             
             osViewer.observables.viewerOpen.subscribe( function( data ) {
                 
-            	if(_defaults.image.highlightCoords) {
-	            	for ( var index=0; index<_defaults.image.highlightCoords.length; index++) {
-	                    var highlightCoords = _defaults.image.highlightCoords[ index ];
-	                    osViewer.overlays.draw( highlightCoords.name, highlightCoords.displayTooltip );
-	                }
+            	if(_defaults.image.highlightCoords) {            		
+            		for ( var index=0; index<_defaults.image.highlightCoords.length; index++) {
+            			var highlightCoords = _defaults.image.highlightCoords[ index ];
+            			osViewer.overlays.draw( highlightCoords.name, highlightCoords.displayTooltip );
+            		}
             	}
                 if ( _initializedCallback ) {
                     _initializedCallback();
@@ -2476,9 +2484,9 @@ if(!Number.isNaN) {
                     } ).fail( function( error ) {
                         reject( "Failed to retrieve json from " + imageInfo );
                     } );
-                    setTimeout(function() {
-                    	reject("Timeout after 10s");
-                    }, 10000)
+                    setTimeout( function() {
+                        reject( "Timeout after 10s" );
+                    }, 10000 )
                 }
                 else {
                     reject( "Not a uri: " + imageInfo );
