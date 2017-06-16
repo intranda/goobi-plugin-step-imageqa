@@ -51,6 +51,7 @@ import de.intranda.goobi.NamePart;
 import de.intranda.goobi.SelectableImage;
 import de.sub.goobi.config.ConfigPlugins;
 import de.sub.goobi.config.ConfigurationHelper;
+import de.sub.goobi.forms.HelperForm;
 import de.sub.goobi.helper.FacesContextHelper;
 import de.sub.goobi.helper.Helper;
 import de.sub.goobi.helper.NIOFileUtils;
@@ -211,7 +212,7 @@ public class ImageQAPlugin implements IStepPlugin {
                 nameParts.add(new NamePart(fieldConfig, getStep()));
             }
             return nameParts;
-        } catch (IllegalArgumentException | ConfigurationRuntimeException e) {
+        } catch (Throwable e) {
             return Collections.singletonList(new NamePart(""));
         }
     }
@@ -257,17 +258,20 @@ public class ImageQAPlugin implements IStepPlugin {
     }
 
     private String getContextPath() {
-        FacesContext context = FacesContextHelper.getCurrentFacesContext();
-        HttpSession session = (HttpSession) context.getExternalContext().getSession(false);
-        String baseUrl = session.getServletContext().getContextPath();
-        return baseUrl;
+        HelperForm hf = (HelperForm) Helper.getManagedBeanValue("#{HelperForm}");
+        String contextPath = hf.getServletPathWithHostAsUrl();
+        return contextPath;
+//        FacesContext context = FacesContextHelper.getCurrentFacesContext();
+//        HttpSession session = (HttpSession) context.getExternalContext().getSession(false);
+//        String baseUrl = session.getServletContext().getContextPath();
+//        return baseUrl;
     }
 
     private Dimension getActualImageSize(Image image) {
         Dimension dim;
         try {
             String imagePath = imageFolderName + image.getImageName();
-            String dimString = new GetImageDimensionAction().getDimensions(imagePath);
+            String dimString = new GetImageDimensionAction().getDimensions(("file://" + imagePath).replaceAll("\\\\", "/"));
             int width = Integer.parseInt(dimString.replaceAll("::.*", ""));
             int height = Integer.parseInt(dimString.replaceAll(".*::", ""));
             dim = new Dimension(width, height);
