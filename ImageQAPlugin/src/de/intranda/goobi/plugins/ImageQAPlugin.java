@@ -18,7 +18,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -31,7 +33,6 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.configuration.ConfigurationRuntimeException;
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.SubnodeConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
@@ -593,6 +594,7 @@ public class ImageQAPlugin implements IStepPlugin {
         String myCombinedName = myimage.getCombinedName();
         String myPreviousCombinedName = myimage.getCombinedNameFromFilename();
         boolean imageNameFound = false;
+        Map<File, File> renamingMap = new LinkedHashMap<>();
         while (iterator.hasNext()) {
             SelectableImage currentImage = iterator.next();
             int currentImageIndex = getAllImages().indexOf(currentImage);
@@ -606,12 +608,28 @@ public class ImageQAPlugin implements IStepPlugin {
                 currentImage.setPageCounterLabel(currentPageCounter);
                 String newFilename = currentImage.getNamePrefix() + "_" + myCombinedName + currentPageCounter + suffix;
                 File imageFile = new File(imageFolderName, currentImage.getImageName());
-                imageFile.renameTo(new File(imageFolderName, newFilename));
+                File newImageFile = new File(imageFolderName, newFilename);
+                renamingMap.put(imageFile, newImageFile);
                 currentImage.setImageName(newFilename);
             } else if (myCombinedName.equals(currentCombinedName)) {
                 pageCounter++;
             }  else if (imageNameFound) {
                 break;
+            }
+        }
+        
+        List<File> toBeRenamedList = new ArrayList<>(renamingMap.keySet());
+        Collections.reverse(toBeRenamedList);
+        Iterator<File> iter = toBeRenamedList.iterator();
+        while(iter.hasNext()) {
+            File currentFile = iter.next();
+            File newFile = renamingMap.get(currentFile);
+            if(newFile.isFile() && !newFile.equals(currentFile)) {
+                logger.error("Trying to rename " + currentFile.getName() + " to " + newFile.getName() + ". But file already exists");
+                Helper.setFehlerMeldung("Trying to rename " + currentFile.getName() + " to " + newFile.getName() + ". But file already exists");
+                break;
+            } else {
+                currentFile.renameTo(newFile);
             }
         }
 
