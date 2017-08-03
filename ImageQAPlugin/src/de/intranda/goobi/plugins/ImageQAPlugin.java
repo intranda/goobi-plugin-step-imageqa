@@ -115,7 +115,7 @@ public class ImageQAPlugin implements IStepPlugin {
     public void initialize(Step step, String returnPath) {
         this.returnPath = returnPath;
         this.step = step;
-        
+
         String projectName = step.getProzess().getProjekt().getTitel();
 
         XMLConfiguration xmlConfig = ConfigPlugins.getPluginConfig(this);
@@ -262,10 +262,10 @@ public class ImageQAPlugin implements IStepPlugin {
         HelperForm hf = (HelperForm) Helper.getManagedBeanValue("#{HelperForm}");
         String contextPath = hf.getServletPathWithHostAsUrl();
         return contextPath;
-//        FacesContext context = FacesContextHelper.getCurrentFacesContext();
-//        HttpSession session = (HttpSession) context.getExternalContext().getSession(false);
-//        String baseUrl = session.getServletContext().getContextPath();
-//        return baseUrl;
+        //        FacesContext context = FacesContextHelper.getCurrentFacesContext();
+        //        HttpSession session = (HttpSession) context.getExternalContext().getSession(false);
+        //        String baseUrl = session.getServletContext().getContextPath();
+        //        return baseUrl;
     }
 
     private Dimension getActualImageSize(Image image) {
@@ -601,7 +601,8 @@ public class ImageQAPlugin implements IStepPlugin {
             String suffix = currentImage.getImageName().substring(currentImage.getImageName().lastIndexOf("."));
             String currentCombinedName = currentImage.getCombinedName();
 
-             if (currentImageIndex >= imageIndex && (myPreviousCombinedName.equals(currentCombinedName) || myCombinedName.equals(currentCombinedName) || currentImage.isNotYetNamed())) {
+            if (currentImageIndex >= imageIndex && (myPreviousCombinedName.equals(currentCombinedName) || myCombinedName.equals(currentCombinedName)
+                    || currentImage.isNotYetNamed())) {
                 imageNameFound = true;
                 currentImage.setNameParts(myimage.getNameParts());
                 String currentPageCounter = PAGENUMBERFORMAT.format(++pageCounter);
@@ -613,24 +614,33 @@ public class ImageQAPlugin implements IStepPlugin {
                 currentImage.setImageName(newFilename);
             } else if (myCombinedName.equals(currentCombinedName)) {
                 pageCounter++;
-            }  else if (imageNameFound) {
+            } else if (imageNameFound) {
                 break;
             }
         }
-        
-        List<File> toBeRenamedList = new ArrayList<>(renamingMap.keySet());
-        Collections.reverse(toBeRenamedList);
-        Iterator<File> iter = toBeRenamedList.iterator();
-        while(iter.hasNext()) {
-            File currentFile = iter.next();
-            File newFile = renamingMap.get(currentFile);
-            if(newFile.isFile() && !newFile.equals(currentFile)) {
-                logger.error("Trying to rename " + currentFile.getName() + " to " + newFile.getName() + ". But file already exists");
-                Helper.setFehlerMeldung("Trying to rename " + currentFile.getName() + " to " + newFile.getName() + ". But file already exists");
-                break;
-            } else {
-                currentFile.renameTo(newFile);
+
+        boolean renamed = true;
+        while (renamed && !renamingMap.isEmpty()) {
+            List<File> toBeRenamedList = new ArrayList<>(renamingMap.keySet());
+            Collections.reverse(toBeRenamedList);
+            Iterator<File> iter = toBeRenamedList.iterator();
+            renamed = false;
+            while (iter.hasNext()) {
+                File currentFile = iter.next();
+                File newFile = renamingMap.get(currentFile);
+                if (newFile.isFile() && !newFile.equals(currentFile)) {
+                    //                logger.error("Trying to rename " + currentFile.getName() + " to " + newFile.getName() + ". But file already exists");
+                    //                Helper.setFehlerMeldung("Trying to rename " + currentFile.getName() + " to " + newFile.getName() + ". But file already exists");
+                    //                break;
+                } else {
+                    currentFile.renameTo(newFile);
+                    renamingMap.remove(currentFile);
+                    renamed = true;
+                }
             }
+        }
+        if(!renamingMap.isEmpty()) {
+            Helper.setFehlerMeldung("Error renaming files - file " + renamingMap.keySet().iterator().next() + " could not be renamed to " + renamingMap.get(renamingMap.keySet().iterator().next()));
         }
 
         allImages = new ArrayList<SelectableImage>();
