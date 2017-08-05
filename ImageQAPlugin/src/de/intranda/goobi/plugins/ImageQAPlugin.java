@@ -10,6 +10,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -31,6 +32,9 @@ import java.util.zip.ZipOutputStream;
 
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.configuration.HierarchicalConfiguration;
@@ -58,6 +62,7 @@ import de.sub.goobi.helper.Helper;
 import de.sub.goobi.helper.NIOFileUtils;
 import de.sub.goobi.helper.exceptions.DAOException;
 import de.sub.goobi.helper.exceptions.SwapException;
+import de.sub.goobi.metadaten.MetadatenHelper;
 import de.unigoettingen.sub.commons.contentlib.exceptions.ContentLibException;
 import de.unigoettingen.sub.commons.contentlib.exceptions.ContentLibImageException;
 import de.unigoettingen.sub.commons.contentlib.exceptions.ImageManagerException;
@@ -90,6 +95,7 @@ public class ImageQAPlugin implements IStepPlugin {
     private boolean allowSelection = false;
     private boolean allowSelectionAll = false;
     private boolean allowDownload = false;
+    private boolean allowDownloadAsPdf = false;
 
     private String rotationCommandLeft = "";
     private String rotationCommandRight = "";
@@ -187,6 +193,7 @@ public class ImageQAPlugin implements IStepPlugin {
         allowSelection = myconfig.getBoolean("allowSelection", false);
         allowSelectionAll = myconfig.getBoolean("allowSelectionAll", false);
         allowDownload = myconfig.getBoolean("allowDownload", false);
+        allowDownloadAsPdf = myconfig.getBoolean("allowDownloadAsPdf", false);
 
         deletionCommand = myconfig.getString("deletionCommand", "-");
         rotationCommandLeft = myconfig.getString("rotationCommands.left", "-");
@@ -785,6 +792,46 @@ public class ImageQAPlugin implements IStepPlugin {
                     logger.error(e);
                 }
             }
+        }
+    }
+    
+    public void downloadSelectedImagesAsPdf() throws IOException, DAOException, SwapException, InterruptedException {
+    	
+    	// prepare contentserver URL
+	    FacesContext context = FacesContextHelper.getCurrentFacesContext();
+	    String contentServerUrl = ConfigurationHelper.getInstance().getGoobiContentServerUrl();
+        if (contentServerUrl == null || contentServerUrl.length() == 0) {
+        	HttpServletRequest req = (HttpServletRequest) context.getExternalContext().getRequest();
+    	    String fullpath = req.getRequestURL().toString();
+    	    String servletpath = context.getExternalContext().getRequestServletPath();
+    	    String myBasisUrl = fullpath.substring(0, fullpath.indexOf(servletpath));
+        	contentServerUrl = myBasisUrl + "/cs/cs?action=pdf&images=";
+        }
+        
+        // put all selected images into a URL
+        String url = "";
+        for (SelectableImage image : allImages) {
+            if (image.isSelected()) {
+                Path currentImagePath = Paths.get(imageFolderName, image.getImageName());
+                url = url + currentImagePath.toUri().toURL() + "$";
+            }
+        }
+        
+        // generate the final URL
+        String imageString = url.substring(0, url.length() - 1);
+        String targetFileName = "&targetFileName=" + step.getProzess().getTitel() + ".pdf";
+        URL goobiContentServerUrl = new URL(contentServerUrl + imageString + targetFileName);
+        
+        // generate the pdf and deliver it as download
+        if (!context.getResponseComplete()) {
+            HttpServletResponse response = (HttpServletResponse) context.getExternalContext().getResponse();
+            String fileName = step.getProzess().getTitel() + ".pdf";
+            ServletContext servletContext = (ServletContext) context.getExternalContext().getContext();
+            String contentType = servletContext.getMimeType(fileName);
+            response.setContentType(contentType);
+            response.setHeader("Content-Disposition", "attachment;filename=\"" + fileName + "\"");
+            response.sendRedirect(goobiContentServerUrl.toString());
+            context.responseComplete();
         }
     }
 }

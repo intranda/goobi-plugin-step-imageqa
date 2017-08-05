@@ -92,6 +92,13 @@
                         </h:commandLink>
                     </li>
 
+                    <li>
+                        <h:commandLink styleClass="thumbnail-control rotate-right" action="#{AktuelleSchritteForm.myPlugin.downloadSelectedImagesAsPdf}" rendered="#{AktuelleSchritteForm.myPlugin.allowSelection and AktuelleSchritteForm.myPlugin.allowDownloadAsPdf}" onclick="if (!confirm('#{msgs.wirklichAusfuehren}')) return false">
+                            <i class="btn fa fa-file-pdf-o margin-right-10"></i>
+                            <h:outputText value="#{msgs.plugin_intranda_step_imageQA_downloadSelectedImagesAsPdf}" />
+                        </h:commandLink>
+                    </li>
+
                 </ul>
             </h:panelGroup>
 
