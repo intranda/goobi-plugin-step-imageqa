@@ -114,21 +114,38 @@
 		#image-control-wrapper {
 			display: inline-block;
 			margin-bottom: -1rem;
+			margin-left:0px;
 		}
 	</style>
 	<div id="image-control-wrapper">
 			<nav id="viewer_controls_nav">
-				<ul>
-					<li><span onclick="viewImage.controls.rotateLeft();"
-						title="#{msg.rotateLeft}" class="viewer-control viewer-control-rotate-left" /></li>
-					<li><span onclick="viewImage.controls.rotateRight();"
-						title="#{msg.rotateRight}" class="viewer-control viewer-control-rotate-right" /></li>
-					<li><span onclick="viewImage.controls.reset(true);" class="viewer-control viewer-control-reset"
-						title="#{msg.resetImage}" /></li>
-					<li><span
-							onclick="viewImage.controls.setFullScreen(true);"
-							class="viewer-control viewer-control-fullscreen">
-						</span></li>
+				<ul style="margin-top:1px;">
+					
+					<li>
+						<span class="btn font-size-s" title="#{msg.rotateLeft}"
+							onclick="viewImage.controls.rotateLeft();">
+							<i class="fa fa-undo"></i>
+						</span>
+					</li>
+					<li>
+						<span class="btn font-size-s" title="#{msg.rotateRight}"
+							onclick="viewImage.controls.rotateRight();">
+							<i class="fa fa-repeat"></i>
+						</span>
+					</li>
+					<li>
+						<h:commandLink styleClass="btn font-size-s margin-left-10" title="#{msgs.imageFullscreen}"
+							action="ImageQAPlugin_Fullscreen">
+							<i class="fa fa-arrows-alt"></i>
+						</h:commandLink>
+					</li>
+					<li>
+						<span class="btn font-size-s margin-right-10" title="#{msg.resetImage}"
+							onclick="viewImage.controls.reset(true);">
+							<i class="fa fa-refresh"></i>
+						</span>
+					</li>
+					
 					<li>
 						<div id="zoomSlider">
 							<span class="zoom-slider-handle"></span>

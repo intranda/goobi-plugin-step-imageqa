@@ -15,169 +15,160 @@
     <ui:define name="content">
 
         <style>
-/* Thumbnails */
-.goobi-thumbnail {
-    float: left;
-    margin: 7px;
-    width: #{AktuelleSchritteForm.myPlugin.thumbnailSize +2}px;
-    height: #{AktuelleSchritteForm .myPlugin.thumbnailSize+55}px;
-}
+			/* Thumbnails */
+			.goobi-thumbnail {
+			    float: left;
+			    margin: 7px;
+			    width: #{AktuelleSchritteForm.myPlugin.thumbnailSize +2}px;
+			    height: #{AktuelleSchritteForm .myPlugin.thumbnailSize+55}px;
+			}
+			
+			.goobi-thumbnail .goobi-thumbnail-image {
+			    float: left;
+			    width: 100%;
+			    min-height: 100px;
+			    overflow: hidden;
+			    max-height: #{AktuelleSchritteForm.myPlugin.thumbnailSize +2}px;
+			}
+			
+			.goobi-thumbnail .goobi-thumbnail-image a {
+			    display: block;
+			}
+			
+			.goobi-thumbnail .goobi-thumbnail-image a img {
+			    display: block;
+			    max-width: 100%;
+			    max-height: 175px;
+			    margin: 0 auto;
+			    border: 1px solid lightgrey;
+			}
+			
+			.goobi-thumbnail .goobi-thumbnail-caption {
+			    float: left;
+			    width: 100%;
+			    min-height: 20px;
+			    line-height: 20px;
+			    text-align: center;
+			}
+			
+			.goobi-thumbnail .goobi-thumbnail-controls {
+			    float: left;
+			    width: 100%;
+			    margin-top: 5px;
+			}
+			
+			.goobi-thumbnail-controls-left {
+			    width: 60%;    
+			}
+			
+			.goobi-thumbnail-controls-right {
+			    width: 40%;
+			}
+			
+			.goobi-thumbnail-controls-left {
+			    padding-left: 25px;
+			}
+			
+			.goobi-thumbnail-controls-left .thumbnail-control {
+			    margin-right: 3px;
+			}
+			
+			.goobi-thumbnail-controls-right {
+			    padding-right: 25px;
+			    text-align: right;
+			}
+			
+			.goobi-thumbnail-controls-right .thumbnail-control {
+			    margin-left: 3px;
+			}
+			
+			.thumbnail-control {
+			    padding: 3px 5px;
+			}
+			
+			.thumbnail-control.checkbox {
+			    position: relative;
+			    margin: 0 3px 0 0;
+			}
+			
+			.thumbnail-control.checkbox label {
+			    margin: 0;
+			    padding: 0;
+			}
+			
+			.thumbnail-control.checkbox .control-indicator .fa-square-o, .thumbnail-control.checkbox .control-indicator .fa-check-square-o {
+			    margin-top: 4px;
+			}
+			
+			.thumbnail-control.checkbox .control-indicator .fa-square-o {
+			    padding-right: 2px;
+			}
+			
+			.thumbnail-control.checkbox .control-indicator .fa-check-square-o {
+			    display: none;
+			}
+			
+			.thumbnail-control.checkbox input[type="checkbox"] {
+			    position: absolute;
+			    margin: 0;
+			    visibility: hidden;
+			    z-index: -1;
+			}
+			
+			.thumbnail-control.checkbox input:checked ~ .control-indicator .fa-check-square-o {
+			    display: inline-block;
+			}
+			
+			.thumbnail-control.checkbox input:checked ~ .control-indicator .fa-square-o {
+			    display: none;
+			}
+			
+			.thumb-canvas{
+				border: 1px solid #ccc;
+			}
+			
+			.big-image-caption {
+			    text-align: center;
+			}
+			
+			.div-image img {
+			    float: right;
+			    border: solid 1px;
+			    border-color: lightgrey;
+			}
+			
+			.img-active {
+			    background-color: #368ee0;
+			    color: white;
+			}
+			
+			.image-navigation {
+			    margin-bottom: 5px;
+			}
+			
+			#image-control-wrapper {
+			    margin-left: 6px;
+			}
+			
+			#mainImage {
+			    widht: 100%;
+			}
+			
+			.namePart {
+				display: inline-block;
+				width: auto;
+				min-width: 20px;
+				margin-left: 15px;
+				margin-bottom: 10px;
+			}
 
-.goobi-thumbnail .goobi-thumbnail-image {
-    float: left;
-    width: 100%;
-    min-height: 100px;
-    overflow: hidden;
-    max-height: #{AktuelleSchritteForm.myPlugin.thumbnailSize +2}px;
-}
+		</style>
 
-.goobi-thumbnail .goobi-thumbnail-image a {
-    display: block;
-}
-
-.goobi-thumbnail .goobi-thumbnail-image a img {
-    display: block;
-    max-width: 100%;
-    max-height: 175px;
-    margin: 0 auto;
-    border: 1px solid lightgrey;
-}
-
-.goobi-thumbnail .goobi-thumbnail-caption {
-    float: left;
-    width: 100%;
-    min-height: 20px;
-    line-height: 20px;
-    text-align: center;
-}
-
-.goobi-thumbnail .goobi-thumbnail-controls {
-    float: left;
-    width: 100%;
-    margin-top: 5px;
-}
-
-.goobi-thumbnail-controls-left {
-    width: 60%;    
-}
-
-.goobi-thumbnail-controls-right {
-    width: 40%;
-}
-
-.goobi-thumbnail-controls-left {
-    padding-left: 25px;
-}
-
-.goobi-thumbnail-controls-left .thumbnail-control {
-    margin-right: 3px;
-}
-
-.goobi-thumbnail-controls-right {
-    padding-right: 25px;
-    text-align: right;
-}
-
-.goobi-thumbnail-controls-right .thumbnail-control {
-    margin-left: 3px;
-}
-
-.thumbnail-control {
-    padding: 3px 5px;
-}
-
-.thumbnail-control.checkbox {
-    position: relative;
-    margin: 0 3px 0 0;
-}
-
-.thumbnail-control.checkbox label {
-    margin: 0;
-    padding: 0;
-}
-
-.thumbnail-control.checkbox .control-indicator .fa-square-o, .thumbnail-control.checkbox .control-indicator .fa-check-square-o {
-    margin-top: 4px;
-}
-
-.thumbnail-control.checkbox .control-indicator .fa-square-o {
-    padding-right: 2px;
-}
-
-.thumbnail-control.checkbox .control-indicator .fa-check-square-o {
-    display: none;
-}
-
-.thumbnail-control.checkbox input[type="checkbox"] {
-    position: absolute;
-    margin: 0;
-    visibility: hidden;
-    z-index: -1;
-}
-
-.thumbnail-control.checkbox input:checked ~ .control-indicator .fa-check-square-o {
-    display: inline-block;
-}
-
-.thumbnail-control.checkbox input:checked ~ .control-indicator .fa-square-o {
-    display: none;
-}
-
-.thumb-canvas{
-	border: 1px solid #ccc;
-}
-
-.big-image-caption {
-    text-align: center;
-}
-
-.div-image img {
-    float: right;
-    border: solid 1px;
-    border-color: lightgrey;
-}
-
-.img-active {
-    background-color: #368ee0;
-    color: white;
-}
-
-.image-navigation {
-    margin-bottom: 5px;
-}
-
-#image-control-wrapper {
-    margin-left: 6px;
-}
-
-#mainImage {
-    widht: 100%;
-}
-
-.namePart {
-	display: inline-block;
-	width: auto;
-	min-width: 20px;
-	margin-left: 15px;
-	margin-bottom: 10px;
-}
-
-</style>
-
-	<!-- image navigation -->
-<!-- 	<script src="template/js/reactiveX/rx.lite.min.js"></script> -->
-<!-- 	<script src="template/js/q-promises/q.min.js"></script> -->
-<!-- 	<script src="template/js/openseadragon/openseadragon.min.js"></script> -->
-<!-- 	<script -->
-<!-- 		src="template/js/openseadragon/openseadragon-viewerinputhook.js"></script> -->
-	
         <script type="text/javascript" src="#{HelperForm.applicationWebsiteUrl}/uii/plugins/step/#{AktuelleSchritteForm.myPlugin.title}/javascript/rx.lite.min.js"></script>
         <script type="text/javascript" src="#{HelperForm.applicationWebsiteUrl}/uii/plugins/step/#{AktuelleSchritteForm.myPlugin.title}/javascript/q.min.js"></script>
         <script type="text/javascript" src="#{HelperForm.applicationWebsiteUrl}/uii/plugins/step/#{AktuelleSchritteForm.myPlugin.title}/javascript/openseadragon/openseadragon.min.js"></script>
         <script type="text/javascript" src="#{HelperForm.applicationWebsiteUrl}/uii/plugins/step/#{AktuelleSchritteForm.myPlugin.title}/javascript/openseadragon/openseadragon-viewerinputhook.js"></script>
 		<script type="text/javascript" src="#{HelperForm.applicationWebsiteUrl}/uii/plugins/step/#{AktuelleSchritteForm.myPlugin.title}/javascript/viewImage.js"></script>
-
-<!--         <script type="text/javascript" src="#{HelperForm.applicationWebsiteUrl}/uii/plugins/step/#{AktuelleSchritteForm.myPlugin.title}/javascript/viewImage.zoomSlider.js"></script> -->
 
         <h:form id="qaform">
             <div class="box box-color lightgrey box-bordered">
@@ -206,7 +197,6 @@
                         <!-- Thumbnail list -->
                         <div class="row margin-top-most margin-bottom-most">
 
-                            <!--                              <c:forEach var="image" items="#{AktuelleSchritteForm.myPlugin.paginatorList}" varStatus="status"> -->
                             <ui:repeat var="image" value="#{AktuelleSchritteForm.myPlugin.paginatorList}" varStatus="status">
                                 <div class="goobi-thumbnail #{AktuelleSchritteForm.myPlugin.image.imageName eq image.imageName?'img-active':'font-light'}">
                                     <div class="goobi-thumbnail-image">
@@ -220,12 +210,6 @@
                                             </h:commandLink>
                                         </div>
 
-
-                                        <!--                                         <h:commandLink title="#{image.tooltip}"> -->
-                                        <!--                                             <h:graphicImage value="#{image.thumbnailUrl}" title="#{image.tooltip}" styleClass="#{image.imageName == AktuelleSchritteForm.myPlugin.image.imageName ? 'img-active' : ''}" /> -->
-                                        <!--                                             <f:setPropertyActionListener value="#{image.order -1}" target="#{AktuelleSchritteForm.myPlugin.imageIndex}"/> -->
-                                        <!--                                         	<f:ajax execute="@form" render="@form :bigimage"/> -->
-                                        <!--                                         </h:commandLink> -->
                                     </div>
                                     <div class="goobi-thumbnail-caption">
                                         <h:outputText value="#{image.imageNameShort}"></h:outputText>
@@ -343,7 +327,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <!--                                     </c:forEach> -->
+                         
                             </ui:repeat>
                         </div>
                         <!-- // Thumbnail list -->
@@ -375,28 +359,29 @@
                                         <h:outputText value="#{AktuelleSchritteForm.myPlugin.image.imageName}" />
                                     </div>
                                     <script type="text/javascript">
-									var configViewer = {
-									    global: {
-									    	divId: 'mainImage',
-									        useTiles: false,
-									        footerHeight: 0,
-									        adaptContainerHeight: true,
-									        zoomSlider: "#zoomSlider"
-									    },
-									    image: {
-									        mimeType: "image/jpeg",
- 									        tileSource : [#{AktuelleSchritteForm.myPlugin.image.imageLevels}],
-									    }
-									};									
-									    viewImage.init( configViewer )
-									    .then(function(osViewer) {
-									    	console.info( 'viewer opened' );
-									        //TODO: Hide loader?
-									    })
-									    .catch(function(error){
-									        console.error( 'Error opening image', error );
-									        $('#' + configViewer.global.divId).html( 'Failed to load image: "' + error + '"' );
-									    });
+                                    	var configViewer = {
+                            			    global: {
+                            			    	divId: 'mainImage',
+                            			        useTiles: false,
+                            			        footerHeight: 0,
+                            			        adaptContainerHeight: true,
+                            			        zoomSlider: "#zoomSlider"
+                            			    },
+                            			    image: {
+                            			        mimeType: "image/jpeg",
+                            				        tileSource : [#{AktuelleSchritteForm.myPlugin.image.imageLevels}],
+                            			    }
+                            			};									
+                            		    
+                                    	viewImage.init( configViewer )
+                            		    .then(function(osViewer) {
+                            		    	console.info( 'viewer opened' );
+                            		        //TODO: Hide loader?
+                            		    })
+                            		    .catch(function(error){
+                            		        console.error( 'Error opening image', error );
+                            		        $('#' + configViewer.global.divId).html( 'Failed to load image: "' + error + '"' );
+                            		    });
                                     </script>
                                 </h:panelGroup>
                             </div>
@@ -432,67 +417,89 @@
 
 
         <script type="text/javascript">
+	        	
+        	window.onload = function() {
+		    	loadImages();
+		    }
+			
+			function loadThumbnails() {
+				var height = parseInt('#{AktuelleSchritteForm.myPlugin.thumbnailSize}');
+				if (height) {
+					console.log("höhe ist da mit " +  height);
+		     		$('.goobi-thumbnail-image').css('height', (height + 25) + 'px');
+		    		$('.goobi-thumbnail-image .thumb').css('max-height', height + 'px');
+		    		$('.goobi-thumbnail-image .thumb canvas').css('max-height', height + 'px');
+		    		$('.goobi-thumbnail-image').css('max-width', (height) + 'px');
+				}
+			}
+		
+			$( document ).ready(function() {
+				loadThumbnails();
+			});
+		
+			jsf.ajax.addOnEvent(function(data) {
+		    	var ajaxstatus = data.status; // Can be "begin", "complete" and "success"
+		      	switch (ajaxstatus) {
+		        	case "success": // This is called when ajax response is successfully processed.
+		            	loadImages();
+		            	loadThumbnails();
+		              	break;
+		      		}
+			});
+		
+			function copyValue(element, e) {
+		    	console.log(element.id);
+		    	if (element.id =='qaform:first:txtMoveTo2') {
+		        	document.getElementById('qaform:second:txtMoveTo2').value = element.value;
+		    	} else if (element.id =='qaform:second:txtMoveTo2'){
+		        	document.getElementById('qaform:first:txtMoveTo2').value = element.value;
+		    	} else if (element.id =='qaform:first_image:txtImageMoveTo2') {
+		        	document.getElementById('qaform:second_image:txtImageMoveTo2').value = element.value;
+		    	} else {
+		        	document.getElementById('qaform:first_image:txtImageMoveTo2').value = element.value;
+		    	}
+		    
+			    var keycode;
+				if (window.event)
+					keycode = window.event.keyCode;
+				else if (e)
+					keycode = e.which;
+				else
+					return true;
+			
+				if (keycode == 13) {
+					document.getElementById(element.id).nextSibling.click();
+					return false;
+				} else
+					return true;
+			}
+			
+			$(document).bind('keyup', '#{LoginForm.myBenutzer.shortcutPrefix}+right', function() {            	
+            	var myButton = document.getElementById("qaform:first_image:imageNext");
+            	if (myButton!=null) {
+            		myButton.click();
+            	} 
+            });
+            
+            $(document).bind('keyup', '#{LoginForm.myBenutzer.shortcutPrefix}+left', function() {            	
+            	var myButton = document.getElementById("qaform:first_image:imageBack");
+            	if (myButton!=null) {
+            		myButton.click();
+            	} 
+            });
+            
+         	// Find the right method, call on correct element
+            function launchFullScreen(element) {
+              if(element.requestFullScreen) {
+                element.requestFullScreen();
+              } else if(element.mozRequestFullScreen) {
+                element.mozRequestFullScreen();
+              } else if(element.webkitRequestFullScreen) {
+                element.webkitRequestFullScreen();
+              }
+            }
 
-	window.onload = function() {
-    	loadImages();
-    }
-	
-   function loadThumbnails() {
-//		 var height = parseInt('#{Metadaten.thumbnailSize}');
-		var height = parseInt('#{AktuelleSchritteForm.myPlugin.thumbnailSize}');
-		if (height) {
-			console.log("höhe ist da mit " +  height);
-     		$('.goobi-thumbnail-image').css('height', (height + 25) + 'px');
-    		$('.goobi-thumbnail-image .thumb').css('max-height', height + 'px');
-    		$('.goobi-thumbnail-image .thumb canvas').css('max-height', height + 'px');
-    		$('.goobi-thumbnail-image').css('max-width', (height) + 'px');
-		}
-	}
-$( document ).ready(function() {
-	 loadThumbnails();
-});
-
-jsf.ajax.addOnEvent(function(data) {
-    var ajaxstatus = data.status; // Can be "begin", "complete" and "success"
-      
-      switch (ajaxstatus) {
-          case "success": // This is called when ajax response is successfully processed.
-              loadImages();
-              loadThumbnails();
-              break;
-      }
-	
-});
-
-function copyValue(element, e) {
-    console.log(element.id);
-    if (element.id =='qaform:first:txtMoveTo2') {
-        document.getElementById('qaform:second:txtMoveTo2').value = element.value;
-    } else if (element.id =='qaform:second:txtMoveTo2'){
-        document.getElementById('qaform:first:txtMoveTo2').value = element.value;
-    } else if (element.id =='qaform:first_image:txtImageMoveTo2') {
-        document.getElementById('qaform:second_image:txtImageMoveTo2').value = element.value;
-    } else {
-        document.getElementById('qaform:first_image:txtImageMoveTo2').value = element.value;
-    }
-    
-    var keycode;
-	if (window.event)
-		keycode = window.event.keyCode;
-	else if (e)
-		keycode = e.which;
-	else
-		return true;
-	
-	if (keycode == 13) {
-		document.getElementById(element.id).nextSibling.click();
-		return false;
-	} else
-		return true;
-    
-}
-
-</script>
+	</script>
     </ui:define>
 
 </ui:composition>
