@@ -239,6 +239,13 @@ public class ImageQAPlugin implements IStepPlugin {
         }
         return subList;
     }
+    
+    public Image getImage() {
+        if(image.getImageLevels().isEmpty()) {
+            createImage(image);
+        }
+        return image;
+    }
 
     private void createImage(Image currentImage) {
 
