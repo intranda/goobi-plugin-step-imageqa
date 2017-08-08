@@ -241,7 +241,7 @@ public class ImageQAPlugin implements IStepPlugin {
     }
     
     public Image getImage() {
-        if(image.getImageLevels().isEmpty()) {
+        if(image != null && (image.getImageLevels() == null || image.getImageLevels().isEmpty())) {
             createImage(image);
         }
         return image;
