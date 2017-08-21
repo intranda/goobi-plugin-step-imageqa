@@ -196,8 +196,8 @@ public class ImageQAPlugin implements IStepPlugin {
         allowDownloadAsPdf = myconfig.getBoolean("allowDownloadAsPdf", false);
 
         deletionCommand = myconfig.getString("deletionCommand", "-");
-        rotationCommandLeft = myconfig.getString("rotationCommands.left", "-");
-        rotationCommandRight = myconfig.getString("rotationCommands.right", "-");
+        rotationCommandLeft = myconfig.getString("rotationCommands/left", "-");
+        rotationCommandRight = myconfig.getString("rotationCommands/right", "-");
 
         NUMBER_OF_IMAGES_PER_PAGE = myconfig.getInt("numberOfImagesPerPage", 50);
         THUMBNAIL_SIZE_IN_PIXEL = myconfig.getInt("thumbnailsize", 200);
