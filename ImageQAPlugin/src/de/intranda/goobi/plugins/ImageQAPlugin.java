@@ -716,7 +716,8 @@ public class ImageQAPlugin implements IStepPlugin {
             Process process = Runtime.getRuntime().exec(command);
             int result = process.waitFor();
             if (result != 0) {
-                logger.debug("A problem occured while calling command '" + command + "'. Error code was " + result);
+                logger.error("A problem occured while calling command '" + command + "'. The error code was " + result);
+                Helper.setFehlerMeldung("A problem occured while calling command '" + command + "'. The error code was " + result);
             }
         } catch (IOException e) {
             logger.error("IOException in rotate()", e);
