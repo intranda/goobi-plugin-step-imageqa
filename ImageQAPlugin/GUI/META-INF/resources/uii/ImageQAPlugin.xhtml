@@ -412,6 +412,15 @@
 
                 <div class="form-actions">
 
+                    <!-- Save and finish the task -->
+                    <h:commandLink styleClass="btn btn-green font-size-s" id="finishAndClose" 
+                    	rendered="#{NavigationForm.uiStatus.pluginSimulation != true}"
+                    	action="#{AktuelleSchritteForm.SchrittDurchBenutzerAbschliessen}">
+                        <i class="fa fa-check margin-right-5"></i>
+                        <h:outputText value="#{msgs.task_leavePluginAndFinishTask}" />
+                        <x:updateActionListener property="#{NavigationForm.uiStatus.pluginSimulation}" value="#{false}" />
+                    </h:commandLink>
+                     
                     <!-- Save -->
                     <h:commandLink styleClass="btn btn-lightgrey pull-right font-size-s" id="absenden" action="#{AktuelleSchritteForm.myPlugin.cancel}">
                         <i class="fa fa-check margin-right-5"></i>
