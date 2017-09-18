@@ -196,8 +196,8 @@ public class ImageQAPlugin implements IStepPlugin {
         allowDownloadAsPdf = myconfig.getBoolean("allowDownloadAsPdf", false);
 
         deletionCommand = myconfig.getString("deletionCommand", "-");
-        rotationCommandLeft = myconfig.getString("rotationCommands.left", "-");
-        rotationCommandRight = myconfig.getString("rotationCommands.right", "-");
+        rotationCommandLeft = myconfig.getString("rotationCommands/left", "-");
+        rotationCommandRight = myconfig.getString("rotationCommands/right", "-");
 
         NUMBER_OF_IMAGES_PER_PAGE = myconfig.getInt("numberOfImagesPerPage", 50);
         THUMBNAIL_SIZE_IN_PIXEL = myconfig.getInt("thumbnailsize", 200);
@@ -241,7 +241,7 @@ public class ImageQAPlugin implements IStepPlugin {
     }
     
     public Image getImage() {
-        if(image != null && image.getImageLevels().isEmpty()) {
+        if(image != null && (image.getImageLevels() == null || image.getImageLevels().isEmpty())) {
             createImage(image);
         }
         return image;
@@ -716,7 +716,8 @@ public class ImageQAPlugin implements IStepPlugin {
             Process process = Runtime.getRuntime().exec(command);
             int result = process.waitFor();
             if (result != 0) {
-                logger.debug("A problem occured while calling command '" + command + "'. Error code was " + result);
+                logger.error("A problem occured while calling command '" + command + "'. The error code was " + result);
+                Helper.setFehlerMeldung("A problem occured while calling command '" + command + "'. The error code was " + result);
             }
         } catch (IOException e) {
             logger.error("IOException in rotate()", e);
