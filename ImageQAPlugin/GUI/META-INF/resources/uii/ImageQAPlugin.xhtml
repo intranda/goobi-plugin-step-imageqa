@@ -190,6 +190,19 @@
                         <h:commandLink id="id10" action="#{NavigationForm.Reload}" styleClass="btn btn-mini">
                             <i class="fa fa-refresh" />
                         </h:commandLink>
+                        
+                        <h:commandLink id="id11" action="#{AktuelleSchritteForm.SchrittDurchBenutzerAbschliessen}" styleClass="btn btn-mini" 
+                        	rendered="#{NavigationForm.uiStatus.pluginSimulation != true}" title="#{msgs.task_leavePluginAndFinishTask}">
+                            <i class="fa fa-check" />
+                            <x:updateActionListener property="#{NavigationForm.uiStatus.pluginSimulation}" value="#{false}" />
+                        </h:commandLink>
+                        
+                        <h:commandLink id="id12" action="#{AktuelleSchritteForm.myPlugin.cancel}" styleClass="btn btn-mini" 
+                        	rendered="#{NavigationForm.uiStatus.pluginSimulation != true}" title="#{msgs.pluginLeave}">
+                            <i class="fa fa-close" />
+                            <x:updateActionListener property="#{NavigationForm.uiStatus.pluginSimulation}" value="#{false}" />
+                        </h:commandLink>
+                        
                     </div>
                 </div>
 
@@ -423,7 +436,7 @@
                      
                     <!-- Save -->
                     <h:commandLink styleClass="btn btn-lightgrey pull-right font-size-s" id="absenden" action="#{AktuelleSchritteForm.myPlugin.cancel}">
-                        <i class="fa fa-check margin-right-5"></i>
+                        <i class="fa fa-close margin-right-5"></i>
                         <h:outputText value="#{msgs.pluginLeave}" />
                         <x:updateActionListener property="#{NavigationForm.uiStatus.pluginSimulation}" value="#{false}" />
                     </h:commandLink>
