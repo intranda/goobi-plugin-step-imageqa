@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.apache.commons.io.FilenameUtils;
 
+import de.sub.goobi.metadaten.Image;
 import lombok.Getter;
 import lombok.Setter;
 

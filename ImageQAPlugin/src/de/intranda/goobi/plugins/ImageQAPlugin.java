@@ -51,7 +51,6 @@ import org.goobi.production.enums.PluginType;
 import org.goobi.production.enums.StepReturnValue;
 import org.goobi.production.plugin.interfaces.IStepPlugin;
 
-import de.intranda.goobi.Image;
 import de.intranda.goobi.NamePart;
 import de.intranda.goobi.SelectableImage;
 import de.sub.goobi.config.ConfigPlugins;
@@ -62,7 +61,7 @@ import de.sub.goobi.helper.Helper;
 import de.sub.goobi.helper.NIOFileUtils;
 import de.sub.goobi.helper.exceptions.DAOException;
 import de.sub.goobi.helper.exceptions.SwapException;
-import de.sub.goobi.metadaten.MetadatenHelper;
+import de.sub.goobi.metadaten.Image;
 import de.unigoettingen.sub.commons.contentlib.exceptions.ContentLibException;
 import de.unigoettingen.sub.commons.contentlib.exceptions.ContentLibImageException;
 import de.unigoettingen.sub.commons.contentlib.exceptions.ImageManagerException;
