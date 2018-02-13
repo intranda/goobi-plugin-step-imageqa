@@ -62,6 +62,7 @@ import de.sub.goobi.helper.NIOFileUtils;
 import de.sub.goobi.helper.exceptions.DAOException;
 import de.sub.goobi.helper.exceptions.SwapException;
 import de.sub.goobi.metadaten.Image;
+import de.sub.goobi.metadaten.ImageLevel;
 import de.unigoettingen.sub.commons.contentlib.exceptions.ContentLibException;
 import de.unigoettingen.sub.commons.contentlib.exceptions.ContentLibImageException;
 import de.unigoettingen.sub.commons.contentlib.exceptions.ImageManagerException;
@@ -248,16 +249,33 @@ public class ImageQAPlugin implements IStepPlugin {
 
     private void createImage(Image currentImage) {
 
-//        if (currentImage.getSize() == null) {
-//            currentImage.setSize(getActualImageSize(currentImage));
-//        }
-
         String thumbUrl = createImageUrl(currentImage, THUMBNAIL_SIZE_IN_PIXEL, THUMBNAIL_FORMAT, "");
         currentImage.setThumbnailUrl(thumbUrl);
 
         String largeThumbUrl = createImageUrl(currentImage, THUMBNAIL_SIZE_IN_PIXEL * 4, THUMBNAIL_FORMAT, "");
         currentImage.setLargeThumbnailUrl(largeThumbUrl);
 
+    }
+
+    public List<ImageLevel> getImageLevels(Image image) {
+        if(image != null) {            
+            if(!image.hasImageLevels()) {            
+                createImageLevels(image);
+            } 
+            return image.getImageLevels();
+        } else {
+            return Collections.EMPTY_LIST;
+        }
+
+    }
+    
+    /**
+     * @param currentImage
+     */
+    public void createImageLevels(Image currentImage) {
+        if (currentImage.getSize() == null) {
+            currentImage.setSize(getActualImageSize(currentImage));
+        }
         String contextPath = getContextPath();
         for (String sizeString : imageSizes) {
             try {

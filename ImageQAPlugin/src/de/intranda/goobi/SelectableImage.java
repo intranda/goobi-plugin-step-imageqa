@@ -109,13 +109,6 @@ public class SelectableImage extends Image {
         }
     }
 
-    @Override
-    public void addImageLevel(String imageUrl, int size) {
 
-        Dimension dim = new Dimension(size, 0);
-        ImageLevel layer = new ImageLevel(imageUrl, dim);
-        getImageLevels().add(layer);
-    }
-    
     
 }
