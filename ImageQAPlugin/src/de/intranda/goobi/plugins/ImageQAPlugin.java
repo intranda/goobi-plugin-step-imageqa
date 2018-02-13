@@ -248,9 +248,9 @@ public class ImageQAPlugin implements IStepPlugin {
 
     private void createImage(Image currentImage) {
 
-        if (currentImage.getSize() == null) {
-            currentImage.setSize(getActualImageSize(currentImage));
-        }
+//        if (currentImage.getSize() == null) {
+//            currentImage.setSize(getActualImageSize(currentImage));
+//        }
 
         String thumbUrl = createImageUrl(currentImage, THUMBNAIL_SIZE_IN_PIXEL, THUMBNAIL_FORMAT, "");
         currentImage.setThumbnailUrl(thumbUrl);

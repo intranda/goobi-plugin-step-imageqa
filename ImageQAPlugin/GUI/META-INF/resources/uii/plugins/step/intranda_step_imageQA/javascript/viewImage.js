@@ -259,6 +259,11 @@
             if(Array.isArray(imageInfo)) {
             	imageInfo.forEach(function(level) {
             		level.mimetype = _defaults.image.mimeType;
+            		if(level.width > 0 && level.height == 0) {
+            		    level.height = level.width;
+            		} else if(level.height > 0 && level.widht == 0) {
+            		    level.width = level.height;
+            		}
             	});
             	tileSource = new OpenSeadragon.LegacyTileSource(imageInfo);
             } else if(imageInfo.sizes) {
@@ -422,12 +427,11 @@
         createTileSource: function(source) {
 
         	var result = Q.defer();
-
             viewImage.tileSourceResolver.resolveAsJson(source)
             .then(
             		function(imageInfo) {                        
 		                if(_debug) {                
-		                    console.log("IIIF image info ", imageInfo);                        
+		                    console.log("IIIF image info ", imageInfo);        
 		                }               
 		                viewImage.setImageSizes(imageInfo, _defaults.global.imageSizes);       
 		                viewImage.setTileSizes(imageInfo, _defaults.global.tileSizes);                

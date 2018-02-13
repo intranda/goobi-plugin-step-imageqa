@@ -1,5 +1,6 @@
 package de.intranda.goobi;
 
+import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -7,6 +8,7 @@ import java.util.List;
 import org.apache.commons.io.FilenameUtils;
 
 import de.sub.goobi.metadaten.Image;
+import de.sub.goobi.metadaten.ImageLevel;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -107,7 +109,13 @@ public class SelectableImage extends Image {
         }
     }
 
-    
+    @Override
+    public void addImageLevel(String imageUrl, int size) {
+
+        Dimension dim = new Dimension(size, 0);
+        ImageLevel layer = new ImageLevel(imageUrl, dim);
+        getImageLevels().add(layer);
+    }
     
     
 }
