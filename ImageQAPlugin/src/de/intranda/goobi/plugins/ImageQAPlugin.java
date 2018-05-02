@@ -44,7 +44,6 @@ import org.apache.commons.configuration.reloading.FileChangedReloadingStrategy;
 import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 import org.goobi.beans.Step;
 import org.goobi.production.enums.PluginGuiType;
 import org.goobi.production.enums.PluginType;
@@ -71,18 +70,18 @@ import de.unigoettingen.sub.commons.contentlib.imagelib.ImageManager;
 import de.unigoettingen.sub.commons.contentlib.imagelib.JpegInterpreter;
 import de.unigoettingen.sub.commons.contentlib.servlet.controller.GetImageDimensionAction;
 import lombok.Data;
+import lombok.extern.log4j.Log4j;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 
 @Data
 @PluginImplementation
+@Log4j
 public class ImageQAPlugin implements IStepPlugin {
 
     private static final DecimalFormat PAGENUMBERFORMAT = new DecimalFormat("0000");
     private static final DecimalFormat FILENUMBERFORMAT = new DecimalFormat("00000000");
 
-    private static final Logger logger = Logger.getLogger(ImageQAPlugin.class);
     private Step step;
-
     private static final String PLUGIN_NAME = "intranda_step_imageQA";
 
     private int NUMBER_OF_IMAGES_PER_PAGE = 10;
@@ -124,7 +123,7 @@ public class ImageQAPlugin implements IStepPlugin {
 
         String projectName = step.getProzess().getProjekt().getTitel();
 
-        XMLConfiguration xmlConfig = ConfigPlugins.getPluginConfig(this);
+        XMLConfiguration xmlConfig = ConfigPlugins.getPluginConfig(PLUGIN_NAME);
         xmlConfig.setExpressionEngine(new XPathExpressionEngine());
         xmlConfig.setReloadingStrategy(new FileChangedReloadingStrategy());
 
@@ -159,7 +158,7 @@ public class ImageQAPlugin implements IStepPlugin {
             }
             initImageList(myconfig, imageFolder);
         } catch (SwapException | DAOException | IOException | InterruptedException e) {
-            logger.error(e);
+            log.error(e);
         }
     }
 
@@ -283,7 +282,7 @@ public class ImageQAPlugin implements IStepPlugin {
                 String imageUrl = createImageUrl(currentImage, size, MAINIMAGE_FORMAT, contextPath);
                 currentImage.addImageLevel(imageUrl, size);
             } catch (NullPointerException | NumberFormatException e) {
-                logger.error("Cannot build image with size " + sizeString);
+                log.error("Cannot build image with size " + sizeString);
             }
         }
         Collections.sort(currentImage.getImageLevels());
@@ -308,7 +307,7 @@ public class ImageQAPlugin implements IStepPlugin {
             int height = Integer.parseInt(dimString.replaceAll(".*::", ""));
             dim = new Dimension(width, height);
         } catch (NullPointerException | NumberFormatException | ContentLibImageException | URISyntaxException | IOException e) {
-            logger.error("Could not retrieve actual image size", e);
+            log.error("Could not retrieve actual image size", e);
             dim = new Dimension(0, 0);
         }
         return dim;
@@ -346,7 +345,7 @@ public class ImageQAPlugin implements IStepPlugin {
         while (!oneImageFinished(createdFiles)) {
 
         }
-        logger.debug("First image finished generation");
+        log.debug("First image finished generation");
         return originalImageSize;
 
     }
@@ -387,7 +386,7 @@ public class ImageQAPlugin implements IStepPlugin {
             try (JpegInterpreter pi = new JpegInterpreter(ri)) {
                 pi.writeToStream(null, outputFileStream);
                 outputFileStream.close();
-                logger.debug("Written file " + outputFile);
+                log.debug("Written file " + outputFile);
                 return outputFile;
             }
         }
@@ -464,7 +463,7 @@ public class ImageQAPlugin implements IStepPlugin {
 
     public int getImageWidth() {
         if (image == null) {
-            logger.error("Must set image before querying image size");
+            log.error("Must set image before querying image size");
             return 0;
         } else if (image.getSize() == null) {
             createImage(image);
@@ -474,7 +473,7 @@ public class ImageQAPlugin implements IStepPlugin {
 
     public int getImageHeight() {
         if (image == null) {
-            logger.error("Must set image before querying image size");
+            log.error("Must set image before querying image size");
             return 0;
         } else if (image.getSize() == null) {
             createImage(image);
@@ -727,20 +726,20 @@ public class ImageQAPlugin implements IStepPlugin {
         }
         String command = rotationCommand.replace("IMAGE_FILE", imageFolderName + myimage.getImageName());
         command = command.replace("IMAGE_FOLDER", imageFolderName);
-        logger.debug(command);
+        log.debug(command);
 
         try {
             Process process = Runtime.getRuntime().exec(command);
             int result = process.waitFor();
             if (result != 0) {
-                logger.error("A problem occured while calling command '" + command + "'. The error code was " + result);
+                log.error("A problem occured while calling command '" + command + "'. The error code was " + result);
                 Helper.setFehlerMeldung("A problem occured while calling command '" + command + "'. The error code was " + result);
             }
         } catch (IOException e) {
-            logger.error("IOException in rotate()", e);
+            log.error("IOException in rotate()", e);
             Helper.setFehlerMeldung("Aborted Command '" + command + "' in callScript()!");
         } catch (InterruptedException e) {
-            logger.error("InterruptedException in callScript()", e);
+            log.error("InterruptedException in callScript()", e);
             Helper.setFehlerMeldung("Command '" + command + "' is interrupted in callScript()!");
         }
 
@@ -808,13 +807,13 @@ public class ImageQAPlugin implements IStepPlugin {
             responseOutputStream.close();
             facesContext.responseComplete();
         } catch (IOException e) {
-            logger.error(e);
+            log.error(e);
         } finally {
             if (buf != null) {
                 try {
                     buf.close();
                 } catch (IOException e) {
-                    logger.error(e);
+                    log.error(e);
                 }
             }
         }
