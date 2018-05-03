@@ -5,8 +5,8 @@ import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -57,6 +57,8 @@ import de.sub.goobi.forms.HelperForm;
 import de.sub.goobi.helper.FacesContextHelper;
 import de.sub.goobi.helper.Helper;
 import de.sub.goobi.helper.NIOFileUtils;
+import de.sub.goobi.helper.S3FileUtils;
+import de.sub.goobi.helper.StorageProvider;
 import de.sub.goobi.helper.exceptions.DAOException;
 import de.sub.goobi.helper.exceptions.SwapException;
 import de.sub.goobi.metadaten.Image;
@@ -169,8 +171,8 @@ public class ImageQAPlugin implements IStepPlugin {
         this.imageFolderName = imageFolder;
         Path path = Paths.get(imageFolderName);
         List<NamePart> nameParts = initImageNameParts(myconfig);
-        if (Files.exists(path)) {
-            List<String> imageNameList = NIOFileUtils.list(imageFolderName, NIOFileUtils.imageNameFilter);
+        if (StorageProvider.getInstance().isFileExists(path)) {
+            List<String> imageNameList = StorageProvider.getInstance().list(imageFolderName, NIOFileUtils.imageNameFilter);
             int order = 1;
             for (String imagename : imageNameList) {
                 SelectableImage currentImage = new SelectableImage(imagename, order++, "", imagename, "");
@@ -300,8 +302,15 @@ public class ImageQAPlugin implements IStepPlugin {
     private Dimension getActualImageSize(Image image) {
         Dimension dim;
         try {
-            Path imagePath = Paths.get(imageFolderName, image.getImageName());
-            String dimString = new GetImageDimensionAction().getDimensions(imagePath.toUri().toString());
+            String imagePath = imageFolderName + image.getImageName();
+            ConfigurationHelper config = ConfigurationHelper.getInstance();
+            String dimString;
+            if (config.useS3()) {
+                dimString = new GetImageDimensionAction().getDimensions("s3://" + config.getS3Bucket() +
+                        S3FileUtils.string2Key(imagePath.replaceAll("\\\\", "/")));
+            } else {
+                dimString = new GetImageDimensionAction().getDimensions(("file://" + imagePath).replaceAll("\\\\", "/"));
+            }
             int width = Integer.parseInt(dimString.replaceAll("::.*", ""));
             int height = Integer.parseInt(dimString.replaceAll(".*::", ""));
             dim = new Dimension(width, height);
@@ -314,8 +323,14 @@ public class ImageQAPlugin implements IStepPlugin {
 
     private String createImageUrl(Image currentImage, Integer size, String format, String baseUrl) {
         StringBuilder url = new StringBuilder(baseUrl);
-        url.append("/cs").append("?action=").append("image").append("&format=").append(format).append("&sourcepath=").append(
-                "file://" + imageFolderName + currentImage.getImageName()).append("&width=").append(size).append("&height=").append(size);
+        ConfigurationHelper config = ConfigurationHelper.getInstance();
+        url.append("/cs").append("?action=").append("image").append("&format=").append(format).append("&sourcepath=");
+        if (config.useS3()) {
+            url.append("s3://" + config.getS3Bucket() + S3FileUtils.string2Key(imageFolderName + currentImage.getImageName()));
+        } else {
+            url.append("file://" + imageFolderName + currentImage.getImageName());
+        }
+        url.append("&width=").append(size).append("&height=").append(size);
         return url.toString().replaceAll("\\\\", "/");
     }
 
@@ -327,16 +342,16 @@ public class ImageQAPlugin implements IStepPlugin {
         String outputFilePath = FilenameUtils.getFullPath(outFileName);
         String outputFileBasename = FilenameUtils.getBaseName(outFileName);
         String outputFileSuffix = FilenameUtils.getExtension(outFileName);
-        List<Future<File>> createdFiles = new ArrayList<>();
+        List<Future<Path>> createdFiles = new ArrayList<>();
         for (String sizeString : sizes) {
             int size = Integer.parseInt(sizeString);
             final Dimension dim = new Dimension();
             dim.setSize(size, size);
             final String filename = outputFilePath + outputFileBasename + "_" + size + "." + outputFileSuffix;
-            createdFiles.add(executor.submit(new Callable<File>() {
+            createdFiles.add(executor.submit(new Callable<Path>() {
 
                 @Override
-                public File call() throws Exception {
+                public Path call() throws Exception {
                     return scaleToSize(im, dim, filename, false);
                 }
             }));
@@ -362,8 +377,8 @@ public class ImageQAPlugin implements IStepPlugin {
         return true;
     }
 
-    private boolean oneImageFinished(List<Future<File>> createdFiles) {
-        for (Future<File> future : createdFiles) {
+    private boolean oneImageFinished(List<Future<Path>> createdFiles) {
+        for (Future<Path> future : createdFiles) {
             try {
                 if (future.isDone() && future.get() != null) {
                     return true;
@@ -374,21 +389,26 @@ public class ImageQAPlugin implements IStepPlugin {
         return false;
     }
 
-    private File scaleToSize(ImageManager im, Dimension dim, String filename, boolean overwrite) throws ImageManipulatorException,
+    private Path scaleToSize(ImageManager im, Dimension dim, String filename, boolean overwrite) throws ImageManipulatorException,
             FileNotFoundException, ImageManagerException, IOException, ContentLibException {
-        File outputFile = new File(filename);
-        if (!overwrite && outputFile.isFile()) {
+        Path outputFile = Paths.get(filename);
+        if (!overwrite && StorageProvider.getInstance().isFileExists(outputFile)) {
             return outputFile;
         }
-        try (FileOutputStream outputFileStream = new FileOutputStream(outputFile)) {
+        Path tempFile = Files.createTempFile("resize_tmp", ".tif");
+        try (OutputStream outputFileStream = Files.newOutputStream(tempFile)) {
             RenderedImage ri = im.scaleImageByPixel(dim, ImageManager.SCALE_TO_BOX, 0);
             try (JpegInterpreter pi = new JpegInterpreter(ri)) {
                 pi.writeToStream(null, outputFileStream);
                 outputFileStream.close();
                 log.debug("Written file " + outputFile);
-                return outputFile;
             }
         }
+        try (InputStream in = Files.newInputStream(tempFile)) {
+            StorageProvider.getInstance().uploadFile(in, outputFile);
+        }
+        Files.delete(tempFile);
+        return outputFile;
     }
 
     @Override
@@ -623,7 +643,7 @@ public class ImageQAPlugin implements IStepPlugin {
         String myCombinedName = myimage.getCombinedName();
         String myPreviousCombinedName = myimage.getCombinedNameFromFilename();
         boolean imageNameFound = false;
-        Map<File, File> renamingMap = new LinkedHashMap<>();
+        Map<Path, Path> renamingMap = new LinkedHashMap<>();
         while (iterator.hasNext()) {
             SelectableImage currentImage = iterator.next();
             int currentImageIndex = getAllImages().indexOf(currentImage);
@@ -637,8 +657,8 @@ public class ImageQAPlugin implements IStepPlugin {
                 String currentPageCounter = PAGENUMBERFORMAT.format(++pageCounter);
                 currentImage.setPageCounterLabel(currentPageCounter);
                 String newFilename = currentImage.getNamePrefix() + "_" + myCombinedName + currentPageCounter + suffix;
-                File imageFile = new File(imageFolderName, currentImage.getImageName());
-                File newImageFile = new File(imageFolderName, newFilename);
+                Path imageFile = Paths.get(imageFolderName, currentImage.getImageName());
+                Path newImageFile = Paths.get(imageFolderName, newFilename);
                 renamingMap.put(imageFile, newImageFile);
                 currentImage.setImageName(newFilename);
             } else if (myCombinedName.equals(currentCombinedName)) {
@@ -650,21 +670,25 @@ public class ImageQAPlugin implements IStepPlugin {
 
         boolean renamed = true;
         while (renamed && !renamingMap.isEmpty()) {
-            List<File> toBeRenamedList = new ArrayList<>(renamingMap.keySet());
+            List<Path> toBeRenamedList = new ArrayList<>(renamingMap.keySet());
             Collections.reverse(toBeRenamedList);
-            Iterator<File> iter = toBeRenamedList.iterator();
+            Iterator<Path> iter = toBeRenamedList.iterator();
             renamed = false;
             while (iter.hasNext()) {
-                File currentFile = iter.next();
-                File newFile = renamingMap.get(currentFile);
-                if (newFile.isFile() && !newFile.equals(currentFile)) {
+                Path currentFile = iter.next();
+                Path newFile = renamingMap.get(currentFile);
+                if (StorageProvider.getInstance().isFileExists(newFile) && !newFile.equals(currentFile)) {
                     //                logger.error("Trying to rename " + currentFile.getName() + " to " + newFile.getName() + ". But file already exists");
                     //                Helper.setFehlerMeldung("Trying to rename " + currentFile.getName() + " to " + newFile.getName() + ". But file already exists");
                     //                break;
                 } else {
-                    currentFile.renameTo(newFile);
-                    renamingMap.remove(currentFile);
-                    renamed = true;
+                    try {
+                        StorageProvider.getInstance().move(currentFile, newFile);
+                        renamed = true;
+                        renamingMap.remove(currentFile);
+                    } catch (IOException e) {
+                        log.error(e);
+                    }
                 }
             }
         }
@@ -724,8 +748,15 @@ public class ImageQAPlugin implements IStepPlugin {
         if (selectOtherImage && myindex == allImages.indexOf(myimage)) {
             myindex--;
         }
-        String command = rotationCommand.replace("IMAGE_FILE", imageFolderName + myimage.getImageName());
-        command = command.replace("IMAGE_FOLDER", imageFolderName);
+        ConfigurationHelper config = ConfigurationHelper.getInstance();
+        String imageURI = imageFolderName + myimage.getImageName();
+        String imageFolderURI = imageFolderName;
+        if (config.useS3()) {
+            imageURI = S3FileUtils.string2Key(imageURI);
+            imageFolderURI = S3FileUtils.string2Prefix(imageFolderURI);
+        }
+        String command = rotationCommand.replace("IMAGE_FILE", imageURI);
+        command = command.replace("IMAGE_FOLDER", imageFolderURI);
         log.debug(command);
 
         try {
