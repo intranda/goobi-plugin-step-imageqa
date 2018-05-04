@@ -2,7 +2,6 @@ package de.intranda.goobi.plugins;
 
 import java.awt.Dimension;
 import java.awt.image.RenderedImage;
-import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -238,9 +237,9 @@ public class ImageQAPlugin implements IStepPlugin {
         }
         return subList;
     }
-    
+
     public Image getImage() {
-        if(image != null && (image.getImageLevels() == null || image.getImageLevels().isEmpty())) {
+        if (image != null && (image.getImageLevels() == null || image.getImageLevels().isEmpty())) {
             createImage(image);
         }
         return image;
@@ -257,17 +256,17 @@ public class ImageQAPlugin implements IStepPlugin {
     }
 
     public List<ImageLevel> getImageLevels(Image image) {
-        if(image != null) {            
-            if(!image.hasImageLevels()) {            
+        if (image != null) {
+            if (!image.hasImageLevels()) {
                 createImageLevels(image);
-            } 
+            }
             return image.getImageLevels();
         } else {
             return Collections.EMPTY_LIST;
         }
 
     }
-    
+
     /**
      * @param currentImage
      */
@@ -323,7 +322,7 @@ public class ImageQAPlugin implements IStepPlugin {
     @SuppressWarnings("unused")
     private Dimension scaleFile(String inFileName, String outFileName, List<String> sizes) throws IOException, ContentLibImageException {
 
-        final ImageManager im = new ImageManager(new File(inFileName).toURI().toURL());
+        final ImageManager im = new ImageManager(new File(inFileName).toURI());
         Dimension originalImageSize = new Dimension(im.getMyInterpreter().getWidth(), im.getMyInterpreter().getHeight());
         String outputFilePath = FilenameUtils.getFullPath(outFileName);
         String outputFileBasename = FilenameUtils.getBaseName(outFileName);
@@ -669,8 +668,9 @@ public class ImageQAPlugin implements IStepPlugin {
                 }
             }
         }
-        if(!renamingMap.isEmpty()) {
-            Helper.setFehlerMeldung("Error renaming files - file " + renamingMap.keySet().iterator().next() + " could not be renamed to " + renamingMap.get(renamingMap.keySet().iterator().next()));
+        if (!renamingMap.isEmpty()) {
+            Helper.setFehlerMeldung("Error renaming files - file " + renamingMap.keySet().iterator().next() + " could not be renamed to "
+                    + renamingMap.get(renamingMap.keySet().iterator().next()));
         }
 
         allImages = new ArrayList<SelectableImage>();
@@ -763,12 +763,15 @@ public class ImageQAPlugin implements IStepPlugin {
 
     public void downloadSelectedImages() {
 
-        BufferedInputStream buf = null;
-
         try {
-            Path tempfile = Files.createTempFile(step.getProzess().getTitel(), ".zip");
+            FacesContext facesContext = FacesContextHelper.getCurrentFacesContext();
+            ExternalContext ec = facesContext.getExternalContext();
+            ec.responseReset();
+            ec.setResponseContentType("application/zip");
 
-            ZipOutputStream out = new ZipOutputStream(new FileOutputStream(tempfile.toFile()));
+            ec.setResponseHeader("Content-Disposition", "attachment; filename=" + step.getProzess().getTitel() + ".zip");
+            OutputStream responseOutputStream = ec.getResponseOutputStream();
+            ZipOutputStream out = new ZipOutputStream(responseOutputStream);
 
             for (SelectableImage image : allImages) {
                 if (image.isSelected()) {
@@ -784,54 +787,29 @@ public class ImageQAPlugin implements IStepPlugin {
                     in.close();
                 }
             }
+            out.flush();
             out.close();
 
-            FacesContext facesContext = FacesContextHelper.getCurrentFacesContext();
-            ExternalContext ec = facesContext.getExternalContext();
-            ec.responseReset();
-            ec.setResponseContentType("application/zip");
-            ec.setResponseContentLength((int) Files.size(tempfile));
-
-            ec.setResponseHeader("Content-Disposition", "attachment; filename=" + step.getProzess().getTitel() + ".zip");
-            OutputStream responseOutputStream = ec.getResponseOutputStream();
-
-            FileInputStream input = new FileInputStream(tempfile.toString());
-            buf = new BufferedInputStream(input);
-            int readBytes = 0;
-
-            //read from the file; write to the ServletOutputStream
-            while ((readBytes = buf.read()) != -1) {
-                responseOutputStream.write(readBytes);
-            }
-            responseOutputStream.flush();
-            responseOutputStream.close();
             facesContext.responseComplete();
         } catch (IOException e) {
             log.error(e);
         } finally {
-            if (buf != null) {
-                try {
-                    buf.close();
-                } catch (IOException e) {
-                    log.error(e);
-                }
-            }
         }
     }
-    
+
     public void downloadSelectedImagesAsPdf() throws IOException, DAOException, SwapException, InterruptedException {
-    	
-    	// prepare contentserver URL
-	    FacesContext context = FacesContextHelper.getCurrentFacesContext();
-	    String contentServerUrl = ConfigurationHelper.getInstance().getGoobiContentServerUrl();
+
+        // prepare contentserver URL
+        FacesContext context = FacesContextHelper.getCurrentFacesContext();
+        String contentServerUrl = ConfigurationHelper.getInstance().getGoobiContentServerUrl();
         if (contentServerUrl == null || contentServerUrl.length() == 0) {
-        	HttpServletRequest req = (HttpServletRequest) context.getExternalContext().getRequest();
-    	    String fullpath = req.getRequestURL().toString();
-    	    String servletpath = context.getExternalContext().getRequestServletPath();
-    	    String myBasisUrl = fullpath.substring(0, fullpath.indexOf(servletpath));
-        	contentServerUrl = myBasisUrl + "/cs/cs?action=pdf&images=";
+            HttpServletRequest req = (HttpServletRequest) context.getExternalContext().getRequest();
+            String fullpath = req.getRequestURL().toString();
+            String servletpath = context.getExternalContext().getRequestServletPath();
+            String myBasisUrl = fullpath.substring(0, fullpath.indexOf(servletpath));
+            contentServerUrl = myBasisUrl + "/cs/cs?action=pdf&images=";
         }
-        
+
         // put all selected images into a URL
         String url = "";
         for (SelectableImage image : allImages) {
@@ -840,12 +818,12 @@ public class ImageQAPlugin implements IStepPlugin {
                 url = url + currentImagePath.toUri().toURL() + "$";
             }
         }
-        
+
         // generate the final URL
         String imageString = url.substring(0, url.length() - 1);
         String targetFileName = "&targetFileName=" + step.getProzess().getTitel() + ".pdf";
         URL goobiContentServerUrl = new URL(contentServerUrl + imageString + targetFileName);
-        
+
         // generate the pdf and deliver it as download
         if (!context.getResponseComplete()) {
             HttpServletResponse response = (HttpServletResponse) context.getExternalContext().getResponse();
