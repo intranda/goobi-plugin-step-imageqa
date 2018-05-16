@@ -306,8 +306,9 @@ public class ImageQAPlugin implements IStepPlugin {
             ConfigurationHelper config = ConfigurationHelper.getInstance();
             String dimString;
             if (config.useS3()) {
-                dimString = new GetImageDimensionAction().getDimensions("s3://" + config.getS3Bucket() +
-                        S3FileUtils.string2Key(imagePath.replaceAll("\\\\", "/")));
+                String uri = "s3://" + config.getS3Bucket() + "/" + S3FileUtils.string2Key(imagePath
+                        .replaceAll("\\\\", "/"));
+                dimString = new GetImageDimensionAction().getDimensions(uri);
             } else {
                 dimString = new GetImageDimensionAction().getDimensions(("file://" + imagePath).replaceAll("\\\\", "/"));
             }
@@ -326,7 +327,7 @@ public class ImageQAPlugin implements IStepPlugin {
         ConfigurationHelper config = ConfigurationHelper.getInstance();
         url.append("/cs").append("?action=").append("image").append("&format=").append(format).append("&sourcepath=");
         if (config.useS3()) {
-            url.append("s3://" + config.getS3Bucket() + S3FileUtils.string2Key(imageFolderName + currentImage.getImageName()));
+            url.append("s3://" + config.getS3Bucket() + "/" + S3FileUtils.string2Key(imageFolderName + currentImage.getImageName()));
         } else {
             url.append("file://" + imageFolderName + currentImage.getImageName());
         }
