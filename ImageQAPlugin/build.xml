@@ -9,8 +9,9 @@
   <property name="dir.deploy" value="deploy"/>
   <property name="pluginFolderWin" value="C:/Goobi/plugins/step/"/>
   <property name="pluginFolderUnix" value="/opt/digiverso/goobi/plugins/step/"/>
+  <property name="goobilibs_path" value="/opt/digiverso/goobilibs/lib/"/>
   <path id="classpath">
-    <fileset dir="/opt/digiverso/goobilibs/lib"/>
+    <fileset dir="${goobilibs_path}"/>
     <fileset dir="/opt/digiverso/libs"/>
   </path>
   <tstamp>
@@ -69,6 +70,7 @@
 	     ================================= -->
   <target name="compile">
     <echo>Using eclipse compiler</echo>
+    <echo>using ${goobilibs_path} in classpath</echo>
     <javac destdir="${dir.build}" includeantruntime="false" target="7" encoding="UTF8" source="7" debug="true" debuglevel="lines,vars,source">
       <classpath refid="classpath"/>
       <compilerarg value="-Xlint"/>
