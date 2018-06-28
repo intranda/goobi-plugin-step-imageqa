@@ -836,4 +836,26 @@ public class ImageQAPlugin implements IStepPlugin {
             context.responseComplete();
         }
     }
+    
+    private String getImageFolderShort() {
+        String imageFolder = Paths.get(imageFolderName).getFileName().toString();
+        if(imageFolder.startsWith("master_") || imageFolder.startsWith("orig_")) {
+            return "master";
+        } else if(imageFolder.contains("_")) {
+            return imageFolder.substring(imageFolder.lastIndexOf("_"));
+        } else {
+            return imageFolder;
+        }
+    }
+    
+    public String getImageUrl(Image image) {
+        StringBuilder sb = new StringBuilder(new HelperForm().getServletPathWithHostAsUrl());
+        sb.append("/api/image/").append(step.getProcessId()).append("/").append(getImageFolderShort()).append("/")
+        .append(image.getImageName()).append("/info.json");
+        return sb.toString();
+    }
+    
+    public String getImageWebApiToken() {
+        return ConfigPlugins.getPluginConfig(PLUGIN_NAME).getString("imageWebApiToken", "test");
+    }
 }

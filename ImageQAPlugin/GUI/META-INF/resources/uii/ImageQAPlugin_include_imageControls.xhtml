@@ -94,7 +94,7 @@
 		  height: 1.5rem;
 		  margin-top: 0.6rem;
 		  margin-right: 0;
-		  margin-left: .4rem;
+          margin-left: 65px;
 		  border: 1px solid #6f6f6f;
 		  position: relative;
 		}
@@ -111,6 +111,23 @@
 		  margin: 0;
 		  background: #6f6f6f;
 		}
+        #viewer_controls_nav ul li #zoomSliderLabel {
+            float:left;
+            width:55px;
+            padding: 0;
+            margin-top:0.3rem;
+            margin-left: 5px;
+            height: 2.2rem;
+            
+        }
+        
+        #viewer_controls_nav ul li #zoomSliderLabel input {
+            border: none;
+            background-color: transparent;
+            width:40px;
+            text-align: right;
+            
+        }
 		#image-control-wrapper {
 			display: inline-block;
 			margin-bottom: -1rem;
@@ -147,6 +164,9 @@
 					</li>
 					
 					<li>
+                        <div id="zoomSliderLabel" class="form-control">
+                            <input></input><span>%</span>
+                        </div>
 						<div id="zoomSlider">
 							<span class="zoom-slider-handle"></span>
 						</div>
