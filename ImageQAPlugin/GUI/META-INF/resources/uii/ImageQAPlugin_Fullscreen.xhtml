@@ -30,8 +30,13 @@
             #zoomSliderLabel input{
                 border: none;
                 background-color: transparent;
-                width:40px;
+                width:60px;
                 text-align: right;
+            }
+            
+            #zoomSliderLabel input:focus{
+                background-color: white;
+                color: #666;
             }
 
 		</style>
@@ -98,7 +103,7 @@
 						var configViewer = {
 						    global: {
 						    	divId: 'mainImage',
-						        useTiles: false,
+						        useTiles: true,
 						        footerHeight: 0,
 						        adaptContainerHeight: false,
 						        zoomSlider: "#zoomSlider",
@@ -107,6 +112,8 @@
 						    image: {
 						        mimeType: "image/jpeg",
 							        tileSource : [#{AktuelleSchritteForm.myPlugin.getImageLevels(AktuelleSchritteForm.myPlugin.image)}],
+							        originalImageWidth: "#{AktuelleSchritteForm.myPlugin.image.size.width}",
+                			   		originalImageHeight: "#{AktuelleSchritteForm.myPlugin.image.size.height}",
 						    }
 						};									
 						var viewImage = new ImageView.Image( configViewer );
