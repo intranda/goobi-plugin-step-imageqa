@@ -842,7 +842,7 @@ public class ImageQAPlugin implements IStepPlugin {
         if(imageFolder.startsWith("master_") || imageFolder.startsWith("orig_")) {
             return "master";
         } else if(imageFolder.contains("_")) {
-            return imageFolder.substring(imageFolder.lastIndexOf("_"));
+            return imageFolder.substring(imageFolder.lastIndexOf("_")+1);
         } else {
             return imageFolder;
         }

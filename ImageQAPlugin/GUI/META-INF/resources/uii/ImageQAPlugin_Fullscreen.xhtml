@@ -18,6 +18,22 @@
 				overflow-x: hidden;
 			}
 
+            #zoomSliderLabel {
+                position: absolute;
+                top: 10px;
+                left: 10px;
+                width: 100px;
+                background: transparent;
+                border: none;
+            }
+            
+            #zoomSliderLabel input{
+                border: none;
+                background-color: transparent;
+                width:40px;
+                text-align: right;
+            }
+
 		</style>
 
         <script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/reactiveX/rx.lite.min.js"></script>
@@ -85,7 +101,8 @@
 						        useTiles: false,
 						        footerHeight: 0,
 						        adaptContainerHeight: false,
-						        zoomSlider: "#zoomSlider"
+						        zoomSlider: "#zoomSlider",
+            			        zoomSliderLabel: "#zoomSliderLabel input",
 						    },
 						    image: {
 						        mimeType: "image/jpeg",
@@ -107,6 +124,10 @@
 			</div>
 			<!-- // big image -->
 				
+                <div id="zoomSliderLabel" class="font-light">
+                            <input></input><span>%</span>
+                        </div>
+                
 				<!-- exit fullscreen -->
 				<h:commandLink styleClass="btn btn-lightgrey" style="position:absolute;top:10px; right:10px;" 
 					action="ImageQAPlugin" title="#{msgs.imageDefaultDisplay}" >
