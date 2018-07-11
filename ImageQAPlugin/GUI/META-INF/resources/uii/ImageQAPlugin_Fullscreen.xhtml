@@ -13,6 +13,19 @@
 			    widht: 100%;
 				height:98vh;
 			}
+            
+            #mainImage #ajaxloader_image {
+                position: absolute;
+                left:50%;
+                top:50%;
+                margin-left: -34px;
+                margin-top: -21px;
+            }
+            
+            #mainImage #ajaxloader_image img{
+                border: none;
+            }
+            
 			
 			html, body {
 				overflow-x: hidden;
@@ -98,7 +111,11 @@
 			<!-- big image -->
 			<div class="row margin-top-most margin-bottom-most" style="height:95vh;">
 			    <h:panelGroup styleClass="div-image" layout="block">
-			        <div id="mainImage" class="margin-bottom-regular" rendered="#{AktuelleSchritteForm.myPlugin.image != null}" />
+			        <div id="mainImage" class="margin-bottom-regular" rendered="#{AktuelleSchritteForm.myPlugin.image != null}">
+                        <div id="ajaxloader_image">
+                            <img src="template/img/goobi/ajaxloader2.gif" />
+                        </div>
+                    </div>
 			        <script type="text/javascript">
 						var configViewer = {
 						    global: {
@@ -120,10 +137,17 @@
                     	viewImage.load()
             		    .then(function(osViewer) {
 						    	console.info( 'viewer opened' );
-						        //TODO: Hide loader?
+						    	osViewer.onFirstTileLoaded()
+						        .then(function() {										            
+						        	$('#ajaxloader_image').fadeOut(800);
+						        })
+						        .catch(function() {
+						            $('#ajaxloader_image').fadeOut(800);
+						        })
 						    })
 						    .catch(function(error){
 						        console.error( 'Error opening image', error );
+						        $('#ajaxloader_image').fadeOut(800);
 						        $('#' + configViewer.global.divId).html( 'Failed to load image: "' + error + '"' );
 						    });
                           </script>
