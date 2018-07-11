@@ -51,6 +51,29 @@
                 background-color: white;
                 color: #666;
             }
+            
+            #image-control-wrapper {
+              position: absolute;
+                top: 10px;
+                left: 10px;
+            }
+            
+            #image-control-wrapper ul {
+                padding-left: 0;
+            }
+            
+            #image-control-wrapper li {
+                display: inline-block;
+            }
+            
+            #image-control-wrapper li label{
+                width: 50px;
+            }
+            
+            #image-control-wrapper #reset-position {
+                margin-left: 86px;
+            }
+
 
 		</style>
 
@@ -117,47 +140,190 @@
                         </div>
                     </div>
 			        <script type="text/javascript">
-						var configViewer = {
-						    global: {
-						    	divId: 'mainImage',
-						        useTiles: true,
-						        footerHeight: 0,
-						        adaptContainerHeight: false,
-						        zoomSlider: "#zoomSlider",
-            			        zoomSliderLabel: "#zoomSliderLabel input",
-						    },
-						    image: {
-						        mimeType: "image/jpeg",
-							        tileSource : [#{AktuelleSchritteForm.myPlugin.getImageLevels(AktuelleSchritteForm.myPlugin.image)}],
-							        originalImageWidth: "#{AktuelleSchritteForm.myPlugin.image.size.width}",
-                			   		originalImageHeight: "#{AktuelleSchritteForm.myPlugin.image.size.height}",
-						    }
-						};									
-						var viewImage = new ImageView.Image( configViewer );
-                    	viewImage.load()
-            		    .then(function(osViewer) {
-						    	console.info( 'viewer opened' );
-						    	osViewer.onFirstTileLoaded()
-						        .then(function() {										            
-						        	$('#ajaxloader_image').fadeOut(800);
-						        })
-						        .catch(function() {
-						            $('#ajaxloader_image').fadeOut(800);
-						        })
-						    })
-						    .catch(function(error){
-						        console.error( 'Error opening image', error );
-						        $('#ajaxloader_image').fadeOut(800);
-						        $('#' + configViewer.global.divId).html( 'Failed to load image: "' + error + '"' );
-						    });
-                          </script>
+                                    	var configViewer = {
+                            			    global: {
+                            			    	divId: 'mainImage',
+                            			        useTiles: false,
+                            			        footerHeight: 0,
+                            			        adaptContainerHeight: true,
+                            			        zoomSlider: "#zoomSlider",
+                            			        zoomSliderHandle: "#zoomSlider .zoom-slider-handle",
+                            			        zoomSliderLabel: "#zoomSliderLabel input",
+                                                webApiToken: '#{AktuelleSchritteForm.myPlugin.imageWebApiToken}',
+
+                            			    },
+                            			    image: {
+                            			        mimeType: "image/jpeg",
+                            				    tileSource : "#{AktuelleSchritteForm.myPlugin.getImageUrl(AktuelleSchritteForm.myPlugin.image)}?token=#{AktuelleSchritteForm.myPlugin.imageWebApiToken}",
+                            			   		originalImageWidth: "#{AktuelleSchritteForm.myPlugin.image.size.width}",
+                            			   		originalImageHeight: "#{AktuelleSchritteForm.myPlugin.image.size.height}",
+                            			    }
+                            			};									
+                            		    
+                                    	var worldConfig = {
+									 			controls: {
+									 			    xAxis: {
+									 			        rotateLeft: '#rotate-left-x',
+									 			        rotateRight: '#rotate-right-x'
+									 			    },
+									 			   yAxis: {
+									 			        rotateLeft: '#rotate-left-y',
+									 			        rotateRight: '#rotate-right-y'
+									 			    },
+									 			   zAxis: {
+									 			        rotateLeft: '#rotate-left-z',
+									 			        rotateRight: '#rotate-right-z'
+									 			    },
+									 			    position: {
+									 			    	reset: '#reset-position'   
+									 			    },
+									 			    zoom: {
+									 			        resetZoom: '#reset#zoom'
+									 			    }
+									 			},
+									    		container: {
+									    			id: "mainImage"
+									    		},
+										 };
+                                    	
+									 	var mediaType = "#{AktuelleSchritteForm.myPlugin.image.type}";
+									 	console.log("Media type = ", mediaType);
+									 	if(mediaType == "image") {
+									 		
+										    var viewImage = new ImageView.Image( configViewer );
+										    viewImage.load()
+										    .then(function(image) {
+										        image.onFirstTileLoaded()
+										        .then(function() {										            
+										        	$('#ajaxloader_image').fadeOut(800);
+										        })
+										        .catch(function() {
+										            $('#ajaxloader_image').fadeOut(800);
+										        })
+										    })
+										    .catch(function(error){
+										        console.error( 'Error opening image', error );
+										        $('#ajaxloader_image').fadeOut(800);
+										        $('#' + configViewer.global.divId).html( 'Failed to load image: "' + error + '"' );
+										    });
+									    
+									 	} else if(mediaType == "object") {
+									 	   $('#ajaxloader_image').show();
+									 		var world = WorldGenerator.create(worldConfig);
+									 		world.loadObject({
+									 	 		 url: "#{AktuelleSchritteForm.myPlugin.image.objectUrl}",
+									 			 position: { x:0, y:0, z:-0 },
+									 			 rotation:  { x:0, y:0, z:0 },
+									 			 size:  10,
+									 			 material: {
+									 					color: 0x44bb33
+									 				},
+									 			focus: true,
+									 			onTick: function(object, time) {
+									 				if(object) {
+// 									 	 				object.rotation.set(0,  Math.PI/180 * time, 0);
+									 				}
+									 			}
+									 		 }).then(function(object) {
+									 	       	 $('#ajaxloader_image').fadeOut(2000);
+									 		 	world.render();
+									 		 }).catch(function(error) {
+									 		    $('#ajaxloader_image').fadeOut(2000);
+									 			 console.err("failed to load: ", error);
+									 		 })
+									 		
+									 	} else if(mediaType == "x3dom") {
+									 	    var objectUrl = "#{AktuelleSchritteForm.myPlugin.image.objectUrl}";
+									 	   $('#ajaxloader_image').show();
+    									 	    new X3DLoader().load($('#mainImage'), objectUrl, 
+									 	            function(){
+    									 	       		$('#ajaxloader_image').fadeOut(2000);
+    									 	       		console.log("loaded")
+									 	            },
+									 	           function(){
+									 	               console.log("progress");
+									 	            },
+									 	           function(error){
+									 	               $('#ajaxloader_image').fadeOut(2000);
+									 	               console.log("error", error);
+									 	            })
+									 	}
+									 	
+									 	 function freeJSResources(data) {
+										        if(!data || data.status == 'begin') {									            
+	    									        if(viewImage) {
+	    									            console.log("closing OpenSeadragon viewer");
+	    									            viewImage.close();
+	    									        }
+	    									        if(world) {
+	    									            console.log("disposing 3d scene");
+	    									            world.dispose();
+	    									        }
+										        }
+										    }
+                                    </script>
 			    </h:panelGroup>
 			</div>
 			<!-- // big image -->
 				
-                <div id="zoomSliderLabel" class="font-light">
+                <ui:fragment rendered="#{AktuelleSchritteForm.myPlugin.image.type == 'image'}">
+                    <div id="zoomSliderLabel" class="font-light">
                             <input></input><span>%</span>
-                        </div>
+                    </div>
+                </ui:fragment>
+                <ui:fragment rendered="#{AktuelleSchritteForm.myPlugin.image.type == 'object'}">
+                    <div id="image-control-wrapper">
+            			<nav id="viewer_controls_nav">
+
+                            <ul style="margin-top:1px;">
+            					<li><label>#{msgs.rotation_x_axis}</label></li>
+            					<li>
+            						<span class="btn font-size-s" id="rotate-left-x" title="#{msg.rotateLeft}">
+            							<i class="fa fa-undo"></i>
+            						</span>
+            					</li>
+            					<li>
+            						<span class="btn font-size-s" id="rotate-right-x" title="#{msg.rotateRight}">
+            							<i class="fa fa-repeat"></i>
+            						</span>
+            					</li>
+            				</ul>
+                            <ul style="margin-top:1px;">
+                            <li><label>#{msgs.rotation_y_axis}</label></li>
+                                <li>
+                                    <span class="btn font-size-s" id="rotate-left-y" title="#{msg.rotateLeft}">
+                                        <i class="fa fa-undo"></i>
+                                    </span>
+                                </li>
+                                <li>
+                                    <span class="btn font-size-s" id="rotate-right-y" title="#{msg.rotateRight}">
+                                        <i class="fa fa-repeat"></i>
+                                    </span>
+                                </li>
+                            </ul>
+                            <ul style="margin-top:1px;">
+                                <li><label>#{msgs.rotation_z_axis}</label></li>
+                                <li>
+                                    <span class="btn font-size-s" id="rotate-left-z" title="#{msg.rotateLeft}">
+                                        <i class="fa fa-undo"></i>
+                                    </span>
+                                </li>
+                                <li>
+                                    <span class="btn font-size-s" id="rotate-right-z" title="#{msg.rotateRight}">
+                                        <i class="fa fa-repeat"></i>
+                                    </span>
+                                </li>
+                            </ul>
+                            <ul style="margin-top:1px;">
+                                <li>
+                                    <span class="btn font-size-s margin-right-10" id="reset-position" title="#{msg.resetImage}">
+                                        <i class="fa fa-refresh"></i>
+                                    </span>
+                                </li>
+                            </ul>
+            			</nav>
+            			</div>
+                </ui:fragment>
                 
 				<!-- exit fullscreen -->
 				<h:commandLink styleClass="btn btn-lightgrey" style="position:absolute;top:10px; right:10px;" 
@@ -169,7 +335,7 @@
 				<h:commandLink id="imageBack" styleClass="btn btn-lightgrey font-size-s" title="#{msgs.lw_previousImage}"
 					style="position:absolute;top:50vh; left:10px; height:50px;padding-top:17px;">
 					<i class="fa fa-angle-left"></i>
-					<f:ajax execute="@form" render="@form" />
+					<f:ajax execute="@form" render="@form" onevent="freeJSResources"/>
 					<x:updateActionListener value="#{AktuelleSchritteForm.myPlugin.imageIndex - 1}" property="#{AktuelleSchritteForm.myPlugin.imageIndex}" />
 				</h:commandLink>
 				
@@ -177,7 +343,7 @@
 				<h:commandLink id="imageNext" styleClass="btn btn-lightgrey font-size-s" title="#{msgs.lw_nextImage}"
 					style="position:absolute;top:50vh; right:10px; height:50px; padding-top:17px;">
 					<i class="fa fa-angle-right"></i>
-					<f:ajax execute="@form" render="@form" />
+					<f:ajax execute="@form" render="@form" onevent="freeJSResources"/>
 					<x:updateActionListener value="#{AktuelleSchritteForm.myPlugin.imageIndex + 1}" property="#{AktuelleSchritteForm.myPlugin.imageIndex}" />
 				</h:commandLink>
 				

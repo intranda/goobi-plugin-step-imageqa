@@ -61,6 +61,7 @@ import de.sub.goobi.helper.exceptions.DAOException;
 import de.sub.goobi.helper.exceptions.SwapException;
 import de.sub.goobi.metadaten.Image;
 import de.sub.goobi.metadaten.ImageLevel;
+import de.sub.goobi.metadaten.Image.Type;
 import de.unigoettingen.sub.commons.contentlib.exceptions.ContentLibException;
 import de.unigoettingen.sub.commons.contentlib.exceptions.ContentLibImageException;
 import de.unigoettingen.sub.commons.contentlib.exceptions.ImageManagerException;
@@ -170,7 +171,7 @@ public class ImageQAPlugin implements IStepPlugin {
         Path path = Paths.get(imageFolderName);
         List<NamePart> nameParts = initImageNameParts(myconfig);
         if (Files.exists(path)) {
-            List<String> imageNameList = NIOFileUtils.list(imageFolderName, NIOFileUtils.imageNameFilter);
+            List<String> imageNameList = NIOFileUtils.list(imageFolderName, NIOFileUtils.imageOrObjectNameFilter);
             int order = 1;
             for (String imagename : imageNameList) {
                 SelectableImage currentImage = new SelectableImage(imagename, order++, "", imagename, "");
@@ -247,12 +248,25 @@ public class ImageQAPlugin implements IStepPlugin {
 
     private void createImage(Image currentImage) {
 
-        String thumbUrl = createImageUrl(currentImage, THUMBNAIL_SIZE_IN_PIXEL, THUMBNAIL_FORMAT, "");
-        currentImage.setThumbnailUrl(thumbUrl);
-
-        String largeThumbUrl = createImageUrl(currentImage, THUMBNAIL_SIZE_IN_PIXEL * 4, THUMBNAIL_FORMAT, "");
-        currentImage.setLargeThumbnailUrl(largeThumbUrl);
-
+        if(currentImage.getType().equals(Type.image)) {
+            String thumbUrl = createImageUrl(currentImage, THUMBNAIL_SIZE_IN_PIXEL, THUMBNAIL_FORMAT, "");
+            currentImage.setThumbnailUrl(thumbUrl);
+    
+            String largeThumbUrl = createImageUrl(currentImage, THUMBNAIL_SIZE_IN_PIXEL * 4, THUMBNAIL_FORMAT, "");
+            currentImage.setLargeThumbnailUrl(largeThumbUrl);
+        }
+        
+        if (currentImage.getType().equals(Type.object) || currentImage.getType().equals(Type.x3dom)) {
+            String contextPath = getContextPath();
+            HelperForm hf = (HelperForm) Helper.getManagedBeanValue("#{HelperForm}");
+            contextPath = hf.getServletPathWithHostAsUrl();
+            String url = contextPath + "/api/view/object/" + getStep().getProcessId() + "/" + Paths.get(imageFolderName).getFileName().toString() + "/" + currentImage.getImageName()
+            + "/info.json";
+            currentImage.setObjectUrl(url);
+            
+            currentImage.setThumbnailUrl("/uii/template/img/goobi_3d_object_placeholder_large.png?version=1");
+            
+        }
     }
 
     public List<ImageLevel> getImageLevels(Image image) {
