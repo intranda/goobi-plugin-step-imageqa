@@ -1,12 +1,16 @@
 package de.intranda.goobi;
 
 import java.awt.Dimension;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.io.FilenameUtils;
+import org.goobi.beans.Process;
 
+import de.sub.goobi.helper.exceptions.DAOException;
+import de.sub.goobi.helper.exceptions.SwapException;
 import de.sub.goobi.metadaten.Image;
 import de.sub.goobi.metadaten.ImageLevel;
 import lombok.Getter;
@@ -23,7 +27,24 @@ public class SelectableImage extends Image {
     private List<NamePart> nameParts = new ArrayList<>();
     private String pageCounterLabel;
 
-    
+    /**
+     * @param process
+     * @param imageFolderName
+     * @param filename
+     * @param order
+     * @param thumbnailSize
+     * @throws IOException
+     * @throws InterruptedException
+     * @throws SwapException
+     * @throws DAOException
+     */
+    public SelectableImage(Process process, String imageFolderName, String filename, int order, Integer thumbnailSize)
+            throws IOException, InterruptedException, SwapException, DAOException {
+        super(process, imageFolderName, filename, order, thumbnailSize);
+        this.selected = false;
+    }
+
+    @Deprecated
     public SelectableImage(String imageName, int order, String thumbnailUrl, String largeThumbnailUrl, String tooltip) {
         super(imageName, order, thumbnailUrl, largeThumbnailUrl, tooltip);
         this.selected = false;
@@ -108,6 +129,7 @@ public class SelectableImage extends Image {
             this.nameParts.add(new NamePart(namePart));
         }
     }
+
 
 
     

@@ -43,6 +43,7 @@ import org.apache.commons.configuration.reloading.FileChangedReloadingStrategy;
 import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.goobi.beans.Step;
 import org.goobi.production.enums.PluginGuiType;
 import org.goobi.production.enums.PluginType;
@@ -77,7 +78,7 @@ import net.xeoh.plugins.base.annotations.PluginImplementation;
 @PluginImplementation
 @Log4j
 public class ImageQAPlugin implements IStepPlugin {
-
+    
     private static final DecimalFormat PAGENUMBERFORMAT = new DecimalFormat("0000");
     private static final DecimalFormat FILENUMBERFORMAT = new DecimalFormat("00000000");
 
@@ -174,9 +175,14 @@ public class ImageQAPlugin implements IStepPlugin {
             List<String> imageNameList = NIOFileUtils.list(imageFolderName, NIOFileUtils.imageOrObjectNameFilter);
             int order = 1;
             for (String imagename : imageNameList) {
-                SelectableImage currentImage = new SelectableImage(imagename, order++, "", imagename, "");
-                currentImage.initNameParts(nameParts);
-                allImages.add(currentImage);
+                SelectableImage currentImage;
+                try {
+                    currentImage = new SelectableImage(getStep().getProzess(), imageFolderName, imagename, order, THUMBNAIL_SIZE_IN_PIXEL);
+                    currentImage.initNameParts(nameParts);
+                    allImages.add(currentImage);
+                } catch (IOException | InterruptedException | SwapException | DAOException e) {
+                    log.error("Error initializing image " + imagename, e);
+                }
             }
             setImageIndex(0);
         }
@@ -231,42 +237,11 @@ public class ImageQAPlugin implements IStepPlugin {
         } else {
             subList = allImages.subList(pageNo * NUMBER_OF_IMAGES_PER_PAGE, allImages.size());
         }
-        for (Image currentImage : subList) {
-            if (StringUtils.isEmpty(currentImage.getThumbnailUrl())) {
-                createImage(currentImage);
-            }
-        }
         return subList;
     }
 
     public Image getImage() {
-        if (image != null && (image.getImageLevels() == null || image.getImageLevels().isEmpty())) {
-            createImage(image);
-        }
         return image;
-    }
-
-    private void createImage(Image currentImage) {
-
-        if(currentImage.getType().equals(Type.image)) {
-            String thumbUrl = createImageUrl(currentImage, THUMBNAIL_SIZE_IN_PIXEL, THUMBNAIL_FORMAT, "");
-            currentImage.setThumbnailUrl(thumbUrl);
-    
-            String largeThumbUrl = createImageUrl(currentImage, THUMBNAIL_SIZE_IN_PIXEL * 4, THUMBNAIL_FORMAT, "");
-            currentImage.setLargeThumbnailUrl(largeThumbUrl);
-        }
-        
-        if (currentImage.getType().equals(Type.object) || currentImage.getType().equals(Type.x3dom)) {
-            String contextPath = getContextPath();
-            HelperForm hf = (HelperForm) Helper.getManagedBeanValue("#{HelperForm}");
-            contextPath = hf.getServletPathWithHostAsUrl();
-            String url = contextPath + "/api/view/object/" + getStep().getProcessId() + "/" + Paths.get(imageFolderName).getFileName().toString() + "/" + currentImage.getImageName()
-            + "/info.json";
-            currentImage.setObjectUrl(url);
-            
-            currentImage.setThumbnailUrl("/uii/template/img/goobi_3d_object_placeholder_large.png?version=1");
-            
-        }
     }
 
     public List<ImageLevel> getImageLevels(Image image) {
@@ -478,8 +453,6 @@ public class ImageQAPlugin implements IStepPlugin {
         if (image == null) {
             log.error("Must set image before querying image size");
             return 0;
-        } else if (image.getSize() == null) {
-            createImage(image);
         }
         return image.getSize().width;
     }
@@ -488,19 +461,20 @@ public class ImageQAPlugin implements IStepPlugin {
         if (image == null) {
             log.error("Must set image before querying image size");
             return 0;
-        } else if (image.getSize() == null) {
-            createImage(image);
         }
         return image.getSize().height;
     }
 
     @SuppressWarnings("unused")
-    private String getImageUrl(Image image, String size) {
-        FacesContext context = FacesContextHelper.getCurrentFacesContext();
-        HttpSession session = (HttpSession) context.getExternalContext().getSession(false);
-        String currentImageURL = session.getServletContext().getContextPath() + ConfigurationHelper.getTempImagesPath() + session.getId() + "_"
-                + image.getImageName() + "_large_" + size + ".jpg";
-        return currentImageURL.replaceAll("\\\\", "/");
+    private String getImageUrl(Image image, String sizeString) {
+        try {
+            int size = Integer.parseInt(sizeString);
+            image.createThumbnailUrls(size);
+            return image.getThumbnailUrl();
+        } catch(NullPointerException | NumberFormatException e) {
+            log.error("Unable to set size of image ", e);
+        }
+        return image.getObjectUrl();
     }
 
     @SuppressWarnings("unused")
@@ -863,10 +837,7 @@ public class ImageQAPlugin implements IStepPlugin {
     }
     
     public String getImageUrl(Image image) {
-        StringBuilder sb = new StringBuilder(new HelperForm().getServletPathWithHostAsUrl());
-        sb.append("/api/image/").append(step.getProcessId()).append("/").append(getImageFolderShort()).append("/")
-        .append(image.getImageName()).append("/info.json");
-        return sb.toString();
+        return image.getObjectUrl();
     }
     
     public String getImageWebApiToken() {
