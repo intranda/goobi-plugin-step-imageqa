@@ -176,11 +176,14 @@ public class ImageQAPlugin implements IStepPlugin {
             int order = 1;
             for (String imagename : imageNameList) {
                 SelectableImage currentImage;
+                Path imagePath = Paths.get(imageFolderName, imagename);
                 try {
-                    currentImage = new SelectableImage(getStep().getProzess(), imageFolderName, imagename, order, THUMBNAIL_SIZE_IN_PIXEL);
+//                    currentImage = new SelectableImage(getStep().getProzess(), imageFolderName, imagename, order, THUMBNAIL_SIZE_IN_PIXEL);
+                    currentImage = new SelectableImage(imagePath, order, THUMBNAIL_SIZE_IN_PIXEL);
                     currentImage.initNameParts(nameParts);
                     allImages.add(currentImage);
-                } catch (IOException | InterruptedException | SwapException | DAOException e) {
+                    order++;
+                } catch (IOException e) {
                     log.error("Error initializing image " + imagename, e);
                 }
             }
@@ -244,69 +247,6 @@ public class ImageQAPlugin implements IStepPlugin {
         return image;
     }
 
-    public List<ImageLevel> getImageLevels(Image image) {
-        if (image != null) {
-            if (!image.hasImageLevels()) {
-                createImageLevels(image);
-            }
-            return image.getImageLevels();
-        } else {
-            return Collections.EMPTY_LIST;
-        }
-
-    }
-
-    /**
-     * @param currentImage
-     */
-    public void createImageLevels(Image currentImage) {
-        if (currentImage.getSize() == null) {
-            currentImage.setSize(getActualImageSize(currentImage));
-        }
-        String contextPath = getContextPath();
-        for (String sizeString : imageSizes) {
-            try {
-                int size = Integer.parseInt(sizeString);
-                String imageUrl = createImageUrl(currentImage, size, MAINIMAGE_FORMAT, contextPath);
-                currentImage.addImageLevel(imageUrl, size);
-            } catch (NullPointerException | NumberFormatException e) {
-                log.error("Cannot build image with size " + sizeString);
-            }
-        }
-        Collections.sort(currentImage.getImageLevels());
-    }
-
-    private String getContextPath() {
-        HelperForm hf = (HelperForm) Helper.getManagedBeanValue("#{HelperForm}");
-        String contextPath = hf.getServletPathWithHostAsUrl();
-        return contextPath;
-        //        FacesContext context = FacesContextHelper.getCurrentFacesContext();
-        //        HttpSession session = (HttpSession) context.getExternalContext().getSession(false);
-        //        String baseUrl = session.getServletContext().getContextPath();
-        //        return baseUrl;
-    }
-
-    private Dimension getActualImageSize(Image image) {
-        Dimension dim;
-        try {
-            Path imagePath = Paths.get(imageFolderName, image.getImageName());
-            String dimString = new GetImageDimensionAction().getDimensions(imagePath.toUri().toString());
-            int width = Integer.parseInt(dimString.replaceAll("::.*", ""));
-            int height = Integer.parseInt(dimString.replaceAll(".*::", ""));
-            dim = new Dimension(width, height);
-        } catch (NullPointerException | NumberFormatException | ContentLibImageException | URISyntaxException | IOException e) {
-            log.error("Could not retrieve actual image size", e);
-            dim = new Dimension(0, 0);
-        }
-        return dim;
-    }
-
-    private String createImageUrl(Image currentImage, Integer size, String format, String baseUrl) {
-        StringBuilder url = new StringBuilder(baseUrl);
-        url.append("/cs").append("?action=").append("image").append("&format=").append(format).append("&sourcepath=").append(
-                "file://" + imageFolderName + currentImage.getImageName()).append("&width=").append(size).append("&height=").append(size);
-        return url.toString().replaceAll("\\\\", "/");
-    }
 
     @SuppressWarnings("unused")
     private Dimension scaleFile(String inFileName, String outFileName, List<String> sizes) throws IOException, ContentLibImageException {

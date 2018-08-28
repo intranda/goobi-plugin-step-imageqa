@@ -2,6 +2,7 @@ package de.intranda.goobi;
 
 import java.awt.Dimension;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -41,6 +42,11 @@ public class SelectableImage extends Image {
     public SelectableImage(Process process, String imageFolderName, String filename, int order, Integer thumbnailSize)
             throws IOException, InterruptedException, SwapException, DAOException {
         super(process, imageFolderName, filename, order, thumbnailSize);
+        this.selected = false;
+    }
+    
+    public SelectableImage(Path imagePath, int order, Integer thumbnailSize) throws IOException {
+        super(imagePath, order, thumbnailSize);
         this.selected = false;
     }
 
@@ -129,6 +135,7 @@ public class SelectableImage extends Image {
             this.nameParts.add(new NamePart(namePart));
         }
     }
+
 
 
 
