@@ -178,12 +178,12 @@ public class ImageQAPlugin implements IStepPlugin {
                 SelectableImage currentImage;
                 Path imagePath = Paths.get(imageFolderName, imagename);
                 try {
-                    //                    currentImage = new SelectableImage(getStep().getProzess(), imageFolderName, imagename, order, THUMBNAIL_SIZE_IN_PIXEL);
-                    currentImage = new SelectableImage(imagePath, order, THUMBNAIL_SIZE_IN_PIXEL);
+                      currentImage = new SelectableImage(getStep().getProzess(), imageFolderName, imagename, order, THUMBNAIL_SIZE_IN_PIXEL);
+//                    currentImage = new SelectableImage(imagePath, order, THUMBNAIL_SIZE_IN_PIXEL);
                     currentImage.initNameParts(nameParts);
                     allImages.add(currentImage);
                     order++;
-                } catch (IOException e) {
+                } catch (IOException | InterruptedException | SwapException | DAOException e) {
                     log.error("Error initializing image " + imagename, e);
                 }
             }
