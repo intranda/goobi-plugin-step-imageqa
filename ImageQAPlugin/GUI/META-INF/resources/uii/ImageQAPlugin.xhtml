@@ -459,8 +459,8 @@
                             			        zoomSliderHandle: "#zoomSlider .zoom-slider-handle",
                             			        zoomSliderLabel: "#zoomSliderLabel input",
                                                 webApiToken: '#{AktuelleSchritteForm.myPlugin.imageWebApiToken}',
-												sizes: #{AktuelleSchritteForm.myPlugin.displaySizes},
-                                                tiles: #{AktuelleSchritteForm.myPlugin.tileSize}
+												imageSizes: #{AktuelleSchritteForm.myPlugin.displaySizes},
+                                                tileSizes: #{AktuelleSchritteForm.myPlugin.tileSize}
                             			    },
                             			    image: {
                             			        mimeType: "image/jpeg",
@@ -498,7 +498,6 @@
 										 };
                                     	
 									 	var mediaType = "#{AktuelleSchritteForm.myPlugin.image.type}";
-									 	console.log("Media type = ", mediaType);
 									 	if(mediaType == "image") {
 									 		
 										    var viewImage = new ImageView.Image( configViewer );
@@ -625,7 +624,6 @@
 			function loadThumbnails() {
 				var height = parseInt('#{AktuelleSchritteForm.myPlugin.thumbnailSize}');
 				if (height) {
-					console.log("höhe ist da mit " +  height);
 		     		$('.goobi-thumbnail-image').css('height', (height + 25) + 'px');
 		    		$('.goobi-thumbnail-image .thumb').css('max-height', height + 'px');
 		    		$('.goobi-thumbnail-image .thumb canvas').css('max-height', height + 'px');
