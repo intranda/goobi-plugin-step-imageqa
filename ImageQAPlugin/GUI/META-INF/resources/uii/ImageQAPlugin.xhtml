@@ -452,14 +452,15 @@
                                     	var configViewer = {
                             			    global: {
                             			    	divId: 'mainImage',
-                            			        useTiles: false,
+                            			        useTiles: #{AktuelleSchritteForm.myPlugin.useTiles},
                             			        footerHeight: 0,
                             			        adaptContainerHeight: true,
                             			        zoomSlider: "#zoomSlider",
                             			        zoomSliderHandle: "#zoomSlider .zoom-slider-handle",
                             			        zoomSliderLabel: "#zoomSliderLabel input",
                                                 webApiToken: '#{AktuelleSchritteForm.myPlugin.imageWebApiToken}',
-
+												sizes: #{AktuelleSchritteForm.myPlugin.displaySizes},
+                                                tiles: #{AktuelleSchritteForm.myPlugin.tileSize}
                             			    },
                             			    image: {
                             			        mimeType: "image/jpeg",
