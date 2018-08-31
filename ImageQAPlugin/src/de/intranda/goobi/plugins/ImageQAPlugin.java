@@ -8,7 +8,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -53,7 +52,6 @@ import de.intranda.goobi.NamePart;
 import de.intranda.goobi.SelectableImage;
 import de.sub.goobi.config.ConfigPlugins;
 import de.sub.goobi.config.ConfigurationHelper;
-import de.sub.goobi.forms.HelperForm;
 import de.sub.goobi.helper.FacesContextHelper;
 import de.sub.goobi.helper.Helper;
 import de.sub.goobi.helper.NIOFileUtils;
@@ -62,14 +60,12 @@ import de.sub.goobi.helper.StorageProvider;
 import de.sub.goobi.helper.exceptions.DAOException;
 import de.sub.goobi.helper.exceptions.SwapException;
 import de.sub.goobi.metadaten.Image;
-import de.sub.goobi.metadaten.ImageLevel;
 import de.unigoettingen.sub.commons.contentlib.exceptions.ContentLibException;
 import de.unigoettingen.sub.commons.contentlib.exceptions.ContentLibImageException;
 import de.unigoettingen.sub.commons.contentlib.exceptions.ImageManagerException;
 import de.unigoettingen.sub.commons.contentlib.exceptions.ImageManipulatorException;
 import de.unigoettingen.sub.commons.contentlib.imagelib.ImageManager;
 import de.unigoettingen.sub.commons.contentlib.imagelib.JpegInterpreter;
-import de.unigoettingen.sub.commons.contentlib.servlet.controller.GetImageDimensionAction;
 import lombok.Data;
 import lombok.extern.log4j.Log4j;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
@@ -183,7 +179,7 @@ public class ImageQAPlugin implements IStepPlugin {
                     currentImage.initNameParts(nameParts);
                     allImages.add(currentImage);
                     order++;
-                } catch (IOException | InterruptedException | SwapException | DAOException e) {
+                } catch (IOException | InterruptedException | SwapException | DAOException  e) {
                     log.error("Error initializing image " + imagename, e);
                 }
             }
@@ -247,93 +243,6 @@ public class ImageQAPlugin implements IStepPlugin {
         return image;
     }
 
-    private void createImage(Image currentImage) {
-
-        String thumbUrl = createImageUrl(currentImage, THUMBNAIL_SIZE_IN_PIXEL, THUMBNAIL_FORMAT, "");
-        currentImage.setThumbnailUrl(thumbUrl);
-
-        String largeThumbUrl = createImageUrl(currentImage, THUMBNAIL_SIZE_IN_PIXEL * 4, THUMBNAIL_FORMAT, "");
-        currentImage.setLargeThumbnailUrl(largeThumbUrl);
-
-    }
-
-    public List<ImageLevel> getImageLevels(Image image) {
-        if (image != null) {
-            if (!image.hasImageLevels()) {
-                createImageLevels(image);
-            }
-            return image.getImageLevels();
-        } else {
-            return Collections.EMPTY_LIST;
-        }
-
-    }
-
-    /**
-     * @param currentImage
-     */
-    public void createImageLevels(Image currentImage) {
-        if (currentImage.getSize() == null) {
-            currentImage.setSize(getActualImageSize(currentImage));
-        }
-        String contextPath = getContextPath();
-        for (String sizeString : imageSizes) {
-            try {
-                int size = Integer.parseInt(sizeString);
-                String imageUrl = createImageUrl(currentImage, size, MAINIMAGE_FORMAT, contextPath);
-                currentImage.addImageLevel(imageUrl, size);
-            } catch (NullPointerException | NumberFormatException e) {
-                log.error("Cannot build image with size " + sizeString);
-            }
-        }
-        Collections.sort(currentImage.getImageLevels());
-    }
-
-    private String getContextPath() {
-        HelperForm hf = (HelperForm) Helper.getManagedBeanValue("#{HelperForm}");
-        String contextPath = hf.getServletPathWithHostAsUrl();
-        return contextPath;
-        //        FacesContext context = FacesContextHelper.getCurrentFacesContext();
-        //        HttpSession session = (HttpSession) context.getExternalContext().getSession(false);
-        //        String baseUrl = session.getServletContext().getContextPath();
-        //        return baseUrl;
-    }
-
-    private Dimension getActualImageSize(Image image) {
-        Dimension dim;
-        try {
-            String imagePath = imageFolderName + image.getImageName();
-            ConfigurationHelper config = ConfigurationHelper.getInstance();
-            String dimString;
-            if (config.useS3()) {
-                String uri = "s3://" + config.getS3Bucket() + "/" + S3FileUtils.string2Key(imagePath
-                        .replaceAll("\\\\", "/"));
-                dimString = new GetImageDimensionAction().getDimensions(uri);
-            } else {
-                dimString = new GetImageDimensionAction().getDimensions(("file://" + imagePath).replaceAll("\\\\", "/"));
-            }
-            int width = Integer.parseInt(dimString.replaceAll("::.*", ""));
-            int height = Integer.parseInt(dimString.replaceAll(".*::", ""));
-            dim = new Dimension(width, height);
-        } catch (NullPointerException | NumberFormatException | ContentLibImageException | URISyntaxException | IOException e) {
-            log.error("Could not retrieve actual image size", e);
-            dim = new Dimension(0, 0);
-        }
-        return dim;
-    }
-
-    private String createImageUrl(Image currentImage, Integer size, String format, String baseUrl) {
-        StringBuilder url = new StringBuilder(baseUrl);
-        ConfigurationHelper config = ConfigurationHelper.getInstance();
-        url.append("/cs").append("?action=").append("image").append("&format=").append(format).append("&sourcepath=");
-        if (config.useS3()) {
-            url.append("s3://" + config.getS3Bucket() + "/" + S3FileUtils.string2Key(imageFolderName + currentImage.getImageName()));
-        } else {
-            url.append("file://" + imageFolderName + currentImage.getImageName());
-        }
-        url.append("&width=").append(size).append("&height=").append(size);
-        return url.toString().replaceAll("\\\\", "/");
-    }
 
     @SuppressWarnings("unused")
     private Dimension scaleFile(String inFileName, String outFileName, List<String> sizes) throws IOException, ContentLibImageException {
@@ -865,17 +774,6 @@ public class ImageQAPlugin implements IStepPlugin {
             response.setHeader("Content-Disposition", "attachment;filename=\"" + fileName + "\"");
             response.sendRedirect(goobiContentServerUrl.toString());
             context.responseComplete();
-        }
-    }
-
-    private String getImageFolderShort() {
-        String imageFolder = Paths.get(imageFolderName).getFileName().toString();
-        if (imageFolder.startsWith("master_") || imageFolder.startsWith("orig_")) {
-            return "master";
-        } else if (imageFolder.contains("_")) {
-            return imageFolder.substring(imageFolder.lastIndexOf("_") + 1);
-        } else {
-            return imageFolder;
         }
     }
 
