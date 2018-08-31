@@ -52,6 +52,7 @@ public class ImageQAPluginTest {
 		Assert.assertEquals(3, plugin.getAllImages().size(), 0);
 	}
 
+	/** test if setting for Display size is parsed and created correclty */
 	@Test
 	public void testDisplaySizes() throws ConfigurationException {
 		projectName = "testDisplaySizesProject";
@@ -59,21 +60,23 @@ public class ImageQAPluginTest {
 
 		getConfig();
 		plugin.initConfig(myconfig);
-		String sizes = "[{\"width\":800},{\"width\":1800},{\"width\":3000},]";
+		String sizes = "[{\"width\":800},{\"width\":1800},{\"width\":3000}]";
+		System.out.println(plugin.getDisplaySizes());
 		Assert.assertEquals(sizes, plugin.getDisplaySizes());
 	}
 
+	/** Test if setting for Tile-sizes is parsed and created correctly */
 	@Test
 	public void testTileSize() throws ConfigurationException {
 		projectName = "testTileSizeProject";
 		testStep = "testTileSizeStep";
 		getConfig();
 		plugin.initConfig(myconfig);
-		String tiles = "[{\"width\":256,\"scaleFactors\":[1,4,16,64,]}]";
-		System.out.println(plugin.getTileSize());
+		String tiles = "[{\"width\":256,\"scaleFactors\":[1,4,16,64]}]";
 		Assert.assertEquals(tiles, plugin.getTileSize());
 	}
 
+	/** loads config file, needed for most tests */
 	private void getConfig() throws ConfigurationException {
 		plugin.setStep(new Step());
 

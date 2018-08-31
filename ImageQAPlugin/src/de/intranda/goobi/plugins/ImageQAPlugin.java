@@ -219,6 +219,7 @@ public class ImageQAPlugin implements IStepPlugin {
 		THUMBNAIL_SIZE_IN_PIXEL = myconfig.getInt("thumbnailsize", 200);
 		THUMBNAIL_FORMAT = myconfig.getString("thumbnailFormat", "png");
 		MAINIMAGE_FORMAT = myconfig.getString("mainImageFormat", "jpg");
+		/*load imagesizes, set default of none found*/
 		imageSizes = myconfig.getList("imagesize");
 		if (imageSizes == null || imageSizes.isEmpty()) {
 			imageSizes = new ArrayList<>();
@@ -228,6 +229,7 @@ public class ImageQAPlugin implements IStepPlugin {
 		if (tileSize == null) {
 			tileSize = "";
 		}
+		/*load scale factors, set default of none found*/
 		scaleFactors = myconfig.getList("scaleFactors");
 		if (scaleFactors == null || scaleFactors.isEmpty()) {
 			scaleFactors = new ArrayList<>();
@@ -239,14 +241,7 @@ public class ImageQAPlugin implements IStepPlugin {
 		executor = Executors.newFixedThreadPool(imageSizes.size());
 	}
 
-	/*public String getUseTiles() {
-		if (useTiles) {
-			return "true";
-		} else {
-			return "false";
-		}
-	}*/
-
+/** builds String to apply settings for tile-size and scale Factors from the config file*/
 	public String getTileSize() {
 		StringBuilder sb = new StringBuilder();
 		if (StringUtils.isNotBlank(tileSize)) {
@@ -263,7 +258,7 @@ public class ImageQAPlugin implements IStepPlugin {
 		}
 		return sb.toString();
 	}
-
+/** builds String to apply settings for display size from the config file*/
 	public String getDisplaySizes() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("[");
