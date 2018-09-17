@@ -171,7 +171,7 @@ public class ImageQAPlugin implements IStepPlugin {
 		Path path = Paths.get(imageFolderName);
 		List<NamePart> nameParts = initImageNameParts(myconfig);
 		if (StorageProvider.getInstance().isFileExists(path)) {
-            List<String> imageNameList = StorageProvider.getInstance().list(imageFolderName, NIOFileUtils.imageNameFilter);
+            List<String> imageNameList = StorageProvider.getInstance().list(imageFolderName, NIOFileUtils.imageOrObjectNameFilter);
 			int order = 1;
 			for (String imagename : imageNameList) {
 				SelectableImage currentImage;
