@@ -13,8 +13,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.sun.swing.internal.plaf.synth.resources.synth_sv;
-
 public class ImageQAPluginTest {
 
 	File configFile = new File("test/test_config.xml").getAbsoluteFile();
@@ -61,7 +59,6 @@ public class ImageQAPluginTest {
 		getConfig();
 		plugin.initConfig(myconfig);
 		String sizes = "[{\"width\":800},{\"width\":1800},{\"width\":3000}]";
-		System.out.println(plugin.getDisplaySizes());
 		Assert.assertEquals(sizes, plugin.getDisplaySizes());
 	}
 

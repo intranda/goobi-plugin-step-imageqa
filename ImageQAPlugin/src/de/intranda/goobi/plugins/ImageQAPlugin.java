@@ -118,6 +118,9 @@ public class ImageQAPlugin implements IStepPlugin {
 	private ExecutorService executor;
 
 	private String returnPath;
+//ocr display variables
+	private boolean ocrExists = false;
+	private boolean displayOCR = false;
 
 	@Override
 	public void initialize(Step step, String returnPath) {
@@ -219,7 +222,7 @@ public class ImageQAPlugin implements IStepPlugin {
 		THUMBNAIL_SIZE_IN_PIXEL = myconfig.getInt("thumbnailsize", 200);
 		THUMBNAIL_FORMAT = myconfig.getString("thumbnailFormat", "png");
 		MAINIMAGE_FORMAT = myconfig.getString("mainImageFormat", "jpg");
-		/*load imagesizes, set default of none found*/
+		/* load imagesizes, set default of none found */
 		imageSizes = myconfig.getList("imagesize");
 		if (imageSizes == null || imageSizes.isEmpty()) {
 			imageSizes = new ArrayList<>();
@@ -229,19 +232,22 @@ public class ImageQAPlugin implements IStepPlugin {
 		if (tileSize == null) {
 			tileSize = "";
 		}
-		/*load scale factors, set default of none found*/
+		/* load scale factors, set default of none found */
 		scaleFactors = myconfig.getList("scaleFactors");
 		if (scaleFactors == null || scaleFactors.isEmpty()) {
 			scaleFactors = new ArrayList<>();
 			scaleFactors.add("1");
 			scaleFactors.add("32");
 		}
-		useTiles = myconfig.getBoolean("useTiles",false);
-		useTilesFullscreen = myconfig.getBoolean("useTilesFullscreen",true);
+		useTiles = myconfig.getBoolean("useTiles", false);
+		useTilesFullscreen = myconfig.getBoolean("useTilesFullscreen", true);
 		executor = Executors.newFixedThreadPool(imageSizes.size());
 	}
 
-/** builds String to apply settings for tile-size and scale Factors from the config file*/
+	/**
+	 * builds String to apply settings for tile-size and scale Factors from the
+	 * config file
+	 */
 	public String getTileSize() {
 		StringBuilder sb = new StringBuilder();
 		if (StringUtils.isNotBlank(tileSize)) {
@@ -258,7 +264,8 @@ public class ImageQAPlugin implements IStepPlugin {
 		}
 		return sb.toString();
 	}
-/** builds String to apply settings for display size from the config file*/
+
+	/** builds String to apply settings for display size from the config file */
 	public String getDisplaySizes() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("[");
