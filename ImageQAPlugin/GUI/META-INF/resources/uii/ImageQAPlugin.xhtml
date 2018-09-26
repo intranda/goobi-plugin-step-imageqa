@@ -1,622 +1,747 @@
-<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://xmlns.jcp.org/jsf/facelets" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:o="http://omnifaces.org/ui" xmlns:of="http://omnifaces.org/functions" template="/uii/template/template.html" xmlns:x="http://myfaces.apache.org/tomahawk" xmlns:intranda="http://xmlns.jcp.org/jsf/composite/composites">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:o="http://omnifaces.org/ui"
+	xmlns:of="http://omnifaces.org/functions"
+	template="/uii/template/template.html"
+	xmlns:x="http://myfaces.apache.org/tomahawk"
+	xmlns:intranda="http://xmlns.jcp.org/jsf/composite/composites">
 
-    <ui:param name="myPageTitle" value="#{msgs.plugin}: #{msgs[('plugin_').concat(AktuelleSchritteForm.myPlugin.title)]}" />
+	<ui:param name="myPageTitle"
+		value="#{msgs.plugin}: #{msgs[('plugin_').concat(AktuelleSchritteForm.myPlugin.title)]}" />
 
 	<ui:define name="breadcrumb">
-        <intranda:breadcrumb label="#{msgs.startseite}" action="index" navId="a0" />
-        
-        <c:if test="#{LoginForm.hasRole('Workflow_Processes') and NavigationForm.uiStatus.pluginSimulation == true}">
-			<intranda:breadcrumb id="processAll" label="#{ProzessverwaltungForm.modusAnzeige=='aktuell'?msgs.aktuelleProzesse:msgs.prozessvorlagen}" action="process_all" navId="a1" />
-			<intranda:breadcrumb id="processEdit" label="#{ProzessverwaltungForm.modusAnzeige=='aktuell'?msgs.prozessDetails:msgs.process_templateDetails}" action="process_edit" />
+		<intranda:breadcrumb label="#{msgs.startseite}" action="index"
+			navId="a0" />
+
+		<c:if
+			test="#{LoginForm.hasRole('Workflow_Processes') and NavigationForm.uiStatus.pluginSimulation == true}">
+			<intranda:breadcrumb id="processAll"
+				label="#{ProzessverwaltungForm.modusAnzeige=='aktuell'?msgs.aktuelleProzesse:msgs.prozessvorlagen}"
+				action="process_all" navId="a1" />
+			<intranda:breadcrumb id="processEdit"
+				label="#{ProzessverwaltungForm.modusAnzeige=='aktuell'?msgs.prozessDetails:msgs.process_templateDetails}"
+				action="process_edit" />
 		</c:if>
-        
-        <c:if test="#{NavigationForm.uiStatus.pluginSimulation != true}">
-		    <intranda:breadcrumb label="#{msgs.aktuelleSchritte}" action="#{AktuelleSchritteForm.paginator.returnToPreviousPage}" />
-    	   	<intranda:breadcrumb label="#{AktuelleSchritteForm.mySchritt.prozess.titel}" action="#{AktuelleSchritteForm.myPlugin.cancel}" />
+
+		<c:if test="#{NavigationForm.uiStatus.pluginSimulation != true}">
+			<intranda:breadcrumb label="#{msgs.aktuelleSchritte}"
+				action="#{AktuelleSchritteForm.paginator.returnToPreviousPage}" />
+			<intranda:breadcrumb
+				label="#{AktuelleSchritteForm.mySchritt.prozess.titel}"
+				action="#{AktuelleSchritteForm.myPlugin.cancel}" />
 		</c:if>
-        
-        <intranda:breadcrumb label="#{myPageTitle}" noSeparator="#{true}" />
-    </ui:define>
 
-    <ui:define name="info">
-    </ui:define>
+		<intranda:breadcrumb label="#{myPageTitle}" noSeparator="#{true}" />
+	</ui:define>
 
-    <ui:define name="content">
+	<ui:define name="info">
+	</ui:define>
 
-        <style>
-			/* Thumbnails */
-			.goobi-thumbnail {
-			    float: left;
-			    margin: 7px;
-			    width: #{AktuelleSchritteForm.myPlugin.thumbnailSize +2}px;
-			    height: #{AktuelleSchritteForm .myPlugin.thumbnailSize+55}px;
-			}
+	<ui:define name="content">
+
+		<style>
+/* Thumbnails */
+.goobi-thumbnail {
+	float: left;
+	margin: 7px;
+	width: #{AktuelleSchritteForm.myPlugin.thumbnailSize +2
+}px;
+			    
+height: #{AktuelleSchritteForm.myPlugin.thumbnailSize+55}px;
 			
-			.goobi-thumbnail .goobi-thumbnail-image {
-			    float: left;
-			    width: 100%;
-			    min-height: 100px;
-			    overflow: hidden;
-			    max-height: #{AktuelleSchritteForm.myPlugin.thumbnailSize +2}px;
-			}
-			
-			.goobi-thumbnail .goobi-thumbnail-image a {
-			    display: block;
-			}
-			
-			.goobi-thumbnail .goobi-thumbnail-image a img {
-			    display: block;
-			    max-width: 100%;
-			    max-height: 175px;
-			    margin: 0 auto;
-			    border: 1px solid lightgrey;
-			}
-			
-			.goobi-thumbnail .goobi-thumbnail-caption {
-			    float: left;
-			    width: 100%;
-			    min-height: 20px;
-			    line-height: 20px;
-			    text-align: center;
-			}
-			
-			.goobi-thumbnail .goobi-thumbnail-controls {
-			    float: left;
-			    width: 100%;
-			    margin-top: 5px;
-			}
-			
-			.goobi-thumbnail-controls-left {
-			    width: 60%;    
-			}
-			
-			.goobi-thumbnail-controls-right {
-			    width: 40%;
-			}
-			
-			.goobi-thumbnail-controls-left {
-			    padding-left: 25px;
-			}
-			
-			.goobi-thumbnail-controls-left .thumbnail-control {
-			    margin-right: 3px;
-			}
-			
-			.goobi-thumbnail-controls-right {
-			    padding-right: 25px;
-			    text-align: right;
-			}
-			
-			.goobi-thumbnail-controls-right .thumbnail-control {
-			    margin-left: 3px;
-			}
-			
-			.thumbnail-control {
-			    padding: 3px 5px;
-			}
-			
-			.thumbnail-control.checkbox {
-			    position: relative;
-			    margin: 0 3px 0 0;
-			}
-			
-			.thumbnail-control.checkbox label {
-			    margin: 0;
-			    padding: 0;
-			}
-			
-			.thumbnail-control.checkbox .control-indicator .fa-square-o, .thumbnail-control.checkbox .control-indicator .fa-check-square-o {
-			    margin-top: 4px;
-			}
-			
-			.thumbnail-control.checkbox .control-indicator .fa-square-o {
-			    padding-right: 2px;
-			}
-			
-			.thumbnail-control.checkbox .control-indicator .fa-check-square-o {
-			    display: none;
-			}
-			
-			.thumbnail-control.checkbox input[type="checkbox"] {
-			    position: absolute;
-			    margin: 0;
-			    visibility: hidden;
-			    z-index: -1;
-			}
-			
-			.thumbnail-control.checkbox input:checked ~ .control-indicator .fa-check-square-o {
-			    display: inline-block;
-			}
-			
-			.thumbnail-control.checkbox input:checked ~ .control-indicator .fa-square-o {
-			    display: none;
-			}
-			
-			.thumb-canvas{
-				border: 1px solid #ccc;
-			}
-			
-			.big-image-caption {
-			    text-align: center;
-			}
-			
-			.div-image img {
-			    float: right;
-			    border: solid 1px;
-			    border-color: lightgrey;
-			}
-			
-			.img-active {
-			    background-color: #368ee0;
-			    color: white;
-			}
-			
-			.image-navigation {
-			    margin-bottom: 5px;
-			}
-			
-			#image-control-wrapper {
-			    margin-left: 6px;
-			}
-			
-			#mainImage {
-			    widht: 100%;
-                height: 600px;
-                border: 1px solid lightgrey;            
-			}
-            
-            #mainImage #ajaxloader_image {
-                position: absolute;
-                left:50%;
-                top:50%;
-                margin-left: -34px;
-                margin-top: -21px;
-            }
-            
-            #mainImage #ajaxloader_image img{
-                border: none;
-            }
+}
+.goobi-thumbnail .goobi-thumbnail-image {
+	float: left;
+	width: 100%;
+	min-height: 100px;
+	overflow: hidden;
+	max-height: #{AktuelleSchritteForm.myPlugin.thumbnailSize +2
+}px;
 
-			.namePart {
-				display: inline-block;
-				width: auto;
-				min-width: 20px;
-				margin-left: 15px;
-				margin-bottom: 10px;
-			}
+}
+.goobi-thumbnail .goobi-thumbnail-image a {
+	display: block;
+}
 
-		</style>
-<script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/reactiveX/rx.lite.min.js"></script>
-<script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/q-promises/q.min.js"></script>
+.goobi-thumbnail .goobi-thumbnail-image a img {
+	display: block;
+	max-width: 100%;
+	max-height: 175px;
+	margin: 0 auto;
+	border: 1px solid lightgrey;
+}
 
-<script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/openseadragon/openseadragon.min.js"></script>
-    <script
-        src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/openseadragon/openseadragon-viewerinputhook.js"></script>
-    <script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/imageView/imageView.image.js"></script>
-    <script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/imageView/imageView.tileSourceResolver.js"></script>
-    <script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/imageView/imageView.measures.js"></script>
-    <script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/imageView/imageView.controls.js"></script>
-    <script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/imageView/imageView.zoomSlider.js"></script>
-    <!-- 3D-Models -->
-    <script type="text/javascript"
-        src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/three/three.min.js"></script>
-    <script type="text/javascript"
-        src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/three/loaders/OBJLoader.js"></script>
-    <script type="text/javascript"
-        src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/three/loaders/MTLLoader.js"></script>
-    <script type="text/javascript"
-        src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/three/loaders/PLYLoader.js"></script>
-    <script type="text/javascript"
-        src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/three/loaders/STLLoader.js"></script>
-    <script type="text/javascript"
-        src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/three/loaders/FBXLoader.js"></script>
-    <script type="text/javascript"
-        src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/three/loaders/TDSLoader.js"></script>
-    <script type="text/javascript"
-        src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/three/loaders/DRACOLoader.js"></script>
-    <script type="text/javascript"
-        src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/three/loaders/GLTFLoader.js"></script>
-    <script type="text/javascript"
-        src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/three/controls/OrbitControls.js"></script>
-    <script type="text/javascript"
-        src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/three/dependencies/inflate.min.js"></script>
-    <script type="text/javascript"
-        src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/viewObject/OBJMTLLoader.js"></script>
-    <script type="text/javascript"
-        src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/viewObject/PLYMeshLoader.js"></script>
-    <script type="text/javascript"
-        src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/viewObject/STLMeshLoader.js"></script>
-    <script type="text/javascript"
-        src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/viewObject/TDSMeshLoader.js"></script>
-    <script type="text/javascript"
-        src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/viewObject/FBXMeshLoader.js"></script>
-    <script type="text/javascript"
-        src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/viewObject/GLTFDRACOLoader.js"></script>
-    <script type="text/javascript"
-        src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/viewObject/X3DLoader.js"></script>
-    <script type="text/javascript"
-        src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/viewObject/WorldGenerator.js"></script>
-    <script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/x3dom/x3dom.js"></script>
+.goobi-thumbnail .goobi-thumbnail-caption {
+	float: left;
+	width: 100%;
+	min-height: 20px;
+	line-height: 20px;
+	text-align: center;
+}
 
-        <h:form id="qaform">
-            <div class="box box-color lightgrey box-bordered">
-                <div class="box-title">
-                    <h3>
-                        <i class="fa fa-puzzle-piece" />
-                        <h:outputText id="id9a" value="#{AktuelleSchritteForm.myPlugin.step.titel}" />
-                    </h3>
-                    <div class="actions">
-                        <h:commandLink id="id10" action="#{NavigationForm.Reload}" styleClass="btn btn-mini">
-                            <i class="fa fa-refresh" />
-                        </h:commandLink>
-                        
-                        <h:commandLink id="id11" action="#{AktuelleSchritteForm.SchrittDurchBenutzerAbschliessen}" styleClass="btn btn-mini" 
-                        	rendered="#{NavigationForm.uiStatus.pluginSimulation != true}" title="#{msgs.task_leavePluginAndFinishTask}">
-                            <i class="fa fa-check" />
-                            <x:updateActionListener property="#{NavigationForm.uiStatus.pluginSimulation}" value="#{false}" />
-                        </h:commandLink>
-                        
-                        <h:commandLink id="id12" action="#{AktuelleSchritteForm.myPlugin.cancel}" styleClass="btn btn-mini" 
-                        	rendered="#{NavigationForm.uiStatus.pluginSimulation != true}" title="#{msgs.pluginLeave}">
-                            <i class="fa fa-close" />
-                            <x:updateActionListener property="#{NavigationForm.uiStatus.pluginSimulation}" value="#{false}" />
-                        </h:commandLink>
-                        
-                    </div>
-                </div>
+.goobi-thumbnail .goobi-thumbnail-controls {
+	float: left;
+	width: 100%;
+	margin-top: 5px;
+}
 
-                <div class="box-content">
+.goobi-thumbnail-controls-left {
+	width: 60%;
+}
 
-                    <h:panelGroup layout="block" rendered="#{AktuelleSchritteForm.myPlugin.sizeOfImageList gt 0}" styleClass="col-sm-7">
+.goobi-thumbnail-controls-right {
+	width: 40%;
+}
 
-                        <div class="row">
-                            <f:subview id="first">
-                                <ui:include src="ImageQAPlugin_include_thumbnavigation.xhtml" />
-                            </f:subview>
-                        </div>
+.goobi-thumbnail-controls-left {
+	padding-left: 25px;
+}
 
-                        <!-- Thumbnail list -->
-                        <div class="row margin-top-most margin-bottom-most">
+.goobi-thumbnail-controls-left .thumbnail-control {
+	margin-right: 3px;
+}
 
-                            <ui:repeat var="image" value="#{AktuelleSchritteForm.myPlugin.paginatorList}" varStatus="status">
-                                <div class="goobi-thumbnail #{AktuelleSchritteForm.myPlugin.image.imageName eq image.imageName?'img-active':'font-light'}">
-                                    <div class="goobi-thumbnail-image">
+.goobi-thumbnail-controls-right {
+	padding-right: 25px;
+	text-align: right;
+}
 
-                                        <div class="thumb">
-                                            <h:commandLink title="#{image.tooltip}">
-                                                <canvas class="thumb-canvas" data-image_small="#{HelperForm.servletPathWithHostAsUrl}#{image.thumbnailUrl}" data-image_large="#{HelperForm.servletPathWithHostAsUrl}#{image.largeThumbnailUrl}" title="#{image.tooltip}" id="thumbnail-#{status.index}"></canvas>
-                                                <f:setPropertyActionListener value="#{image.order -1}" target="#{AktuelleSchritteForm.myPlugin.imageIndex}" />
-                                                <f:ajax execute="@form" render="@form :bigimage" onevent="freeJSResources"/>
+.goobi-thumbnail-controls-right .thumbnail-control {
+	margin-left: 3px;
+}
 
-                                            </h:commandLink>
-                                        </div>
+.thumbnail-control {
+	padding: 3px 5px;
+}
 
-                                    </div>
-                                    <div class="goobi-thumbnail-caption">
-                                        <h:outputText value="#{image.imageNameShort}"></h:outputText>
-                                    </div>
+.thumbnail-control.checkbox {
+	position: relative;
+	margin: 0 3px 0 0;
+}
 
-                                    <h:panelGroup styleClass="goobi-thumbnail-controls" rendered="#{NavigationForm.uiStatus.plugin_qa_confirmation == false}">
+.thumbnail-control.checkbox label {
+	margin: 0;
+	padding: 0;
+}
 
-                                        <div class="goobi-thumbnail-controls-left pull-left">
-                                            <!-- select current image -->
-                                            <h:panelGroup rendered="#{AktuelleSchritteForm.myPlugin.allowSelection}">
-                                                <span class="btn thumbnail-control checkbox">
-                                                    <label class="control checkbox">
-                                                        <h:selectBooleanCheckbox value="#{image.selected}" />
-                                                        <span class="control-indicator">
-                                                            <i class="fa fa fa-check-square-o"></i>
-                                                            <i class="fa fa fa-square-o"></i>
-                                                        </span>
-                                                    </label>
+.thumbnail-control.checkbox .control-indicator .fa-square-o,
+	.thumbnail-control.checkbox .control-indicator .fa-check-square-o {
+	margin-top: 4px;
+}
 
-                                                </span>
-                                            </h:panelGroup>
-                                            <!--  modal rendern  -->
-                                            <h:panelGroup rendered="#{AktuelleSchritteForm.myPlugin.allowRenaming}">
-                                                <a class="btn thumbnail-control rename" title="#{msgs.plugin_intranda_step_imageQA_rename} #{image.tooltip}" href="#" data-toggle="modal" data-target="#myModal-#{status.index}">
-                                                    <i class="fa fa-pencil" />
-                                                </a>
-                                            </h:panelGroup>
-                                            <h:commandLink styleClass="btn thumbnail-control delete" title="#{msgs.plugin_intranda_step_imageQA_delete} #{image.tooltip}" action="#{AktuelleSchritteForm.myPlugin.deleteImage(image)}" rendered="#{AktuelleSchritteForm.myPlugin.allowDeletion}">
-                                                <i class="fa fa-trash"></i>
-                                            </h:commandLink>
-                                        </div>
-                                        <div class="goobi-thumbnail-controls-right pull-right">
-                                        <h:commandLink styleClass="btn thumbnail-control rotate-left" title="#{msgs.plugin_intranda_step_imageQA_rotateLeft} #{image.tooltip}" action="#{AktuelleSchritteForm.myPlugin.rotateLeft(image)}" rendered="#{AktuelleSchritteForm.myPlugin.allowRotation}">
-                                            <i class="fa fa-undo"></i>
-                                        </h:commandLink>
-                                    	<h:commandLink styleClass="btn thumbnail-control rotate-right" title="#{msgs.plugin_intranda_step_imageQA_rotateRight} #{image.tooltip}" action="#{AktuelleSchritteForm.myPlugin.rotateRight(image)}" rendered="#{AktuelleSchritteForm.myPlugin.allowRotation}">
-                                            <i class="fa fa-repeat"></i>
-                                        </h:commandLink>
-                                        </div>
-                                    </h:panelGroup>
+.thumbnail-control.checkbox .control-indicator .fa-square-o {
+	padding-right: 2px;
+}
 
-                                    <h:panelGroup styleClass="goobi-thumbnail-controls" rendered="#{NavigationForm.uiStatus.plugin_qa_confirmation != false}">
-                                        <div class="goobi-thumbnail-controls-left pull-left">
-                                            <!-- select current image -->
-                                            <h:panelGroup rendered="#{AktuelleSchritteForm.myPlugin.allowSelection}">
-                                                <span class="btn thumbnail-control checkbox">
-                                                    <label class="control checkbox">
-                                                        <h:selectBooleanCheckbox value="#{image.selected}" />
-                                                        <span class="control-indicator">
-                                                            <i class="fa fa fa-check-square-o"></i>
-                                                            <i class="fa fa fa-square-o"></i>
-                                                        </span>
-                                                    </label>
+.thumbnail-control.checkbox .control-indicator .fa-check-square-o {
+	display: none;
+}
 
-                                                </span>
-                                            </h:panelGroup>
+.thumbnail-control.checkbox input[type="checkbox"] {
+	position: absolute;
+	margin: 0;
+	visibility: hidden;
+	z-index: -1;
+}
 
-                                            <!--  modal rendern  -->
-                                            <h:panelGroup rendered="#{AktuelleSchritteForm.myPlugin.allowRenaming}">
-                                                <a class="btn thumbnail-control rename" title="#{msgs.plugin_intranda_step_imageQA_rename} #{image.tooltip}" href="#" data-toggle="modal" data-target="#myModal-#{status.index}">
-                                                    <i class="fa fa-pencil" />
-                                                </a>
-                                            </h:panelGroup>
-                                            <h:commandLink styleClass="btn thumbnail-control delete" title="#{msgs.plugin_intranda_step_imageQA_delete} #{image.tooltip}" action="#{AktuelleSchritteForm.myPlugin.deleteImage(image)}" rendered="#{AktuelleSchritteForm.myPlugin.allowDeletion}" onclick="if (!confirm('#{msgs.wirklichAusfuehren}')) return false">
-                                                <i class="fa fa-trash"></i>
-                                            </h:commandLink>
-                                        </div>
+.thumbnail-control.checkbox input:checked ~ .control-indicator .fa-check-square-o
+	{
+	display: inline-block;
+}
 
-                                        <div class="goobi-thumbnail-controls-right pull-right">
-                                            <h:commandLink styleClass="btn thumbnail-control rotate-left" title="#{msgs.plugin_intranda_step_imageQA_rotateLeft} #{image.tooltip}" action="#{AktuelleSchritteForm.myPlugin.rotateLeft(image)}" rendered="#{AktuelleSchritteForm.myPlugin.allowRotation}" onclick="if (!confirm('#{msgs.wirklichAusfuehren}')) return false">
-                                                <i class="fa fa-undo"></i>
-                                            </h:commandLink>
-                                         	<h:commandLink styleClass="btn thumbnail-control rotate-right" title="#{msgs.plugin_intranda_step_imageQA_rotateRight} #{image.tooltip}" action="#{AktuelleSchritteForm.myPlugin.rotateRight(image)}" rendered="#{AktuelleSchritteForm.myPlugin.allowRotation}" onclick="if (!confirm('#{msgs.wirklichAusfuehren}')) return false">
-                                                <i class="fa fa-repeat"></i>
-                                            </h:commandLink>
-                                        </div>
-                                    </h:panelGroup>
+.thumbnail-control.checkbox input:checked ~ .control-indicator .fa-square-o
+	{
+	display: none;
+}
 
-                                </div>
+.thumb-canvas {
+	border: 1px solid #ccc;
+}
 
-                                <div class="modal fade" id="myModal-#{status.index}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                                    <div class="modal-dialog" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <a href="#" class="btn btn-blue pull-right" title="#{msgs.cancel}" data-dismiss="modal">
-                                                    <i class="fa fa-times"></i>
-                                                </a>
-                                                <h4 class="modal-title" id="myModalLabel">
-                                                    <h:outputText value="#{msgs.plugin_intranda_step_imageQA_renameTitle}: #{image.imageName}" />
-                                                </h4>
-                                            </div>
-                                            <div class="modal-body">
-                                                <h:outputText value="#{msgs.plugin_intranda_step_imageQA_renameDescription}" />
+.big-image-caption {
+	text-align: center;
+}
 
-                                                <div class="row" style="margin-top: 15px;">
-	                                                    <ui:repeat var="namePart" value="#{image.nameParts}">
-		                                                    	<x:inputText styleClass="form-control namePart" value="#{namePart.value}" />
-	                                                    </ui:repeat>
-                                                </div>
+.div-image img {
+	float: right;
+	border: solid 1px;
+	border-color: lightgrey;
+}
 
-                                            </div>
-                                            <div class="modal-footer">
+.img-active {
+	background-color: #368ee0;
+	color: white;
+}
 
-                                                <a href="#" class="btn pull-left font-size-s" title="#{msgs.abbrechen}" data-dismiss="modal">
-                                                    <h:outputText value="#{msgs.abbrechen}" />
-                                                </a>
+.image-navigation {
+	margin-bottom: 5px;
+}
 
-                                                <h:commandLink action="#{AktuelleSchritteForm.myPlugin.renameImages(image)}" title="#{msgs.uebernehmen}" rel="tooltip" styleClass="btn btn-green font-size-s">
-                                                    <i class="fa fa-floppy-o margin-right-10"></i>
-                                                    <h:outputText value="#{msgs.uebernehmen}" />
-                                                    <f:passThroughAttribute name="data-toggle" value="tooltip" />
-                                                </h:commandLink>
+#image-control-wrapper {
+	margin-left: 6px;
+}
 
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                         
-                            </ui:repeat>
-                        </div>
-                        <!-- // Thumbnail list -->
+#mainImage {
+	widht: 100%;
+	height: 600px;
+	border: 1px solid lightgrey;
+}
 
-                        <div class="row">
-                            <f:subview id="second">
-                                <ui:include src="ImageQAPlugin_include_thumbnavigation.xhtml" />
-                            </f:subview>
-                        </div>
+#mainImage #ajaxloader_image {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	margin-left: -34px;
+	margin-top: -21px;
+}
 
-                    </h:panelGroup>
-                    <h:panelGroup layout="block" rendered="#{AktuelleSchritteForm.myPlugin.sizeOfImageList gt 0}" styleClass="col-sm-5">
+#mainImage #ajaxloader_image img {
+	border: none;
+}
 
-                        <h:panelGroup id="bigimage">
+.namePart {
+	display: inline-block;
+	width: auto;
+	min-width: 20px;
+	margin-left: 15px;
+	margin-bottom: 10px;
+}
+</style>
+		<script
+			src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/reactiveX/rx.lite.min.js"></script>
+		<script
+			src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/q-promises/q.min.js"></script>
 
-                            <div class="row pull-center">
-                                <f:subview id="first_image">
-                                    <ui:include src="ImageQAPlugin_include_imagenavigation.xhtml" />
-                                </f:subview>
-                                <ui:fragment rendered="#{AktuelleSchritteForm.myPlugin.image.type == 'image'}">
-                                    <ui:include src="ImageQAPlugin_include_imageControls.xhtml" />
-                                </ui:fragment>
-                                <ui:fragment rendered="#{AktuelleSchritteForm.myPlugin.image.type == 'object'}">
-                                    <ui:include src="ImageQAPlugin_include_objectControls.xhtml" />
-                                </ui:fragment>
-                            </div>
+		<script
+			src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/openseadragon/openseadragon.min.js"></script>
+		<script
+			src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/openseadragon/openseadragon-viewerinputhook.js"></script>
+		<script
+			src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/imageView/imageView.image.js"></script>
+		<script
+			src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/imageView/imageView.tileSourceResolver.js"></script>
+		<script
+			src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/imageView/imageView.measures.js"></script>
+		<script
+			src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/imageView/imageView.controls.js"></script>
+		<script
+			src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/imageView/imageView.zoomSlider.js"></script>
+		<!-- 3D-Models -->
+		<script type="text/javascript"
+			src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/three/three.min.js"></script>
+		<script type="text/javascript"
+			src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/three/loaders/OBJLoader.js"></script>
+		<script type="text/javascript"
+			src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/three/loaders/MTLLoader.js"></script>
+		<script type="text/javascript"
+			src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/three/loaders/PLYLoader.js"></script>
+		<script type="text/javascript"
+			src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/three/loaders/STLLoader.js"></script>
+		<script type="text/javascript"
+			src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/three/loaders/FBXLoader.js"></script>
+		<script type="text/javascript"
+			src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/three/loaders/TDSLoader.js"></script>
+		<script type="text/javascript"
+			src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/three/loaders/DRACOLoader.js"></script>
+		<script type="text/javascript"
+			src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/three/loaders/GLTFLoader.js"></script>
+		<script type="text/javascript"
+			src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/three/controls/OrbitControls.js"></script>
+		<script type="text/javascript"
+			src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/three/dependencies/inflate.min.js"></script>
+		<script type="text/javascript"
+			src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/viewObject/OBJMTLLoader.js"></script>
+		<script type="text/javascript"
+			src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/viewObject/PLYMeshLoader.js"></script>
+		<script type="text/javascript"
+			src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/viewObject/STLMeshLoader.js"></script>
+		<script type="text/javascript"
+			src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/viewObject/TDSMeshLoader.js"></script>
+		<script type="text/javascript"
+			src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/viewObject/FBXMeshLoader.js"></script>
+		<script type="text/javascript"
+			src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/viewObject/GLTFDRACOLoader.js"></script>
+		<script type="text/javascript"
+			src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/viewObject/X3DLoader.js"></script>
+		<script type="text/javascript"
+			src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/viewObject/WorldGenerator.js"></script>
+		<script
+			src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/x3dom/x3dom.js"></script>
 
-                            <!-- big image -->
-                            <div class="row margin-top-most margin-bottom-most">
-                                <h:panelGroup styleClass="div-image" layout="block">
-                                    <!--                                     <h:graphicImage class="margin-bottom-regular" value="#{AktuelleSchritteForm.myPlugin.bild}" rendered="#{AktuelleSchritteForm.myPlugin.image != null}" width="100%" /> -->
-                                    <div id="mainImage" class="margin-bottom-regular">
-                                        <div id="ajaxloader_image">
-                                            <img src="template/img/goobi/ajaxloader2.gif" />
-                                        </div>
-                                    </div>
-                                    <div class="big-image-caption margin-top-regular font-light">
-                                        <h:outputText value="#{AktuelleSchritteForm.myPlugin.image.imageName}" />
-                                    </div>
-                                    <script type="text/javascript">
-                                    	var configViewer = {
-                            			    global: {
-                            			    	divId: 'mainImage',
-                            			        useTiles: #{AktuelleSchritteForm.myPlugin.useTiles},
-                            			        footerHeight: 0,
-                            			        adaptContainerHeight: true,
-                            			        zoomSlider: "#zoomSlider",
-                            			        zoomSliderHandle: "#zoomSlider .zoom-slider-handle",
-                            			        zoomSliderLabel: "#zoomSliderLabel input",
-                                                webApiToken: '#{AktuelleSchritteForm.myPlugin.imageWebApiToken}',
-                                                imageSizes: #{AktuelleSchritteForm.myPlugin.displaySizes},
-                                                tileSizes: #{AktuelleSchritteForm.myPlugin.tileSize}
-                            			    },
-                            			    image: {
-                            			        mimeType: "image/jpeg",
-                            			        tileSource: "#{AktuelleSchritteForm.myPlugin.image.url}"
-//                              				    tileSource : [#{AktuelleSchritteForm.myPlugin.image.imageLevels}],
-//                              			   		originalImageWidth: "#{AktuelleSchritteForm.myPlugin.image.size.width}",
-//                              			   		originalImageHeight: "#{AktuelleSchritteForm.myPlugin.image.size.height}",
-                            			    }
-                            			};									
-                            		    
-                                    	var worldConfig = {
-									 			controls: {
-									 			    xAxis: {
-									 			        rotateLeft: '#rotate-left-x',
-									 			        rotateRight: '#rotate-right-x'
-									 			    },
-									 			   yAxis: {
-									 			        rotateLeft: '#rotate-left-y',
-									 			        rotateRight: '#rotate-right-y'
-									 			    },
-									 			   zAxis: {
-									 			        rotateLeft: '#rotate-left-z',
-									 			        rotateRight: '#rotate-right-z'
-									 			    },
-									 			    position: {
-									 			    	reset: '#reset-position'   
-									 			    },
-									 			    zoom: {
-									 			        resetZoom: '#reset#zoom'
-									 			    }
-									 			},
-									    		container: {
-									    			id: "mainImage"
-									    		},
-										 };
-                                    	
-									 	var mediaType = "#{AktuelleSchritteForm.myPlugin.image.type}";
-									 	console.log("Media type = ", mediaType);
-									 	if(mediaType == "image") {
-									 		
-										    var viewImage = new ImageView.Image( configViewer );
-										    viewImage.load()
-										    .then(function(image) {
-										        image.onFirstTileLoaded()
-										        .then(function() {										            
-										        	$('#ajaxloader_image').fadeOut(800);
-										        })
-										        .catch(function() {
-										            $('#ajaxloader_image').fadeOut(800);
-										        })
-										    })
-										    .catch(function(error){
-										        console.error( 'Error opening image', error );
-										        $('#ajaxloader_image').fadeOut(800);
-										        $('#' + configViewer.global.divId).html( 'Failed to load image: "' + error + '"' );
-										    });
-									    
-									 	} else if(mediaType == "object") {
-									 	   $('#ajaxloader_image').show();
-									 		var world = WorldGenerator.create(worldConfig);
-									 		world.loadObject({
-									 	 		 url: "#{AktuelleSchritteForm.myPlugin.image.objectUrl}",
-									 			 position: { x:0, y:0, z:-0 },
-									 			 rotation:  { x:0, y:0, z:0 },
-									 			 size:  10,
-									 			 material: {
-									 					color: 0x44bb33
-									 				},
-									 			focus: true,
-									 			onTick: function(object, time) {
-									 				if(object) {
-// 									 	 				object.rotation.set(0,  Math.PI/180 * time, 0);
-									 				}
-									 			}
-									 		 }).then(function(object) {
-									 	       	 $('#ajaxloader_image').fadeOut(2000);
-									 		 	world.render();
-									 		 }).catch(function(error) {
-									 		    $('#ajaxloader_image').fadeOut(2000);
-									 			 console.err("failed to load: ", error);
-									 		 })
-									 		
-									 	} else if(mediaType == "x3dom") {
-									 	    var objectUrl = "#{AktuelleSchritteForm.myPlugin.image.objectUrl}";
-									 	   $('#ajaxloader_image').show();
-    									 	    new X3DLoader().load($('#mainImage'), objectUrl, 
-									 	            function(){
-    									 	       		$('#ajaxloader_image').fadeOut(2000);
-    									 	       		console.log("loaded")
-									 	            },
-									 	           function(){
-									 	               console.log("progress");
-									 	            },
-									 	           function(error){
-									 	               $('#ajaxloader_image').fadeOut(2000);
-									 	               console.log("error", error);
-									 	            })
-									 	}
-									 	
-									 	 function freeJSResources(data) {
-										        if(!data || data.status == 'begin') {									            
-	    									        if(viewImage) {
-	    									            console.log("closing OpenSeadragon viewer");
-	    									            viewImage.close();
-	    									        }
-	    									        if(world) {
-	    									            console.log("disposing 3d scene");
-	    									            world.dispose();
-	    									        }
-										        }
-										    }
-                                    </script>
-                                </h:panelGroup>
-                            </div>
-                            <!-- // big image -->
+		<h:form id="qaform">
+			<div class="box box-color lightgrey box-bordered">
+				<div class="box-title">
+					<h3>
+						<i class="fa fa-puzzle-piece" />
+						<h:outputText id="id9a"
+							value="#{AktuelleSchritteForm.myPlugin.step.titel}" />
+					</h3>
+					<div class="actions">
+						<h:commandLink id="id10" action="#{NavigationForm.Reload}"
+							styleClass="btn btn-mini">
+							<i class="fa fa-refresh" />
+						</h:commandLink>
 
-                            <div class="row">
-                                <f:subview id="second_image">
-                                    <ui:include src="ImageQAPlugin_include_imagenavigation.xhtml" />
-                                </f:subview>
-                            </div>
+						<h:commandLink id="id11"
+							action="#{AktuelleSchritteForm.SchrittDurchBenutzerAbschliessen}"
+							styleClass="btn btn-mini"
+							rendered="#{NavigationForm.uiStatus.pluginSimulation != true}"
+							title="#{msgs.task_leavePluginAndFinishTask}">
+							<i class="fa fa-check" />
+							<x:updateActionListener
+								property="#{NavigationForm.uiStatus.pluginSimulation}"
+								value="#{false}" />
+						</h:commandLink>
 
-                        </h:panelGroup>
-                    </h:panelGroup>
+						<h:commandLink id="id12"
+							action="#{AktuelleSchritteForm.myPlugin.cancel}"
+							styleClass="btn btn-mini"
+							rendered="#{NavigationForm.uiStatus.pluginSimulation != true}"
+							title="#{msgs.pluginLeave}">
+							<i class="fa fa-close" />
+							<x:updateActionListener
+								property="#{NavigationForm.uiStatus.pluginSimulation}"
+								value="#{false}" />
+						</h:commandLink>
 
-                    <h:panelGroup layout="block" rendered="#{AktuelleSchritteForm.myPlugin.sizeOfImageList == 0}" styleClass="col-sm-12">
-                        <h:outputText value="#{msgs.noImagesFound}" />
-                    </h:panelGroup>
-                </div>
+					</div>
+				</div>
 
-                <div class="form-actions">
+				<div class="box-content">
+					<div class="#{AktuelleSchritteForm.myPlugin.displayOCR ? 'col-xs-12 col-sm-5' : 'col-xs-12 col-sm-7'}">
+						<h:panelGroup layout="block"
+							rendered="#{AktuelleSchritteForm.myPlugin.sizeOfImageList gt 0}"
+							><!-- styleClass="col-sm-7">-->
+	
+							<div class="row">
+								<f:subview id="first">
+									<ui:include src="ImageQAPlugin_include_thumbnavigation.xhtml" />
+								</f:subview>
+							</div>
+	
+							<!-- Thumbnail list -->
+							<div class="row margin-top-most margin-bottom-most">
+	
+								<ui:repeat var="image"
+									value="#{AktuelleSchritteForm.myPlugin.paginatorList}"
+									varStatus="status">
+									<div
+										class="goobi-thumbnail #{AktuelleSchritteForm.myPlugin.image.imageName eq image.imageName?'img-active':'font-light'}">
+										<div class="goobi-thumbnail-image">
+	
+											<div class="thumb">
+												<h:commandLink title="#{image.tooltip}">
+													<canvas class="thumb-canvas"
+														data-image_small="#{HelperForm.servletPathWithHostAsUrl}#{image.thumbnailUrl}"
+														data-image_large="#{HelperForm.servletPathWithHostAsUrl}#{image.largeThumbnailUrl}"
+														title="#{image.tooltip}" id="thumbnail-#{status.index}"></canvas>
+													<f:setPropertyActionListener value="#{image.order -1}"
+														target="#{AktuelleSchritteForm.myPlugin.imageIndex}" />
+													<f:ajax execute="@form" render="@form :bigimage"
+														onevent="freeJSResources" />
+	
+												</h:commandLink>
+											</div>
+	
+										</div>
+										<div class="goobi-thumbnail-caption">
+											<h:outputText value="#{image.imageNameShort}"></h:outputText>
+										</div>
+	
+										<h:panelGroup styleClass="goobi-thumbnail-controls"
+											rendered="#{NavigationForm.uiStatus.plugin_qa_confirmation == false}">
+	
+											<div class="goobi-thumbnail-controls-left pull-left">
+												<!-- select current image -->
+												<h:panelGroup
+													rendered="#{AktuelleSchritteForm.myPlugin.allowSelection}">
+													<span class="btn thumbnail-control checkbox"> <label
+														class="control checkbox"> <h:selectBooleanCheckbox
+																value="#{image.selected}" /> <span
+															class="control-indicator"> <i
+																class="fa fa fa-check-square-o"></i> <i
+																class="fa fa fa-square-o"></i>
+														</span>
+													</label>
+	
+													</span>
+												</h:panelGroup>
+												<!--  modal rendern  -->
+												<h:panelGroup
+													rendered="#{AktuelleSchritteForm.myPlugin.allowRenaming}">
+													<a class="btn thumbnail-control rename"
+														title="#{msgs.plugin_intranda_step_imageQA_rename} #{image.tooltip}"
+														href="#" data-toggle="modal"
+														data-target="#myModal-#{status.index}"> <i
+														class="fa fa-pencil" />
+													</a>
+												</h:panelGroup>
+												<h:commandLink styleClass="btn thumbnail-control delete"
+													title="#{msgs.plugin_intranda_step_imageQA_delete} #{image.tooltip}"
+													action="#{AktuelleSchritteForm.myPlugin.deleteImage(image)}"
+													rendered="#{AktuelleSchritteForm.myPlugin.allowDeletion}">
+													<i class="fa fa-trash"></i>
+												</h:commandLink>
+											</div>
+											<div class="goobi-thumbnail-controls-right pull-right">
+												<h:commandLink styleClass="btn thumbnail-control rotate-left"
+													title="#{msgs.plugin_intranda_step_imageQA_rotateLeft} #{image.tooltip}"
+													action="#{AktuelleSchritteForm.myPlugin.rotateLeft(image)}"
+													rendered="#{AktuelleSchritteForm.myPlugin.allowRotation}">
+													<i class="fa fa-undo"></i>
+												</h:commandLink>
+												<h:commandLink
+													styleClass="btn thumbnail-control rotate-right"
+													title="#{msgs.plugin_intranda_step_imageQA_rotateRight} #{image.tooltip}"
+													action="#{AktuelleSchritteForm.myPlugin.rotateRight(image)}"
+													rendered="#{AktuelleSchritteForm.myPlugin.allowRotation}">
+													<i class="fa fa-repeat"></i>
+												</h:commandLink>
+											</div>
+										</h:panelGroup>
+	
+										<h:panelGroup styleClass="goobi-thumbnail-controls"
+											rendered="#{NavigationForm.uiStatus.plugin_qa_confirmation != false}">
+											<div class="goobi-thumbnail-controls-left pull-left">
+												<!-- select current image -->
+												<h:panelGroup
+													rendered="#{AktuelleSchritteForm.myPlugin.allowSelection}">
+													<span class="btn thumbnail-control checkbox"> <label
+														class="control checkbox"> <h:selectBooleanCheckbox
+																value="#{image.selected}" /> <span
+															class="control-indicator"> <i
+																class="fa fa fa-check-square-o"></i> <i
+																class="fa fa fa-square-o"></i>
+														</span>
+													</label>
+	
+													</span>
+												</h:panelGroup>
+	
+												<!--  modal rendern  -->
+												<h:panelGroup
+													rendered="#{AktuelleSchritteForm.myPlugin.allowRenaming}">
+													<a class="btn thumbnail-control rename"
+														title="#{msgs.plugin_intranda_step_imageQA_rename} #{image.tooltip}"
+														href="#" data-toggle="modal"
+														data-target="#myModal-#{status.index}"> <i
+														class="fa fa-pencil" />
+													</a>
+												</h:panelGroup>
+												<h:commandLink styleClass="btn thumbnail-control delete"
+													title="#{msgs.plugin_intranda_step_imageQA_delete} #{image.tooltip}"
+													action="#{AktuelleSchritteForm.myPlugin.deleteImage(image)}"
+													rendered="#{AktuelleSchritteForm.myPlugin.allowDeletion}"
+													onclick="if (!confirm('#{msgs.wirklichAusfuehren}')) return false">
+													<i class="fa fa-trash"></i>
+												</h:commandLink>
+											</div>
+	
+											<div class="goobi-thumbnail-controls-right pull-right">
+												<h:commandLink styleClass="btn thumbnail-control rotate-left"
+													title="#{msgs.plugin_intranda_step_imageQA_rotateLeft} #{image.tooltip}"
+													action="#{AktuelleSchritteForm.myPlugin.rotateLeft(image)}"
+													rendered="#{AktuelleSchritteForm.myPlugin.allowRotation}"
+													onclick="if (!confirm('#{msgs.wirklichAusfuehren}')) return false">
+													<i class="fa fa-undo"></i>
+												</h:commandLink>
+												<h:commandLink
+													styleClass="btn thumbnail-control rotate-right"
+													title="#{msgs.plugin_intranda_step_imageQA_rotateRight} #{image.tooltip}"
+													action="#{AktuelleSchritteForm.myPlugin.rotateRight(image)}"
+													rendered="#{AktuelleSchritteForm.myPlugin.allowRotation}"
+													onclick="if (!confirm('#{msgs.wirklichAusfuehren}')) return false">
+													<i class="fa fa-repeat"></i>
+												</h:commandLink>
+											</div>
+										</h:panelGroup>
+	
+									</div>
+	
+									<div class="modal fade" id="myModal-#{status.index}"
+										tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+										<div class="modal-dialog" role="document">
+											<div class="modal-content">
+												<div class="modal-header">
+													<a href="#" class="btn btn-blue pull-right"
+														title="#{msgs.cancel}" data-dismiss="modal"> <i
+														class="fa fa-times"></i>
+													</a>
+													<h4 class="modal-title" id="myModalLabel">
+														<h:outputText
+															value="#{msgs.plugin_intranda_step_imageQA_renameTitle}: #{image.imageName}" />
+													</h4>
+												</div>
+												<div class="modal-body">
+													<h:outputText
+														value="#{msgs.plugin_intranda_step_imageQA_renameDescription}" />
+	
+													<div class="row" style="margin-top: 15px;">
+														<ui:repeat var="namePart" value="#{image.nameParts}">
+															<x:inputText styleClass="form-control namePart"
+																value="#{namePart.value}" />
+														</ui:repeat>
+													</div>
+	
+												</div>
+												<div class="modal-footer">
+	
+													<a href="#" class="btn pull-left font-size-s"
+														title="#{msgs.abbrechen}" data-dismiss="modal"> <h:outputText
+															value="#{msgs.abbrechen}" />
+													</a>
+	
+													<h:commandLink
+														action="#{AktuelleSchritteForm.myPlugin.renameImages(image)}"
+														title="#{msgs.uebernehmen}" rel="tooltip"
+														styleClass="btn btn-green font-size-s">
+														<i class="fa fa-floppy-o margin-right-10"></i>
+														<h:outputText value="#{msgs.uebernehmen}" />
+														<f:passThroughAttribute name="data-toggle" value="tooltip" />
+													</h:commandLink>
+	
+												</div>
+											</div>
+										</div>
+									</div>
+	
+								</ui:repeat>
+							</div>
+							<!-- // Thumbnail list -->
+	
+							<div class="row">
+								<f:subview id="second">
+									<ui:include src="ImageQAPlugin_include_thumbnavigation.xhtml" />
+								</f:subview>
+							</div>
+	
+						</h:panelGroup>
+					</div>
+					<div class="#{AktuelleSchritteForm.myPlugin.displayOCR ? 'col-xs-12 col-sm-7' : 'col-xs-12 col-sm-5'}">
+						<h:panelGroup layout="block"
+							rendered="#{AktuelleSchritteForm.myPlugin.sizeOfImageList gt 0}">
+							<!-- styleClass="col-sm-5">-->
+							<h:panelGroup id="bigimage">
+								<div class="row pull-center">
+									<f:subview id="first_image">
+										<ui:include src="ImageQAPlugin_include_imagenavigation.xhtml" />
+									</f:subview>
+									<ui:fragment
+										rendered="#{AktuelleSchritteForm.myPlugin.image.type == 'image'}">
+										<ui:include src="ImageQAPlugin_include_imageControls.xhtml" />
+									</ui:fragment>
+									<ui:fragment
+										rendered="#{AktuelleSchritteForm.myPlugin.image.type == 'object'}">
+										<ui:include src="ImageQAPlugin_include_objectControls.xhtml" />
+									</ui:fragment>
+								</div>
+	
+								<!-- big image -->
+								<div class="row margin-top-most margin-bottom-most">
+									<!-- OCR TEXT -->
+									<ui:fragment rendered="#{AktuelleSchritteForm.myPlugin.displayOCR}">
+										<div class="col-xs-12 col-sm-6">
+											<div id="ocrText" class="ocr-text">	
+											<h:outputText value="#{AktuelleSchritteForm.myPlugin.ocrText}" escape="false">
+											</h:outputText>
+											</div>
+										</div>
+									</ui:fragment>
+									
+									<div class="#{AktuelleSchritteForm.myPlugin.displayOCR ? 'col-xs-12 col-sm-6' : ''}">							
+									<div class="div-image">
+										<!--                                     <h:graphicImage class="margin-bottom-regular" value="#{AktuelleSchritteForm.myPlugin.bild}" rendered="#{AktuelleSchritteForm.myPlugin.image != null}" width="100%" /> -->
+										<div id="mainImage" class="margin-bottom-regular">
+											<div id="ajaxloader_image">
+												<img src="template/img/goobi/ajaxloader2.gif" />
+											</div>
+										</div>
+										<div class="big-image-caption margin-top-regular font-light">
+											<h:outputText
+												value="#{AktuelleSchritteForm.myPlugin.image.imageName}" />
+										</div>
+										<script type="text/javascript">
+	                                    	var configViewer = {
+	                            			    global: {
+	                            			    	divId: 'mainImage',
+	                            			        useTiles: #{AktuelleSchritteForm.myPlugin.useTiles},
+	                            			        footerHeight: 0,
+	                            			        adaptContainerHeight: true,
+	                            			        zoomSlider: "#zoomSlider",
+	                            			        zoomSliderHandle: "#zoomSlider .zoom-slider-handle",
+	                            			        zoomSliderLabel: "#zoomSliderLabel input",
+	                                                webApiToken: '#{AktuelleSchritteForm.myPlugin.imageWebApiToken}',
+	                                                imageSizes: #{AktuelleSchritteForm.myPlugin.displaySizes},
+	                                                tileSizes: #{AktuelleSchritteForm.myPlugin.tileSize}
+	                            			    },
+	                            			    image: {
+	                            			        mimeType: "image/jpeg",
+	                            			        tileSource: "#{AktuelleSchritteForm.myPlugin.image.url}"
+	//                              				    tileSource : [#{AktuelleSchritteForm.myPlugin.image.imageLevels}],
+	//                              			   		originalImageWidth: "#{AktuelleSchritteForm.myPlugin.image.size.width}",
+	//                              			   		originalImageHeight: "#{AktuelleSchritteForm.myPlugin.image.size.height}",
+	                            			    }
+	                            			};									
+	                            		    
+	                                    	var worldConfig = {
+										 			controls: {
+										 			    xAxis: {
+										 			        rotateLeft: '#rotate-left-x',
+										 			        rotateRight: '#rotate-right-x'
+										 			    },
+										 			   yAxis: {
+										 			        rotateLeft: '#rotate-left-y',
+										 			        rotateRight: '#rotate-right-y'
+										 			    },
+										 			   zAxis: {
+										 			        rotateLeft: '#rotate-left-z',
+										 			        rotateRight: '#rotate-right-z'
+										 			    },
+										 			    position: {
+										 			    	reset: '#reset-position'   
+										 			    },
+										 			    zoom: {
+										 			        resetZoom: '#reset#zoom'
+										 			    }
+										 			},
+										    		container: {
+										    			id: "mainImage"
+										    		},
+											 };
+	                                    	
+										 	var mediaType = "#{AktuelleSchritteForm.myPlugin.image.type}";
+										 	console.log("Media type = ", mediaType);
+										 	if(mediaType == "image") {
+										 		
+											    var viewImage = new ImageView.Image( configViewer );
+											    viewImage.load()
+											    .then(function(image) {
+											        image.onFirstTileLoaded()
+											        .then(function() {										            
+											        	$('#ajaxloader_image').fadeOut(800);
+											        })
+											        .catch(function() {
+											            $('#ajaxloader_image').fadeOut(800);
+											        })
+											    })
+											    .catch(function(error){
+											        console.error( 'Error opening image', error );
+											        $('#ajaxloader_image').fadeOut(800);
+											        $('#' + configViewer.global.divId).html( 'Failed to load image: "' + error + '"' );
+											    });
+										    
+										 	} else if(mediaType == "object") {
+										 	   $('#ajaxloader_image').show();
+										 		var world = WorldGenerator.create(worldConfig);
+										 		world.loadObject({
+										 	 		 url: "#{AktuelleSchritteForm.myPlugin.image.objectUrl}",
+										 			 position: { x:0, y:0, z:-0 },
+										 			 rotation:  { x:0, y:0, z:0 },
+										 			 size:  10,
+										 			 material: {
+										 					color: 0x44bb33
+										 				},
+										 			focus: true,
+										 			onTick: function(object, time) {
+										 				if(object) {
+	// 									 	 				object.rotation.set(0,  Math.PI/180 * time, 0);
+										 				}
+										 			}
+										 		 }).then(function(object) {
+										 	       	 $('#ajaxloader_image').fadeOut(2000);
+										 		 	world.render();
+										 		 }).catch(function(error) {
+										 		    $('#ajaxloader_image').fadeOut(2000);
+										 			 console.err("failed to load: ", error);
+										 		 })
+										 		
+										 	} else if(mediaType == "x3dom") {
+										 	    var objectUrl = "#{AktuelleSchritteForm.myPlugin.image.objectUrl}";
+										 	   $('#ajaxloader_image').show();
+	    									 	    new X3DLoader().load($('#mainImage'), objectUrl, 
+										 	            function(){
+	    									 	       		$('#ajaxloader_image').fadeOut(2000);
+	    									 	       		console.log("loaded")
+										 	            },
+										 	           function(){
+										 	               console.log("progress");
+										 	            },
+										 	           function(error){
+										 	               $('#ajaxloader_image').fadeOut(2000);
+										 	               console.log("error", error);
+										 	            })
+										 	}
+										 	
+										 	 function freeJSResources(data) {
+											        if(!data || data.status == 'begin') {									            
+		    									        if(viewImage) {
+		    									            console.log("closing OpenSeadragon viewer");
+		    									            viewImage.close();
+		    									        }
+		    									        if(world) {
+		    									            console.log("disposing 3d scene");
+		    									            world.dispose();
+		    									        }
+											        }
+											    }
+	                                    </script>
+	                                </div>
+	                                </div>
+								</div>
+								<!-- // big image -->
+	
+								<div class="row">
+									<f:subview id="second_image">
+										<ui:include src="ImageQAPlugin_include_imagenavigation.xhtml" />
+									</f:subview>
+								</div>
+	
+							</h:panelGroup>
+						</h:panelGroup>
+					</div>
+					<h:panelGroup layout="block"
+						rendered="#{AktuelleSchritteForm.myPlugin.sizeOfImageList == 0}"
+						styleClass="col-sm-12">
+						<h:outputText value="#{msgs.noImagesFound}" />
+					</h:panelGroup>
+				</div>
 
-                    <!-- Save and finish the task -->
-                    <h:commandLink styleClass="btn btn-green font-size-s" id="finishAndClose" 
-                    	rendered="#{NavigationForm.uiStatus.pluginSimulation != true}"
-                    	action="#{AktuelleSchritteForm.SchrittDurchBenutzerAbschliessen}">
-                        <i class="fa fa-check margin-right-5"></i>
-                        <h:outputText value="#{msgs.task_leavePluginAndFinishTask}" />
-                        <x:updateActionListener property="#{NavigationForm.uiStatus.pluginSimulation}" value="#{false}" />
-                    </h:commandLink>
-                     
-                    <!-- Save -->
-                    <h:commandLink styleClass="btn btn-lightgrey pull-right font-size-s" id="absenden" action="#{AktuelleSchritteForm.myPlugin.cancel}">
-                        <i class="fa fa-close margin-right-5"></i>
-                        <h:outputText value="#{msgs.pluginLeave}" />
-                        <x:updateActionListener property="#{NavigationForm.uiStatus.pluginSimulation}" value="#{false}" />
-                    </h:commandLink>
+				<div class="form-actions">
 
-                </div>
+					<!-- Save and finish the task -->
+					<h:commandLink styleClass="btn btn-green font-size-s"
+						id="finishAndClose"
+						rendered="#{NavigationForm.uiStatus.pluginSimulation != true}"
+						action="#{AktuelleSchritteForm.SchrittDurchBenutzerAbschliessen}">
+						<i class="fa fa-check margin-right-5"></i>
+						<h:outputText value="#{msgs.task_leavePluginAndFinishTask}" />
+						<x:updateActionListener
+							property="#{NavigationForm.uiStatus.pluginSimulation}"
+							value="#{false}" />
+					</h:commandLink>
 
-            </div>
+					<!-- Save -->
+					<h:commandLink
+						styleClass="btn btn-lightgrey pull-right font-size-s"
+						id="absenden" action="#{AktuelleSchritteForm.myPlugin.cancel}">
+						<i class="fa fa-close margin-right-5"></i>
+						<h:outputText value="#{msgs.pluginLeave}" />
+						<x:updateActionListener
+							property="#{NavigationForm.uiStatus.pluginSimulation}"
+							value="#{false}" />
+					</h:commandLink>
 
-        </h:form>
+				</div>
+
+			</div>
+
+		</h:form>
 
 
-        <script type="text/javascript">
+		<script type="text/javascript">
 	        	
         	window.onload = function() {
 		    	loadImages();
@@ -700,6 +825,6 @@
             }
 
 	</script>
-    </ui:define>
+	</ui:define>
 
 </ui:composition>

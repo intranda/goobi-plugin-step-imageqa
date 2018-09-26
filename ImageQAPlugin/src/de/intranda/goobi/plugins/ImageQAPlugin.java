@@ -55,6 +55,7 @@ import de.sub.goobi.config.ConfigPlugins;
 import de.sub.goobi.config.ConfigurationHelper;
 import de.sub.goobi.forms.HelperForm;
 import de.sub.goobi.helper.FacesContextHelper;
+import de.sub.goobi.helper.FilesystemHelper;
 import de.sub.goobi.helper.Helper;
 import de.sub.goobi.helper.NIOFileUtils;
 import de.sub.goobi.helper.S3FileUtils;
@@ -118,9 +119,12 @@ public class ImageQAPlugin implements IStepPlugin {
 	private ExecutorService executor;
 
 	private String returnPath;
-//ocr display variables
+	// ocr display variables
+	private boolean displayOcrButton = false;
+	private String ocrDir = "";
 	private boolean ocrExists = false;
 	private boolean displayOCR = false;
+	private String ocrText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque nec felis urna. Pellentesque porttitor urna nunc. Suspendisse at tellus ex. Sed non hendrerit urna. Donec et porttitor lacus. In hac habitasse platea dictumst. Morbi congue sagittis imperdiet. Cras vulputate vitae purus id efficitur. Suspendisse potenti. Quisque accumsan urna eu metus. ";
 
 	@Override
 	public void initialize(Step step, String returnPath) {
@@ -167,6 +171,7 @@ public class ImageQAPlugin implements IStepPlugin {
 		} catch (SwapException | DAOException | IOException | InterruptedException e) {
 			log.error(e);
 		}
+
 	}
 
 	/**
@@ -242,6 +247,8 @@ public class ImageQAPlugin implements IStepPlugin {
 		useTiles = myconfig.getBoolean("useTiles", false);
 		useTilesFullscreen = myconfig.getBoolean("useTilesFullscreen", true);
 		executor = Executors.newFixedThreadPool(imageSizes.size());
+		displayOcrButton = myconfig.getBoolean("displayocr", false);
+		System.out.println(displayOcrButton);
 	}
 
 	/**
@@ -535,6 +542,20 @@ public class ImageQAPlugin implements IStepPlugin {
 		}
 		if (this.imageIndex >= 0) {
 			setImage(allImages.get(this.imageIndex));
+		}
+		updateOCR();
+	}
+
+	public void updateOCR() {
+		// FilesystemHelper.getOcrFileContent(inProcess, ocrFile);
+		String filename = this.image.getImageName();
+		filename = FilenameUtils.removeExtension(filename);
+		ocrText = "";
+		ocrText = FilesystemHelper.getOcrFileContent(step.getProzess(), filename);
+		if (ocrText == "") {
+			ocrExists = false;
+		} else {
+			ocrExists = true;
 		}
 	}
 
@@ -960,5 +981,9 @@ public class ImageQAPlugin implements IStepPlugin {
 
 	public String getImageWebApiToken() {
 		return ConfigPlugins.getPluginConfig(PLUGIN_NAME).getString("imageWebApiToken", "test");
+	}
+
+	public void toggleOCR() {
+		displayOCR = !displayOCR;
 	}
 }
