@@ -520,10 +520,10 @@ height: #{AktuelleSchritteForm.myPlugin.thumbnailSize+55}px;
 	
 						</h:panelGroup>
 					</div>
+					
 					<div class="#{AktuelleSchritteForm.myPlugin.displayOCR ? 'col-xs-12 col-sm-7' : 'col-xs-12 col-sm-5'}">
 						<h:panelGroup layout="block"
 							rendered="#{AktuelleSchritteForm.myPlugin.sizeOfImageList gt 0}">
-							<!-- styleClass="col-sm-5">-->
 							<h:panelGroup id="bigimage">
 								<div class="row pull-center">
 									<f:subview id="first_image">
@@ -541,7 +541,146 @@ height: #{AktuelleSchritteForm.myPlugin.thumbnailSize+55}px;
 	
 								<!-- big image -->
 								<div class="row margin-top-most margin-bottom-most">
-									<!-- OCR TEXT -->
+
+									<div class="#{AktuelleSchritteForm.myPlugin.displayOCR ? 'col-xs-12 col-sm-6' : ''}">							
+										<div class="div-image">
+											<div id="mainImage" class="margin-bottom-regular">
+												<div id="ajaxloader_image">
+													<img src="template/img/goobi/ajaxloader2.gif" />
+												</div>
+											</div>
+											<div class="big-image-caption margin-top-regular font-light">
+												<h:outputText
+													value="#{AktuelleSchritteForm.myPlugin.image.imageName}" />
+											</div>
+											<script type="text/javascript">
+		                                    	var configViewer = {
+		                            			    global: {
+		                            			    	divId: 'mainImage',
+		                            			        useTiles: #{AktuelleSchritteForm.myPlugin.useTiles},
+		                            			        footerHeight: 0,
+		                            			        adaptContainerHeight: true,
+		                            			        zoomSlider: "#zoomSlider",
+		                            			        zoomSliderHandle: "#zoomSlider .zoom-slider-handle",
+		                            			        zoomSliderLabel: "#zoomSliderLabel input",
+		                                                webApiToken: '#{AktuelleSchritteForm.myPlugin.imageWebApiToken}',
+		                                                imageSizes: #{AktuelleSchritteForm.myPlugin.displaySizes},
+		                                                tileSizes: #{AktuelleSchritteForm.myPlugin.tileSize}
+		                            			    },
+		                            			    image: {
+		                            			        mimeType: "image/jpeg",
+		                            			        tileSource: "#{AktuelleSchritteForm.myPlugin.image.url}"
+		//                              				    tileSource : [#{AktuelleSchritteForm.myPlugin.image.imageLevels}],
+		//                              			   		originalImageWidth: "#{AktuelleSchritteForm.myPlugin.image.size.width}",
+		//                              			   		originalImageHeight: "#{AktuelleSchritteForm.myPlugin.image.size.height}",
+		                            			    }
+		                            			};									
+		                            		    
+		                                    	var worldConfig = {
+											 			controls: {
+											 			    xAxis: {
+											 			        rotateLeft: '#rotate-left-x',
+											 			        rotateRight: '#rotate-right-x'
+											 			    },
+											 			   yAxis: {
+											 			        rotateLeft: '#rotate-left-y',
+											 			        rotateRight: '#rotate-right-y'
+											 			    },
+											 			   zAxis: {
+											 			        rotateLeft: '#rotate-left-z',
+											 			        rotateRight: '#rotate-right-z'
+											 			    },
+											 			    position: {
+											 			    	reset: '#reset-position'   
+											 			    },
+											 			    zoom: {
+											 			        resetZoom: '#reset#zoom'
+											 			    }
+											 			},
+											    		container: {
+											    			id: "mainImage"
+											    		},
+												 };
+		                                    	
+											 	var mediaType = "#{AktuelleSchritteForm.myPlugin.image.type}";
+											 	console.log("Media type = ", mediaType);
+											 	if(mediaType == "image") {
+											 		
+												    var viewImage = new ImageView.Image( configViewer );
+												    viewImage.load()
+												    .then(function(image) {
+												        image.onFirstTileLoaded()
+												        .then(function() {										            
+												        	$('#ajaxloader_image').fadeOut(800);
+												        })
+												        .catch(function() {
+												            $('#ajaxloader_image').fadeOut(800);
+												        })
+												    })
+												    .catch(function(error){
+												        console.error( 'Error opening image', error );
+												        $('#ajaxloader_image').fadeOut(800);
+												        $('#' + configViewer.global.divId).html( 'Failed to load image: "' + error + '"' );
+												    });
+											    
+											 	} else if(mediaType == "object") {
+											 	   $('#ajaxloader_image').show();
+											 		var world = WorldGenerator.create(worldConfig);
+											 		world.loadObject({
+											 	 		 url: "#{AktuelleSchritteForm.myPlugin.image.objectUrl}",
+											 			 position: { x:0, y:0, z:-0 },
+											 			 rotation:  { x:0, y:0, z:0 },
+											 			 size:  10,
+											 			 material: {
+											 					color: 0x44bb33
+											 				},
+											 			focus: true,
+											 			onTick: function(object, time) {
+											 				if(object) {
+		// 									 	 				object.rotation.set(0,  Math.PI/180 * time, 0);
+											 				}
+											 			}
+											 		 }).then(function(object) {
+											 	       	 $('#ajaxloader_image').fadeOut(2000);
+											 		 	world.render();
+											 		 }).catch(function(error) {
+											 		    $('#ajaxloader_image').fadeOut(2000);
+											 			 console.err("failed to load: ", error);
+											 		 })
+											 		
+											 	} else if(mediaType == "x3dom") {
+											 	    var objectUrl = "#{AktuelleSchritteForm.myPlugin.image.objectUrl}";
+											 	   $('#ajaxloader_image').show();
+		    									 	    new X3DLoader().load($('#mainImage'), objectUrl, 
+											 	            function(){
+		    									 	       		$('#ajaxloader_image').fadeOut(2000);
+		    									 	       		console.log("loaded")
+											 	            },
+											 	           function(){
+											 	               console.log("progress");
+											 	            },
+											 	           function(error){
+											 	               $('#ajaxloader_image').fadeOut(2000);
+											 	               console.log("error", error);
+											 	            })
+											 	}
+											 	
+											 	 function freeJSResources(data) {
+												        if(!data || data.status == 'begin') {									            
+			    									        if(viewImage) {
+			    									            console.log("closing OpenSeadragon viewer");
+			    									            viewImage.close();
+			    									        }
+			    									        if(world) {
+			    									            console.log("disposing 3d scene");
+			    									            world.dispose();
+			    									        }
+												        }
+												    }
+		                                    </script>
+		                                </div>
+	                                </div>
+	                               <!-- OCR text -->
 									<ui:fragment rendered="#{AktuelleSchritteForm.myPlugin.displayOCR}">
 										<div class="col-xs-12 col-sm-6">
 											<div id="ocrText" class="ocr-text">	
@@ -550,155 +689,14 @@ height: #{AktuelleSchritteForm.myPlugin.thumbnailSize+55}px;
 											</div>
 										</div>
 									</ui:fragment>
-									
-									<div class="#{AktuelleSchritteForm.myPlugin.displayOCR ? 'col-xs-12 col-sm-6' : ''}">							
-									<div class="div-image">
-										<!--                                     <h:graphicImage class="margin-bottom-regular" value="#{AktuelleSchritteForm.myPlugin.bild}" rendered="#{AktuelleSchritteForm.myPlugin.image != null}" width="100%" /> -->
-										<div id="mainImage" class="margin-bottom-regular">
-											<div id="ajaxloader_image">
-												<img src="template/img/goobi/ajaxloader2.gif" />
-											</div>
-										</div>
-										<div class="big-image-caption margin-top-regular font-light">
-											<h:outputText
-												value="#{AktuelleSchritteForm.myPlugin.image.imageName}" />
-										</div>
-										<script type="text/javascript">
-	                                    	var configViewer = {
-	                            			    global: {
-	                            			    	divId: 'mainImage',
-	                            			        useTiles: #{AktuelleSchritteForm.myPlugin.useTiles},
-	                            			        footerHeight: 0,
-	                            			        adaptContainerHeight: true,
-	                            			        zoomSlider: "#zoomSlider",
-	                            			        zoomSliderHandle: "#zoomSlider .zoom-slider-handle",
-	                            			        zoomSliderLabel: "#zoomSliderLabel input",
-	                                                webApiToken: '#{AktuelleSchritteForm.myPlugin.imageWebApiToken}',
-	                                                imageSizes: #{AktuelleSchritteForm.myPlugin.displaySizes},
-	                                                tileSizes: #{AktuelleSchritteForm.myPlugin.tileSize}
-	                            			    },
-	                            			    image: {
-	                            			        mimeType: "image/jpeg",
-	                            			        tileSource: "#{AktuelleSchritteForm.myPlugin.image.url}"
-	//                              				    tileSource : [#{AktuelleSchritteForm.myPlugin.image.imageLevels}],
-	//                              			   		originalImageWidth: "#{AktuelleSchritteForm.myPlugin.image.size.width}",
-	//                              			   		originalImageHeight: "#{AktuelleSchritteForm.myPlugin.image.size.height}",
-	                            			    }
-	                            			};									
-	                            		    
-	                                    	var worldConfig = {
-										 			controls: {
-										 			    xAxis: {
-										 			        rotateLeft: '#rotate-left-x',
-										 			        rotateRight: '#rotate-right-x'
-										 			    },
-										 			   yAxis: {
-										 			        rotateLeft: '#rotate-left-y',
-										 			        rotateRight: '#rotate-right-y'
-										 			    },
-										 			   zAxis: {
-										 			        rotateLeft: '#rotate-left-z',
-										 			        rotateRight: '#rotate-right-z'
-										 			    },
-										 			    position: {
-										 			    	reset: '#reset-position'   
-										 			    },
-										 			    zoom: {
-										 			        resetZoom: '#reset#zoom'
-										 			    }
-										 			},
-										    		container: {
-										    			id: "mainImage"
-										    		},
-											 };
-	                                    	
-										 	var mediaType = "#{AktuelleSchritteForm.myPlugin.image.type}";
-										 	console.log("Media type = ", mediaType);
-										 	if(mediaType == "image") {
-										 		
-											    var viewImage = new ImageView.Image( configViewer );
-											    viewImage.load()
-											    .then(function(image) {
-											        image.onFirstTileLoaded()
-											        .then(function() {										            
-											        	$('#ajaxloader_image').fadeOut(800);
-											        })
-											        .catch(function() {
-											            $('#ajaxloader_image').fadeOut(800);
-											        })
-											    })
-											    .catch(function(error){
-											        console.error( 'Error opening image', error );
-											        $('#ajaxloader_image').fadeOut(800);
-											        $('#' + configViewer.global.divId).html( 'Failed to load image: "' + error + '"' );
-											    });
-										    
-										 	} else if(mediaType == "object") {
-										 	   $('#ajaxloader_image').show();
-										 		var world = WorldGenerator.create(worldConfig);
-										 		world.loadObject({
-										 	 		 url: "#{AktuelleSchritteForm.myPlugin.image.objectUrl}",
-										 			 position: { x:0, y:0, z:-0 },
-										 			 rotation:  { x:0, y:0, z:0 },
-										 			 size:  10,
-										 			 material: {
-										 					color: 0x44bb33
-										 				},
-										 			focus: true,
-										 			onTick: function(object, time) {
-										 				if(object) {
-	// 									 	 				object.rotation.set(0,  Math.PI/180 * time, 0);
-										 				}
-										 			}
-										 		 }).then(function(object) {
-										 	       	 $('#ajaxloader_image').fadeOut(2000);
-										 		 	world.render();
-										 		 }).catch(function(error) {
-										 		    $('#ajaxloader_image').fadeOut(2000);
-										 			 console.err("failed to load: ", error);
-										 		 })
-										 		
-										 	} else if(mediaType == "x3dom") {
-										 	    var objectUrl = "#{AktuelleSchritteForm.myPlugin.image.objectUrl}";
-										 	   $('#ajaxloader_image').show();
-	    									 	    new X3DLoader().load($('#mainImage'), objectUrl, 
-										 	            function(){
-	    									 	       		$('#ajaxloader_image').fadeOut(2000);
-	    									 	       		console.log("loaded")
-										 	            },
-										 	           function(){
-										 	               console.log("progress");
-										 	            },
-										 	           function(error){
-										 	               $('#ajaxloader_image').fadeOut(2000);
-										 	               console.log("error", error);
-										 	            })
-										 	}
-										 	
-										 	 function freeJSResources(data) {
-											        if(!data || data.status == 'begin') {									            
-		    									        if(viewImage) {
-		    									            console.log("closing OpenSeadragon viewer");
-		    									            viewImage.close();
-		    									        }
-		    									        if(world) {
-		    									            console.log("disposing 3d scene");
-		    									            world.dispose();
-		    									        }
-											        }
-											    }
-	                                    </script>
-	                                </div>
-	                                </div>
+									<!--  OCR text -->
 								</div>
 								<!-- // big image -->
-	
 								<div class="row">
 									<f:subview id="second_image">
 										<ui:include src="ImageQAPlugin_include_imagenavigation.xhtml" />
 									</f:subview>
 								</div>
-	
 							</h:panelGroup>
 						</h:panelGroup>
 					</div>
