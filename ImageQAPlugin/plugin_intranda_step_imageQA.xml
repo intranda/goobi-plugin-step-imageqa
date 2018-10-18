@@ -16,10 +16,18 @@
         <numberOfImagesPerPage>12</numberOfImagesPerPage>
         <thumbnailsize>200</thumbnailsize>
 		<!-- which image sizes to use for the big image -->
-        <imagesize>800</imagesize>
-        <imagesize>3000</imagesize>
         <thumbnailFormat>jpg</thumbnailFormat>
         <mainImageFormat>jpg</mainImageFormat>
+                
+        <imagesize>800</imagesize>
+        <imagesize>1800</imagesize>
+        <imagesize>3000</imagesize>
+        <tileSize>256</tileSize>
+        <scaleFactors>1</scaleFactors>
+        <scaleFactors>32</scaleFactors>
+        <useTiles>false</useTiles>
+        <useTilesFullscreen>true</useTilesFullscreen>
+        
 	    <!-- allow deletion of images -->
         <allowDeletion>false</allowDeletion>
         <deletionCommand>/opt/digiverso/goobi/scripts/deleteImage.sh IMAGE_FOLDER IMAGE_FILE</deletionCommand>
