@@ -44,8 +44,8 @@
         <allowSelectionAll>false</allowSelectionAll>
         <allowDownload>false</allowDownload>
         <allowDownloadAsPdf>false</allowDownloadAsPdf>
-
-        
+        <!-- configure button to display ocr -->
+        <displayocr>true</displayocr>
     </config>
 
     <config>
@@ -77,6 +77,7 @@
         <allowSelection>false</allowSelection>
         <allowDownload>false</allowDownload>
         <allowDownloadAsPdf>false</allowDownloadAsPdf>
+        <displayocr>true</displayocr>
     </config>
     
     <config>
@@ -97,6 +98,8 @@
         	<field defaultValue="${process:Object}"></field>
         	<field defaultValue="1" number="true" format="0000"></field>
         </renamingPattern>
+        <displayocr>true</displayocr>
+        
     </config>
     
 </config_plugin>

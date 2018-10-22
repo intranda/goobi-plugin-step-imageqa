@@ -2,16 +2,12 @@
 
     <ui:define name="content">
 
-		 <style>
-
-			body {
-				background:black;
-			}
-			
+		 <style>			
 			#mainImage {
+				background:black;
 				border: none;
-			    widht: 100%;
-				height:98vh;
+			    widht: 100vw;
+				height:100vh;
 			}
             
             #mainImage #ajaxloader_image {
@@ -129,16 +125,18 @@
         src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/viewObject/WorldGenerator.js"></script>
     <script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/x3dom/x3dom.js"></script>
 
-        <h:form id="qaform" style="margin-top:-15px;">
-
+        <h:form id="qaform">
 			<!-- big image -->
-			<div class="row margin-top-most margin-bottom-most" style="height:95vh;">
-			    <h:panelGroup styleClass="div-image" layout="block">
-			        <div id="mainImage" class="margin-bottom-regular" rendered="#{AktuelleSchritteForm.myPlugin.image != null}">
-                        <div id="ajaxloader_image">
-                            <img src="template/img/goobi/ajaxloader1.gif" />
-                        </div>
-                    </div>
+			<div class="#{AktuelleSchritteForm.myPlugin.displayOCR ? 'col-sm-9' : ''}">
+			<div class="row">			
+			    <div class="div-image">
+			    	<ui:fragment rendered="#{AktuelleSchritteForm.myPlugin.image != null}">
+				        <div id="mainImage">
+	                        <div id="ajaxloader_image">
+	                            <img src="template/img/goobi/ajaxloader1.gif" />
+	                        </div>
+	                    </div>
+                    </ui:fragment>
 			        <script type="text/javascript">
                                     	var configViewer = {
                             			    global: {
@@ -263,11 +261,139 @@
 										        }
 										    }
                                     </script>
-			    </h:panelGroup>
+			    </div>
+			</div>
+			                <ui:fragment rendered="#{AktuelleSchritteForm.myPlugin.image.type == 'image'}">
+                    <div id="zoomSliderLabel" class="font-light">
+                            <input></input><span>%</span>
+                    </div>
+                </ui:fragment>
+                <ui:fragment rendered="#{AktuelleSchritteForm.myPlugin.image.type == 'object'}">
+                    <div id="image-control-wrapper">
+            			<nav id="viewer_controls_nav">
+                            <ul>
+            					<li><label>#{msgs.rotation_x_axis}</label></li>
+            					<li>
+            						<span class="btn font-size-s" id="rotate-left-x" title="#{msg.rotateLeft}">
+            							<i class="fa fa-undo"></i>
+            						</span>
+            					</li>
+            					<li>
+            						<span class="btn font-size-s" id="rotate-right-x" title="#{msg.rotateRight}">
+            							<i class="fa fa-repeat"></i>
+            						</span>
+            					</li>
+            				</ul>
+                            <ul>
+                            <li><label>#{msgs.rotation_y_axis}</label></li>
+                                <li>
+                                    <span class="btn font-size-s" id="rotate-left-y" title="#{msg.rotateLeft}">
+                                        <i class="fa fa-undo"></i>
+                                    </span>
+                                </li>
+                                <li>
+                                    <span class="btn font-size-s" id="rotate-right-y" title="#{msg.rotateRight}">
+                                        <i class="fa fa-repeat"></i>
+                                    </span>
+                                </li>
+                            </ul>
+                            <ul>
+                                <li><label>#{msgs.rotation_z_axis}</label></li>
+                                <li>
+                                    <span class="btn font-size-s" id="rotate-left-z" title="#{msg.rotateLeft}">
+                                        <i class="fa fa-undo"></i>
+                                    </span>
+                                </li>
+                                <li>
+                                    <span class="btn font-size-s" id="rotate-right-z" title="#{msg.rotateRight}">
+                                        <i class="fa fa-repeat"></i>
+                                    </span>
+                                </li>
+                            </ul>
+                            <ul>
+                                <li>
+                                    <span class="btn font-size-s margin-right-10" id="reset-position" title="#{msg.resetImage}">
+                                        <i class="fa fa-refresh"></i>
+                                    </span>
+                                </li>
+                            </ul>
+            			</nav>
+            			</div>
+                </ui:fragment>
+                <div style="position:absolute;top:10px; right:10px;">
+               		<h:commandLink styleClass="btn btn-lightgrey"
+						rendered="#{AktuelleSchritteForm.myPlugin.displayOcrButton}"
+						title="Show OCR-result"
+						action="#{AktuelleSchritteForm.myPlugin.toggleOCR()}">
+						<i class="fa fa-file-text-o"></i>
+					</h:commandLink>
+							<!-- exit fullscreen -->
+							<!-- style="position:absolute;top:10px; right:10px; " -->
+				<h:commandLink styleClass="btn btn-lightgrey" 
+					action="ImageQAPlugin" title="#{msgs.imageDefaultDisplay}" >
+					<i class="fa fa-close"></i>
+				</h:commandLink>
+				</div>
+				<!-- previous image -->
+				<h:commandLink id="imageBack" styleClass="btn btn-lightgrey font-size-s" title="#{msgs.lw_previousImage}"
+					style="position:absolute;top:50vh; left:10px; height:50px;padding-top:17px;">
+					<i class="fa fa-angle-left"></i>
+					<f:ajax execute="@form" render="@form" onevent="freeJSResources"/>
+					<x:updateActionListener value="#{AktuelleSchritteForm.myPlugin.imageIndex - 1}" property="#{AktuelleSchritteForm.myPlugin.imageIndex}" />
+				</h:commandLink>
+				
+				<!-- next image -->
+				<h:commandLink id="imageNext" styleClass="btn btn-lightgrey font-size-s" title="#{msgs.lw_nextImage}"
+					style="position:absolute;top:50vh; right:10px; height:50px; padding-top:17px;">
+					<i class="fa fa-angle-right"></i>
+					<f:ajax execute="@form" render="@form" onevent="freeJSResources"/>
+					<x:updateActionListener value="#{AktuelleSchritteForm.myPlugin.imageIndex + 1}" property="#{AktuelleSchritteForm.myPlugin.imageIndex}" />
+				</h:commandLink>
+				
+				<!-- file name -->
+				<h:outputText styleClass="font-light" style="position:absolute;bottom:10px; left:10px;" 
+					value="#{AktuelleSchritteForm.myPlugin.image.imageName}" />
+				
+				<!-- image number -->
+				<div style="position:absolute;bottom:10px; right:10px;">
+	                <x:outputText id="txtImageMoveTo1" styleClass="font-light"
+	                    value="#{AktuelleSchritteForm.myPlugin.imageIndex +1} #{msgs.von}  #{AktuelleSchritteForm.myPlugin.sizeOfImageList}"
+	                    onclick="document.getElementById(this.id).nextSibling.style.display='inline';
+	                    document.getElementById(this.id).style.display='none';  
+	                    document.getElementById(this.id).nextSibling.focus(); 
+	                    document.getElementById(this.id).nextSibling.select();" /> 
+					<!-- jump to page -->
+	                <x:inputText value="#{AktuelleSchritteForm.myPlugin.imageMoveTo}" style="display:none;font-size:9px;width:30px"
+	                    required="true" id="txtImageMoveTo2"
+	                    onblur="document.getElementById(this.id).style.display='none';document.getElementById(this.id).previousSibling.style.display='inline';"
+	                    onkeypress="copyValue(this,event);" />
+	                <x:commandButton action="#{NavigationForm.Reload}" value="go" style="display:none" />
+				</div>
+								<!-- first and last page -->				
+				<div style="position:absolute;top:10px;left:10px;display:none;">
+					<h:commandLink styleClass="btn btn-lightgrey font-size-s margin-right-10" title="#{msgs.firstImage}">
+						<i class="fa fa-double-angle-left"></i>
+						<f:ajax execute="@form" render="@form" />
+						<x:updateActionListener value="0" property="#{AktuelleSchritteForm.myPlugin.imageIndex}" />
+					</h:commandLink>
+					<h:commandLink styleClass="btn btn-lightgrey font-size-s" title="#{msgs.lastImage}">
+						<i class="fa fa-double-angle-right"></i>
+						<f:ajax execute="@form" render="@form" />
+						<x:updateActionListener value="#{AktuelleSchritteForm.myPlugin.sizeOfImageList - 1}" property="#{AktuelleSchritteForm.myPlugin.imageIndex}" />
+					</h:commandLink>
+				</div>
+				
 			</div>
 			<!-- // big image -->
-				
-                <ui:fragment rendered="#{AktuelleSchritteForm.myPlugin.image.type == 'image'}">
+				<ui:fragment rendered="#{AktuelleSchritteForm.myPlugin.displayOCR}">
+					<div class="col-sm-3">
+						<div id="ocrText" class="ocr-text">	
+						<h:outputText value="#{AktuelleSchritteForm.myPlugin.ocrText}" escape="false">
+						</h:outputText>
+						</div>
+					</div>
+				</ui:fragment>
+<!--                 <ui:fragment rendered="#{AktuelleSchritteForm.myPlugin.image.type == 'image'}">
                     <div id="zoomSliderLabel" class="font-light">
                             <input></input><span>%</span>
                     </div>
@@ -325,14 +451,14 @@
             			</nav>
             			</div>
                 </ui:fragment>
-                
-				<!-- exit fullscreen -->
+                 -->
+<!-- 				exit fullscreen
 				<h:commandLink styleClass="btn btn-lightgrey" style="position:absolute;top:10px; right:10px;" 
 					action="ImageQAPlugin" title="#{msgs.imageDefaultDisplay}" >
 					<i class="fa fa-close"></i>
 				</h:commandLink>
 				
-				<!-- previous image -->
+				previous image
 				<h:commandLink id="imageBack" styleClass="btn btn-lightgrey font-size-s" title="#{msgs.lw_previousImage}"
 					style="position:absolute;top:50vh; left:10px; height:50px;padding-top:17px;">
 					<i class="fa fa-angle-left"></i>
@@ -340,7 +466,7 @@
 					<x:updateActionListener value="#{AktuelleSchritteForm.myPlugin.imageIndex - 1}" property="#{AktuelleSchritteForm.myPlugin.imageIndex}" />
 				</h:commandLink>
 				
-				<!-- next image -->
+				next image
 				<h:commandLink id="imageNext" styleClass="btn btn-lightgrey font-size-s" title="#{msgs.lw_nextImage}"
 					style="position:absolute;top:50vh; right:10px; height:50px; padding-top:17px;">
 					<i class="fa fa-angle-right"></i>
@@ -348,11 +474,11 @@
 					<x:updateActionListener value="#{AktuelleSchritteForm.myPlugin.imageIndex + 1}" property="#{AktuelleSchritteForm.myPlugin.imageIndex}" />
 				</h:commandLink>
 				
-				<!-- file name -->
+				file name
 				<h:outputText styleClass="font-light" style="position:absolute;bottom:10px; left:10px;" 
 					value="#{AktuelleSchritteForm.myPlugin.image.imageName}" />
 				
-				<!-- image number -->
+				image number
 				<div style="position:absolute;bottom:10px; right:10px;">
 	                <x:outputText id="txtImageMoveTo1" styleClass="font-light"
 	                    value="#{AktuelleSchritteForm.myPlugin.imageIndex +1} #{msgs.von}  #{AktuelleSchritteForm.myPlugin.sizeOfImageList}"
@@ -360,15 +486,15 @@
 	                    document.getElementById(this.id).style.display='none';  
 	                    document.getElementById(this.id).nextSibling.focus(); 
 	                    document.getElementById(this.id).nextSibling.select();" /> 
-					<!-- jump to page -->
+					jump to page
 	                <x:inputText value="#{AktuelleSchritteForm.myPlugin.imageMoveTo}" style="display:none;font-size:9px;width:30px"
 	                    required="true" id="txtImageMoveTo2"
 	                    onblur="document.getElementById(this.id).style.display='none';document.getElementById(this.id).previousSibling.style.display='inline';"
 	                    onkeypress="copyValue(this,event);" />
 	                <x:commandButton action="#{NavigationForm.Reload}" value="go" style="display:none" />
-				</div>
+				</div> -->
 				
-				<!-- first and last page -->				
+<!-- 				first and last page				
 				<div style="position:absolute;top:10px;left:10px;display:none;">
 					<h:commandLink styleClass="btn btn-lightgrey font-size-s margin-right-10" title="#{msgs.firstImage}">
 						<i class="fa fa-double-angle-left"></i>
@@ -381,7 +507,7 @@
 						<x:updateActionListener value="#{AktuelleSchritteForm.myPlugin.sizeOfImageList - 1}" property="#{AktuelleSchritteForm.myPlugin.imageIndex}" />
 					</h:commandLink>
 				</div>
-
+ -->
 		</h:form>
 
 

@@ -53,6 +53,7 @@ import de.intranda.goobi.SelectableImage;
 import de.sub.goobi.config.ConfigPlugins;
 import de.sub.goobi.config.ConfigurationHelper;
 import de.sub.goobi.helper.FacesContextHelper;
+import de.sub.goobi.helper.FilesystemHelper;
 import de.sub.goobi.helper.Helper;
 import de.sub.goobi.helper.NIOFileUtils;
 import de.sub.goobi.helper.S3FileUtils;
@@ -114,6 +115,12 @@ public class ImageQAPlugin implements IStepPlugin {
 	private ExecutorService executor;
 
 	private String returnPath;
+	// ocr display variables
+	private boolean displayOcrButton = false;
+	private String ocrDir = "";
+	private boolean ocrExists = false;
+	private boolean displayOCR = false;
+	private String ocrText = "";
 
 	@Override
 	public void initialize(Step step, String returnPath) {
@@ -191,7 +198,10 @@ public class ImageQAPlugin implements IStepPlugin {
 	}
 
 	/**
-	 * @param myconfig
+	 * reads configfile and sets object variables accordingly, sets defaults for
+	 * some settings if no value is specified
+	 * 
+	 * @param myconfig SubnodeConfiguration object of the config file
 	 */
 	public void initConfig(SubnodeConfiguration myconfig) {
 		allowDeletion = myconfig.getBoolean("allowDeletion", false);
@@ -218,6 +228,7 @@ public class ImageQAPlugin implements IStepPlugin {
 		if (tileSize == null) {
 			tileSize = "";
 		}
+		/* load scale factors, set default of none found */
 		scaleFactors = myconfig.getList("scaleFactors");
 		if (scaleFactors == null || scaleFactors.isEmpty()) {
 			scaleFactors = new ArrayList<>();
@@ -227,9 +238,26 @@ public class ImageQAPlugin implements IStepPlugin {
 		useTiles = myconfig.getBoolean("useTiles",false);
 		useTilesFullscreen = myconfig.getBoolean("useTilesFullscreen",true);
 		executor = Executors.newFixedThreadPool(Math.max(1,imageSizes.size()));
+		displayOcrButton = myconfig.getBoolean("displayocr", false);
+		// only display button if it is both configured and there is an ocr folder for
+		// this process
+		if (displayOcrButton) {
+			try {
+				if (!StorageProvider.getInstance().isDirectory(Paths.get(step.getProzess().getOcrDirectory()))) {
+					displayOcrButton = false;
+				}
+			} catch (SwapException | DAOException | IOException | InterruptedException e) {
+				log.debug("OCR folder could not be accessed", e);
+			}
+		}
 	}
 
-
+	/**
+	 * builds String to apply settings for tile-size and scale Factors from the
+	 * config file
+	 * 
+	 * @return String that sets the tile size according to the config file
+	 */
 	public String getTileSize() {
 		StringBuilder sb = new StringBuilder();
 		if (StringUtils.isNotBlank(tileSize)) {
@@ -247,6 +275,11 @@ public class ImageQAPlugin implements IStepPlugin {
 		return sb.toString();
 	}
 
+	/**
+	 * builds String to apply settings for display size from the config file
+	 * 
+	 * @return returns String that sets the display size according to the config
+	 */
 	public String getDisplaySizes() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("[");
@@ -274,6 +307,11 @@ public class ImageQAPlugin implements IStepPlugin {
 			return Collections.singletonList(new NamePart(""));
 		}
 	}
+
+	/**
+	 * TODO document
+	 * 
+	 */
 
 	public List<SelectableImage> getPaginatorList() {
 		List<SelectableImage> subList = new ArrayList<>();
@@ -417,6 +455,12 @@ public class ImageQAPlugin implements IStepPlugin {
 		return null;
 	}
 
+	/**
+	 * 
+	 * Adjusts the variable imageIndex by the passed int, ensureing it does not go
+	 * out of bounds in the process if displaOCR is set it also updates the OCRtext
+	 * 
+	 */
 	public void setImageIndex(int imageIndex) {
 		this.imageIndex = imageIndex;
 		if (this.imageIndex < 0) {
@@ -428,8 +472,34 @@ public class ImageQAPlugin implements IStepPlugin {
 		if (this.imageIndex >= 0) {
 			setImage(allImages.get(this.imageIndex));
 		}
+		if (displayOCR) {
+			updateOCR();
+		}
 	}
 
+	/**
+	 * 
+	 * tries to retrieve OCR text for current image and puts it in ocrText, then
+	 * flips the switch ocrExists
+	 * 
+	 */
+	public void updateOCR() {
+		String filename = this.image.getImageName();
+		filename = FilenameUtils.removeExtension(filename);
+		ocrText = "";
+		ocrText = FilesystemHelper.getOcrFileContent(step.getProzess(), filename);
+		if (ocrText == "") {
+			ocrExists = false;
+		} else {
+			ocrExists = true;
+		}
+	}
+
+	/**
+	 * 
+	 * @return String url of currently focussed image
+	 * 
+	 */
 	public String getBild() {
 		if (image == null) {
 			return null;
@@ -852,5 +922,16 @@ public class ImageQAPlugin implements IStepPlugin {
 
 	public String getImageWebApiToken() {
 		return ConfigPlugins.getPluginConfig(PLUGIN_NAME).getString("imageWebApiToken", "test");
+	}
+
+	/**
+	 * flips the boolean displayOCR used to switch the ocr-display on or off,
+	 * aditionally update the ocrtext if it will be displayed
+	 */
+	public void toggleOCR() {
+		displayOCR = !displayOCR;
+		if (displayOCR) {
+			updateOCR();
+		}
 	}
 }
