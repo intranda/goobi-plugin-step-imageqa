@@ -5,6 +5,10 @@
 	<groupId>de.intranda.goobi.plugins.step</groupId>
 	<artifactId>imageqa-gui</artifactId>
 	<version>1.0.0</version>
+	<properties>
+		<jar.name>plugin_intranda_step_imageQA-GUI</jar.name>
+		<dest.folder>/opt/digiverso/goobi/plugins/GUI/</dest.folder>
+	</properties>
 	<parent>
 		<groupId>de.intranda.goobi.plugins.step</groupId>
 		<artifactId>imageqa</artifactId>
@@ -17,6 +21,7 @@
 		</repository>
 	</repositories>
 	<build>
+		<finalName>${jar.name}</finalName>
 		<resources>
 			<resource>
 				<directory>../GUI</directory>
@@ -44,9 +49,10 @@
 									<artifactId>${project.artifactId}</artifactId>
 									<version>${project.version}</version>
 									<type>${project.packaging}</type>
+									<destFileName>${jar.name}.jar</destFileName>
 								</artifactItem>
 							</artifactItems>
-							<outputDirectory>/opt/digiverso/goobi/plugins/GUI/</outputDirectory>
+							<outputDirectory>${dest.folder}</outputDirectory>
 						</configuration>
 					</execution>
 				</executions>
