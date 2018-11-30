@@ -6,9 +6,13 @@
 	<artifactId>imageqa</artifactId>
 	<version>1.0.0</version>
 	<packaging>pom</packaging>
-	<distributionManagement>
-		<repository>
-			<id>intranda</id>
+    <modules>
+        <module>module-gui</module>
+        <module>module-main</module>
+    </modules>
+    <distributionManagement>
+        <repository>
+            <id>intranda</id>
 			<url>http://nexus.intranda.com/repository/intranda</url>
 		</repository>
 	</distributionManagement>
