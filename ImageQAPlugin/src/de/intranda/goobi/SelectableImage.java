@@ -1,6 +1,5 @@
 package de.intranda.goobi;
 
-import java.awt.Dimension;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -13,16 +12,15 @@ import org.goobi.beans.Process;
 import de.sub.goobi.helper.exceptions.DAOException;
 import de.sub.goobi.helper.exceptions.SwapException;
 import de.sub.goobi.metadaten.Image;
-import de.sub.goobi.metadaten.ImageLevel;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
 public class SelectableImage extends Image {
-    
+
     private static final String NAMEPART_SEPARATOR = "_";
-    
+
     private boolean selected;
     private String namePrefix;
     private List<NamePart> nameParts = new ArrayList<>();
@@ -44,7 +42,7 @@ public class SelectableImage extends Image {
         super(process, imageFolderName, filename, order, thumbnailSize);
         this.selected = false;
     }
-    
+
     public SelectableImage(Path imagePath, int order, Integer thumbnailSize) throws IOException {
         super(imagePath, order, thumbnailSize);
         this.selected = false;
@@ -55,11 +53,11 @@ public class SelectableImage extends Image {
         super(imageName, order, thumbnailUrl, largeThumbnailUrl, tooltip);
         this.selected = false;
     }
-    
+
     public String getImageNameShort() {
-        if (getImageName().length()>25){
-            return "..." + getImageName().substring(getImageName().length()-25, getImageName().length());
-        }else{
+        if (getImageName().length() > 25) {
+            return "..." + getImageName().substring(getImageName().length() - 25, getImageName().length());
+        } else {
             return getImageName();
         }
     }
@@ -79,27 +77,27 @@ public class SelectableImage extends Image {
         this.nameParts = new ArrayList<>();
         String imageBaseName = FilenameUtils.getBaseName(getImageName());
         String[] imageNameParts = imageBaseName.split(NAMEPART_SEPARATOR);
-        if(imageNameParts.length > 0) {
+        if (imageNameParts.length > 0) {
             namePrefix = imageNameParts[0];
         }
-        if(imageNameParts.length > 1) {
-            pageCounterLabel = imageNameParts[imageNameParts.length-1];
+        if (imageNameParts.length > 1) {
+            pageCounterLabel = imageNameParts[imageNameParts.length - 1];
         }
-        
-        if(imageNameParts.length > 1) {            
-            imageNameParts = Arrays.copyOfRange(imageNameParts, 1, imageNameParts.length-1);
+
+        if (imageNameParts.length > 1) {
+            imageNameParts = Arrays.copyOfRange(imageNameParts, 1, imageNameParts.length - 1);
         } else {
             imageNameParts = new String[0];
         }
         for (int i = 0; i < defaultNameParts.size(); i++) {
             NamePart newNamePart = new NamePart(defaultNameParts.get(i));
-            if(i < imageNameParts.length) {
+            if (i < imageNameParts.length) {
                 String origNamePart = imageNameParts[i];
                 newNamePart.setValue(origNamePart);
             }
             nameParts.add(newNamePart);
         }
-        
+
     }
 
     /**
@@ -112,8 +110,8 @@ public class SelectableImage extends Image {
     public String getCombinedNameFromFilename() {
         String imageBaseName = FilenameUtils.getBaseName(getImageName());
         String[] imageNameParts = imageBaseName.split(NAMEPART_SEPARATOR);
-        if(imageNameParts.length > 1) {            
-            imageNameParts = Arrays.copyOfRange(imageNameParts, 1, imageNameParts.length-1);
+        if (imageNameParts.length > 1) {
+            imageNameParts = Arrays.copyOfRange(imageNameParts, 1, imageNameParts.length - 1);
         } else {
             imageNameParts = new String[0];
         }
@@ -121,7 +119,7 @@ public class SelectableImage extends Image {
         for (String namePart : imageNameParts) {
             sb.append(namePart).append(NAMEPART_SEPARATOR);
         }
-        return sb.toString(); 
+        return sb.toString();
     }
 
     /**
@@ -136,8 +134,4 @@ public class SelectableImage extends Image {
         }
     }
 
-
-
-
-    
 }
