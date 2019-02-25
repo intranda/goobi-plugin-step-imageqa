@@ -274,7 +274,7 @@
 
                                         <div class="thumb">
                                             <h:commandLink title="#{image.tooltip}">
-                                                <canvas class="thumb-canvas" data-image_small="#{HelperForm.servletPathWithHostAsUrl}#{image.thumbnailUrl}" data-image_large="#{HelperForm.servletPathWithHostAsUrl}#{image.largeThumbnailUrl}" title="#{image.tooltip}" id="thumbnail-#{status.index}"></canvas>
+                                                <canvas class="thumb-canvas" data-image_small="#{image.thumbnailUrl}" data-image_large="#{image.largeThumbnailUrl}" title="#{image.tooltip}" id="thumbnail-#{status.index}"></canvas>
                                                 <f:setPropertyActionListener value="#{image.order -1}" target="#{AktuelleSchritteForm.myPlugin.imageIndex}" />
                                                 <f:ajax execute="@form" render="@form :qaform:bigimage" onevent="freeJSResources"/>
 
