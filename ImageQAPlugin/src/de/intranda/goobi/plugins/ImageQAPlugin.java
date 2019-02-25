@@ -255,7 +255,7 @@ public class ImageQAPlugin implements IStepPlugin {
         useTiles = myconfig.getBoolean("useTiles", false);
         useTilesFullscreen = myconfig.getBoolean("useTilesFullscreen", true);
         executor = Executors.newFixedThreadPool(Math.max(1, imageSizes.size()));
-        displayOcrButton = myconfig.getBoolean("displayocr", false);
+        displayOcrButton = myconfig.getBoolean("displayocr", true);
         // only display button if it is both configured and there is an ocr folder for
         // this process
         if (displayOcrButton) {
