@@ -30,7 +30,7 @@
         <step>*</step>
         <!-- which images to use -->
         <useOrigFolder>true</useOrigFolder>
-        <!-- how to display the tumbnails -->
+        <!-- how to display the thumbnails -->
         <numberOfImagesPerPage>12</numberOfImagesPerPage>
         <thumbnailsize>200</thumbnailsize>
         <!-- which image sizes to use for the big image -->
@@ -74,7 +74,7 @@
         <step>DerivateQA</step>
         <!-- which images to use -->
         <useOrigFolder>true</useOrigFolder>
-        <!-- how to display the tumbnails -->
+        <!-- how to display the thumbnails -->
         <numberOfImagesPerPage>12</numberOfImagesPerPage>
         <thumbnailsize>200</thumbnailsize>
         <!-- which image sizes to use for the big image -->
@@ -102,7 +102,7 @@
         <project>*</project>
         <step>ImageQA</step>
         <useOrigFolder>true</useOrigFolder>
-        <!-- how to display the tumbnails -->
+        <!-- how to display the thumbnails -->
         <numberOfImagesPerPage>12</numberOfImagesPerPage>
         <thumbnailsize>200</thumbnailsize>
         <!-- which image sizes to use for the big image -->
