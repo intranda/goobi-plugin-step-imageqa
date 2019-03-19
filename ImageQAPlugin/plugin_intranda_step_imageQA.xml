@@ -17,7 +17,7 @@
  * 
  -->
 <config_plugin>
-<!--
+    <!--
         order of configuration is:
           1.) project name and step name matches
           2.) step name matches and project is *
@@ -25,18 +25,18 @@
           4.) project name and step name are *
 -->
     <config>
-		<!-- which projects to use for (can be more then one, otherwise use *) -->
+        <!-- which projects to use for (can be more then one, otherwise use *) -->
         <project>*</project>
         <step>*</step>
-		<!-- which images to use -->
+        <!-- which images to use -->
         <useOrigFolder>true</useOrigFolder>
-	    <!-- how to display the tumbnails -->
+        <!-- how to display the tumbnails -->
         <numberOfImagesPerPage>12</numberOfImagesPerPage>
         <thumbnailsize>200</thumbnailsize>
-		<!-- which image sizes to use for the big image -->
+        <!-- which image sizes to use for the big image -->
         <thumbnailFormat>jpg</thumbnailFormat>
         <mainImageFormat>jpg</mainImageFormat>
-                
+
         <imagesize>800</imagesize>
         <imagesize>1800</imagesize>
         <imagesize>3000</imagesize>
@@ -45,17 +45,17 @@
         <scaleFactors>32</scaleFactors>
         <useTiles>false</useTiles>
         <useTilesFullscreen>true</useTilesFullscreen>
-        
-	    <!-- allow deletion of images -->
+
+        <!-- allow deletion of images -->
         <allowDeletion>false</allowDeletion>
         <deletionCommand>/opt/digiverso/goobi/scripts/deleteImage.sh IMAGE_FOLDER IMAGE_FILE</deletionCommand>
-		<!-- allow rotation of images -->
+        <!-- allow rotation of images -->
         <allowRotation>false</allowRotation>
         <rotationCommands>
             <left>/usr/local/bin/mogrify -rotate -90 IMAGE_FILE</left>
             <right>/usr/local/bin/mogrify -rotate 90 IMAGE_FILE</right>
         </rotationCommands>
-		<!-- allow renaming of images -->
+        <!-- allow renaming of images -->
         <allowRenaming>false</allowRenaming>
         <!-- allow selection of images -->
         <allowSelection>false</allowSelection>
@@ -67,57 +67,57 @@
     </config>
 
     <config>
-		<!-- which projects to use for (can be more then one, otherwise use *) -->
+        <!-- which projects to use for (can be more then one, otherwise use *) -->
         <project>My special project</project>
         <project>Archive_Project</project>
         <step>MasterQA</step>
         <step>DerivateQA</step>
-		<!-- which images to use -->
+        <!-- which images to use -->
         <useOrigFolder>true</useOrigFolder>
-	    <!-- how to display the tumbnails -->
+        <!-- how to display the tumbnails -->
         <numberOfImagesPerPage>12</numberOfImagesPerPage>
         <thumbnailsize>200</thumbnailsize>
-		<!-- which image sizes to use for the big image -->
+        <!-- which image sizes to use for the big image -->
         <imagesize>800</imagesize>
         <imagesize>3000</imagesize>
-	    <!-- allow deletion of images -->
+        <!-- allow deletion of images -->
         <allowDeletion>false</allowDeletion>
         <deletionCommand>/opt/digiverso/goobi/scripts/deleteImage.sh IMAGE_FOLDER IMAGE_FILE</deletionCommand>
-		<!-- allow rotation of images -->
+        <!-- allow rotation of images -->
         <allowRotation>false</allowRotation>
         <rotationCommands>
             <left>/usr/local/bin/mogrify -rotate -90 IMAGE_FILE</left>
             <right>/usr/local/bin/mogrify -rotate 90 IMAGE_FILE</right>
         </rotationCommands>
-		<!-- allow renaming of images -->
-        <allowRenaming>false</allowRenaming>	
+        <!-- allow renaming of images -->
+        <allowRenaming>false</allowRenaming>
         <!-- allow selection of images -->
         <allowSelection>false</allowSelection>
         <allowDownload>false</allowDownload>
         <allowDownloadAsPdf>false</allowDownloadAsPdf>
         <displayocr>true</displayocr>
     </config>
-    
+
     <config>
-    	<project>*</project>
-    	<step>ImageQA</step>
-    	<useOrigFolder>true</useOrigFolder>
-	    <!-- how to display the tumbnails -->
+        <project>*</project>
+        <step>ImageQA</step>
+        <useOrigFolder>true</useOrigFolder>
+        <!-- how to display the tumbnails -->
         <numberOfImagesPerPage>12</numberOfImagesPerPage>
         <thumbnailsize>200</thumbnailsize>
-		<!-- which image sizes to use for the big image -->
+        <!-- which image sizes to use for the big image -->
         <imagesize>800</imagesize>
         <imagesize>3000</imagesize>
 
-		<!-- allow renaming of images -->
-        <allowRenaming>false</allowRenaming>	
+        <!-- allow renaming of images -->
+        <allowRenaming>false</allowRenaming>
         <renamingPattern>
-        	<field defaultValue="${process:Archive}"></field>
-        	<field defaultValue="${process:Object}"></field>
-        	<field defaultValue="1" number="true" format="0000"></field>
+            <field defaultValue="${process:Archive}"></field>
+            <field defaultValue="${process:Object}"></field>
+            <field defaultValue="1" number="true" format="0000"></field>
         </renamingPattern>
         <displayocr>true</displayocr>
-        
+
     </config>
-    
+
 </config_plugin>
