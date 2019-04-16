@@ -26,7 +26,7 @@
 		<dependency>
 			<groupId>de.intranda.goobi.workflow</groupId>
 			<artifactId>goobi-core-jar</artifactId>
-			<version>3.0.5-SNAPSHOT</version>
+			<version>3.0.5</version>
 		</dependency>
         
         <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
