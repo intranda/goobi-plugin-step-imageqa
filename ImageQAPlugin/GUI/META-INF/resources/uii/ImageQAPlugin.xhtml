@@ -241,13 +241,13 @@
                         </h:commandLink>
                         
                         <h:commandLink id="id11" action="#{AktuelleSchritteForm.SchrittDurchBenutzerAbschliessen}" styleClass="btn btn-mini" 
-                        	rendered="#{NavigationForm.uiStatus.pluginSimulation != true}" title="#{msgs.task_leavePluginAndFinishTask}">
+                        	rendered="#{NavigationForm.uiStatus.pluginSimulation != true and AktuelleSchritteForm.myPlugin.allowTaskFinishButtons == true}" title="#{msgs.task_leavePluginAndFinishTask}">
                             <i class="fa fa-check" />
                             <x:updateActionListener property="#{NavigationForm.uiStatus.pluginSimulation}" value="#{false}" />
                         </h:commandLink>
                         
                         <h:commandLink id="id12" action="#{AktuelleSchritteForm.myPlugin.cancel}" styleClass="btn btn-mini" 
-                        	rendered="#{NavigationForm.uiStatus.pluginSimulation != true}" title="#{msgs.pluginLeave}">
+                        	rendered="#{NavigationForm.uiStatus.pluginSimulation != true and AktuelleSchritteForm.myPlugin.allowTaskFinishButtons == true}" title="#{msgs.pluginLeave}">
                             <i class="fa fa-close" />
                             <x:updateActionListener property="#{NavigationForm.uiStatus.pluginSimulation}" value="#{false}" />
                         </h:commandLink>
@@ -596,7 +596,7 @@
                 <div class="form-actions">
 
                     <!-- Save and finish the task -->
-					<h:commandLink styleClass="btn btn-green font-size-s" id="finishAndClose" rendered="#{NavigationForm.uiStatus.pluginSimulation != true}" action="#{AktuelleSchritteForm.SchrittDurchBenutzerAbschliessen}">
+					<h:commandLink styleClass="btn btn-green font-size-s" id="finishAndClose" rendered="#{NavigationForm.uiStatus.pluginSimulation != true and AktuelleSchritteForm.myPlugin.allowTaskFinishButtons == true}" action="#{AktuelleSchritteForm.SchrittDurchBenutzerAbschliessen}">
                         <i class="fa fa-check margin-right-5"></i>
                         <h:outputText value="#{msgs.task_leavePluginAndFinishTask}" />
                         <x:updateActionListener property="#{NavigationForm.uiStatus.pluginSimulation}" value="#{false}" />

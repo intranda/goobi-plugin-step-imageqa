@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 
-<project name="goobi-plugin-step-mixedocr">
+<project name="plugin_intranda_step_imageQA">
 	<target name="devbuild">
-		<exec executable="mvn">
+		<exec executable="/usr/local/bin/mvn">
 			<arg value="package" />
 		</exec>
 		<copy file="module-gui/target/plugin_intranda_step_imageQA-GUI.jar" todir="/opt/digiverso/goobi/plugins/GUI/"/>

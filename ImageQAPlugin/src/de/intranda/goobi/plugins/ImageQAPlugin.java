@@ -110,6 +110,7 @@ public class ImageQAPlugin implements IStepPlugin {
     private boolean allowSelectionAll = false;
     private boolean allowDownload = false;
     private boolean allowDownloadAsPdf = false;
+    private boolean allowTaskFinishButtons = true;
     private boolean useTiles = false;
     private boolean useTilesFullscreen = false;
     private String rotationCommandLeft = "";
@@ -226,7 +227,7 @@ public class ImageQAPlugin implements IStepPlugin {
         allowSelectionAll = myconfig.getBoolean("allowSelectionAll", false);
         allowDownload = myconfig.getBoolean("allowDownload", false);
         allowDownloadAsPdf = myconfig.getBoolean("allowDownloadAsPdf", false);
-
+        allowTaskFinishButtons = myconfig.getBoolean("allowTaskFinishButtons",true);
         deletionCommand = myconfig.getString("deletionCommand", "-");
         rotationCommandLeft = myconfig.getString("rotationCommands/left", "-");
         rotationCommandRight = myconfig.getString("rotationCommands/right", "-");

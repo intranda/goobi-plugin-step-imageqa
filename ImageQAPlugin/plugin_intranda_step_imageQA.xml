@@ -62,6 +62,8 @@
         <allowSelectionAll>false</allowSelectionAll>
         <allowDownload>false</allowDownload>
         <allowDownloadAsPdf>false</allowDownloadAsPdf>
+        <!-- allow the user to finish the task directly out of the plugin -->
+        <allowTaskFinishButtons>true</allowTaskFinishButtons>
         <!-- configure button to display ocr -->
         <displayocr>true</displayocr>
     </config>
@@ -95,6 +97,8 @@
         <allowSelection>false</allowSelection>
         <allowDownload>false</allowDownload>
         <allowDownloadAsPdf>false</allowDownloadAsPdf>
+        <!-- allow the user to finish the task directly out of the plugin -->
+        <allowTaskFinishButtons>false</allowTaskFinishButtons>
         <displayocr>true</displayocr>
     </config>
 
