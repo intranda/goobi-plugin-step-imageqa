@@ -228,7 +228,7 @@ public class ImageQAPlugin implements IStepPlugin {
         allowDownload = myconfig.getBoolean("allowDownload", false);
         allowDownloadAsPdf = myconfig.getBoolean("allowDownloadAsPdf", false);
         allowTaskFinishButtons = myconfig.getBoolean("allowTaskFinishButtons",true);
-        deletionCommand = myconfig.getString("deletionCommand", "-");
+        deletionCommand = myconfig.getString("deletionCommand", "");
         rotationCommandLeft = myconfig.getString("rotationCommands/left", "-");
         rotationCommandRight = myconfig.getString("rotationCommands/right", "-");
 
@@ -746,7 +746,11 @@ public class ImageQAPlugin implements IStepPlugin {
     }
 
     public void deleteImage(Image myimage) {
-        callScript(myimage, deletionCommand, true);
+    	if (deletionCommand == null || deletionCommand.length() == 0 ) {
+    		deleteImageViaJava(myimage);
+    	} else {
+    		callScript(myimage, deletionCommand, true);
+    	}
     }
 
     public void rotateRight(Image myimage) {
@@ -762,7 +766,11 @@ public class ImageQAPlugin implements IStepPlugin {
         while (iterator.hasNext()) {
             SelectableImage image = iterator.next();
             if (image.isSelected()) {
-                callScript(image, deletionCommand, true);
+            	if (deletionCommand == null || deletionCommand.length() == 0 ) {
+            		deleteImageViaJava(image);
+            	} else {
+            		callScript(image, deletionCommand, true);
+            	}
             }
         }
     }
@@ -783,6 +791,24 @@ public class ImageQAPlugin implements IStepPlugin {
         }
     }
 
+    public void deleteImageViaJava(Image myimage) {
+    	int myindex = getImageIndex();
+        if (myindex == allImages.indexOf(myimage)) {
+            myindex--;
+        }
+
+        try {
+			StorageProvider.getInstance().deleteFile(myimage.getImagePath());
+		} catch (IOException e) {
+			Helper.setFehlerMeldung("Error while deleting file " + myimage.getImagePath() + ": " + e.getMessage());
+		}
+
+        allImages = new ArrayList<>();
+        initialize(this.step, returnPath);
+
+        setImageIndex(myindex);
+    }
+    
     public void callScript(Image myimage, String rotationCommand, boolean selectOtherImage) {
         int myindex = getImageIndex();
         if (selectOtherImage && myindex == allImages.indexOf(myimage)) {
