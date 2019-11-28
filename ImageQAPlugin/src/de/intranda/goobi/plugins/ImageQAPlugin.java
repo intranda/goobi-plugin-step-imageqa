@@ -78,6 +78,9 @@ import de.sub.goobi.helper.StorageProvider;
 import de.sub.goobi.helper.exceptions.DAOException;
 import de.sub.goobi.helper.exceptions.SwapException;
 import de.sub.goobi.metadaten.Image;
+import de.sub.goobi.metadaten.MetadatenHelper;
+import de.sub.goobi.metadaten.MetadatenImagesHelper;
+import de.sub.goobi.persistence.managers.ProcessManager;
 import de.unigoettingen.sub.commons.contentlib.exceptions.ContentLibException;
 import de.unigoettingen.sub.commons.contentlib.exceptions.ContentLibImageException;
 import de.unigoettingen.sub.commons.contentlib.exceptions.ImageManagerException;
@@ -87,6 +90,14 @@ import de.unigoettingen.sub.commons.contentlib.imagelib.JpegInterpreter;
 import lombok.Data;
 import lombok.extern.log4j.Log4j;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
+import ugh.dl.DigitalDocument;
+import ugh.dl.DocStruct;
+import ugh.dl.Fileformat;
+import ugh.dl.Metadata;
+import ugh.dl.Prefs;
+import ugh.exceptions.PreferencesException;
+import ugh.exceptions.ReadException;
+import ugh.exceptions.WriteException;
 
 @Data
 @PluginImplementation
@@ -139,6 +150,8 @@ public class ImageQAPlugin implements IStepPlugin {
     private boolean ocrExists = false;
     private boolean displayOCR = false;
     private String ocrText = "";
+
+    private Boolean pagesRTL;
 
     @Override
     public void initialize(Step step, String returnPath) {
@@ -212,6 +225,63 @@ public class ImageQAPlugin implements IStepPlugin {
             }
             setImageIndex(0);
         }
+
+        //check pages RTL:
+        try {
+            this.pagesRTL = readPagesRTLFromXML();
+
+        } catch (Exception e) {
+            //by default, false
+        }
+
+    }
+
+    public Boolean readPagesRTLFromXML()
+            throws ReadException, PreferencesException, WriteException, IOException, InterruptedException, SwapException, DAOException {
+
+        org.goobi.beans.Process myProzess = this.getStep().getProzess();
+        //   Prefs myPrefs = myProzess.getRegelsatz().getPreferences();
+
+        /*
+         * -------------------------------- Dokument einlesen --------------------------------
+         */
+        Fileformat gdzfile = myProzess.readMetadataFile();
+        if (gdzfile == null) {
+            return false;
+        }
+
+        DigitalDocument mydocument = gdzfile.getDigitalDocument();
+
+        mydocument.addAllContentFiles();
+
+        /*
+         * -------------------------------- Das Hauptelement ermitteln --------------------------------
+         */
+
+        DocStruct logicalTopstruct = mydocument.getLogicalDocStruct();
+
+        // this exception needs some serious feedback because data is corrupted
+        if (logicalTopstruct == null) {
+            throw new ReadException(Helper.getTranslation("metaDataError"));
+        }
+
+        if (mydocument.getPhysicalDocStruct().getAllMetadata() != null && mydocument.getPhysicalDocStruct().getAllMetadata().size() > 0) {
+
+            List<Metadata> lstMetadata = mydocument.getPhysicalDocStruct().getAllMetadata();
+            for (Metadata md : lstMetadata) {
+                if (md.getType().getName().equals("_pagesRTL")) {
+                    try {
+                        Boolean value = Boolean.valueOf(md.getValue());
+                        return value;
+                    } catch (Exception e) {
+
+                    }
+                }
+            }
+        }
+
+        //deafult:
+        return false;
     }
 
     /**
@@ -227,7 +297,7 @@ public class ImageQAPlugin implements IStepPlugin {
         allowSelectionAll = myconfig.getBoolean("allowSelectionAll", false);
         allowDownload = myconfig.getBoolean("allowDownload", false);
         allowDownloadAsPdf = myconfig.getBoolean("allowDownloadAsPdf", false);
-        allowTaskFinishButtons = myconfig.getBoolean("allowTaskFinishButtons",true);
+        allowTaskFinishButtons = myconfig.getBoolean("allowTaskFinishButtons", true);
         deletionCommand = myconfig.getString("deletionCommand", "");
         rotationCommandLeft = myconfig.getString("rotationCommands/left", "-");
         rotationCommandRight = myconfig.getString("rotationCommands/right", "-");
@@ -397,8 +467,8 @@ public class ImageQAPlugin implements IStepPlugin {
         return false;
     }
 
-    private Path scaleToSize(ImageManager im, Dimension dim, String filename, boolean overwrite) throws ImageManipulatorException,
-    FileNotFoundException, ImageManagerException, IOException, ContentLibException {
+    private Path scaleToSize(ImageManager im, Dimension dim, String filename, boolean overwrite)
+            throws ImageManipulatorException, FileNotFoundException, ImageManagerException, IOException, ContentLibException {
         Path outputFile = Paths.get(filename);
         if (!overwrite && StorageProvider.getInstance().isFileExists(outputFile)) {
             return outputFile;
@@ -519,6 +589,42 @@ public class ImageQAPlugin implements IStepPlugin {
         }
     }
 
+    //Blätter nach rechts:
+    public void imageRight() {
+
+        if (pagesRTL)
+            setImageIndex(imageIndex - 1);
+        else
+            setImageIndex(imageIndex + 1);
+    }
+
+    //blätter nach links
+    public void imageLeft() {
+
+        if (pagesRTL)
+            setImageIndex(imageIndex + 1);
+        else
+            setImageIndex(imageIndex - 1);
+    }
+
+    //blätter ganz nach links
+    public void imageLeftmost() {
+
+        if (pagesRTL)
+            setImageIndex(getSizeOfImageList() - 1);
+        else
+            setImageIndex(0);
+    }
+
+    //blätter ganz nach rechts
+    public void imageRightmost() {
+
+        if (pagesRTL)
+            setImageIndex(0);
+        else
+            setImageIndex(getSizeOfImageList() - 1);
+    }
+
     public int getImageWidth() {
         if (image == null) {
             log.error("Must set image before querying image size");
@@ -556,33 +662,62 @@ public class ImageQAPlugin implements IStepPlugin {
     }
 
     public String cmdMoveFirst() {
-        if (this.pageNo != 0) {
-            this.pageNo = 0;
-            getPaginatorList();
+        if (pagesRTL) {
+            if (this.pageNo != getLastPageNumber()) {
+                this.pageNo = getLastPageNumber();
+                getPaginatorList();
+            }
+        } else {
+            if (this.pageNo != 0) {
+                this.pageNo = 0;
+                getPaginatorList();
+            }
         }
         return "";
     }
 
     public String cmdMovePrevious() {
-        if (!isFirstPage()) {
-            this.pageNo--;
-            getPaginatorList();
+        if (pagesRTL) {
+            if (!isLastPage()) {
+                this.pageNo++;
+                getPaginatorList();
+            }
+        } else {
+            if (!isFirstPage()) {
+                this.pageNo--;
+                getPaginatorList();
+            }
         }
         return "";
     }
 
     public String cmdMoveNext() {
-        if (!isLastPage()) {
-            this.pageNo++;
-            getPaginatorList();
+        if (pagesRTL) {
+            if (!isFirstPage()) {
+                this.pageNo--;
+                getPaginatorList();
+            }
+        } else {
+            if (!isLastPage()) {
+                this.pageNo++;
+                getPaginatorList();
+            }
         }
         return "";
+
     }
 
     public String cmdMoveLast() {
-        if (this.pageNo != getLastPageNumber()) {
-            this.pageNo = getLastPageNumber();
-            getPaginatorList();
+        if (pagesRTL) {
+            if (this.pageNo != 0) {
+                this.pageNo = 0;
+                getPaginatorList();
+            }
+        } else {
+            if (this.pageNo != getLastPageNumber()) {
+                this.pageNo = getLastPageNumber();
+                getPaginatorList();
+            }
         }
         return "";
     }
@@ -746,11 +881,11 @@ public class ImageQAPlugin implements IStepPlugin {
     }
 
     public void deleteImage(Image myimage) {
-    	if (deletionCommand == null || deletionCommand.length() == 0 ) {
-    		deleteImageViaJava(myimage);
-    	} else {
-    		callScript(myimage, deletionCommand, true);
-    	}
+        if (deletionCommand == null || deletionCommand.length() == 0) {
+            deleteImageViaJava(myimage);
+        } else {
+            callScript(myimage, deletionCommand, true);
+        }
     }
 
     public void rotateRight(Image myimage) {
@@ -766,11 +901,11 @@ public class ImageQAPlugin implements IStepPlugin {
         while (iterator.hasNext()) {
             SelectableImage image = iterator.next();
             if (image.isSelected()) {
-            	if (deletionCommand == null || deletionCommand.length() == 0 ) {
-            		deleteImageViaJava(image);
-            	} else {
-            		callScript(image, deletionCommand, true);
-            	}
+                if (deletionCommand == null || deletionCommand.length() == 0) {
+                    deleteImageViaJava(image);
+                } else {
+                    callScript(image, deletionCommand, true);
+                }
             }
         }
     }
@@ -792,23 +927,23 @@ public class ImageQAPlugin implements IStepPlugin {
     }
 
     public void deleteImageViaJava(Image myimage) {
-    	int myindex = getImageIndex();
+        int myindex = getImageIndex();
         if (myindex == allImages.indexOf(myimage)) {
             myindex--;
         }
 
         try {
-			StorageProvider.getInstance().deleteFile(myimage.getImagePath());
-		} catch (IOException e) {
-			Helper.setFehlerMeldung("Error while deleting file " + myimage.getImagePath() + ": " + e.getMessage());
-		}
+            StorageProvider.getInstance().deleteFile(myimage.getImagePath());
+        } catch (IOException e) {
+            Helper.setFehlerMeldung("Error while deleting file " + myimage.getImagePath() + ": " + e.getMessage());
+        }
 
         allImages = new ArrayList<>();
         initialize(this.step, returnPath);
 
         setImageIndex(myindex);
     }
-    
+
     public void callScript(Image myimage, String rotationCommand, boolean selectOtherImage) {
         int myindex = getImageIndex();
         if (selectOtherImage && myindex == allImages.indexOf(myimage)) {

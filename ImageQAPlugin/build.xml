@@ -1,6 +1,6 @@
 <project name="goobi-plugin-step-imageqa" default="devbuild">
 	<target name="devbuild">
-		<exec executable="/usr/local/bin/mvn">
+		<exec executable="mvn">
 			<arg value="package"/>
 		</exec>
 		<copy file="module-gui/target/plugin_intranda_step_imageQA-GUI.jar" todir="/opt/digiverso/goobi/plugins/GUI/"/>
