@@ -88,6 +88,7 @@ import de.unigoettingen.sub.commons.contentlib.exceptions.ImageManipulatorExcept
 import de.unigoettingen.sub.commons.contentlib.imagelib.ImageManager;
 import de.unigoettingen.sub.commons.contentlib.imagelib.JpegInterpreter;
 import lombok.Data;
+import lombok.Getter;
 import lombok.extern.log4j.Log4j;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 import ugh.dl.DigitalDocument;
@@ -238,13 +239,8 @@ public class ImageQAPlugin implements IStepPlugin {
 
     public Boolean readPagesRTLFromXML()
             throws ReadException, PreferencesException, WriteException, IOException, InterruptedException, SwapException, DAOException {
-
         org.goobi.beans.Process myProzess = this.getStep().getProzess();
-        //   Prefs myPrefs = myProzess.getRegelsatz().getPreferences();
 
-        /*
-         * -------------------------------- Dokument einlesen --------------------------------
-         */
         Fileformat gdzfile = myProzess.readMetadataFile();
         if (gdzfile == null) {
             return false;
@@ -252,24 +248,16 @@ public class ImageQAPlugin implements IStepPlugin {
 
         DigitalDocument mydocument = gdzfile.getDigitalDocument();
 
-        mydocument.addAllContentFiles();
-
-        /*
-         * -------------------------------- Das Hauptelement ermitteln --------------------------------
-         */
-
         DocStruct logicalTopstruct = mydocument.getLogicalDocStruct();
-
-        // this exception needs some serious feedback because data is corrupted
-        if (logicalTopstruct == null) {
-            throw new ReadException(Helper.getTranslation("metaDataError"));
+        if (logicalTopstruct.getType().isAnchor()) {
+            logicalTopstruct = logicalTopstruct.getAllChildren().get(0);
         }
 
-        if (mydocument.getPhysicalDocStruct().getAllMetadata() != null && mydocument.getPhysicalDocStruct().getAllMetadata().size() > 0) {
+        if (logicalTopstruct.getAllMetadata() != null) {
 
-            List<Metadata> lstMetadata = mydocument.getPhysicalDocStruct().getAllMetadata();
+            List<Metadata> lstMetadata = logicalTopstruct.getAllMetadata();
             for (Metadata md : lstMetadata) {
-                if (md.getType().getName().equals("_pagesRTL")) {
+                if (md.getType().getName().equals("_directionRTL")) {
                     try {
                         Boolean value = Boolean.valueOf(md.getValue());
                         return value;
