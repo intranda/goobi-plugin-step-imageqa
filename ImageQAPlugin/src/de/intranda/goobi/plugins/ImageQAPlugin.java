@@ -572,6 +572,11 @@ public class ImageQAPlugin implements IStepPlugin {
         }
     }
 
+    public String getFlowDir() {
+
+        return this.pagesRTL ? "rtl" : "ltr";
+    }
+
     /**
      * 
      * @return String url of currently focussed image
