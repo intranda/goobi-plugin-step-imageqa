@@ -277,8 +277,8 @@
                         <!-- Thumbnail list -->
                         <div class="flex-container margin-top-most margin-bottom-most" dir="#{AktuelleSchritteForm.myPlugin.flowDir}">
 
-                            <ui:repeat var="image" value="#{AktuelleSchritteForm.myPlugin.paginatorList}" varStatus="status" dir="rtl">
-                                <div class="goobi-thumbnail #{AktuelleSchritteForm.myPlugin.image.imageName eq image.imageName?'img-active':'font-light'}">
+                            <ui:repeat var="image" value="#{AktuelleSchritteForm.myPlugin.paginatorList}" varStatus="status">
+                                <div class="goobi-thumbnail #{AktuelleSchritteForm.myPlugin.image.imageName eq image.imageName?'img-active':'font-light'}" dir="auto">
                                     <div class="goobi-thumbnail-image">
 
                                         <div class="thumb">

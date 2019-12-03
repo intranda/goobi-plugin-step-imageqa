@@ -78,9 +78,6 @@ import de.sub.goobi.helper.StorageProvider;
 import de.sub.goobi.helper.exceptions.DAOException;
 import de.sub.goobi.helper.exceptions.SwapException;
 import de.sub.goobi.metadaten.Image;
-import de.sub.goobi.metadaten.MetadatenHelper;
-import de.sub.goobi.metadaten.MetadatenImagesHelper;
-import de.sub.goobi.persistence.managers.ProcessManager;
 import de.unigoettingen.sub.commons.contentlib.exceptions.ContentLibException;
 import de.unigoettingen.sub.commons.contentlib.exceptions.ContentLibImageException;
 import de.unigoettingen.sub.commons.contentlib.exceptions.ImageManagerException;
@@ -88,14 +85,12 @@ import de.unigoettingen.sub.commons.contentlib.exceptions.ImageManipulatorExcept
 import de.unigoettingen.sub.commons.contentlib.imagelib.ImageManager;
 import de.unigoettingen.sub.commons.contentlib.imagelib.JpegInterpreter;
 import lombok.Data;
-import lombok.Getter;
 import lombok.extern.log4j.Log4j;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 import ugh.dl.DigitalDocument;
 import ugh.dl.DocStruct;
 import ugh.dl.Fileformat;
 import ugh.dl.Metadata;
-import ugh.dl.Prefs;
 import ugh.exceptions.PreferencesException;
 import ugh.exceptions.ReadException;
 import ugh.exceptions.WriteException;
@@ -152,7 +147,7 @@ public class ImageQAPlugin implements IStepPlugin {
     private boolean displayOCR = false;
     private String ocrText = "";
 
-    private Boolean pagesRTL;
+    private boolean pagesRTL;
 
     @Override
     public void initialize(Step step, String returnPath) {
@@ -237,7 +232,7 @@ public class ImageQAPlugin implements IStepPlugin {
 
     }
 
-    public Boolean readPagesRTLFromXML()
+    public boolean readPagesRTLFromXML()
             throws ReadException, PreferencesException, WriteException, IOException, InterruptedException, SwapException, DAOException {
         org.goobi.beans.Process myProzess = this.getStep().getProzess();
 
@@ -259,7 +254,7 @@ public class ImageQAPlugin implements IStepPlugin {
             for (Metadata md : lstMetadata) {
                 if (md.getType().getName().equals("_directionRTL")) {
                     try {
-                        Boolean value = Boolean.valueOf(md.getValue());
+                        boolean value = Boolean.valueOf(md.getValue());
                         return value;
                     } catch (Exception e) {
 
@@ -268,7 +263,7 @@ public class ImageQAPlugin implements IStepPlugin {
             }
         }
 
-        //deafult:
+        //default:
         return false;
     }
 
@@ -585,37 +580,41 @@ public class ImageQAPlugin implements IStepPlugin {
     //Blätter nach rechts:
     public void imageRight() {
 
-        if (pagesRTL)
+        if (pagesRTL) {
             setImageIndex(imageIndex - 1);
-        else
+        } else {
             setImageIndex(imageIndex + 1);
+        }
     }
 
     //blätter nach links
     public void imageLeft() {
 
-        if (pagesRTL)
+        if (pagesRTL) {
             setImageIndex(imageIndex + 1);
-        else
+        } else {
             setImageIndex(imageIndex - 1);
+        }
     }
 
     //blätter ganz nach links
     public void imageLeftmost() {
 
-        if (pagesRTL)
+        if (pagesRTL) {
             setImageIndex(getSizeOfImageList() - 1);
-        else
+        } else {
             setImageIndex(0);
+        }
     }
 
     //blätter ganz nach rechts
     public void imageRightmost() {
 
-        if (pagesRTL)
+        if (pagesRTL) {
             setImageIndex(0);
-        else
+        } else {
             setImageIndex(getSizeOfImageList() - 1);
+        }
     }
 
     public int getImageWidth() {
