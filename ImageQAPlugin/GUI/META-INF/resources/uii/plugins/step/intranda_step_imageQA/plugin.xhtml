@@ -1,0 +1,426 @@
+<ui:composition
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:composite="http://java.sun.com/jsf/composite"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:x="http://myfaces.apache.org/tomahawk"
+    xmlns:intranda="http://xmlns.jcp.org/jsf/composite/composites">
+
+    <h:form>
+
+        <div class="box box-color lightgrey box-bordered">
+
+            <div class="box-title">
+                <h3>
+                    <i class="fa fa-puzzle-piece"></i>
+                    <h:outputText value="#{msgs.plugin}: #{msgs[('plugin_').concat(AktuelleSchritteForm.myPlugin.title)]}" />
+                </h3>
+            </div>
+<style>
+
+.scroll {
+ overflow-x: auto;
+    overflow-y: hidden;
+ width: auto;
+ display: flex;
+ flex-wrap: nowrap;
+}
+
+.goobi-thumbnail {
+                float: left;
+                margin: 7px;
+                width: #{AktuelleSchritteForm.myPlugin.thumbnailSize +2}px;
+                height: #{AktuelleSchritteForm .myPlugin.thumbnailSize+55}px;
+            }
+            
+            .goobi-thumbnail .goobi-thumbnail-image {
+                float: left;
+                width: 100%;
+                min-height: 100px;
+                overflow: hidden;
+                max-height: #{AktuelleSchritteForm.myPlugin.thumbnailSize +2}px;
+            }
+            
+            .goobi-thumbnail .goobi-thumbnail-image a {
+                display: block;
+            }
+            
+            .goobi-thumbnail .goobi-thumbnail-image a img {
+                display: block;
+                max-width: 100%;
+                max-height: 175px;
+                margin: 0 auto;
+                border: 1px solid lightgrey;
+            }
+            
+            .goobi-thumbnail .goobi-thumbnail-caption {
+                float: left;
+                width: 100%;
+                min-height: 20px;
+                line-height: 20px;
+                text-align: center;
+            }
+            
+            .goobi-thumbnail .goobi-thumbnail-controls {
+                float: left;
+                width: 100%;
+                margin-top: 5px;
+            }
+            
+            .goobi-thumbnail-controls-left {
+                width: 60%;    
+            }
+            
+            .goobi-thumbnail-controls-right {
+                width: 40%;
+            }
+            
+            .goobi-thumbnail-controls-left {
+                padding-left: 25px;
+            }
+            
+            .goobi-thumbnail-controls-left .thumbnail-control {
+                margin-right: 3px;
+            }
+            
+            .goobi-thumbnail-controls-right {
+                padding-right: 25px;
+                text-align: right;
+            }
+            
+            .goobi-thumbnail-controls-right .thumbnail-control {
+                margin-left: 3px;
+            }
+            
+            .thumbnail-control {
+                padding: 3px 5px;
+            }
+            
+            .thumbnail-control.checkbox {
+                position: relative;
+                margin: 0 3px 0 0;
+            }
+            
+            .thumbnail-control.checkbox label {
+                margin: 0;
+                padding: 0;
+            }
+            
+            .thumbnail-control.checkbox .control-indicator .fa-square-o, .thumbnail-control.checkbox .control-indicator .fa-check-square-o {
+                margin-top: 4px;
+            }
+            
+            .thumbnail-control.checkbox .control-indicator .fa-square-o {
+                padding-right: 2px;
+            }
+            
+            .thumbnail-control.checkbox .control-indicator .fa-check-square-o {
+                display: none;
+            }
+            
+            .thumbnail-control.checkbox input[type="checkbox"] {
+                position: absolute;
+                margin: 0;
+                visibility: hidden;
+                z-index: -1;
+            }
+            
+            .thumbnail-control.checkbox input:checked ~ .control-indicator .fa-check-square-o {
+                display: inline-block;
+            }
+            
+            .thumbnail-control.checkbox input:checked ~ .control-indicator .fa-square-o {
+                display: none;
+            }
+            
+            .thumb-canvas{
+                border: 1px solid #ccc;
+            }
+</style>
+
+            <div class="box-content nopadding">
+
+                <h:panelGroup
+                    layout="block"
+                    rendered="#{AktuelleSchritteForm.myPlugin.sizeOfImageList gt 0}">
+
+                        <div class="row">
+                            <f:subview id="first">
+                                <ui:include src="../../../ImageQAPlugin_include_thumbnavigation.xhtml" />
+                            </f:subview>
+                        </div>
+
+                        <!-- Thumbnail list -->
+                        <div class="flex-container margin-top-most margin-bottom-most" dir="#{AktuelleSchritteForm.myPlugin.flowDir}">
+
+                        <ui:repeat
+                            var="image"
+                            value="#{AktuelleSchritteForm.myPlugin.paginatorListForPartGUI}"
+                            varStatus="status">
+                            <div
+                                class="goobi-thumbnail #{AktuelleSchritteForm.myPlugin.image.imageName eq image.imageName?'img-active':'font-light'}"
+                                dir="auto">
+                                <div class="goobi-thumbnail-image">
+
+                                    <div class="thumb">
+                                        <h:commandLink title="#{image.tooltip}">
+                                            <canvas
+                                                class="thumb-canvas"
+                                                data-image_small="#{image.thumbnailUrl}"
+                                                data-image_large="#{image.largeThumbnailUrl}"
+                                                title="#{image.tooltip}"
+                                                id="thumbnail-#{status.index}"></canvas>
+                                            <f:setPropertyActionListener
+                                                value="#{image.order -1}"
+                                                target="#{AktuelleSchritteForm.myPlugin.imageIndex}" />
+                                            <f:ajax
+                                                execute="@form"
+                                                render="@form :qaform:bigimage"
+                                                onevent="freeJSResources" />
+
+                                        </h:commandLink>
+                                    </div>
+
+                                </div>
+                                <div class="goobi-thumbnail-caption">
+                                    <h:outputText value="#{image.imageNameShort}"></h:outputText>
+                                </div>
+
+                                <h:panelGroup
+                                    styleClass="goobi-thumbnail-controls"
+                                    rendered="#{NavigationForm.uiStatus.plugin_qa_confirmation == false}">
+
+                                    <div class="goobi-thumbnail-controls-left pull-left">
+                                        <!-- select current image -->
+                                        <h:panelGroup rendered="#{AktuelleSchritteForm.myPlugin.allowSelection}">
+                                            <span class="btn thumbnail-control checkbox">
+                                                <label class="control checkbox">
+                                                    <h:selectBooleanCheckbox value="#{image.selected}" />
+                                                    <span class="control-indicator">
+                                                        <i class="fa fa fa-check-square-o"></i>
+                                                        <i class="fa fa fa-square-o"></i>
+                                                    </span>
+                                                </label>
+
+                                            </span>
+                                        </h:panelGroup>
+                                        <!--  modal rendern  -->
+                                        <h:panelGroup rendered="#{AktuelleSchritteForm.myPlugin.allowRenaming}">
+                                            <a
+                                                class="btn thumbnail-control rename"
+                                                title="#{msgs.plugin_intranda_step_imageQA_rename} #{image.tooltip}"
+                                                href="#"
+                                                data-toggle="modal"
+                                                data-target="#myModal-#{status.index}">
+                                                <i class="fa fa-pencil" />
+                                            </a>
+                                        </h:panelGroup>
+                                        <h:commandLink
+                                            styleClass="btn thumbnail-control delete"
+                                            title="#{msgs.plugin_intranda_step_imageQA_delete} #{image.tooltip}"
+                                            action="#{AktuelleSchritteForm.myPlugin.deleteImage(image)}"
+                                            rendered="#{AktuelleSchritteForm.myPlugin.allowDeletion}">
+                                            <i class="fa fa-trash"></i>
+                                        </h:commandLink>
+                                    </div>
+                                    <div class="goobi-thumbnail-controls-right pull-right">
+                                        <h:commandLink
+                                            styleClass="btn thumbnail-control rotate-left"
+                                            title="#{msgs.plugin_intranda_step_imageQA_rotateLeft} #{image.tooltip}"
+                                            action="#{AktuelleSchritteForm.myPlugin.rotateLeft(image)}"
+                                            rendered="#{AktuelleSchritteForm.myPlugin.allowRotation}">
+                                            <i class="fa fa-undo"></i>
+                                        </h:commandLink>
+                                        <h:commandLink
+                                            styleClass="btn thumbnail-control rotate-right"
+                                            title="#{msgs.plugin_intranda_step_imageQA_rotateRight} #{image.tooltip}"
+                                            action="#{AktuelleSchritteForm.myPlugin.rotateRight(image)}"
+                                            rendered="#{AktuelleSchritteForm.myPlugin.allowRotation}">
+                                            <i class="fa fa-repeat"></i>
+                                        </h:commandLink>
+                                    </div>
+                                </h:panelGroup>
+
+                                <h:panelGroup
+                                    styleClass="goobi-thumbnail-controls"
+                                    rendered="#{NavigationForm.uiStatus.plugin_qa_confirmation != false}">
+                                    <div class="goobi-thumbnail-controls-left pull-left">
+                                        <!-- select current image -->
+                                        <h:panelGroup rendered="#{AktuelleSchritteForm.myPlugin.allowSelection}">
+                                            <span class="btn thumbnail-control checkbox">
+                                                <label class="control checkbox">
+                                                    <h:selectBooleanCheckbox value="#{image.selected}" />
+                                                    <span class="control-indicator">
+                                                        <i class="fa fa fa-check-square-o"></i>
+                                                        <i class="fa fa fa-square-o"></i>
+                                                    </span>
+                                                </label>
+
+                                            </span>
+                                        </h:panelGroup>
+
+                                        <!--  modal rendern  -->
+                                        <h:panelGroup rendered="#{AktuelleSchritteForm.myPlugin.allowRenaming}">
+                                            <a
+                                                class="btn thumbnail-control rename"
+                                                title="#{msgs.plugin_intranda_step_imageQA_rename} #{image.tooltip}"
+                                                href="#"
+                                                data-toggle="modal"
+                                                data-target="#myModal-#{status.index}">
+                                                <i class="fa fa-pencil" />
+                                            </a>
+                                        </h:panelGroup>
+                                        <h:commandLink
+                                            styleClass="btn thumbnail-control delete"
+                                            title="#{msgs.plugin_intranda_step_imageQA_delete} #{image.tooltip}"
+                                            action="#{AktuelleSchritteForm.myPlugin.deleteImage(image)}"
+                                            rendered="#{AktuelleSchritteForm.myPlugin.allowDeletion}"
+                                            onclick="if (!confirm('#{msgs.wirklichAusfuehren}')) return false">
+                                            <i class="fa fa-trash"></i>
+                                        </h:commandLink>
+                                    </div>
+
+                                    <div class="goobi-thumbnail-controls-right pull-right">
+                                        <h:commandLink
+                                            styleClass="btn thumbnail-control rotate-left"
+                                            title="#{msgs.plugin_intranda_step_imageQA_rotateLeft} #{image.tooltip}"
+                                            action="#{AktuelleSchritteForm.myPlugin.rotateLeft(image)}"
+                                            rendered="#{AktuelleSchritteForm.myPlugin.allowRotation}"
+                                            onclick="if (!confirm('#{msgs.wirklichAusfuehren}')) return false">
+                                            <i class="fa fa-undo"></i>
+                                        </h:commandLink>
+                                        <h:commandLink
+                                            styleClass="btn thumbnail-control rotate-right"
+                                            title="#{msgs.plugin_intranda_step_imageQA_rotateRight} #{image.tooltip}"
+                                            action="#{AktuelleSchritteForm.myPlugin.rotateRight(image)}"
+                                            rendered="#{AktuelleSchritteForm.myPlugin.allowRotation}"
+                                            onclick="if (!confirm('#{msgs.wirklichAusfuehren}')) return false">
+                                            <i class="fa fa-repeat"></i>
+                                        </h:commandLink>
+                                    </div>
+                                </h:panelGroup>
+
+                            </div>
+
+                            <div
+                                class="modal fade"
+                                id="myModal-#{status.index}"
+                                tabindex="-1"
+                                role="dialog"
+                                aria-labelledby="myModalLabel">
+                                <div
+                                    class="modal-dialog"
+                                    role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <a
+                                                href="#"
+                                                class="btn btn-blue pull-right"
+                                                title="#{msgs.cancel}"
+                                                data-dismiss="modal">
+                                                <i class="fa fa-times"></i>
+                                            </a>
+                                            <h4
+                                                class="modal-title"
+                                                id="myModalLabel">
+                                                <h:outputText value="#{msgs.plugin_intranda_step_imageQA_renameTitle}: #{image.imageName}" />
+                                            </h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <h:outputText value="#{msgs.plugin_intranda_step_imageQA_renameDescription}" />
+
+                                            <div
+                                                class="row"
+                                                style="margin-top: 15px;">
+                                                <ui:repeat
+                                                    var="namePart"
+                                                    value="#{image.nameParts}">
+                                                    <x:inputText
+                                                        styleClass="form-control namePart"
+                                                        value="#{namePart.value}" />
+                                                </ui:repeat>
+                                            </div>
+
+                                        </div>
+                                        <div class="modal-footer">
+
+                                            <a
+                                                href="#"
+                                                class="btn pull-left font-size-s"
+                                                title="#{msgs.abbrechen}"
+                                                data-dismiss="modal">
+                                                <h:outputText value="#{msgs.abbrechen}" />
+                                            </a>
+
+                                            <h:commandLink
+                                                action="#{AktuelleSchritteForm.myPlugin.renameImages(image)}"
+                                                title="#{msgs.uebernehmen}"
+                                                rel="tooltip"
+                                                styleClass="btn btn-green font-size-s">
+                                                <i class="fa fa-floppy-o margin-right-10"></i>
+                                                <h:outputText value="#{msgs.uebernehmen}" />
+                                                <f:passThroughAttribute
+                                                    name="data-toggle"
+                                                    value="tooltip" />
+                                            </h:commandLink>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </ui:repeat>
+                    </div>
+                    <!-- // Thumbnail list -->
+
+                    <div class="row">
+                        <f:subview id="second">
+                            <!--                                 <ui:include src="../../ImageQAPlugin_include_thumbnavigation.xhtml" /> -->
+                        </f:subview>
+                    </div>
+
+                </h:panelGroup>
+
+
+
+   <script type="text/javascript">
+	window.onload = function() {
+    	loadImages();
+    }          
+          
+            function loadThumbnails() {
+                var height = parseInt('#{AktuelleSchritteForm.myPlugin.thumbnailSize}');
+                if (height) {
+                    $('.goobi-thumbnail-image').css('height', (height + 25) + 'px');
+                    $('.goobi-thumbnail-image .thumb').css('max-height', height + 'px');
+                    $('.goobi-thumbnail-image .thumb canvas').css('max-height', height + 'px');
+                    $('.goobi-thumbnail-image').css('max-width', (height) + 'px');
+                }
+            }
+        
+            $( document ).ready(function() {
+                loadThumbnails();
+            });
+        
+            jsf.ajax.addOnEvent(function(data) {
+                var ajaxstatus = data.status; // Can be "begin", "complete" and "success"
+                switch (ajaxstatus) {
+                    case "success": // This is called when ajax response is successfully processed.
+                        loadThumbnails();
+                        break;
+                    }
+            });
+        
+            
+
+    </script>
+
+
+
+            </div>
+        </div>
+    </h:form>
+
+
+</ui:composition>

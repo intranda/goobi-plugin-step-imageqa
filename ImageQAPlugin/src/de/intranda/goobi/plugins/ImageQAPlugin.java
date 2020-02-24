@@ -106,7 +106,8 @@ public class ImageQAPlugin implements IStepPlugin {
     private Step step;
     private static final String PLUGIN_NAME = "intranda_step_imageQA";
 
-    private int NUMBER_OF_IMAGES_PER_PAGE = 10;
+    private int numberOfImagesInFullGUI = 10;
+    private int numberOfImagesInPartGUI = 5;
     private int THUMBNAIL_SIZE_IN_PIXEL = 175;
     private String THUMBNAIL_FORMAT = "png";
     private String MAINIMAGE_FORMAT = "jpg";
@@ -285,7 +286,8 @@ public class ImageQAPlugin implements IStepPlugin {
         rotationCommandLeft = myconfig.getString("rotationCommands/left", "-");
         rotationCommandRight = myconfig.getString("rotationCommands/right", "-");
 
-        NUMBER_OF_IMAGES_PER_PAGE = myconfig.getInt("numberOfImagesPerPage", 50);
+        numberOfImagesInFullGUI = myconfig.getInt("numberOfImagesPerPage", 50);
+        numberOfImagesInPartGUI = myconfig.getInt("numberOfImagesInPartGUI", 5);
         THUMBNAIL_SIZE_IN_PIXEL = myconfig.getInt("thumbnailsize", 200);
         THUMBNAIL_FORMAT = myconfig.getString("thumbnailFormat", "png");
         MAINIMAGE_FORMAT = myconfig.getString("mainImageFormat", "jpg");
@@ -383,13 +385,26 @@ public class ImageQAPlugin implements IStepPlugin {
 
     public List<SelectableImage> getPaginatorList() {
         List<SelectableImage> subList = new ArrayList<>();
-        if (allImages.size() > (pageNo * NUMBER_OF_IMAGES_PER_PAGE) + NUMBER_OF_IMAGES_PER_PAGE) {
-            subList = allImages.subList(pageNo * NUMBER_OF_IMAGES_PER_PAGE, (pageNo * NUMBER_OF_IMAGES_PER_PAGE) + NUMBER_OF_IMAGES_PER_PAGE);
+        if (allImages.size() > (pageNo * numberOfImagesInFullGUI) + numberOfImagesInFullGUI) {
+            subList = allImages.subList(pageNo * numberOfImagesInFullGUI, (pageNo * numberOfImagesInFullGUI) + numberOfImagesInFullGUI);
         } else {
-            subList = allImages.subList(pageNo * NUMBER_OF_IMAGES_PER_PAGE, allImages.size());
+            subList = allImages.subList(pageNo * numberOfImagesInFullGUI, allImages.size());
         }
         return subList;
     }
+
+
+    public List<SelectableImage> getPaginatorListForPartGUI() {
+        List<SelectableImage> subList = new ArrayList<>();
+        if (allImages.size() > (pageNo * numberOfImagesInPartGUI) + numberOfImagesInPartGUI) {
+            subList = allImages.subList(pageNo * numberOfImagesInPartGUI, (pageNo * numberOfImagesInPartGUI) + numberOfImagesInPartGUI);
+        } else {
+            subList = allImages.subList(pageNo * numberOfImagesInPartGUI, allImages.size());
+        }
+        return subList;
+    }
+
+
 
     public Image getImage() {
         return image;
@@ -479,7 +494,7 @@ public class ImageQAPlugin implements IStepPlugin {
 
     @Override
     public PluginGuiType getPluginGuiType() {
-        return PluginGuiType.FULL;
+        return PluginGuiType.PART_AND_FULL;
     }
 
     @Override
@@ -744,12 +759,24 @@ public class ImageQAPlugin implements IStepPlugin {
     }
 
     public int getLastPageNumber() {
-        int ret = new Double(Math.floor(this.allImages.size() / NUMBER_OF_IMAGES_PER_PAGE)).intValue();
-        if (this.allImages.size() % NUMBER_OF_IMAGES_PER_PAGE == 0) {
+        int ret = new Double(Math.floor(this.allImages.size() / numberOfImagesInFullGUI)).intValue();
+        if (this.allImages.size() % numberOfImagesInFullGUI == 0) {
             ret--;
         }
         return ret;
     }
+    public int getLastPageNumberPartGUI() {
+        int ret = new Double(Math.floor(this.allImages.size() / numberOfImagesInPartGUI)).intValue();
+        if (this.allImages.size() % numberOfImagesInPartGUI == 0) {
+            ret--;
+        }
+        return ret;
+    }
+
+    public boolean hasNextPagePartGUI() {
+        return this.allImages.size() > numberOfImagesInPartGUI;
+    }
+
 
     public boolean isFirstPage() {
         return this.pageNo == 0;
@@ -760,7 +787,7 @@ public class ImageQAPlugin implements IStepPlugin {
     }
 
     public boolean hasNextPage() {
-        return this.allImages.size() > NUMBER_OF_IMAGES_PER_PAGE;
+        return this.allImages.size() > numberOfImagesInFullGUI;
     }
 
     public boolean hasPreviousPage() {
