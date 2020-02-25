@@ -17,7 +17,8 @@
  * 
  -->
 <ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://xmlns.jcp.org/jsf/facelets" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:o="http://omnifaces.org/ui" xmlns:of="http://omnifaces.org/functions" template="/uii/template/template_blank.html" xmlns:x="http://myfaces.apache.org/tomahawk" xmlns:intranda="http://xmlns.jcp.org/jsf/composite/composites">
-
+    
+    <link rel="stylesheet" href="imageQA.css" />
     <ui:define name="content">
 
 		 <style>			
@@ -27,67 +28,16 @@
 			    widht: 100vw;
 				height:100vh;
 			}
-            
-            #mainImage #ajaxloader_image {
-                position: absolute;
-                left:50%;
-                top:50%;
-                margin-left: -34px;
-                margin-top: -21px;
-            }
-            
-            #mainImage #ajaxloader_image img{
-                border: none;
-            }
-            
-			
+   		
 			html, body {
 				overflow-x: hidden;
 			}
 
-            #zoomSliderLabel {
-                position: absolute;
-                top: 10px;
-                left: 10px;
-                width: 100px;
-                background: transparent;
-                border: none;
-            }
-            
-            #zoomSliderLabel input{
-                border: none;
-                background-color: transparent;
-                width:60px;
-                text-align: right;
-            }
-            
-            #zoomSliderLabel input:focus{
-                background-color: white;
-                color: #666;
-            }
-            
             #image-control-wrapper {
               position: absolute;
                 top: 10px;
                 left: 10px;
             }
-            
-            #image-control-wrapper ul {
-                padding-left: 0;
-            }
-            
-            #image-control-wrapper li {
-                display: inline-block;
-            }
-            
-            #image-control-wrapper li label{
-                width: 50px;
-            }
-            
-            #image-control-wrapper #reset-position {
-                margin-left: 86px;
-            }
-
 
 		</style>
 

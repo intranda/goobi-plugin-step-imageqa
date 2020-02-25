@@ -33,6 +33,8 @@
         <!-- how to display the thumbnails -->
         <numberOfImagesPerPage>12</numberOfImagesPerPage>
         <thumbnailsize>200</thumbnailsize>
+        <!-- number of thumbnails in preview area, default value is 8 -->
+        <numberOfImagesInPartGUI>8</numberOfImagesInPartGUI>
         <!-- which image sizes to use for the big image -->
         <thumbnailFormat>jpg</thumbnailFormat>
         <mainImageFormat>jpg</mainImageFormat>

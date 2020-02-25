@@ -287,7 +287,7 @@ public class ImageQAPlugin implements IStepPlugin {
         rotationCommandRight = myconfig.getString("rotationCommands/right", "-");
 
         numberOfImagesInFullGUI = myconfig.getInt("numberOfImagesPerPage", 50);
-        numberOfImagesInPartGUI = myconfig.getInt("numberOfImagesInPartGUI", 5);
+        numberOfImagesInPartGUI = myconfig.getInt("numberOfImagesInPartGUI", 8);
         THUMBNAIL_SIZE_IN_PIXEL = myconfig.getInt("thumbnailsize", 200);
         THUMBNAIL_FORMAT = myconfig.getString("thumbnailFormat", "png");
         MAINIMAGE_FORMAT = myconfig.getString("mainImageFormat", "jpg");
