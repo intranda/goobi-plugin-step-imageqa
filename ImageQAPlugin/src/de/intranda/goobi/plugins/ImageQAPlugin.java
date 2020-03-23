@@ -126,6 +126,8 @@ public class ImageQAPlugin implements IStepPlugin {
     private String deletionCommand = "";
     boolean askForConfirmation = true;
 
+    private String guiType;
+
     private int pageNo = 0;
 
     private int imageIndex = 0;
@@ -274,6 +276,7 @@ public class ImageQAPlugin implements IStepPlugin {
      * @param myconfig SubnodeConfiguration object of the config file
      */
     public void initConfig(SubnodeConfiguration myconfig) {
+        guiType = myconfig.getString("guiType", "full"); // full, part, both
         allowDeletion = myconfig.getBoolean("allowDeletion", false);
         allowRotation = myconfig.getBoolean("allowRotation", false);
         allowRenaming = myconfig.getBoolean("allowRenaming", false);
@@ -393,7 +396,6 @@ public class ImageQAPlugin implements IStepPlugin {
         return subList;
     }
 
-
     public List<SelectableImage> getPaginatorListForPartGUI() {
         List<SelectableImage> subList = new ArrayList<>();
         if (allImages.size() > (pageNo * numberOfImagesInPartGUI) + numberOfImagesInPartGUI) {
@@ -403,8 +405,6 @@ public class ImageQAPlugin implements IStepPlugin {
         }
         return subList;
     }
-
-
 
     public Image getImage() {
         return image;
@@ -494,7 +494,14 @@ public class ImageQAPlugin implements IStepPlugin {
 
     @Override
     public PluginGuiType getPluginGuiType() {
-        return PluginGuiType.PART_AND_FULL;
+        switch (guiType) {
+            case "both":
+                return PluginGuiType.PART_AND_FULL;
+            case "part":
+                return PluginGuiType.PART;
+            default:
+                return PluginGuiType.FULL;
+        }
     }
 
     @Override
@@ -765,6 +772,7 @@ public class ImageQAPlugin implements IStepPlugin {
         }
         return ret;
     }
+
     public int getLastPageNumberPartGUI() {
         int ret = new Double(Math.floor(this.allImages.size() / numberOfImagesInPartGUI)).intValue();
         if (this.allImages.size() % numberOfImagesInPartGUI == 0) {
@@ -776,7 +784,6 @@ public class ImageQAPlugin implements IStepPlugin {
     public boolean hasNextPagePartGUI() {
         return this.allImages.size() > numberOfImagesInPartGUI;
     }
-
 
     public boolean isFirstPage() {
         return this.pageNo == 0;
