@@ -571,8 +571,9 @@ public class ImageQAPlugin implements IStepPlugin {
         } else {
             FacesContext context = FacesContextHelper.getCurrentFacesContext();
             HttpSession session = (HttpSession) context.getExternalContext().getSession(false);
-            String currentImageURL = session.getServletContext().getContextPath() + ConfigurationHelper.getTempImagesPath() + session.getId() + "_"
-                    + image.getImageName() + "_large_" + ".jpg";
+            String currentImageURL =
+                    context.getExternalContext().getRequestContextPath() + ConfigurationHelper.getTempImagesPath() + session.getId() + "_"
+                            + image.getImageName() + "_large_" + ".jpg";
             return currentImageURL.replaceAll("\\\\", "/");
         }
     }
@@ -1030,7 +1031,7 @@ public class ImageQAPlugin implements IStepPlugin {
         String contentServerUrl = ConfigurationHelper.getInstance().getGoobiContentServerUrl();
         if (contentServerUrl == null || contentServerUrl.length() == 0) {
             HttpServletRequest req = (HttpServletRequest) context.getExternalContext().getRequest();
-            String fullpath = req.getRequestURL().toString();
+            String fullpath = req.getRequestURI().toString();
             String servletpath = context.getExternalContext().getRequestServletPath();
             String myBasisUrl = fullpath.substring(0, fullpath.indexOf(servletpath));
             contentServerUrl = myBasisUrl + "/cs/cs?action=pdf&images=";
