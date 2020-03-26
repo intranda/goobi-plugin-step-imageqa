@@ -138,6 +138,11 @@
     border: none;
 }
 
+.row.thumbnavigationcenter{
+	padding-top: 10px;
+    text-align: center;
+}
+
 .namePart {
     display: inline-block;
     width: auto;

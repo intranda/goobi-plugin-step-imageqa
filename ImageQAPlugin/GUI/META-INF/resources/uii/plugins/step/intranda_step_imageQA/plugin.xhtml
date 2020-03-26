@@ -9,23 +9,23 @@
 
     <link
         rel="stylesheet"
-        href="../../../imageQA.css" />
+        href="imageQA.css" />
 
     <style>
-.goobi-thumbnail {
-    float: left;
-    margin: 7px;
-    width: #{AktuelleSchritteForm.myPlugin.thumbnailSize +2}px;
-    height:#{AktuelleSchritteForm.myPlugin.thumbnailSize+55}px;            
-}
-.goobi-thumbnail .goobi-thumbnail-image {
-    float: left;
-    width: 100%;
-    min-height: 100px;
-    overflow: hidden;
-    max-height: #{AktuelleSchritteForm.myPlugin.thumbnailSize +2}px;            
-}
-</style>
+		.goobi-thumbnail {
+		    float: left;
+		    margin: 7px;
+		    width: #{AktuelleSchritteForm.myPlugin.thumbnailSize +2}px;
+		    height:#{AktuelleSchritteForm.myPlugin.thumbnailSize+55}px;            
+		}
+		.goobi-thumbnail .goobi-thumbnail-image {
+		    float: left;
+		    width: 100%;
+		    min-height: 100px;
+		    overflow: hidden;
+		    max-height: #{AktuelleSchritteForm.myPlugin.thumbnailSize +2}px;            
+		}
+	</style>
 
     <h:form>
 
@@ -45,7 +45,7 @@
                     layout="block"
                     rendered="#{AktuelleSchritteForm.myPlugin.sizeOfImageList gt 0}">
 
-                    <div class="row">
+                    <div class="row thumbnavigationcenter">
                         <f:subview id="first">
                             <ui:include src="../../../ImageQAPlugin_include_thumbnavigation.xhtml" />
                         </f:subview>
@@ -53,7 +53,7 @@
 
                     <!-- Thumbnail list -->
                     <div
-                        class="flex-container margin-top-most margin-bottom-most"
+                        class="flex-container margin-top-most"
                         dir="#{AktuelleSchritteForm.myPlugin.flowDir}">
 
                         <ui:repeat
