@@ -50,6 +50,34 @@
 			#mainImage #ajaxloader_image img {
 			    border: none;
 			}
+			
+			#zoomSliderLabel {
+                position: absolute;
+                top: 10px;
+                left: 10px;
+                width: 100px;
+                background: transparent;
+                border: none;
+            }
+            
+            #zoomSliderLabel input{
+                border: none;
+                background-color: transparent;
+                width:60px;
+                text-align: right;
+            }
+            
+            #zoomSliderLabel input:focus{
+                background-color: white;
+                color: #666;
+            }
+            
+     		br {
+			  content: "";
+			  margin: 0px;
+			  display: block;
+			  font-size: 0px;
+			}
 
 		</style>
 
@@ -298,16 +326,16 @@
 				</div>
 				<!-- previous image -->
 				<h:commandLink id="imageBack" styleClass="btn btn-lightgrey font-size-s" title="#{msgs.lw_previousImage}"
-					style="position:absolute;top:50vh; left:10px; height:50px;padding-top:17px;">
-					<i class="fa fa-angle-left"></i>
+					style="position:absolute;top:50vh; left:10px; height:50px;">
+					<i class="fa fa-chevron-left" style="margin-top:18px"/>
 					<f:ajax execute="@form" render="@form" onevent="freeJSResources"/>
 					<x:updateActionListener value="#{AktuelleSchritteForm.myPlugin.imageIndex - 1}" property="#{AktuelleSchritteForm.myPlugin.imageIndex}" />
 				</h:commandLink>
 				
 				<!-- next image -->
 				<h:commandLink id="imageNext" styleClass="btn btn-lightgrey font-size-s" title="#{msgs.lw_nextImage}"
-					style="position:absolute;top:50vh; right:10px; height:50px; padding-top:17px;">
-					<i class="fa fa-angle-right"></i>
+					style="position:absolute;top:50vh; right:10px; height:50px;">
+					<i class="fa fa-chevron-right" style="margin-top:18px"/>
 					<f:ajax execute="@form" render="@form" onevent="freeJSResources"/>
 					<x:updateActionListener value="#{AktuelleSchritteForm.myPlugin.imageIndex + 1}" property="#{AktuelleSchritteForm.myPlugin.imageIndex}" />
 				</h:commandLink>
