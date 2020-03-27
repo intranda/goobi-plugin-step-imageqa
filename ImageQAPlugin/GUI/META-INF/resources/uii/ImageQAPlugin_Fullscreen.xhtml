@@ -21,65 +21,7 @@
     <link rel="stylesheet" href="imageQA.css" />
     <ui:define name="content">
 
-		 <style>			
-			#mainImage {
-				background:black;
-				border: none;
-			    widht: 100vw;
-				height:100vh;
-			}
-   		
-			html, body {
-				overflow-x: hidden;
-			}
-
-            #image-control-wrapper {
-              position: absolute;
-                top: 10px;
-                left: 10px;
-            }
-            
-            #mainImage #ajaxloader_image {
-			    position: absolute;
-			    left: 50%;
-			    top: 50%;
-			    margin-left: -34px;
-			    margin-top: -21px;
-			}
-			
-			#mainImage #ajaxloader_image img {
-			    border: none;
-			}
-			
-			#zoomSliderLabel {
-                position: absolute;
-                top: 10px;
-                left: 10px;
-                width: 100px;
-                background: transparent;
-                border: none;
-            }
-            
-            #zoomSliderLabel input{
-                border: none;
-                background-color: transparent;
-                width:60px;
-                text-align: right;
-            }
-            
-            #zoomSliderLabel input:focus{
-                background-color: white;
-                color: #666;
-            }
-            
-     		br {
-			  content: "";
-			  margin: 0px;
-			  display: block;
-			  font-size: 0px;
-			}
-
-		</style>
+		<link rel="stylesheet" href="imageQA_Fullscreen.css" />
 
         <script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/reactiveX/rx.lite.min.js"></script>
 		<script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/q-promises/q.min.js"></script>
@@ -253,12 +195,12 @@
                                     </script>
 			    </div>
 			</div>
-			                <ui:fragment rendered="#{AktuelleSchritteForm.myPlugin.image.type == 'image'}">
-                    <div id="zoomSliderLabel" class="font-light">
-                            <input></input><span>%</span>
-                    </div>
-                </ui:fragment>
-                <ui:fragment rendered="#{AktuelleSchritteForm.myPlugin.image.type == 'object'}">
+			<ui:fragment rendered="#{AktuelleSchritteForm.myPlugin.image.type == 'image'}">
+               <div id="zoomSliderLabel" class="font-light">
+                       <input></input><span>%</span>
+               </div>
+             </ui:fragment>
+             <ui:fragment rendered="#{AktuelleSchritteForm.myPlugin.image.type == 'object'}">
                     <div id="image-control-wrapper">
             			<nav id="viewer_controls_nav">
                             <ul>
@@ -302,7 +244,7 @@
                             </ul>
                             <ul>
                                 <li>
-                                    <span class="btn font-size-s margin-right-10" id="reset-position" title="#{msg.resetImage}">
+                                    <span class="btn font-size-s" id="reset-position" title="#{msg.resetImage}">
                                         <i class="fa fa-refresh"></i>
                                     </span>
                                 </li>

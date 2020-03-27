@@ -132,10 +132,24 @@
 
                                         <div class="thumb">
                                             <h:commandLink title="#{image.tooltip}">
-                                                <canvas class="thumb-canvas" data-image_small="#{image.thumbnailUrl}" data-image_large="#{image.largeThumbnailUrl}" title="#{image.tooltip}" id="thumbnail-#{status.index}"></canvas>
-                                                <f:setPropertyActionListener value="#{image.order -1}" target="#{AktuelleSchritteForm.myPlugin.imageIndex}" />
-                                                <f:ajax execute="@form" render="@form :qaform:bigimage" onevent="freeJSResources"/>
+	                                            <ui:fragment rendered="#{image.type == 'image'}">
+	                                                <canvas class="thumb-canvas" data-image_small="#{image.thumbnailUrl}" data-image_large="#{image.largeThumbnailUrl}" title="#{image.tooltip}" id="thumbnail-#{status.index}"></canvas>
 
+												</ui:fragment>
+												<!-- 3D OBJECT -->
+			                                    <ui:fragment rendered="#{image.type == 'object' or image.type == 'x3dom'}">
+			                                        <img 
+			                                            class="thumbnails__thumb-placeholder"
+			                                            src="#{HelperForm.servletPathWithHostAsUrl}/uii/template/img/goobi_3d_object_placeholder.png" />
+			                                    </ui:fragment>
+			                                    <!-- PLACEHOLDER -->
+			                                    <ui:fragment rendered="#{image.type != 'image' and image.type != 'object' and  image.type != 'x3dom'}">
+			                                        <img 
+			                                            class="thumbnails__thumb-placeholder"
+			                                            src="#{HelperForm.servletPathWithHostAsUrl}/uii/template/img/thumbnail-placeholder.png" />
+			                                    </ui:fragment>
+			                                    <f:setPropertyActionListener value="#{image.order -1}" target="#{AktuelleSchritteForm.myPlugin.imageIndex}" />
+	                                            <f:ajax execute="@form" render="@form :qaform:bigimage" onevent="freeJSResources"/>
                                             </h:commandLink>
                                         </div>
 
