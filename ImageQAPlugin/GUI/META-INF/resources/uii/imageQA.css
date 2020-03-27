@@ -285,13 +285,14 @@
 		  border: none;
 		}
 		
-		.zoom-slider {
+		#viewer_controls_nav ul li .zoom-slider {
 		    width: 12rem;
 		 	height: 1.5rem;
 		 	margin-top: 0.6rem;
 			margin-right: 0;
 		    margin-left: 55px;
 			border: 1px solid #6f6f6f;
+			position: relative;
          	-webkit-appearance: none; /* Hides the slider so that custom slider can be made */
 	    	background: transparent; /* Otherwise white in Chrome */
 		}
@@ -314,29 +315,6 @@
 		}
 		.zoom-slider::focus {
 			outline: none; /* Removes the blue border. You should probably do some kind of focus styling for accessibility reasons though. */
-		}
-		
-		#viewer_controls_nav ul li #zoomSlider {
-		  width: 12rem;
-		  height: 1.5rem;
-		  margin-top: 0.6rem;
-		  margin-right: 0;
-          margin-left: 55px;
-		  border: 1px solid #6f6f6f;
-		  position: relative;
-		}
-		#viewer_controls_nav ul li #zoomSlider .zoom-slider-handle {
-		  top: -0.4rem;
-		  height: 2.2rem;
-		  width: 1rem;
-		  background-color: #6f6f6f;
-		  position: absolute;
-		}
-		#viewer_controls_nav ul li #zoomSlider a {
-		  width: 1.45rem;
-		  height: 1.45rem;
-		  margin: 0;
-		  background: #6f6f6f;
 		}
 		
 		#image-control-wrapper {
