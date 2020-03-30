@@ -149,6 +149,7 @@ public class ImageQAPlugin implements IStepPlugin {
     private boolean ocrExists = false;
     private boolean displayOCR = false;
     private String ocrText = "";
+    private String displayMode = "";
 
     private boolean pagesRTL;
 
@@ -156,7 +157,6 @@ public class ImageQAPlugin implements IStepPlugin {
     public void initialize(Step step, String returnPath) {
         this.returnPath = returnPath;
         this.step = step;
-
         String projectName = step.getProzess().getProjekt().getTitel();
 
         XMLConfiguration xmlConfig = ConfigPlugins.getPluginConfig(PLUGIN_NAME);
@@ -385,15 +385,21 @@ public class ImageQAPlugin implements IStepPlugin {
      * TODO document
      * 
      */
-
     public List<SelectableImage> getPaginatorList() {
-        List<SelectableImage> subList = new ArrayList<>();
-        if (allImages.size() > (pageNo * numberOfImagesInFullGUI) + numberOfImagesInFullGUI) {
-            subList = allImages.subList(pageNo * numberOfImagesInFullGUI, (pageNo * numberOfImagesInFullGUI) + numberOfImagesInFullGUI);
+        if (displayMode.equals("part")) {
+        	return getPaginatorListForPartGUI();
         } else {
-            subList = allImages.subList(pageNo * numberOfImagesInFullGUI, allImages.size());
+        	List<SelectableImage> subList = new ArrayList<>();
+        	if (pageNo * numberOfImagesInFullGUI > allImages.size()) {
+        		pageNo = 0;
+        	}
+	        if (allImages.size() > (pageNo * numberOfImagesInFullGUI) + numberOfImagesInFullGUI) {
+	            subList = allImages.subList(pageNo * numberOfImagesInFullGUI, (pageNo * numberOfImagesInFullGUI) + numberOfImagesInFullGUI);
+	        } else {
+	        	subList = allImages.subList(pageNo * numberOfImagesInFullGUI, allImages.size());
+	        }
+	        return subList;
         }
-        return subList;
     }
 
     public List<SelectableImage> getPaginatorListForPartGUI() {
@@ -506,7 +512,7 @@ public class ImageQAPlugin implements IStepPlugin {
 
     @Override
     public String getPagePath() {
-        return "/" + getTheme() + "/ImageQAPlugin.xhtml";
+        return "/uii/ImageQAPlugin.xhtml";
     }
 
     @Override
@@ -525,12 +531,12 @@ public class ImageQAPlugin implements IStepPlugin {
 
     @Override
     public String cancel() {
-        return "/" + getTheme() + returnPath;
+        return "/uii" + returnPath;
     }
 
     @Override
     public String finish() {
-        return "/" + getTheme() + returnPath;
+        return "/uii" + returnPath;
     }
 
     @Override
@@ -688,6 +694,7 @@ public class ImageQAPlugin implements IStepPlugin {
                 getPaginatorList();
             }
         }
+        displayMode = "";
         return "";
     }
 
@@ -703,6 +710,7 @@ public class ImageQAPlugin implements IStepPlugin {
                 getPaginatorList();
             }
         }
+        displayMode = "";
         return "";
     }
 
@@ -718,8 +726,8 @@ public class ImageQAPlugin implements IStepPlugin {
                 getPaginatorList();
             }
         }
+        displayMode = "";
         return "";
-
     }
 
     public String cmdMoveLast() {
@@ -734,6 +742,7 @@ public class ImageQAPlugin implements IStepPlugin {
                 getPaginatorList();
             }
         }
+        displayMode = "";
         return "";
     }
 
@@ -767,11 +776,15 @@ public class ImageQAPlugin implements IStepPlugin {
     }
 
     public int getLastPageNumber() {
-        int ret = new Double(Math.floor(this.allImages.size() / numberOfImagesInFullGUI)).intValue();
-        if (this.allImages.size() % numberOfImagesInFullGUI == 0) {
-            ret--;
-        }
-        return ret;
+    	if (displayMode.equals("part")) {
+    		return getLastPageNumberPartGUI();
+    	} else {
+    		int ret = new Double(Math.floor(this.allImages.size() / numberOfImagesInFullGUI)).intValue();
+	        if (this.allImages.size() % numberOfImagesInFullGUI == 0) {
+	            ret--;
+	        }
+	        return ret;
+    	}
     }
 
     public int getLastPageNumberPartGUI() {
@@ -782,9 +795,9 @@ public class ImageQAPlugin implements IStepPlugin {
         return ret;
     }
 
-    public boolean hasNextPagePartGUI() {
-        return this.allImages.size() > numberOfImagesInPartGUI;
-    }
+//    public boolean hasNextPagePartGUI() {
+//        return this.allImages.size() > numberOfImagesInPartGUI;
+//    }
 
     public boolean isFirstPage() {
         return this.pageNo == 0;
@@ -794,13 +807,13 @@ public class ImageQAPlugin implements IStepPlugin {
         return this.pageNo >= getLastPageNumber();
     }
 
-    public boolean hasNextPage() {
-        return this.allImages.size() > numberOfImagesInFullGUI;
-    }
+//    public boolean hasNextPage() {
+//        return this.allImages.size() > numberOfImagesInFullGUI;
+//    }
 
-    public boolean hasPreviousPage() {
-        return this.pageNo > 0;
-    }
+//    public boolean hasPreviousPage() {
+//        return this.pageNo > 0;
+//    }
 
     public Long getPageNumberCurrent() {
         return Long.valueOf(this.pageNo + 1);
@@ -808,6 +821,10 @@ public class ImageQAPlugin implements IStepPlugin {
 
     public Long getPageNumberLast() {
         return Long.valueOf(getLastPageNumber() + 1);
+    }
+    
+    public Long getPageNumberLastPartGUI() {
+        return Long.valueOf(getLastPageNumberPartGUI() + 1);
     }
 
     public int getSizeOfImageList() {
@@ -820,16 +837,6 @@ public class ImageQAPlugin implements IStepPlugin {
 
     public void setThumbnailSize(int value) {
 
-    }
-
-    private String getTheme() {
-        FacesContext context = FacesContextHelper.getCurrentFacesContext();
-        String completePath = context.getExternalContext().getRequestServletPath();
-        if (StringUtils.isNotBlank(completePath)) {
-            String[] parts = completePath.split("/");
-            return parts[1];
-        }
-        return "";
     }
 
     public String renameImages(SelectableImage myimage) {
