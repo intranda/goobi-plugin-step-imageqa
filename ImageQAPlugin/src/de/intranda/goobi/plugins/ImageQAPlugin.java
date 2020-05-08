@@ -65,6 +65,8 @@ import org.goobi.production.enums.PluginType;
 import org.goobi.production.enums.StepReturnValue;
 import org.goobi.production.plugin.interfaces.IStepPlugin;
 
+import com.google.gson.Gson;
+
 import de.intranda.goobi.NamePart;
 import de.intranda.goobi.SelectableImage;
 import de.sub.goobi.config.ConfigPlugins;
@@ -85,6 +87,7 @@ import de.unigoettingen.sub.commons.contentlib.exceptions.ImageManipulatorExcept
 import de.unigoettingen.sub.commons.contentlib.imagelib.ImageManager;
 import de.unigoettingen.sub.commons.contentlib.imagelib.JpegInterpreter;
 import lombok.Data;
+import lombok.Getter;
 import lombok.extern.log4j.Log4j;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 import ugh.dl.DigitalDocument;
@@ -102,6 +105,7 @@ public class ImageQAPlugin implements IStepPlugin {
 
     private static final DecimalFormat PAGENUMBERFORMAT = new DecimalFormat("0000");
     private static final DecimalFormat FILENUMBERFORMAT = new DecimalFormat("00000000");
+    private static final Gson gson = new Gson();
 
     private Step step;
     private static final String PLUGIN_NAME = "intranda_step_imageQA";
@@ -148,6 +152,8 @@ public class ImageQAPlugin implements IStepPlugin {
     private String ocrText = "";
 
     private boolean pagesRTL;
+    @Getter
+    private boolean useJSFullscreen;
 
     @Override
     public void initialize(Step step, String returnPath) {
@@ -190,6 +196,7 @@ public class ImageQAPlugin implements IStepPlugin {
                 imageFolder = step.getProzess().getImagesTifDirectory(false);
             }
             initImageList(myconfig, imageFolder);
+            this.useJSFullscreen = myconfig.getBoolean("useJSFullscreen");
         } catch (SwapException | DAOException | IOException | InterruptedException e) {
             log.error(e);
         }
@@ -389,6 +396,10 @@ public class ImageQAPlugin implements IStepPlugin {
             subList = allImages.subList(pageNo * NUMBER_OF_IMAGES_PER_PAGE, allImages.size());
         }
         return subList;
+    }
+
+    public String getAllImagesJSON() {
+        return gson.toJson(this.allImages);
     }
 
     public Image getImage() {
