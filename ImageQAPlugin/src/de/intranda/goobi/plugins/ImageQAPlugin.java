@@ -106,7 +106,8 @@ public class ImageQAPlugin implements IStepPlugin {
     private Step step;
     private static final String PLUGIN_NAME = "intranda_step_imageQA";
 
-    private int NUMBER_OF_IMAGES_PER_PAGE = 10;
+    private int numberOfImagesInFullGUI = 10;
+    private int numberOfImagesInPartGUI = 5;
     private int THUMBNAIL_SIZE_IN_PIXEL = 175;
     private String THUMBNAIL_FORMAT = "png";
     private String MAINIMAGE_FORMAT = "jpg";
@@ -124,6 +125,8 @@ public class ImageQAPlugin implements IStepPlugin {
     private String rotationCommandRight = "";
     private String deletionCommand = "";
     boolean askForConfirmation = true;
+
+    private String guiType;
 
     private int pageNo = 0;
 
@@ -146,6 +149,7 @@ public class ImageQAPlugin implements IStepPlugin {
     private boolean ocrExists = false;
     private boolean displayOCR = false;
     private String ocrText = "";
+    private String displayMode = "";
 
     private boolean pagesRTL;
 
@@ -153,7 +157,6 @@ public class ImageQAPlugin implements IStepPlugin {
     public void initialize(Step step, String returnPath) {
         this.returnPath = returnPath;
         this.step = step;
-
         String projectName = step.getProzess().getProjekt().getTitel();
 
         XMLConfiguration xmlConfig = ConfigPlugins.getPluginConfig(PLUGIN_NAME);
@@ -273,6 +276,7 @@ public class ImageQAPlugin implements IStepPlugin {
      * @param myconfig SubnodeConfiguration object of the config file
      */
     public void initConfig(SubnodeConfiguration myconfig) {
+        guiType = myconfig.getString("guiType", "full"); // full, part, both
         allowDeletion = myconfig.getBoolean("allowDeletion", false);
         allowRotation = myconfig.getBoolean("allowRotation", false);
         allowRenaming = myconfig.getBoolean("allowRenaming", false);
@@ -285,7 +289,8 @@ public class ImageQAPlugin implements IStepPlugin {
         rotationCommandLeft = myconfig.getString("rotationCommands/left", "-");
         rotationCommandRight = myconfig.getString("rotationCommands/right", "-");
 
-        NUMBER_OF_IMAGES_PER_PAGE = myconfig.getInt("numberOfImagesPerPage", 50);
+        numberOfImagesInFullGUI = myconfig.getInt("numberOfImagesPerPage", 50);
+        numberOfImagesInPartGUI = myconfig.getInt("numberOfImagesInPartGUI", 8);
         THUMBNAIL_SIZE_IN_PIXEL = myconfig.getInt("thumbnailsize", 200);
         THUMBNAIL_FORMAT = myconfig.getString("thumbnailFormat", "png");
         MAINIMAGE_FORMAT = myconfig.getString("mainImageFormat", "jpg");
@@ -380,13 +385,29 @@ public class ImageQAPlugin implements IStepPlugin {
      * TODO document
      * 
      */
-
     public List<SelectableImage> getPaginatorList() {
-        List<SelectableImage> subList = new ArrayList<>();
-        if (allImages.size() > (pageNo * NUMBER_OF_IMAGES_PER_PAGE) + NUMBER_OF_IMAGES_PER_PAGE) {
-            subList = allImages.subList(pageNo * NUMBER_OF_IMAGES_PER_PAGE, (pageNo * NUMBER_OF_IMAGES_PER_PAGE) + NUMBER_OF_IMAGES_PER_PAGE);
+        if (displayMode.equals("part")) {
+        	return getPaginatorListForPartGUI();
         } else {
-            subList = allImages.subList(pageNo * NUMBER_OF_IMAGES_PER_PAGE, allImages.size());
+        	List<SelectableImage> subList = new ArrayList<>();
+        	if (pageNo * numberOfImagesInFullGUI > allImages.size()) {
+        		pageNo = 0;
+        	}
+	        if (allImages.size() > (pageNo * numberOfImagesInFullGUI) + numberOfImagesInFullGUI) {
+	            subList = allImages.subList(pageNo * numberOfImagesInFullGUI, (pageNo * numberOfImagesInFullGUI) + numberOfImagesInFullGUI);
+	        } else {
+	        	subList = allImages.subList(pageNo * numberOfImagesInFullGUI, allImages.size());
+	        }
+	        return subList;
+        }
+    }
+
+    public List<SelectableImage> getPaginatorListForPartGUI() {
+        List<SelectableImage> subList = new ArrayList<>();
+        if (allImages.size() > (pageNo * numberOfImagesInPartGUI) + numberOfImagesInPartGUI) {
+            subList = allImages.subList(pageNo * numberOfImagesInPartGUI, (pageNo * numberOfImagesInPartGUI) + numberOfImagesInPartGUI);
+        } else {
+            subList = allImages.subList(pageNo * numberOfImagesInPartGUI, allImages.size());
         }
         return subList;
     }
@@ -479,12 +500,19 @@ public class ImageQAPlugin implements IStepPlugin {
 
     @Override
     public PluginGuiType getPluginGuiType() {
-        return PluginGuiType.FULL;
+        switch (guiType) {
+            case "both":
+                return PluginGuiType.PART_AND_FULL;
+            case "part":
+                return PluginGuiType.PART;
+            default:
+                return PluginGuiType.FULL;
+        }
     }
 
     @Override
     public String getPagePath() {
-        return "/" + getTheme() + "/ImageQAPlugin.xhtml";
+        return "/uii/ImageQAPlugin.xhtml";
     }
 
     @Override
@@ -503,12 +531,12 @@ public class ImageQAPlugin implements IStepPlugin {
 
     @Override
     public String cancel() {
-        return "/" + getTheme() + returnPath;
+        return "/uii" + returnPath;
     }
 
     @Override
     public String finish() {
-        return "/" + getTheme() + returnPath;
+        return "/uii" + returnPath;
     }
 
     @Override
@@ -666,6 +694,7 @@ public class ImageQAPlugin implements IStepPlugin {
                 getPaginatorList();
             }
         }
+        displayMode = "";
         return "";
     }
 
@@ -681,6 +710,7 @@ public class ImageQAPlugin implements IStepPlugin {
                 getPaginatorList();
             }
         }
+        displayMode = "";
         return "";
     }
 
@@ -696,8 +726,8 @@ public class ImageQAPlugin implements IStepPlugin {
                 getPaginatorList();
             }
         }
+        displayMode = "";
         return "";
-
     }
 
     public String cmdMoveLast() {
@@ -712,6 +742,7 @@ public class ImageQAPlugin implements IStepPlugin {
                 getPaginatorList();
             }
         }
+        displayMode = "";
         return "";
     }
 
@@ -745,12 +776,28 @@ public class ImageQAPlugin implements IStepPlugin {
     }
 
     public int getLastPageNumber() {
-        int ret = new Double(Math.floor(this.allImages.size() / NUMBER_OF_IMAGES_PER_PAGE)).intValue();
-        if (this.allImages.size() % NUMBER_OF_IMAGES_PER_PAGE == 0) {
+    	if (displayMode.equals("part")) {
+    		return getLastPageNumberPartGUI();
+    	} else {
+    		int ret = new Double(Math.floor(this.allImages.size() / numberOfImagesInFullGUI)).intValue();
+	        if (this.allImages.size() % numberOfImagesInFullGUI == 0) {
+	            ret--;
+	        }
+	        return ret;
+    	}
+    }
+
+    public int getLastPageNumberPartGUI() {
+        int ret = new Double(Math.floor(this.allImages.size() / numberOfImagesInPartGUI)).intValue();
+        if (this.allImages.size() % numberOfImagesInPartGUI == 0) {
             ret--;
         }
         return ret;
     }
+
+//    public boolean hasNextPagePartGUI() {
+//        return this.allImages.size() > numberOfImagesInPartGUI;
+//    }
 
     public boolean isFirstPage() {
         return this.pageNo == 0;
@@ -760,13 +807,13 @@ public class ImageQAPlugin implements IStepPlugin {
         return this.pageNo >= getLastPageNumber();
     }
 
-    public boolean hasNextPage() {
-        return this.allImages.size() > NUMBER_OF_IMAGES_PER_PAGE;
-    }
+//    public boolean hasNextPage() {
+//        return this.allImages.size() > numberOfImagesInFullGUI;
+//    }
 
-    public boolean hasPreviousPage() {
-        return this.pageNo > 0;
-    }
+//    public boolean hasPreviousPage() {
+//        return this.pageNo > 0;
+//    }
 
     public Long getPageNumberCurrent() {
         return Long.valueOf(this.pageNo + 1);
@@ -774,6 +821,10 @@ public class ImageQAPlugin implements IStepPlugin {
 
     public Long getPageNumberLast() {
         return Long.valueOf(getLastPageNumber() + 1);
+    }
+    
+    public Long getPageNumberLastPartGUI() {
+        return Long.valueOf(getLastPageNumberPartGUI() + 1);
     }
 
     public int getSizeOfImageList() {
@@ -786,16 +837,6 @@ public class ImageQAPlugin implements IStepPlugin {
 
     public void setThumbnailSize(int value) {
 
-    }
-
-    private String getTheme() {
-        FacesContext context = FacesContextHelper.getCurrentFacesContext();
-        String completePath = context.getExternalContext().getRequestServletPath();
-        if (StringUtils.isNotBlank(completePath)) {
-            String[] parts = completePath.split("/");
-            return parts[1];
-        }
-        return "";
     }
 
     public String renameImages(SelectableImage myimage) {
