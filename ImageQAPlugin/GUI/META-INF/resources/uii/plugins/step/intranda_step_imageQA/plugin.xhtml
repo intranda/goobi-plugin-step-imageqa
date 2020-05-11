@@ -50,11 +50,13 @@
                     rendered="#{AktuelleSchritteForm.myPlugin.sizeOfImageList gt 0}">
 
                     <div class="row thumbnavigationcenter">
-                        <f:subview id="first">
-                            <ui:include src="../../../ImageQAPlugin_include_thumbnavigationPartGui.xhtml" />
-                        </f:subview>
-                    </div>
-
+						<ui:fragment rendered="#{AktuelleSchritteForm.myPlugin.pageNumberLastPartGUI gt 1}">
+	                        <f:subview id="first">
+	                            <ui:include src="../../../ImageQAPlugin_include_thumbnavigationPartGui.xhtml" />
+	                        </f:subview>
+						</ui:fragment>
+	                </div>
+                    
                     <!-- Thumbnail list -->
                     <div
                         class="flex-container margin-top-most"
