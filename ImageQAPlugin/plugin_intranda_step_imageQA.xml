@@ -49,6 +49,8 @@
         <scaleFactors>32</scaleFactors>
         <useTiles>false</useTiles>
         <useTilesFullscreen>true</useTilesFullscreen>
+        <useJSFullscreen>false</useJSFullscreen>
+        <noShortcutPrefix>false</noShortcutPrefix>
 
         <!-- allow deletion of images -->
         <allowDeletion>false</allowDeletion>

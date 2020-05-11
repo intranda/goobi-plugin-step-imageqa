@@ -325,121 +325,6 @@
 						</div>
 					</div>
 				</ui:fragment>
-<!--                 <ui:fragment rendered="#{AktuelleSchritteForm.myPlugin.image.type == 'image'}">
-                    <div id="zoomSliderLabel" class="font-light">
-                            <input></input><span>%</span>
-                    </div>
-                </ui:fragment>
-                <ui:fragment rendered="#{AktuelleSchritteForm.myPlugin.image.type == 'object'}">
-                    <div id="image-control-wrapper">
-            			<nav id="viewer_controls_nav">
-
-                            <ul style="margin-top:1px;">
-            					<li><label>#{msgs.rotation_x_axis}</label></li>
-            					<li>
-            						<span class="btn font-size-s" id="rotate-left-x" title="#{msg.rotateLeft}">
-            							<i class="fa fa-undo"></i>
-            						</span>
-            					</li>
-            					<li>
-            						<span class="btn font-size-s" id="rotate-right-x" title="#{msg.rotateRight}">
-            							<i class="fa fa-repeat"></i>
-            						</span>
-            					</li>
-            				</ul>
-                            <ul style="margin-top:1px;">
-                            <li><label>#{msgs.rotation_y_axis}</label></li>
-                                <li>
-                                    <span class="btn font-size-s" id="rotate-left-y" title="#{msg.rotateLeft}">
-                                        <i class="fa fa-undo"></i>
-                                    </span>
-                                </li>
-                                <li>
-                                    <span class="btn font-size-s" id="rotate-right-y" title="#{msg.rotateRight}">
-                                        <i class="fa fa-repeat"></i>
-                                    </span>
-                                </li>
-                            </ul>
-                            <ul style="margin-top:1px;">
-                                <li><label>#{msgs.rotation_z_axis}</label></li>
-                                <li>
-                                    <span class="btn font-size-s" id="rotate-left-z" title="#{msg.rotateLeft}">
-                                        <i class="fa fa-undo"></i>
-                                    </span>
-                                </li>
-                                <li>
-                                    <span class="btn font-size-s" id="rotate-right-z" title="#{msg.rotateRight}">
-                                        <i class="fa fa-repeat"></i>
-                                    </span>
-                                </li>
-                            </ul>
-                            <ul style="margin-top:1px;">
-                                <li>
-                                    <span class="btn font-size-s margin-right-10" id="reset-position" title="#{msg.resetImage}">
-                                        <i class="fa fa-refresh"></i>
-                                    </span>
-                                </li>
-                            </ul>
-            			</nav>
-            			</div>
-                </ui:fragment>
-                 -->
-<!-- 				exit fullscreen
-				<h:commandLink styleClass="btn btn-lightgrey" style="position:absolute;top:10px; right:10px;" 
-					action="ImageQAPlugin" title="#{msgs.imageDefaultDisplay}" >
-					<i class="fa fa-close"></i>
-				</h:commandLink>
-				
-				previous image
-				<h:commandLink id="imageBack" styleClass="btn btn-lightgrey font-size-s" title="#{msgs.lw_previousImage}"
-					style="position:absolute;top:50vh; left:10px; height:50px;padding-top:17px;">
-					<i class="fa fa-angle-left"></i>
-					<f:ajax execute="@form" render="@form" onevent="freeJSResources"/>
-					<x:updateActionListener value="#{AktuelleSchritteForm.myPlugin.imageIndex - 1}" property="#{AktuelleSchritteForm.myPlugin.imageIndex}" />
-				</h:commandLink>
-				
-				next image
-				<h:commandLink id="imageNext" styleClass="btn btn-lightgrey font-size-s" title="#{msgs.lw_nextImage}"
-					style="position:absolute;top:50vh; right:10px; height:50px; padding-top:17px;">
-					<i class="fa fa-angle-right"></i>
-					<f:ajax execute="@form" render="@form" onevent="freeJSResources"/>
-					<x:updateActionListener value="#{AktuelleSchritteForm.myPlugin.imageIndex + 1}" property="#{AktuelleSchritteForm.myPlugin.imageIndex}" />
-				</h:commandLink>
-				
-				file name
-				<h:outputText styleClass="font-light" style="position:absolute;bottom:10px; left:10px;" 
-					value="#{AktuelleSchritteForm.myPlugin.image.imageName}" />
-				
-				image number
-				<div style="position:absolute;bottom:10px; right:10px;">
-	                <x:outputText id="txtImageMoveTo1" styleClass="font-light"
-	                    value="#{AktuelleSchritteForm.myPlugin.imageIndex +1} #{msgs.von}  #{AktuelleSchritteForm.myPlugin.sizeOfImageList}"
-	                    onclick="document.getElementById(this.id).nextSibling.style.display='inline';
-	                    document.getElementById(this.id).style.display='none';  
-	                    document.getElementById(this.id).nextSibling.focus(); 
-	                    document.getElementById(this.id).nextSibling.select();" /> 
-					jump to page
-	                <x:inputText value="#{AktuelleSchritteForm.myPlugin.imageMoveTo}" style="display:none;font-size:9px;width:30px"
-	                    required="true" id="txtImageMoveTo2"
-	                    onblur="document.getElementById(this.id).style.display='none';document.getElementById(this.id).previousSibling.style.display='inline';"
-	                    onkeypress="copyValue(this,event);" />
-	                <x:commandButton action="#{NavigationForm.Reload}" value="go" style="display:none" />
-				</div> -->
-				
-<!-- 				first and last page				
-				<div style="position:absolute;top:10px;left:10px;display:none;">
-					<h:commandLink styleClass="btn btn-lightgrey font-size-s margin-right-10" title="#{msgs.firstImage}">
-						<i class="fa fa-double-angle-left"></i>
-						<f:ajax execute="@form" render="@form" />
-						<x:updateActionListener value="0" property="#{AktuelleSchritteForm.myPlugin.imageIndex}" />
-					</h:commandLink>
-					<h:commandLink styleClass="btn btn-lightgrey font-size-s" title="#{msgs.lastImage}">
-						<i class="fa fa-double-angle-right"></i>
-						<f:ajax execute="@form" render="@form" />
-						<x:updateActionListener value="#{AktuelleSchritteForm.myPlugin.sizeOfImageList - 1}" property="#{AktuelleSchritteForm.myPlugin.imageIndex}" />
-					</h:commandLink>
-				</div>
- -->
 		</h:form>
 
 
@@ -460,7 +345,6 @@
 	
 	       window.onload = function() {
 		    	launchIntoFullscreen(document.documentElement); // the whole page
-		    	loadImages();
 		    }
 		
 			jsf.ajax.addOnEvent(function(data) {
@@ -468,7 +352,6 @@
 			      
 			      switch (ajaxstatus) {
 			          case "success": // This is called when ajax response is successfully processed.
-			              loadImages();
 			              break;
 			      }
 				

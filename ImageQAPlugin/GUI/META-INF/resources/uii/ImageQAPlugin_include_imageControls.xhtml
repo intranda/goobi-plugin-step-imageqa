@@ -50,10 +50,18 @@
                     </li>
 
                     <li>
+                    	<h:commandLink 
+                    		styleClass="btn font-size-s margin-left-10" 
+                    		title="#{msgs.imageFullscreen}"
+							action="ImageQAPlugin_JSFullscreen" 
+							rendered="#{AktuelleSchritteForm.myPlugin.useJSFullscreen}">
+							<i class="fa fa-arrows-alt"></i>
+						</h:commandLink>
                         <h:commandLink
                             styleClass="btn font-size-s margin-left-10"
                             title="#{msgs.imageFullscreen}"
-                            action="ImageQAPlugin_Fullscreen">
+                            action="ImageQAPlugin_Fullscreen"
+                            rendered="#{! AktuelleSchritteForm.myPlugin.useJSFullscreen}">
                             <i class="fa fa-arrows-alt"></i>
                         </h:commandLink>
                     </li>

@@ -42,6 +42,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -65,8 +66,11 @@ import org.goobi.production.enums.PluginType;
 import org.goobi.production.enums.StepReturnValue;
 import org.goobi.production.plugin.interfaces.IStepPlugin;
 
+import com.google.gson.Gson;
+
 import de.intranda.goobi.NamePart;
 import de.intranda.goobi.SelectableImage;
+import de.intranda.goobi.SelectableImageForJSON;
 import de.sub.goobi.config.ConfigPlugins;
 import de.sub.goobi.config.ConfigurationHelper;
 import de.sub.goobi.helper.FacesContextHelper;
@@ -102,6 +106,7 @@ public class ImageQAPlugin implements IStepPlugin {
 
     private static final DecimalFormat PAGENUMBERFORMAT = new DecimalFormat("0000");
     private static final DecimalFormat FILENUMBERFORMAT = new DecimalFormat("00000000");
+    private static final Gson gson = new Gson();
 
     private Step step;
     private static final String PLUGIN_NAME = "intranda_step_imageQA";
@@ -152,6 +157,8 @@ public class ImageQAPlugin implements IStepPlugin {
     private String displayMode = "";
 
     private boolean pagesRTL;
+    private boolean useJSFullscreen;
+    private boolean noShortcutPrefix;
 
     @Override
     public void initialize(Step step, String returnPath) {
@@ -193,6 +200,8 @@ public class ImageQAPlugin implements IStepPlugin {
                 imageFolder = step.getProzess().getImagesTifDirectory(false);
             }
             initImageList(myconfig, imageFolder);
+            this.useJSFullscreen = myconfig.getBoolean("useJSFullscreen", false);
+            this.noShortcutPrefix = myconfig.getBoolean("noShortcutPrefix", false);
         } catch (SwapException | DAOException | IOException | InterruptedException e) {
             log.error(e);
         }
@@ -387,18 +396,18 @@ public class ImageQAPlugin implements IStepPlugin {
      */
     public List<SelectableImage> getPaginatorList() {
         if (displayMode.equals("part")) {
-        	return getPaginatorListForPartGUI();
+            return getPaginatorListForPartGUI();
         } else {
-        	List<SelectableImage> subList = new ArrayList<>();
-        	if (pageNo * numberOfImagesInFullGUI > allImages.size()) {
-        		pageNo = 0;
-        	}
-	        if (allImages.size() > (pageNo * numberOfImagesInFullGUI) + numberOfImagesInFullGUI) {
-	            subList = allImages.subList(pageNo * numberOfImagesInFullGUI, (pageNo * numberOfImagesInFullGUI) + numberOfImagesInFullGUI);
-	        } else {
-	        	subList = allImages.subList(pageNo * numberOfImagesInFullGUI, allImages.size());
-	        }
-	        return subList;
+            List<SelectableImage> subList = new ArrayList<>();
+            if (pageNo * numberOfImagesInFullGUI > allImages.size()) {
+                pageNo = 0;
+            }
+            if (allImages.size() > (pageNo * numberOfImagesInFullGUI) + numberOfImagesInFullGUI) {
+                subList = allImages.subList(pageNo * numberOfImagesInFullGUI, (pageNo * numberOfImagesInFullGUI) + numberOfImagesInFullGUI);
+            } else {
+                subList = allImages.subList(pageNo * numberOfImagesInFullGUI, allImages.size());
+            }
+            return subList;
         }
     }
 
@@ -410,6 +419,13 @@ public class ImageQAPlugin implements IStepPlugin {
             subList = allImages.subList(pageNo * numberOfImagesInPartGUI, allImages.size());
         }
         return subList;
+    }
+
+    public String getAllImagesJSON() {
+        List<SelectableImageForJSON> images = this.allImages.stream()
+                .map(SelectableImageForJSON::new)
+                .collect(Collectors.toList());
+        return gson.toJson(images);
     }
 
     public Image getImage() {
@@ -776,15 +792,15 @@ public class ImageQAPlugin implements IStepPlugin {
     }
 
     public int getLastPageNumber() {
-    	if (displayMode.equals("part")) {
-    		return getLastPageNumberPartGUI();
-    	} else {
-    		int ret = new Double(Math.floor(this.allImages.size() / numberOfImagesInFullGUI)).intValue();
-	        if (this.allImages.size() % numberOfImagesInFullGUI == 0) {
-	            ret--;
-	        }
-	        return ret;
-    	}
+        if (displayMode.equals("part")) {
+            return getLastPageNumberPartGUI();
+        } else {
+            int ret = new Double(Math.floor(this.allImages.size() / numberOfImagesInFullGUI)).intValue();
+            if (this.allImages.size() % numberOfImagesInFullGUI == 0) {
+                ret--;
+            }
+            return ret;
+        }
     }
 
     public int getLastPageNumberPartGUI() {
@@ -795,9 +811,9 @@ public class ImageQAPlugin implements IStepPlugin {
         return ret;
     }
 
-//    public boolean hasNextPagePartGUI() {
-//        return this.allImages.size() > numberOfImagesInPartGUI;
-//    }
+    //    public boolean hasNextPagePartGUI() {
+    //        return this.allImages.size() > numberOfImagesInPartGUI;
+    //    }
 
     public boolean isFirstPage() {
         return this.pageNo == 0;
@@ -807,13 +823,13 @@ public class ImageQAPlugin implements IStepPlugin {
         return this.pageNo >= getLastPageNumber();
     }
 
-//    public boolean hasNextPage() {
-//        return this.allImages.size() > numberOfImagesInFullGUI;
-//    }
+    //    public boolean hasNextPage() {
+    //        return this.allImages.size() > numberOfImagesInFullGUI;
+    //    }
 
-//    public boolean hasPreviousPage() {
-//        return this.pageNo > 0;
-//    }
+    //    public boolean hasPreviousPage() {
+    //        return this.pageNo > 0;
+    //    }
 
     public Long getPageNumberCurrent() {
         return Long.valueOf(this.pageNo + 1);
@@ -822,7 +838,7 @@ public class ImageQAPlugin implements IStepPlugin {
     public Long getPageNumberLast() {
         return Long.valueOf(getLastPageNumber() + 1);
     }
-    
+
     public Long getPageNumberLastPartGUI() {
         return Long.valueOf(getLastPageNumberPartGUI() + 1);
     }
