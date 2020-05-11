@@ -40,7 +40,8 @@
     </ui:define>
 
     <ui:define name="content">
-
+    
+        <link rel="stylesheet" href="imageQA.css" />
         <style>
 			/* Thumbnails */
 			.goobi-thumbnail {
@@ -58,161 +59,9 @@
 			    max-height: #{AktuelleSchritteForm.myPlugin.thumbnailSize +2}px;
 			}
 			
-			.goobi-thumbnail .goobi-thumbnail-image a {
-			    display: block;
-			}
-			
-			.goobi-thumbnail .goobi-thumbnail-image a img {
-			    display: block;
-			    max-width: 100%;
-			    max-height: 175px;
-			    margin: 0 auto;
-			    border: 1px solid lightgrey;
-			}
-			
-			.goobi-thumbnail .goobi-thumbnail-caption {
-			    float: left;
-			    width: 100%;
-			    min-height: 20px;
-			    line-height: 20px;
-			    text-align: center;
-			}
-			
-			.goobi-thumbnail .goobi-thumbnail-controls {
-			    float: left;
-			    width: 100%;
-			    margin-top: 5px;
-			}
-			
-			.goobi-thumbnail-controls-left {
-			    width: 60%;    
-			}
-			
-			.goobi-thumbnail-controls-right {
-			    width: 40%;
-			}
-			
-			.goobi-thumbnail-controls-left {
-			    padding-left: 25px;
-			}
-			
-			.goobi-thumbnail-controls-left .thumbnail-control {
-			    margin-right: 3px;
-			}
-			
-			.goobi-thumbnail-controls-right {
-			    padding-right: 25px;
-			    text-align: right;
-			}
-			
-			.goobi-thumbnail-controls-right .thumbnail-control {
-			    margin-left: 3px;
-			}
-			
-			.thumbnail-control {
-			    padding: 3px 5px;
-			}
-			
-			.thumbnail-control.checkbox {
-			    position: relative;
-			    margin: 0 3px 0 0;
-			}
-			
-			.thumbnail-control.checkbox label {
-			    margin: 0;
-			    padding: 0;
-			}
-			
-			.thumbnail-control.checkbox .control-indicator .fa-square-o, .thumbnail-control.checkbox .control-indicator .fa-check-square-o {
-			    margin-top: 4px;
-			}
-			
-			.thumbnail-control.checkbox .control-indicator .fa-square-o {
-			    padding-right: 2px;
-			}
-			
-			.thumbnail-control.checkbox .control-indicator .fa-check-square-o {
-			    display: none;
-			}
-			
-			.thumbnail-control.checkbox input[type="checkbox"] {
-			    position: absolute;
-			    margin: 0;
-			    visibility: hidden;
-			    z-index: -1;
-			}
-			
-			.thumbnail-control.checkbox input:checked ~ .control-indicator .fa-check-square-o {
-			    display: inline-block;
-			}
-			
-			.thumbnail-control.checkbox input:checked ~ .control-indicator .fa-square-o {
-			    display: none;
-			}
-			
-			.thumb-canvas{
-				border: 1px solid #ccc;
-			}
-			
-			.big-image-caption {
-			    text-align: center;
-			}
-			
-			.div-image img {
-			    float: right;
-			    border: solid 1px;
-			    border-color: lightgrey;
-			}
-			
-			.img-active {
-			    background-color: #368ee0;
-			    color: white;
-			}
-			
-			.image-navigation {
-			    margin-bottom: 5px;
-			}
-			
-			#image-control-wrapper {
-			    margin-left: 6px;
-			}
-			
-			#mainImage {
-			    widht: 100%;
-                height: 600px;
-                border: 1px solid lightgrey;            
-			}
-            
-            #mainImage #ajaxloader_image {
-                position: absolute;
-                left:50%;
-                top:50%;
-                margin-left: -34px;
-                margin-top: -21px;
-            }
-            
-            #mainImage #ajaxloader_image img{
-                border: none;
-            }
-
-			.namePart {
-				display: inline-block;
-				width: auto;
-				min-width: 20px;
-				margin-left: 15px;
-				margin-bottom: 10px;
-			}
-			
-			.row.margin-top-most.margin-bottom-most {
-				direction: rtl;
-			}
-			
-			.flex-container {
- 				 display: flex;
- 				 flex-wrap: wrap;
-			}
 
 		</style>
+        
 		<script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/reactiveX/rx.lite.min.js"></script>
 		<script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/q-promises/q.min.js"></script>
 
@@ -283,10 +132,24 @@
 
                                         <div class="thumb">
                                             <h:commandLink title="#{image.tooltip}">
-                                                <canvas class="thumb-canvas" data-image_small="#{image.thumbnailUrl}" data-image_large="#{image.largeThumbnailUrl}" title="#{image.tooltip}" id="thumbnail-#{status.index}"></canvas>
-                                                <f:setPropertyActionListener value="#{image.order -1}" target="#{AktuelleSchritteForm.myPlugin.imageIndex}" />
-                                                <f:ajax execute="@form" render="@form :qaform:bigimage" onevent="freeJSResources"/>
+	                                            <ui:fragment rendered="#{image.type == 'image'}">
+	                                                <canvas class="thumb-canvas" data-image_small="#{image.thumbnailUrl}" data-image_large="#{image.largeThumbnailUrl}" title="#{image.tooltip}" id="thumbnail-#{status.index}"></canvas>
 
+												</ui:fragment>
+												<!-- 3D OBJECT -->
+			                                    <ui:fragment rendered="#{image.type == 'object' or image.type == 'x3dom'}">
+			                                        <img 
+			                                            class="thumbnails__thumb-placeholder"
+			                                            src="#{HelperForm.servletPathWithHostAsUrl}/uii/template/img/goobi_3d_object_placeholder.png" />
+			                                    </ui:fragment>
+			                                    <!-- PLACEHOLDER -->
+			                                    <ui:fragment rendered="#{image.type != 'image' and image.type != 'object' and  image.type != 'x3dom'}">
+			                                        <img 
+			                                            class="thumbnails__thumb-placeholder"
+			                                            src="#{HelperForm.servletPathWithHostAsUrl}/uii/template/img/thumbnail-placeholder.png" />
+			                                    </ui:fragment>
+			                                    <f:setPropertyActionListener value="#{image.order -1}" target="#{AktuelleSchritteForm.myPlugin.imageIndex}" />
+	                                            <f:ajax execute="@form" render="@form :qaform:bigimage" onevent="freeJSResources"/>
                                             </h:commandLink>
                                         </div>
 
@@ -577,7 +440,7 @@
 	                                </div>
 	                               <!-- OCR text -->
 									<ui:fragment rendered="#{AktuelleSchritteForm.myPlugin.displayOCR}">
-										<div class="col-xs-12 col-sm-6">
+										<div class="col-xs-12 col-sm-6 border-light">
 											<div id="ocrText" class="ocr-text">	
 											<h:outputText value="#{AktuelleSchritteForm.myPlugin.ocrText}" escape="false">
 											</h:outputText>
