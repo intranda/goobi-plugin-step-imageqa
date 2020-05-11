@@ -42,6 +42,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -69,6 +70,7 @@ import com.google.gson.Gson;
 
 import de.intranda.goobi.NamePart;
 import de.intranda.goobi.SelectableImage;
+import de.intranda.goobi.SelectableImageForJSON;
 import de.sub.goobi.config.ConfigPlugins;
 import de.sub.goobi.config.ConfigurationHelper;
 import de.sub.goobi.helper.FacesContextHelper;
@@ -87,7 +89,6 @@ import de.unigoettingen.sub.commons.contentlib.exceptions.ImageManipulatorExcept
 import de.unigoettingen.sub.commons.contentlib.imagelib.ImageManager;
 import de.unigoettingen.sub.commons.contentlib.imagelib.JpegInterpreter;
 import lombok.Data;
-import lombok.Getter;
 import lombok.extern.log4j.Log4j;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 import ugh.dl.DigitalDocument;
@@ -152,7 +153,6 @@ public class ImageQAPlugin implements IStepPlugin {
     private String ocrText = "";
 
     private boolean pagesRTL;
-    @Getter
     private boolean useJSFullscreen;
 
     @Override
@@ -399,7 +399,10 @@ public class ImageQAPlugin implements IStepPlugin {
     }
 
     public String getAllImagesJSON() {
-        return gson.toJson(this.allImages);
+        List<SelectableImageForJSON> images = this.allImages.stream()
+                .map(SelectableImageForJSON::new)
+                .collect(Collectors.toList());
+        return gson.toJson(images);
     }
 
     public Image getImage() {
