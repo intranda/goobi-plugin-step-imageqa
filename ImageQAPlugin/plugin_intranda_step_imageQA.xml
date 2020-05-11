@@ -49,6 +49,7 @@
         <scaleFactors>32</scaleFactors>
         <useTiles>false</useTiles>
         <useTilesFullscreen>true</useTilesFullscreen>
+        <useJSFullscreen>false</useJSFullscreen>
 
         <!-- allow deletion of images -->
         <allowDeletion>false</allowDeletion>
