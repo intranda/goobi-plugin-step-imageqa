@@ -120,7 +120,9 @@
               		useTiles: #{AktuelleSchritteForm.myPlugin.useTilesFullscreen},
               		imageSizes: #{AktuelleSchritteForm.myPlugin.displaySizes},
               		tileSizes: #{AktuelleSchritteForm.myPlugin.tileSize},
-   				allImages: '#{AktuelleSchritteForm.myPlugin.allImagesJSON}'
+   					allImages: '#{AktuelleSchritteForm.myPlugin.allImagesJSON}',
+   					shortcutPrefix: '#{LoginForm.myBenutzer.shortcutPrefix}',
+   					noShortcutPrefix: #{AktuelleSchritteForm.myPlugin.noShortcutPrefix}
               };
 	       	   riot.mount("fullscreen", opts);
 		    }

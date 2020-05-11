@@ -67,6 +67,13 @@ this.on("mount", () => {
 	this.loadInitialImage().then(() => {
 		this.loadInfoJsonCache(1, false);
 	});
+	if(this.opts.noShortcutPrefix) {
+		$(document).bind('keyup', 'left', e => this.shortcutPrevious(e));
+		$(document).bind('keyup', 'right', e => this.shortcutNext(e));
+	} else {
+		$(document).bind('keyup', this.opts.shortcutPrefix+'+left', this.shortcutPrevious);
+		$(document).bind('keyup', this.opts.shortcutPrefix+'+right', this.shortcutNext);
+	}
 })
 
 loadMessages() {
@@ -80,6 +87,18 @@ loadMessages() {
           this.update();
         })
       })
+}
+
+shortcutPrevious(e) {
+	e.stopPropagation(); 
+	this.previousImage(); 
+	this.update();
+}
+
+shortcutNext(e) { 
+	e.stopPropagation(); 
+	this.nextImage(); 
+	this.update();
 }
 
 showAndFocusImageNumberInput() {

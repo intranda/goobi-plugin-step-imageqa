@@ -158,6 +158,7 @@ public class ImageQAPlugin implements IStepPlugin {
 
     private boolean pagesRTL;
     private boolean useJSFullscreen;
+    private boolean noShortcutPrefix;
 
     @Override
     public void initialize(Step step, String returnPath) {
@@ -199,7 +200,8 @@ public class ImageQAPlugin implements IStepPlugin {
                 imageFolder = step.getProzess().getImagesTifDirectory(false);
             }
             initImageList(myconfig, imageFolder);
-            this.useJSFullscreen = myconfig.getBoolean("useJSFullscreen");
+            this.useJSFullscreen = myconfig.getBoolean("useJSFullscreen", false);
+            this.noShortcutPrefix = myconfig.getBoolean("noShortcutPrefix", false);
         } catch (SwapException | DAOException | IOException | InterruptedException e) {
             log.error(e);
         }
@@ -394,18 +396,18 @@ public class ImageQAPlugin implements IStepPlugin {
      */
     public List<SelectableImage> getPaginatorList() {
         if (displayMode.equals("part")) {
-        	return getPaginatorListForPartGUI();
+            return getPaginatorListForPartGUI();
         } else {
-        	List<SelectableImage> subList = new ArrayList<>();
-        	if (pageNo * numberOfImagesInFullGUI > allImages.size()) {
-        		pageNo = 0;
-        	}
-	        if (allImages.size() > (pageNo * numberOfImagesInFullGUI) + numberOfImagesInFullGUI) {
-	            subList = allImages.subList(pageNo * numberOfImagesInFullGUI, (pageNo * numberOfImagesInFullGUI) + numberOfImagesInFullGUI);
-	        } else {
-	        	subList = allImages.subList(pageNo * numberOfImagesInFullGUI, allImages.size());
-	        }
-	        return subList;
+            List<SelectableImage> subList = new ArrayList<>();
+            if (pageNo * numberOfImagesInFullGUI > allImages.size()) {
+                pageNo = 0;
+            }
+            if (allImages.size() > (pageNo * numberOfImagesInFullGUI) + numberOfImagesInFullGUI) {
+                subList = allImages.subList(pageNo * numberOfImagesInFullGUI, (pageNo * numberOfImagesInFullGUI) + numberOfImagesInFullGUI);
+            } else {
+                subList = allImages.subList(pageNo * numberOfImagesInFullGUI, allImages.size());
+            }
+            return subList;
         }
     }
 
@@ -790,15 +792,15 @@ public class ImageQAPlugin implements IStepPlugin {
     }
 
     public int getLastPageNumber() {
-    	if (displayMode.equals("part")) {
-    		return getLastPageNumberPartGUI();
-    	} else {
-    		int ret = new Double(Math.floor(this.allImages.size() / numberOfImagesInFullGUI)).intValue();
-	        if (this.allImages.size() % numberOfImagesInFullGUI == 0) {
-	            ret--;
-	        }
-	        return ret;
-    	}
+        if (displayMode.equals("part")) {
+            return getLastPageNumberPartGUI();
+        } else {
+            int ret = new Double(Math.floor(this.allImages.size() / numberOfImagesInFullGUI)).intValue();
+            if (this.allImages.size() % numberOfImagesInFullGUI == 0) {
+                ret--;
+            }
+            return ret;
+        }
     }
 
     public int getLastPageNumberPartGUI() {
@@ -809,9 +811,9 @@ public class ImageQAPlugin implements IStepPlugin {
         return ret;
     }
 
-//    public boolean hasNextPagePartGUI() {
-//        return this.allImages.size() > numberOfImagesInPartGUI;
-//    }
+    //    public boolean hasNextPagePartGUI() {
+    //        return this.allImages.size() > numberOfImagesInPartGUI;
+    //    }
 
     public boolean isFirstPage() {
         return this.pageNo == 0;
@@ -821,13 +823,13 @@ public class ImageQAPlugin implements IStepPlugin {
         return this.pageNo >= getLastPageNumber();
     }
 
-//    public boolean hasNextPage() {
-//        return this.allImages.size() > numberOfImagesInFullGUI;
-//    }
+    //    public boolean hasNextPage() {
+    //        return this.allImages.size() > numberOfImagesInFullGUI;
+    //    }
 
-//    public boolean hasPreviousPage() {
-//        return this.pageNo > 0;
-//    }
+    //    public boolean hasPreviousPage() {
+    //        return this.pageNo > 0;
+    //    }
 
     public Long getPageNumberCurrent() {
         return Long.valueOf(this.pageNo + 1);
@@ -836,7 +838,7 @@ public class ImageQAPlugin implements IStepPlugin {
     public Long getPageNumberLast() {
         return Long.valueOf(getLastPageNumber() + 1);
     }
-    
+
     public Long getPageNumberLastPartGUI() {
         return Long.valueOf(getLastPageNumberPartGUI() + 1);
     }
