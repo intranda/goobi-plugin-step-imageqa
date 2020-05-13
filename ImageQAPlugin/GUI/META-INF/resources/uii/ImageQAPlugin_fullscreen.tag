@@ -58,7 +58,7 @@ this.infoJsonCache = {};
 this.on("mount", () => {
 	console.log(this.opts);
 	this.useTiles = this.opts.useTiles;
-	this.imageSizes = this.opts.displaySizes;
+	this.imageSizes = this.opts.imageSizes;
 	this.tileSizes = this.opts.tileSizes;
 	this.allImages = JSON.parse(this.opts.allImages);
 	this.update();
@@ -159,6 +159,7 @@ loadInfoJsonCache(start) {
 			fetch(this.allImages[i].url)
 				.then((response) => {
 					response.json().then((infoJson) => {
+						infoJson.sizes = this.imageSizes;
 						this.infoJsonCache[i] = infoJson;
 					}).catch(err => {
 						console.log(err);
@@ -190,6 +191,7 @@ loadInitialImage() {
 		fetch(this.currentImage().url).then(response => {
 			response.json().then(infoJson => {
 				console.log("use tiles:", this.useTiles);
+				infoJson.sizes = this.imageSizes;
 				var configViewer = {
 				    global: {
 				    	divId: 'mainImage',
@@ -207,7 +209,6 @@ loadInitialImage() {
 				        tileSource: infoJson
 				    }
 				};					
-				
 			    this.viewImage = new ImageView.Image( configViewer );
 			    this.viewImage.load()
 			    .then(function(image) {
