@@ -159,7 +159,7 @@ loadInfoJsonCache(start) {
 			fetch(this.allImages[i].url)
 				.then((response) => {
 					response.json().then((infoJson) => {
-						infoJson.sizes = this.imageSizes;
+// 						infoJson.sizes = this.imageSizes;
 						this.infoJsonCache[i] = infoJson;
 					}).catch(err => {
 						console.log(err);
@@ -191,7 +191,7 @@ loadInitialImage() {
 		fetch(this.currentImage().url).then(response => {
 			response.json().then(infoJson => {
 				console.log("use tiles:", this.useTiles);
-				infoJson.sizes = this.imageSizes;
+// 				infoJson.sizes = this.imageSizes;
 				var configViewer = {
 				    global: {
 				    	divId: 'mainImage',
@@ -201,7 +201,7 @@ loadInitialImage() {
 				        zoomSlider: "#zoomSlider",
 				        zoomSliderHandle: "#zoomSlider .zoom-slider-handle",
 				        zoomSliderLabel: "#zoomSliderLabel input",
-			            imageSizes: this.imageSizes,
+// 			            imageSizes: this.imageSizes,
 			            tileSizes: this.tileSizes,
 				    },
 				    image: {
