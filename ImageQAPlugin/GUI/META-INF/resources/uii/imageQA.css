@@ -154,10 +154,6 @@
     margin-bottom: 10px;
 }
 
-.row.margin-top-most.margin-bottom-most {
-    direction: rtl;
-}
-
 .flex-container {
     display: flex;
     flex-wrap: wrap;
