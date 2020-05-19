@@ -211,7 +211,9 @@ loadInitialImage() {
 				};					
 			    this.viewImage = new ImageView.Image( configViewer );
 			    this.viewImage.load()
-			    .then(function(image) {
+			    .then((image) => {
+				    this.viewImage.viewer.blendTime = 0.0;
+			    	console.log(this.viewImage.viewer.drawer.getOpacity())
 			        image.onFirstTileLoaded()
 			        .then(function() {										            
 			        	$('#ajaxloader_image').fadeOut(800);
