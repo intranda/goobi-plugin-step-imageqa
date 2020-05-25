@@ -51,6 +51,7 @@
         <useTilesFullscreen>true</useTilesFullscreen>
         <useJSFullscreen>false</useJSFullscreen>
         <noShortcutPrefix>false</noShortcutPrefix>
+        <thumbnailsOnly>false</thumbnailsOnly>
 
         <!-- allow deletion of images -->
         <allowDeletion>false</allowDeletion>

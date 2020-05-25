@@ -94,6 +94,20 @@
                         <h:outputText id="id9a" value="#{AktuelleSchritteForm.myPlugin.step.titel}" />
                     </h3>
                     <div class="actions">
+                    	<h:commandLink 
+                    		styleClass="btn font-size-s margin-left-10" 
+                    		title="#{msgs.imageFullscreen}"
+							action="ImageQAPlugin_JSFullscreen" 
+							rendered="#{AktuelleSchritteForm.myPlugin.thumbnailsOnly and AktuelleSchritteForm.myPlugin.useJSFullscreen}">
+							<i class="fa fa-arrows-alt"></i>
+						</h:commandLink>
+						<h:commandLink
+                            styleClass="btn font-size-s margin-left-10"
+                            title="#{msgs.imageFullscreen}"
+                            action="ImageQAPlugin_Fullscreen"
+                            rendered="#{AktuelleSchritteForm.myPlugin.thumbnailsOnly and not AktuelleSchritteForm.myPlugin.useJSFullscreen}">
+                            <i class="fa fa-arrows-alt"></i>
+                        </h:commandLink>
                         <h:commandLink id="id10" action="#{NavigationForm.Reload}" styleClass="btn btn-mini">
                             <i class="fa fa-refresh" />
                         </h:commandLink>
@@ -114,7 +128,7 @@
                 </div>
 
                 <div class="box-content">
-					<div class="#{AktuelleSchritteForm.myPlugin.displayOCR ? 'col-xs-12 col-sm-5' : 'col-xs-12 col-sm-7'}">
+					<div class="#{AktuelleSchritteForm.myPlugin.thumbnailsOnly ? 'col-sm-12' : AktuelleSchritteForm.myPlugin.displayOCR ? 'col-sm-5' : 'col-sm-7'} col-xs-12">
 						<h:panelGroup layout="block" rendered="#{AktuelleSchritteForm.myPlugin.sizeOfImageList gt 0}">
 
                         <div class="row">
@@ -284,8 +298,10 @@
                     </h:panelGroup>
 					</div>
 
-					<div class="#{AktuelleSchritteForm.myPlugin.displayOCR ? 'col-xs-12 col-sm-7' : 'col-xs-12 col-sm-5'}">
-						<h:panelGroup layout="block" rendered="#{AktuelleSchritteForm.myPlugin.sizeOfImageList gt 0}">
+					<h:panelGroup 
+						rendered="#{AktuelleSchritteForm.myPlugin.sizeOfImageList gt 0 and not AktuelleSchritteForm.myPlugin.thumbnailsOnly}" 
+						class="#{AktuelleSchritteForm.myPlugin.displayOCR ? 'col-xs-12 col-sm-7' : 'col-xs-12 col-sm-5'}"
+						layout="block">
                         <h:panelGroup id="bigimage">
 
                             <div class="row pull-center">
@@ -459,7 +475,6 @@
 
                         </h:panelGroup>
                     </h:panelGroup>
-					</div>
                     <h:panelGroup layout="block" rendered="#{AktuelleSchritteForm.myPlugin.sizeOfImageList == 0}" styleClass="col-sm-12">
                         <h:outputText value="#{msgs.noImagesFound}" />
                     </h:panelGroup>

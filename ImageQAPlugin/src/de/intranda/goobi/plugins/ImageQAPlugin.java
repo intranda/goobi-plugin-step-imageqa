@@ -159,6 +159,7 @@ public class ImageQAPlugin implements IStepPlugin {
     private boolean pagesRTL;
     private boolean useJSFullscreen;
     private boolean noShortcutPrefix;
+    private boolean thumbnailsOnly;
 
     @Override
     public void initialize(Step step, String returnPath) {
@@ -202,6 +203,7 @@ public class ImageQAPlugin implements IStepPlugin {
             initImageList(myconfig, imageFolder);
             this.useJSFullscreen = myconfig.getBoolean("useJSFullscreen", false);
             this.noShortcutPrefix = myconfig.getBoolean("noShortcutPrefix", false);
+            this.thumbnailsOnly = myconfig.getBoolean("thumbnailsOnly", false);
         } catch (SwapException | DAOException | IOException | InterruptedException e) {
             log.error(e);
         }
