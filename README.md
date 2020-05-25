@@ -11,8 +11,8 @@ Detail | Description
 --- | ---
 **Plugin identifier**       | intranda_step_imageQA
 **Plugin type**             | Step plugin
-**Documentation (German)**  | https://docs.intranda.com/
-**Documentation (English)** | - still to be translated -
+**Documentation (German)**  | https://docs.goobi.io/goobi-workflow-plugins-de/step-plugins/intranda_step_imageqa
+**Documentation (English)** | https://docs.goobi.io/goobi-workflow-plugins-en/step-plugins/intranda_step_imageqa
 
 ## Goobi details
 
