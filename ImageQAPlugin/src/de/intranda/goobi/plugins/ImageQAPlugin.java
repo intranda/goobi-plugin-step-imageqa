@@ -359,6 +359,16 @@ public class ImageQAPlugin implements IStepPlugin {
         return sb.toString();
     }
 
+    public String imageClick() {
+        if (this.thumbnailsOnly) {
+            if (this.useJSFullscreen) {
+                return "ImageQAPlugin_JSFullscreen";
+            }
+            return "ImageQAPlugin_Fullscreen";
+        }
+        return "";
+    }
+
     /**
      * builds String to apply settings for display size from the config file
      * 

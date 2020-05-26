@@ -145,7 +145,7 @@
                                     <div class="goobi-thumbnail-image">
 
                                         <div class="thumb">
-                                            <h:commandLink title="#{image.tooltip}">
+                                            <h:commandLink title="#{image.tooltip}" action="#{AktuelleSchritteForm.myPlugin.imageClick}">
 	                                            <ui:fragment rendered="#{image.type == 'image'}">
 	                                                <canvas class="thumb-canvas" data-image_small="#{image.thumbnailUrl}" data-image_large="#{image.largeThumbnailUrl}" title="#{image.tooltip}" id="thumbnail-#{status.index}"></canvas>
 
@@ -163,7 +163,7 @@
 			                                            src="#{HelperForm.servletPathWithHostAsUrl}/uii/template/img/thumbnail-placeholder.png" />
 			                                    </ui:fragment>
 			                                    <f:setPropertyActionListener value="#{image.order -1}" target="#{AktuelleSchritteForm.myPlugin.imageIndex}" />
-	                                            <f:ajax execute="@form" render="@form :qaform:bigimage" onevent="freeJSResources"/>
+	                                            <f:ajax execute="@form" render="@form :qaform:bigimage" onevent="freeJSResources" disabled="#{AktuelleSchritteForm.myPlugin.thumbnailsOnly}"/>
                                             </h:commandLink>
                                         </div>
 

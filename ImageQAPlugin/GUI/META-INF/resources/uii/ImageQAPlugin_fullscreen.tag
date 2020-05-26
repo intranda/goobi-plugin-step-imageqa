@@ -63,6 +63,7 @@ this.on("mount", () => {
 	this.allImages = JSON.parse(this.opts.allImages);
 	this.update();
 	this.lang = this.opts.lang;
+	this.imageIndex = this.opts.startImage;
 	this.loadMessages();
 	this.loadInitialImage().then(() => {
 		this.loadInfoJsonCache(1, false);
