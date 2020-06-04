@@ -317,6 +317,41 @@
                             </div>
 
                             <!-- big image -->
+                            
+                            <ui:fragment rendered="#{AktuelleSchritteForm.myPlugin.image.type == 'audio'}">
+                                <audio
+                                    class="audioplayer"
+                                    id="audioplayer"
+                                    controls="true"
+                                    played="length"
+                                    preload="auto"
+                                    src="#{AktuelleSchritteForm.myPlugin.image.objectUrl}">
+                                </audio>
+                            </ui:fragment>
+
+                            <ui:fragment rendered="#{AktuelleSchritteForm.myPlugin.image.type == 'video'}">
+                                <video
+                                    class="videoplayer"
+                                    id="videoplayer"
+                                    controls="true"
+                                    played="length"
+                                    preload="auto"
+                                    src="#{AktuelleSchritteForm.myPlugin.image.objectUrl}">
+                                </video>
+                            </ui:fragment>
+
+                            <ui:fragment rendered="#{AktuelleSchritteForm.myPlugin.image.type == 'unknown'}">
+                                <p class="unknown_file_download">
+                                    <h:outputText value="#{msgs.mets_downloadFile}" />
+                                    <a
+                                        href="#{AktuelleSchritteForm.myPlugin.image.objectUrl}"
+                                        download="#{AktuelleSchritteForm.myPlugin.image.tooltip}">Download</a>
+                                </p>
+                            </ui:fragment>
+
+
+                            <ui:fragment rendered="#{AktuelleSchritteForm.myPlugin.image.type == 'image'}">
+                            
                             <div class="row margin-top-most margin-bottom-most">
 									<div class="#{AktuelleSchritteForm.myPlugin.displayOCR ? 'col-xs-12 col-sm-6' : ''}">							
 										<div class="div-image">
@@ -466,13 +501,13 @@
 									<!--  OCR text -->
 								</div>
                             <!-- // big image -->
-
                             <div class="row">
                                 <f:subview id="second_image">
                                     <ui:include src="ImageQAPlugin_include_imagenavigation.xhtml" />
                                 </f:subview>
                             </div>
 
+                            </ui:fragment>
                         </h:panelGroup>
                     </h:panelGroup>
                     <h:panelGroup layout="block" rendered="#{AktuelleSchritteForm.myPlugin.sizeOfImageList == 0}" styleClass="col-sm-12">
