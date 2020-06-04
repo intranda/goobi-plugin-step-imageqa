@@ -62,7 +62,7 @@
 			<div class="#{AktuelleSchritteForm.myPlugin.displayOCR ? 'col-sm-9' : ''}">
 			<div class="row">			
 			    <div class="div-image">
-			    	<ui:fragment rendered="#{AktuelleSchritteForm.myPlugin.image != null}">
+			    	<ui:fragment rendered="#{AktuelleSchritteForm.myPlugin.image != null and AktuelleSchritteForm.myPlugin.image.type == 'image'}">
 				        <div id="mainImage">
 	                        <div id="ajaxloader_image">
 	                            <img src="template/img/goobi/ajaxloader1.gif" />
@@ -199,6 +199,37 @@
                <div id="zoomSliderLabel" class="font-light">
                        <input></input><span>%</span>
                </div>
+             </ui:fragment>
+             
+             <ui:fragment rendered="#{AktuelleSchritteForm.myPlugin.image.type == 'audio'}">
+                                <audio
+                                    class="audioplayer"
+                                    id="audioplayer"
+                                    controls="true"
+                                    played="length"
+                                    preload="auto"
+                                    src="#{AktuelleSchritteForm.myPlugin.image.objectUrl}">
+                                </audio>
+             </ui:fragment>
+
+             <ui:fragment rendered="#{AktuelleSchritteForm.myPlugin.image.type == 'video'}">
+                                <video
+                                    class="videoplayer"
+                                    id="videoplayer"
+                                    controls="true"
+                                    played="length"
+                                    preload="auto"
+                                    src="#{AktuelleSchritteForm.myPlugin.image.objectUrl}">
+                                </video>
+             </ui:fragment>
+
+             <ui:fragment rendered="#{AktuelleSchritteForm.myPlugin.image.type == 'unknown'}">
+                                <p class="unknown_file_download">
+                                    <h:outputText value="#{msgs.mets_downloadFile}" />
+                                    <a
+                                        href="#{AktuelleSchritteForm.myPlugin.image.objectUrl}"
+                                        download="#{AktuelleSchritteForm.myPlugin.image.tooltip}">Download</a>
+                                </p>
              </ui:fragment>
              <ui:fragment rendered="#{AktuelleSchritteForm.myPlugin.image.type == 'object'}">
                     <div id="image-control-wrapper">
