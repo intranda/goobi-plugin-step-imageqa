@@ -357,8 +357,3 @@
 	text-align: right;
 	font-size: 12px;
 }
-
-#ocrText {
-	max-height: 100vh;
-	overflow-y: auto;
-}
