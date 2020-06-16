@@ -319,6 +319,7 @@
                             <!-- big image -->
                             
                             <ui:fragment rendered="#{AktuelleSchritteForm.myPlugin.image.type == 'audio'}">
+                                <div class="row margin-top-most margin-bottom-most">
                                 <audio
                                     class="audioplayer"
                                     id="audioplayer"
@@ -327,9 +328,11 @@
                                     preload="auto"
                                     src="#{AktuelleSchritteForm.myPlugin.image.objectUrl}">
                                 </audio>
+                                </div>
                             </ui:fragment>
 
                             <ui:fragment rendered="#{AktuelleSchritteForm.myPlugin.image.type == 'video'}">
+                                <div class="row margin-top-most margin-bottom-most">
                                 <video
                                     class="videoplayer"
                                     id="videoplayer"
@@ -338,15 +341,18 @@
                                     preload="auto"
                                     src="#{AktuelleSchritteForm.myPlugin.image.objectUrl}">
                                 </video>
+                                </div>
                             </ui:fragment>
 
                             <ui:fragment rendered="#{AktuelleSchritteForm.myPlugin.image.type == 'unknown'}">
+                                <div class="row margin-top-most margin-bottom-most">
                                 <p class="unknown_file_download">
                                     <h:outputText value="#{msgs.mets_downloadFile}" />
                                     <a
                                         href="#{AktuelleSchritteForm.myPlugin.image.objectUrl}"
                                         download="#{AktuelleSchritteForm.myPlugin.image.tooltip}">Download</a>
                                 </p>
+								</div>
                             </ui:fragment>
 
 
