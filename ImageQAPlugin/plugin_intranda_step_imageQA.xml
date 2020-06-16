@@ -40,6 +40,8 @@
         <!-- which image sizes to use for the big image -->
         <thumbnailFormat>jpg</thumbnailFormat>
         <mainImageFormat>jpg</mainImageFormat>
+        <!-- use the high speed JavaScript fullscreen view -->
+        <useJSFullscreen>false</useJSFullscreen>
 
         <imagesize>800</imagesize>
         <imagesize>1800</imagesize>
@@ -49,7 +51,6 @@
         <scaleFactors>32</scaleFactors>
         <useTiles>false</useTiles>
         <useTilesFullscreen>true</useTilesFullscreen>
-        <useJSFullscreen>false</useJSFullscreen>
         <noShortcutPrefix>false</noShortcutPrefix>
         <thumbnailsOnly>false</thumbnailsOnly>
 
