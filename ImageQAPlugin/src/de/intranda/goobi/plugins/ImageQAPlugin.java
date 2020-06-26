@@ -31,6 +31,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -193,20 +194,20 @@ public class ImageQAPlugin implements IStepPlugin {
         }
 
         initConfig(myconfig);
+
+        String imageFolder=null;
+
         try {
-            String imageFolder;
-            if (myconfig.getBoolean("useOrigFolder", false)) {
-                imageFolder = step.getProzess().getImagesOrigDirectory(false);
-            } else {
-                imageFolder = step.getProzess().getImagesTifDirectory(false);
-            }
-            initImageList(myconfig, imageFolder);
-            this.useJSFullscreen = myconfig.getBoolean("useJSFullscreen", false);
-            this.noShortcutPrefix = myconfig.getBoolean("noShortcutPrefix", false);
-            this.thumbnailsOnly = myconfig.getBoolean("thumbnailsOnly", false);
-        } catch (SwapException | DAOException | IOException | InterruptedException e) {
+            imageFolder= step.getProzess().getConfiguredImageFolder(myconfig.getString("foldername","media"));
+        } catch (IOException | InterruptedException | SwapException | DAOException e) {
             log.error(e);
         }
+
+        initImageList(myconfig, imageFolder);
+        this.useJSFullscreen = myconfig.getBoolean("useJSFullscreen", false);
+        this.noShortcutPrefix = myconfig.getBoolean("noShortcutPrefix", false);
+        this.thumbnailsOnly = myconfig.getBoolean("thumbnailsOnly", false);
+
     }
 
     /**
@@ -305,7 +306,7 @@ public class ImageQAPlugin implements IStepPlugin {
         THUMBNAIL_SIZE_IN_PIXEL = myconfig.getInt("thumbnailsize", 200);
         THUMBNAIL_FORMAT = myconfig.getString("thumbnailFormat", "png");
         MAINIMAGE_FORMAT = myconfig.getString("mainImageFormat", "jpg");
-        imageSizes = myconfig.getList("imagesize");
+        imageSizes = Arrays.asList(myconfig.getStringArray("imagesize"));
         if (imageSizes == null || imageSizes.isEmpty()) {
             imageSizes = new ArrayList<>();
         }
@@ -314,7 +315,7 @@ public class ImageQAPlugin implements IStepPlugin {
             tileSize = "";
         }
         /* load scale factors, set default of none found */
-        scaleFactors = myconfig.getList("scaleFactors");
+        scaleFactors = Arrays.asList(myconfig.getStringArray("scaleFactors"));
         if (scaleFactors == null || scaleFactors.isEmpty()) {
             scaleFactors = new ArrayList<>();
             scaleFactors.add("1");

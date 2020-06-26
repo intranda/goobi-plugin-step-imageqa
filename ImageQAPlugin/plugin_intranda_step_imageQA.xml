@@ -30,8 +30,8 @@
         <!-- which projects to use for (can be more then one, otherwise use *) -->
         <project>*</project>
         <step>*</step>
-        <!-- which images to use -->
-        <useOrigFolder>true</useOrigFolder>
+        <!-- which images to use , possible values are master|main|jpeg|source|... -->
+        <foldername>master</foldername>
         <!-- how to display the thumbnails -->
         <numberOfImagesPerPage>12</numberOfImagesPerPage>
         <thumbnailsize>200</thumbnailsize>
@@ -83,7 +83,7 @@
         <step>MasterQA</step>
         <step>DerivateQA</step>
         <!-- which images to use -->
-        <useOrigFolder>true</useOrigFolder>
+        <foldername>master</foldername>
         <!-- how to display the thumbnails -->
         <numberOfImagesPerPage>12</numberOfImagesPerPage>
         <thumbnailsize>200</thumbnailsize>
@@ -113,7 +113,7 @@
     <config>
         <project>*</project>
         <step>ImageQA</step>
-        <useOrigFolder>true</useOrigFolder>
+        <foldername>master</foldername>
         <!-- how to display the thumbnails -->
         <numberOfImagesPerPage>12</numberOfImagesPerPage>
         <thumbnailsize>200</thumbnailsize>
