@@ -84,6 +84,7 @@
         <step>DerivateQA</step>
         <!-- which images to use -->
         <foldername>master</foldername>
+        <foldername>main</foldername>
         <!-- how to display the thumbnails -->
         <numberOfImagesPerPage>12</numberOfImagesPerPage>
         <thumbnailsize>200</thumbnailsize>
