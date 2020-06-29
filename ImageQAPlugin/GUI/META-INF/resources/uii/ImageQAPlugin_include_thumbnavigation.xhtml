@@ -24,108 +24,207 @@
     <composite:implementation>
 
         <!-- navigation buttons for Thumbnail list -->
+        <h:panelGroup
+            styleClass="text-center"
+            id="folder-selection"
+            layout="block"
+             style="margin-bottom: 10px;"
+            rendered="#{AktuelleSchritteForm.myPlugin.possibleImageFolder.size() gt 1  and position=='first'}">
+
+            <span>
+                <h:outputLabel
+                    for="folder"
+                    value="#{msgs.plugin_fileUpload_selectFolder}" />
+            </span>
+            <span>
+                <h:selectOneMenu
+                    id="folder"
+                    styleClass="form-control"
+                    style="width:auto; display:inline-block"
+                    value="#{AktuelleSchritteForm.myPlugin.selectedImageFolder}">
+                    <f:selectItem
+                        itemValue=""
+                        itemLabel="#{msgs.bitteAuswaehlen}"
+                        itemDisabled="true" />
+                    <f:selectItems
+                        value="#{AktuelleSchritteForm.myPlugin.possibleImageFolder}"
+                        var="item"
+                        itemLabel="#{item}"
+                        itemValue="#{item}" />
+                </h:selectOneMenu>
+            </span>
+            <span>
+                <h:commandLink
+                    styleClass="btn btn-blue font-size-s margin-sides-10"
+                    id="absenden"
+                    action="#{AktuelleSchritteForm.myPlugin.changeFolder}">
+                    <i class="fa fa-folder-open-o margin-right-5"></i>
+                    <h:outputText value="#{msgs.plugin_fileUpload_changeFolder}" />
+                </h:commandLink>
+            </span>
+        </h:panelGroup>
         <div class="text-center">
-        
-        	<ui:fragment rendered="#{AktuelleSchritteForm.myPlugin.pageNumberLastPartGUI gt 1}">
-	            <h:commandLink 
-	           	   styleClass="btn font-size-s margin-sides-10" 
-	           	   action="#{AktuelleSchritteForm.myPlugin.cmdMoveFirst}" 
-	          	   title="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.lastPage:msgs.firstPage}">
-	                <i class="fa fa-double-angle-left"></i>
-	                <f:ajax execute="@form" render="@form :qaform" />
-	            </h:commandLink>
-	            <h:commandLink 
-	            	styleClass="btn btn-primary font-size-s" 
-	       			action="#{AktuelleSchritteForm.myPlugin.cmdMovePrevious}" 
-	            	title="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.pageNext:msgs.pagePrevious}">
-	                <i class="fa fa-angle-left"></i>
-	                <f:ajax execute="@form" render="@form :qaform" />
-	                <h:outputText value=" #{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.pageNext:msgs.pagePrevious}" />
-	            </h:commandLink>
-	
-	            <div class="margin-sides-10">
-	                <x:outputText id="txtMoveTo1" value="#{msgs.seite} #{AktuelleSchritteForm.myPlugin.pageNumberCurrent} #{msgs.von} #{AktuelleSchritteForm.myPlugin.pageNumberLast}" onclick="document.getElementById(this.id).nextSibling.style.display='inline';
+            <ui:fragment rendered="#{AktuelleSchritteForm.myPlugin.pageNumberLast gt 1}">
+                <h:commandLink
+                    styleClass="btn font-size-s margin-sides-10"
+                    action="#{AktuelleSchritteForm.myPlugin.cmdMoveFirst}"
+                    title="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.lastPage:msgs.firstPage}">
+                    <i class="fa fa-double-angle-left"></i>
+                    <f:ajax
+                        execute="@form"
+                        render="@form :qaform" />
+                </h:commandLink>
+                <h:commandLink
+                    styleClass="btn btn-primary font-size-s"
+                    action="#{AktuelleSchritteForm.myPlugin.cmdMovePrevious}"
+                    title="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.pageNext:msgs.pagePrevious}">
+                    <i class="fa fa-angle-left"></i>
+                    <f:ajax
+                        execute="@form"
+                        render="@form :qaform" />
+                    <h:outputText value=" #{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.pageNext:msgs.pagePrevious}" />
+                </h:commandLink>
+
+                <div class="margin-sides-10">
+                    <x:outputText
+                        id="txtMoveTo1"
+                        value="#{msgs.seite} #{AktuelleSchritteForm.myPlugin.pageNumberCurrent} #{msgs.von} #{AktuelleSchritteForm.myPlugin.pageNumberLast}"
+                        onclick="document.getElementById(this.id).nextSibling.style.display='inline';
 	                document.getElementById(this.id).style.display='none'; 
 	                document.getElementById(this.id).nextSibling.focus();
 	                document.getElementById(this.id).nextSibling.select();" />
-	                <!-- Seite direkt anspringen -->
-	                <x:inputText value="#{AktuelleSchritteForm.myPlugin.txtMoveTo}" style="display:none;font-size:9px;width:30px" required="true" id="txtMoveTo2" onblur="document.getElementById(this.id).style.display='none';document.getElementById(this.id).previousSibling.style.display='inline';" onkeypress="copyValue(this,event);" />
-	                <x:commandButton action="#{NavigationForm.Reload}" value="go" style="display:none" id="cmdMoveTo" />
-	
-	            </div>
-	
-	            <h:commandLink 
-	          	  styleClass="btn btn-primary font-size-s" 
-	         	   action="#{AktuelleSchritteForm.myPlugin.cmdMoveNext}" 
-	            	title="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.pagePrevious:msgs.pageNext}">
-	                <h:outputText value="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.pagePrevious:msgs.pageNext} " />
-	                <i class="fa fa-angle-right"></i>
-	                <f:ajax execute="@form" render="@form :qaform" />
-	            </h:commandLink>
-	            <h:commandLink 
-	            	styleClass="btn font-size-s margin-sides-10" 
-	         	    action="#{AktuelleSchritteForm.myPlugin.cmdMoveLast}" 
-	        	    title="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.firstPage:msgs.lastPage}">
-	                <i class="fa fa-double-angle-right"></i>
-	                <f:ajax execute="@form" render="@form :qaform" />
-	            </h:commandLink>
-			</ui:fragment>
+                    <!-- Seite direkt anspringen -->
+                    <x:inputText
+                        value="#{AktuelleSchritteForm.myPlugin.txtMoveTo}"
+                        style="display:none;font-size:9px;width:30px"
+                        required="true"
+                        id="txtMoveTo2"
+                        onblur="document.getElementById(this.id).style.display='none';document.getElementById(this.id).previousSibling.style.display='inline';"
+                        onkeypress="copyValue(this,event);" />
+                    <x:commandButton
+                        action="#{NavigationForm.Reload}"
+                        value="go"
+                        style="display:none"
+                        id="cmdMoveTo" />
+
+                </div>
+
+                <h:commandLink
+                    styleClass="btn btn-primary font-size-s"
+                    action="#{AktuelleSchritteForm.myPlugin.cmdMoveNext}"
+                    title="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.pagePrevious:msgs.pageNext}">
+                    <h:outputText value="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.pagePrevious:msgs.pageNext} " />
+                    <i class="fa fa-angle-right"></i>
+                    <f:ajax
+                        execute="@form"
+                        render="@form :qaform" />
+                </h:commandLink>
+                <h:commandLink
+                    styleClass="btn font-size-s margin-sides-10"
+                    action="#{AktuelleSchritteForm.myPlugin.cmdMoveLast}"
+                    title="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.firstPage:msgs.lastPage}">
+                    <i class="fa fa-double-angle-right"></i>
+                    <f:ajax
+                        execute="@form"
+                        render="@form :qaform" />
+                </h:commandLink>
+            </ui:fragment>
             <!-- // navigation buttons for Thumbnail list -->
 
-            <h:commandLink styleClass="btn font-size-s pull-right" style="margin-right:50px;" rendered="#{AktuelleSchritteForm.myPlugin.allowDeletion or AktuelleSchritteForm.myPlugin.allowRotation or AktuelleSchritteForm.myPlugin.allowRenaming}">
+            <h:commandLink
+                styleClass="btn font-size-s pull-right"
+                style="margin-right:50px;"
+                rendered="#{AktuelleSchritteForm.myPlugin.allowDeletion or AktuelleSchritteForm.myPlugin.allowRotation or AktuelleSchritteForm.myPlugin.allowRenaming}">
                 <i class="fa #{NavigationForm.uiStatus.plugin_qa_confirmation == false?'fa fa-square-o':'fa fa-check-square-o'} margin-right-5" />
-                <h:outputText styleClass="font-size-s" value="#{msgs.plugin_intranda_step_imageQA_confirmImageManipulation}" />
-                <f:setPropertyActionListener value="#{NavigationForm.uiStatus.plugin_qa_confirmation == false?true:false}" target="#{NavigationForm.uiStatus.plugin_qa_confirmation}" />
+                <h:outputText
+                    styleClass="font-size-s"
+                    value="#{msgs.plugin_intranda_step_imageQA_confirmImageManipulation}" />
+                <f:setPropertyActionListener
+                    value="#{NavigationForm.uiStatus.plugin_qa_confirmation == false?true:false}"
+                    target="#{NavigationForm.uiStatus.plugin_qa_confirmation}" />
             </h:commandLink>
-            <h:panelGroup styleClass="btn-group margin-right-10 pull-right" style="margin-top:1px" title="#{msgs.options}" data-toggle="tooltip" 
-            	rendered="#{AktuelleSchritteForm.myPlugin.allowSelection and (AktuelleSchritteForm.myPlugin.allowDeletion or AktuelleSchritteForm.myPlugin.allowRotation or AktuelleSchritteForm.myPlugin.allowDownload)}">
+            <h:panelGroup
+                styleClass="btn-group margin-right-10 pull-right"
+                style="margin-top:1px"
+                title="#{msgs.options}"
+                data-toggle="tooltip"
+                rendered="#{AktuelleSchritteForm.myPlugin.allowSelection and (AktuelleSchritteForm.myPlugin.allowDeletion or AktuelleSchritteForm.myPlugin.allowRotation or AktuelleSchritteForm.myPlugin.allowDownload)}">
 
-                <a class="btn dropdown-toggle fa fa-cog" style="padding: 7px 6px 8px 6px;" data-toggle="dropdown">
+                <a
+                    class="btn dropdown-toggle fa fa-cog"
+                    style="padding: 7px 6px 8px 6px;"
+                    data-toggle="dropdown">
                     <span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu pull-right">
                     <li>
-                        <h:commandLink styleClass="thumbnail-control rotate-right" action="#{AktuelleSchritteForm.myPlugin.selectAllImages}" rendered="#{AktuelleSchritteForm.myPlugin.allowSelectionAll}">
+                        <h:commandLink
+                            styleClass="thumbnail-control rotate-right"
+                            action="#{AktuelleSchritteForm.myPlugin.selectAllImages}"
+                            rendered="#{AktuelleSchritteForm.myPlugin.allowSelectionAll}">
                             <i class="btn fa fa-check-square-o margin-right-10"></i>
                             <h:outputText value="#{msgs.plugin_intranda_step_imageQA_selectAllImages}" />
                         </h:commandLink>
                     </li>
 
                     <li>
-                        <h:commandLink styleClass="thumbnail-control rotate-right" action="#{AktuelleSchritteForm.myPlugin.unselectAllImages}" rendered="#{AktuelleSchritteForm.myPlugin.allowSelectionAll}">
+                        <h:commandLink
+                            styleClass="thumbnail-control rotate-right"
+                            action="#{AktuelleSchritteForm.myPlugin.unselectAllImages}"
+                            rendered="#{AktuelleSchritteForm.myPlugin.allowSelectionAll}">
                             <i class="btn fa fa-square-o margin-right-10"></i>
                             <h:outputText value="#{msgs.plugin_intranda_step_imageQA_unselectAllImages}" />
                         </h:commandLink>
                     </li>
 
                     <li>
-                        <h:commandLink styleClass="thumbnail-control delete" action="#{AktuelleSchritteForm.myPlugin.deleteSelection}" rendered="#{AktuelleSchritteForm.myPlugin.allowSelection and AktuelleSchritteForm.myPlugin.allowDeletion}" onclick="if (!confirm('#{msgs.wirklichAusfuehren}')) return false">
+                        <h:commandLink
+                            styleClass="thumbnail-control delete"
+                            action="#{AktuelleSchritteForm.myPlugin.deleteSelection}"
+                            rendered="#{AktuelleSchritteForm.myPlugin.allowSelection and AktuelleSchritteForm.myPlugin.allowDeletion}"
+                            onclick="if (!confirm('#{msgs.wirklichAusfuehren}')) return false">
                             <i class="btn fa fa-trash margin-right-10"></i>
                             <h:outputText value="#{msgs.plugin_intranda_step_imageQA_deleteSelection}" />
                         </h:commandLink>
                     </li>
                     <li>
-                        <h:commandLink styleClass="thumbnail-control rotate-left" action="#{AktuelleSchritteForm.myPlugin.rotateSelectionLeft}" rendered="#{AktuelleSchritteForm.myPlugin.allowSelection and AktuelleSchritteForm.myPlugin.allowRotation}" onclick="if (!confirm('#{msgs.wirklichAusfuehren}')) return false">
+                        <h:commandLink
+                            styleClass="thumbnail-control rotate-left"
+                            action="#{AktuelleSchritteForm.myPlugin.rotateSelectionLeft}"
+                            rendered="#{AktuelleSchritteForm.myPlugin.allowSelection and AktuelleSchritteForm.myPlugin.allowRotation}"
+                            onclick="if (!confirm('#{msgs.wirklichAusfuehren}')) return false">
                             <i class="btn fa fa-undo margin-right-10"></i>
                             <h:outputText value="#{msgs.plugin_intranda_step_imageQA_rotateLefteSelection}" />
                         </h:commandLink>
                     </li>
                     <li>
-                        <h:commandLink styleClass="thumbnail-control rotate-right" action="#{AktuelleSchritteForm.myPlugin.rotateSelectionRight}" rendered="#{AktuelleSchritteForm.myPlugin.allowSelection and AktuelleSchritteForm.myPlugin.allowRotation}" onclick="if (!confirm('#{msgs.wirklichAusfuehren}')) return false">
+                        <h:commandLink
+                            styleClass="thumbnail-control rotate-right"
+                            action="#{AktuelleSchritteForm.myPlugin.rotateSelectionRight}"
+                            rendered="#{AktuelleSchritteForm.myPlugin.allowSelection and AktuelleSchritteForm.myPlugin.allowRotation}"
+                            onclick="if (!confirm('#{msgs.wirklichAusfuehren}')) return false">
                             <i class="btn fa fa-repeat margin-right-10"></i>
                             <h:outputText value="#{msgs.plugin_intranda_step_imageQA_rotateRighteSelection}" />
                         </h:commandLink>
                     </li>
 
                     <li>
-                        <h:commandLink styleClass="thumbnail-control rotate-right" action="#{AktuelleSchritteForm.myPlugin.downloadSelectedImages}" rendered="#{AktuelleSchritteForm.myPlugin.allowSelection and AktuelleSchritteForm.myPlugin.allowDownload}" onclick="if (!confirm('#{msgs.wirklichAusfuehren}')) return false">
+                        <h:commandLink
+                            styleClass="thumbnail-control rotate-right"
+                            action="#{AktuelleSchritteForm.myPlugin.downloadSelectedImages}"
+                            rendered="#{AktuelleSchritteForm.myPlugin.allowSelection and AktuelleSchritteForm.myPlugin.allowDownload}"
+                            onclick="if (!confirm('#{msgs.wirklichAusfuehren}')) return false">
                             <i class="btn fa fa-download margin-right-10"></i>
                             <h:outputText value="#{msgs.plugin_intranda_step_imageQA_downloadSelectedImages}" />
                         </h:commandLink>
                     </li>
 
                     <li>
-                        <h:commandLink styleClass="thumbnail-control rotate-right" action="#{AktuelleSchritteForm.myPlugin.downloadSelectedImagesAsPdf}" rendered="#{AktuelleSchritteForm.myPlugin.allowSelection and AktuelleSchritteForm.myPlugin.allowDownloadAsPdf}" onclick="if (!confirm('#{msgs.wirklichAusfuehren}')) return false">
+                        <h:commandLink
+                            styleClass="thumbnail-control rotate-right"
+                            action="#{AktuelleSchritteForm.myPlugin.downloadSelectedImagesAsPdf}"
+                            rendered="#{AktuelleSchritteForm.myPlugin.allowSelection and AktuelleSchritteForm.myPlugin.allowDownloadAsPdf}"
+                            onclick="if (!confirm('#{msgs.wirklichAusfuehren}')) return false">
                             <i class="btn fa fa-file-pdf-o margin-right-10"></i>
                             <h:outputText value="#{msgs.plugin_intranda_step_imageQA_downloadSelectedImagesAsPdf}" />
                         </h:commandLink>

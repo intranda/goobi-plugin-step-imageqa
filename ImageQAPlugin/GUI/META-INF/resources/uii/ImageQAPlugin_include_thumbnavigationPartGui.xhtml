@@ -23,8 +23,48 @@
 
     <composite:implementation>
 
+        <h:panelGroup
+            styleClass="text-center"
+            id="folder-selection"
+            layout="block"
+            style="margin-bottom: 10px;"
+            rendered="#{AktuelleSchritteForm.myPlugin.possibleImageFolder.size() gt 1}">
+
+            <span>
+                <h:outputLabel
+                    for="folder"
+                    value="#{msgs.plugin_fileUpload_selectFolder}" />
+            </span>
+            <span>
+                <h:selectOneMenu
+                    id="folder"
+                    styleClass="form-control"
+                    style="width:auto; display:inline-block"
+                    value="#{AktuelleSchritteForm.myPlugin.selectedImageFolder}">
+                    <f:selectItem
+                        itemValue=""
+                        itemLabel="#{msgs.bitteAuswaehlen}"
+                        itemDisabled="true" />
+                    <f:selectItems
+                        value="#{AktuelleSchritteForm.myPlugin.possibleImageFolder}"
+                        var="item"
+                        itemLabel="#{item}"
+                        itemValue="#{item}" />
+                </h:selectOneMenu>
+            </span>
+            <span>
+                <h:commandLink
+                    styleClass="btn btn-blue font-size-s margin-sides-10"
+                    id="absenden"
+                    action="#{AktuelleSchritteForm.myPlugin.changeFolder}">
+                    <i class="fa fa-folder-open-o margin-right-5"></i>
+                    <h:outputText value="#{msgs.plugin_fileUpload_changeFolder}" />
+                </h:commandLink>
+            </span>
+        </h:panelGroup>
         <!-- navigation buttons for Thumbnail list -->
         <div>
+        <ui:fragment rendered="#{AktuelleSchritteForm.myPlugin.pageNumberLastPartGUI gt 1}">
             <h:commandLink 
            	   styleClass="btn font-size-s margin-sides-10" 
            	   action="#{AktuelleSchritteForm.myPlugin.cmdMoveFirst}" 
@@ -70,7 +110,7 @@
                 <f:setPropertyActionListener target="#{AktuelleSchritteForm.myPlugin.displayMode}" value="part" />
                 <f:ajax execute="@form" render="@form :qaform" />
             </h:commandLink>
-
+</ui:fragment>
             <!-- // navigation buttons for Thumbnail list -->
         </div>
     </composite:implementation>

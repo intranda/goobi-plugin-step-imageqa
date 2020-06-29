@@ -162,6 +162,12 @@ public class ImageQAPlugin implements IStepPlugin {
     private boolean noShortcutPrefix;
     private boolean thumbnailsOnly;
 
+
+    private String selectedImageFolder;
+    private List<String> possibleImageFolder;
+
+    private SubnodeConfiguration config;
+
     @Override
     public void initialize(Step step, String returnPath) {
         this.returnPath = returnPath;
@@ -195,19 +201,35 @@ public class ImageQAPlugin implements IStepPlugin {
 
         initConfig(myconfig);
 
-        String imageFolder=null;
-
+        config = myconfig;
+        possibleImageFolder = Arrays.asList(myconfig.getStringArray("foldername"));
+        if (!possibleImageFolder.isEmpty()) {
+            selectedImageFolder = possibleImageFolder.get(0);
+        } else {
+            selectedImageFolder = "media";
+        }
+        String imageFolder = null;
         try {
-            imageFolder= step.getProzess().getConfiguredImageFolder(myconfig.getString("foldername","media"));
+            imageFolder= step.getProzess().getConfiguredImageFolder(selectedImageFolder);
         } catch (IOException | InterruptedException | SwapException | DAOException e) {
             log.error(e);
         }
 
-        initImageList(myconfig, imageFolder);
+        initImageList(config, imageFolder);
         this.useJSFullscreen = myconfig.getBoolean("useJSFullscreen", false);
         this.noShortcutPrefix = myconfig.getBoolean("noShortcutPrefix", false);
         this.thumbnailsOnly = myconfig.getBoolean("thumbnailsOnly", false);
 
+    }
+
+    public void changeFolder() {
+        String imageFolder = null;
+        try {
+            imageFolder= step.getProzess().getConfiguredImageFolder(selectedImageFolder);
+        } catch (IOException | InterruptedException | SwapException | DAOException e) {
+            log.error(e);
+        }
+        initImageList(config, imageFolder);
     }
 
     /**
@@ -216,6 +238,7 @@ public class ImageQAPlugin implements IStepPlugin {
      */
     public void initImageList(SubnodeConfiguration myconfig, String imageFolder) {
         this.imageFolderName = imageFolder;
+        allImages.clear();
         Path path = Paths.get(imageFolderName);
         List<NamePart> nameParts = initImageNameParts(myconfig);
         if (StorageProvider.getInstance().isFileExists(path)) {
