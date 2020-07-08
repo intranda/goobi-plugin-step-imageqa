@@ -206,7 +206,7 @@ public class ImageQAPlugin implements IStepPlugin {
         if (!possibleImageFolder.isEmpty()) {
             selectedImageFolder = possibleImageFolder.get(0);
         } else {
-            selectedImageFolder = "media";
+            selectedImageFolder = "master";
         }
         String imageFolder = null;
         try {
