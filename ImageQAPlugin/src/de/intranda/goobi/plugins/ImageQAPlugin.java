@@ -53,6 +53,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpUtils;
 
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.SubnodeConfiguration;
@@ -162,7 +163,6 @@ public class ImageQAPlugin implements IStepPlugin {
     private boolean noShortcutPrefix;
     private boolean thumbnailsOnly;
 
-
     private String selectedImageFolder;
     private List<String> possibleImageFolder;
 
@@ -210,7 +210,7 @@ public class ImageQAPlugin implements IStepPlugin {
         }
         String imageFolder = null;
         try {
-            imageFolder= step.getProzess().getConfiguredImageFolder(selectedImageFolder);
+            imageFolder = step.getProzess().getConfiguredImageFolder(selectedImageFolder);
         } catch (IOException | InterruptedException | SwapException | DAOException e) {
             log.error(e);
         }
@@ -225,7 +225,7 @@ public class ImageQAPlugin implements IStepPlugin {
     public void changeFolder() {
         String imageFolder = null;
         try {
-            imageFolder= step.getProzess().getConfiguredImageFolder(selectedImageFolder);
+            imageFolder = step.getProzess().getConfiguredImageFolder(selectedImageFolder);
         } catch (IOException | InterruptedException | SwapException | DAOException e) {
             log.error(e);
         }
@@ -1124,11 +1124,13 @@ public class ImageQAPlugin implements IStepPlugin {
         String contentServerUrl = ConfigurationHelper.getInstance().getGoobiContentServerUrl();
         if (contentServerUrl == null || contentServerUrl.length() == 0) {
             HttpServletRequest req = (HttpServletRequest) context.getExternalContext().getRequest();
-            String fullpath = req.getRequestURI().toString();
+            String fullpath = HttpUtils.getRequestURL(req).toString();
             String servletpath = context.getExternalContext().getRequestServletPath();
             String myBasisUrl = fullpath.substring(0, fullpath.indexOf(servletpath));
-            contentServerUrl = myBasisUrl + "/cs/cs?action=pdf&images=";
+            contentServerUrl = myBasisUrl + "/cs/cs";
         }
+
+        contentServerUrl += "?action=pdf&images=";
 
         // put all selected images into a URL
         String url = "";
