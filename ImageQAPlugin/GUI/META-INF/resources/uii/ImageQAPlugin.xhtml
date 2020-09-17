@@ -146,6 +146,32 @@
                                 value="#{AktuelleSchritteForm.myPlugin.step.titel}" />
                         </h2>
                         <div class="actions">
+                        
+                            <ui:fragment rendered="#{AktuelleSchritteForm.myPlugin.possibleImageFolder.size() gt 1}">
+					            <h:selectOneMenu
+				                    id="folder"
+				                    styleClass="form-control"
+				                    style="width:auto; display:inline-block"
+				                    value="#{AktuelleSchritteForm.myPlugin.selectedImageFolder}">
+				                    <f:selectItem
+				                        itemValue=""
+				                        itemLabel="#{msgs.bitteAuswaehlen}"
+				                        itemDisabled="true" />
+				                    <f:selectItems
+				                        value="#{AktuelleSchritteForm.myPlugin.possibleImageFolder}"
+				                        var="item"
+				                        itemLabel="#{item}"
+				                        itemValue="#{item}" />
+				                </h:selectOneMenu>
+				                <h:commandLink
+				                    styleClass="btn btn-mini margin-sides-10"
+				                    id="changefolder"
+				                    action="#{AktuelleSchritteForm.myPlugin.changeFolder}">
+				                    <i class="fa fa-folder-open-o margin-right-5"></i>
+				                    <h:outputText value="#{msgs.plugin_fileUpload_changeFolder}" />
+				                </h:commandLink>
+					        </ui:fragment>
+                        
                             <h:commandLink
                                 styleClass="btn font-size-s margin-left-10"
                                 title="#{msgs.imageFullscreen}"
@@ -204,9 +230,6 @@
 
                                 <div class="row">
                                     <f:subview id="first">
-                                        <ui:param
-                                            name="position"
-                                            value="first"></ui:param>
                                         <ui:include src="ImageQAPlugin_include_thumbnavigation.xhtml" />
                                     </f:subview>
                                 </div>
