@@ -20,9 +20,8 @@
     
     <link rel="stylesheet" href="imageQA.css" />
     <ui:define name="content">
-
+    <head>
 		<link rel="stylesheet" href="imageQA_Fullscreen.css" />
-
         <script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/reactiveX/rx.lite.min.js"></script>
 		<script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/q-promises/q.min.js"></script>
 
@@ -56,7 +55,8 @@
 	    
 	    <script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/imageView.min.js"></script>
     	<script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/objectView.min.js"></script>
-
+        </head>
+        <main>
         <h:form id="qaform">
 			<!-- big image -->
 			<div class="#{AktuelleSchritteForm.myPlugin.displayOCR ? 'col-sm-9' : ''}">
@@ -197,7 +197,7 @@
 			</div>
 			<ui:fragment rendered="#{AktuelleSchritteForm.myPlugin.image.type == 'image'}">
                <div id="zoomSliderLabel" class="font-light">
-                       <input></input><span>%</span>
+                       <input aria-label="#{msgs.sizeOfImages}"></input><span>%</span>
                </div>
              </ui:fragment>
              
@@ -431,6 +431,7 @@
             });
 			
 		</script>
+        </main>
     </ui:define>
 
 </ui:composition>
