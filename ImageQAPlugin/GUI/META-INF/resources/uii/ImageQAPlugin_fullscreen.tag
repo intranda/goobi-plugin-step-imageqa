@@ -5,7 +5,7 @@
 	    </div>
 	</div>
 	<div id="zoomSliderLabel" class="font-light">
-            <input></input><span>%</span>
+            <input aria-label="{msgs.sizeOfImages}"></input><span>%</span>
     </div>
     
     <div style="position:absolute;top:10px; right:10px;">
@@ -28,13 +28,15 @@
 	</button>
 	
 	<!-- file name -->
-	<span class="font-light" style="position:absolute;bottom:10px; left:10px;">
+    <h1>
+	<span class="font-white" style="position:absolute;bottom:10px; left:10px;">
 		{currentImage().imageName} 
 	</span>
+    </h1>
 	
 	<!-- image number -->
 	<div style="position:absolute;bottom:10px; right:10px;">
-	    <span id="txtImageMoveTo1" class="font-light"
+	    <span id="txtImageMoveTo1" class="font-white"
 	    	if={!showPagenumberInput}
 	        onclick={showAndFocusImageNumberInput}>
 			{imageIndex +1} {msgs.von}  {allImages.length}
