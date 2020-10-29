@@ -24,45 +24,6 @@
     <composite:implementation>
 
         <!-- navigation buttons for Thumbnail list -->
-        <h:panelGroup
-            styleClass="text-center"
-            id="folder-selection"
-            layout="block"
-             style="margin-bottom: 10px;"
-            rendered="#{AktuelleSchritteForm.myPlugin.possibleImageFolder.size() gt 1  and position=='first'}">
-
-            <span>
-                <h:outputLabel
-                    for="folder"
-                    value="#{msgs.plugin_fileUpload_selectFolder}" />
-            </span>
-            <span>
-                <h:selectOneMenu
-                    id="folder"
-                    styleClass="form-control"
-                    style="width:auto; display:inline-block"
-                    value="#{AktuelleSchritteForm.myPlugin.selectedImageFolder}">
-                    <f:selectItem
-                        itemValue=""
-                        itemLabel="#{msgs.bitteAuswaehlen}"
-                        itemDisabled="true" />
-                    <f:selectItems
-                        value="#{AktuelleSchritteForm.myPlugin.possibleImageFolder}"
-                        var="item"
-                        itemLabel="#{item}"
-                        itemValue="#{item}" />
-                </h:selectOneMenu>
-            </span>
-            <span>
-                <h:commandLink
-                    styleClass="btn btn-blue font-size-s margin-sides-10"
-                    id="absenden"
-                    action="#{AktuelleSchritteForm.myPlugin.changeFolder}">
-                    <i class="fa fa-folder-open-o margin-right-5"></i>
-                    <h:outputText value="#{msgs.plugin_fileUpload_changeFolder}" />
-                </h:commandLink>
-            </span>
-        </h:panelGroup>
         <div class="text-center">
             <ui:fragment rendered="#{AktuelleSchritteForm.myPlugin.pageNumberLast gt 1}">
                 <h:commandLink

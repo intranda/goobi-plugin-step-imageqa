@@ -18,14 +18,12 @@
 		<mainImageFormat>jpg</mainImageFormat>
 		<!-- allow deletion of images -->
 		<allowDeletion>false</allowDeletion>
-		<deletionCommand>/opt/digiverso/goobi/scripts/deleteImage.sh
-			IMAGE_FOLDER IMAGE_FILE
-		</deletionCommand>
+        <deletion command="/opt/digiverso/goobi/scripts/deleteImage.sh|IMAGE_FOLDER|IMAGE_FILE"/>
 		<!-- allow rotation of images -->
 		<allowRotation>false</allowRotation>
 		<rotationCommands>
-			<left>/usr/local/bin/mogrify -rotate -90 IMAGE_FILE</left>
-			<right>/usr/local/bin/mogrify -rotate 90 IMAGE_FILE</right>
+            <left command="/usr/local/bin/mogrify|-rotate|-90|IMAGE_FILE" />
+            <right command="/usr/local/bin/mogrify|-rotate|90|IMAGE_FILE" />
 		</rotationCommands>
 		<!-- allow renaming of images -->
 		<allowRenaming>false</allowRenaming>

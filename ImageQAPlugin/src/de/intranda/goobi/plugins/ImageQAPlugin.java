@@ -128,9 +128,9 @@ public class ImageQAPlugin implements IStepPlugin {
     private boolean allowTaskFinishButtons = true;
     private boolean useTiles = false;
     private boolean useTilesFullscreen = false;
-    private String rotationCommandLeft = "";
-    private String rotationCommandRight = "";
-    private String deletionCommand = "";
+    private List<String> rotationCommandLeft = null;
+    private List<String> rotationCommandRight = null;
+    private List<String> deletionCommand = null;
     boolean askForConfirmation = true;
 
     private String guiType;
@@ -320,9 +320,9 @@ public class ImageQAPlugin implements IStepPlugin {
         allowDownload = myconfig.getBoolean("allowDownload", false);
         allowDownloadAsPdf = myconfig.getBoolean("allowDownloadAsPdf", false);
         allowTaskFinishButtons = myconfig.getBoolean("allowTaskFinishButtons", true);
-        deletionCommand = myconfig.getString("deletionCommand", "");
-        rotationCommandLeft = myconfig.getString("rotationCommands/left", "-");
-        rotationCommandRight = myconfig.getString("rotationCommands/right", "-");
+        deletionCommand = Arrays.asList(myconfig.getStringArray("deletion/@command"));
+        rotationCommandLeft = Arrays.asList(myconfig.getStringArray("rotationCommands/left/@command"));
+        rotationCommandRight = Arrays.asList(myconfig.getStringArray("rotationCommands/right/@command"));
 
         numberOfImagesInFullGUI = myconfig.getInt("numberOfImagesPerPage", 50);
         numberOfImagesInPartGUI = myconfig.getInt("numberOfImagesInPartGUI", 8);
@@ -458,9 +458,7 @@ public class ImageQAPlugin implements IStepPlugin {
     }
 
     public String getAllImagesJSON() {
-        List<SelectableImageForJSON> images = this.allImages.stream()
-                .map(SelectableImageForJSON::new)
-                .collect(Collectors.toList());
+        List<SelectableImageForJSON> images = this.allImages.stream().map(SelectableImageForJSON::new).collect(Collectors.toList());
         return gson.toJson(images);
     }
 
@@ -651,9 +649,8 @@ public class ImageQAPlugin implements IStepPlugin {
         } else {
             FacesContext context = FacesContextHelper.getCurrentFacesContext();
             HttpSession session = (HttpSession) context.getExternalContext().getSession(false);
-            String currentImageURL =
-                    context.getExternalContext().getRequestContextPath() + ConfigurationHelper.getTempImagesPath() + session.getId() + "_"
-                            + image.getImageName() + "_large_" + ".jpg";
+            String currentImageURL = context.getExternalContext().getRequestContextPath() + ConfigurationHelper.getTempImagesPath() + session.getId()
+            + "_" + image.getImageName() + "_large_" + ".jpg";
             return currentImageURL.replaceAll("\\\\", "/");
         }
     }
@@ -967,7 +964,7 @@ public class ImageQAPlugin implements IStepPlugin {
     }
 
     public void deleteImage(Image myimage) {
-        if (deletionCommand == null || deletionCommand.length() == 0) {
+        if (deletionCommand == null || deletionCommand.isEmpty()) {
             deleteImageViaJava(myimage);
         } else {
             callScript(myimage, deletionCommand, true);
@@ -987,7 +984,7 @@ public class ImageQAPlugin implements IStepPlugin {
         while (iterator.hasNext()) {
             SelectableImage image = iterator.next();
             if (image.isSelected()) {
-                if (deletionCommand == null || deletionCommand.length() == 0) {
+                if (deletionCommand == null || deletionCommand.isEmpty()) {
                     deleteImageViaJava(image);
                 } else {
                     callScript(image, deletionCommand, true);
@@ -1030,7 +1027,7 @@ public class ImageQAPlugin implements IStepPlugin {
         setImageIndex(myindex);
     }
 
-    public void callScript(Image myimage, String rotationCommand, boolean selectOtherImage) {
+    public void callScript(Image myimage, List<String> commandParameter, boolean selectOtherImage) {
         int myindex = getImageIndex();
         if (selectOtherImage && myindex == allImages.indexOf(myimage)) {
             myindex--;
@@ -1042,23 +1039,29 @@ public class ImageQAPlugin implements IStepPlugin {
             imageURI = S3FileUtils.string2Key(imageURI);
             imageFolderURI = S3FileUtils.string2Prefix(imageFolderURI);
         }
-        String command = rotationCommand.replace("IMAGE_FILE", imageURI);
-        command = command.replace("IMAGE_FOLDER", imageFolderURI);
-        log.debug(command);
 
+        List<String> commandLine = new ArrayList<>();
+        for (String parameter : commandParameter) {
+            commandLine.add(parameter.replace("IMAGE_FILE", imageURI).replace("IMAGE_FOLDER", imageFolderURI));
+        }
+        log.debug(commandLine);
+        Process process = null;
         try {
-            Process process = Runtime.getRuntime().exec(command);
+            String[] callSequence = commandLine.toArray(new String[commandLine.size()]);
+            ProcessBuilder pb = new ProcessBuilder(callSequence);
+            process = pb.start();
+
             int result = process.waitFor();
             if (result != 0) {
-                log.error("A problem occured while calling command '" + command + "'. The error code was " + result);
-                Helper.setFehlerMeldung("A problem occured while calling command '" + command + "'. The error code was " + result);
+                log.error("A problem occured while calling command '" + commandLine + "'. The error code was " + result);
+                Helper.setFehlerMeldung("A problem occured while calling command '" + commandLine + "'. The error code was " + result);
             }
         } catch (IOException e) {
             log.error("IOException in rotate()", e);
-            Helper.setFehlerMeldung("Aborted Command '" + command + "' in callScript()!");
+            Helper.setFehlerMeldung("Aborted Command '" + commandLine + "' in callScript()!");
         } catch (InterruptedException e) {
             log.error("InterruptedException in callScript()", e);
-            Helper.setFehlerMeldung("Command '" + command + "' is interrupted in callScript()!");
+            Helper.setFehlerMeldung("Command '" + commandLine + "' is interrupted in callScript()!");
         }
 
         allImages = new ArrayList<>();
