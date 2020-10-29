@@ -316,7 +316,8 @@
                         <h:commandLink
                             styleClass="btn btn-lightgrey"
                             rendered="#{AktuelleSchritteForm.myPlugin.displayOcrButton}"
-                            title="Show OCR-result"
+                            title="#{msgs.mets_showOcrForCurrentImage}"
+                            pt:aria-label="#{msgs.mets_showOcrForCurrentImage}"
                             action="#{AktuelleSchritteForm.myPlugin.toggleOCR()}">
                             <i class="fa fa-file-text-o"></i>
                         </h:commandLink>
@@ -325,6 +326,7 @@
                         <h:commandLink
                             styleClass="btn btn-lightgrey"
                             action="ImageQAPlugin"
+                            pt:aria-label="#{msgs.imageDefaultDisplay}"
                             title="#{msgs.imageDefaultDisplay}">
                             <i class="fa fa-close"></i>
                         </h:commandLink>
@@ -333,6 +335,7 @@
                     <h:commandLink
                         id="imageBack"
                         styleClass="btn btn-lightgrey font-size-s"
+                        pt:aria-label="#{msgs.lw_previousImage}"
                         title="#{msgs.lw_previousImage}"
                         style="position:absolute;top:50vh; left:10px; height:50px;">
                         <i
@@ -351,6 +354,7 @@
                     <h:commandLink
                         id="imageNext"
                         styleClass="btn btn-lightgrey font-size-s"
+                        pt:aria-label="#{msgs.lw_nextImage}"
                         title="#{msgs.lw_nextImage}"
                         style="position:absolute;top:50vh; right:10px; height:50px;">
                         <i

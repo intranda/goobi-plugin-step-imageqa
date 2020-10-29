@@ -9,19 +9,19 @@
     </div>
     
     <div style="position:absolute;top:10px; right:10px;">
-		<button class="btn btn-lightgrey" onclick={leave} title="{msgs.imageDefaultDisplay}" >
+		<button class="btn btn-lightgrey" onclick={leave} aria-label="{msgs.imageDefaultDisplay}" title="{msgs.imageDefaultDisplay}" >
 			<i class="fa fa-close"></i>
 		</button>
 	</div>
 	<!-- previous image -->
-	<button id="imageBack" class="btn btn-lightgrey font-size-s" title="{msgs.lw_previousImage}"
+	<button id="imageBack" class="btn btn-lightgrey font-size-s" aria-label="{msgs.lw_previousImage}" title="{msgs.lw_previousImage}"
 		style="position:absolute;top:50vh; left:10px; height:50px;padding-top:2px;"
 		onclick={previousImage}>
 		<i class="fa fa-angle-left"></i>
 	</button>
 	
 	<!-- next image -->
-	<button id="imageNext" class="btn btn-lightgrey font-size-s" title="{msgs.lw_nextImage}"
+	<button id="imageNext" class="btn btn-lightgrey font-size-s" aria-label="{msgs.lw_nextImage}" title="{msgs.lw_nextImage}"
 		style="position:absolute;top:50vh; right:10px; height:50px; padding-top:2px;"
 		onclick={nextImage}>
 		<i class="fa fa-angle-right"></i>
