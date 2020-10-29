@@ -29,7 +29,7 @@
 	
 	<!-- file name -->
     <h1>
-	<span class="font-white" style="position:absolute;bottom:10px; left:10px;">
+	<span class="font-white" style="position:absolute;bottom:10px; left:10px; font-size: 12px;">
 		{currentImage().imageName} 
 	</span>
     </h1>
