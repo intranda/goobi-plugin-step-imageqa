@@ -16,60 +16,87 @@
  * Temple Place, Suite 330, Boston, MA 02111-1307 USA
  * 
  -->
-<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://xmlns.jcp.org/jsf/facelets" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:o="http://omnifaces.org/ui" xmlns:of="http://omnifaces.org/functions" template="/uii/template/template_blank.html" xmlns:x="http://myfaces.apache.org/tomahawk" xmlns:intranda="http://xmlns.jcp.org/jsf/composite/composites">
-    
-    <link rel="stylesheet" href="imageQA.css" />
+<ui:composition
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core"
+    xmlns:o="http://omnifaces.org/ui"
+    xmlns:of="http://omnifaces.org/functions"
+    template="/uii/template/template_blank.html"
+    xmlns:x="http://myfaces.apache.org/tomahawk"
+    xmlns:intranda="http://xmlns.jcp.org/jsf/composite/composites"
+    xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+
+    <link
+        rel="stylesheet"
+        href="imageQA.css" />
     <ui:define name="content">
-    <head>
-		<link rel="stylesheet" href="imageQA_Fullscreen.css" />
-        <script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/reactiveX/rx.lite.min.js"></script>
-		<script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/q-promises/q.min.js"></script>
+        <head>
+<link
+    rel="stylesheet"
+    href="imageQA_Fullscreen.css" />
+<script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/reactiveX/rx.lite.min.js"></script>
+<script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/q-promises/q.min.js"></script>
 
-		<script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/openseadragon/openseadragon.min.js"></script>
-   		<script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/openseadragon/openseadragon-viewerinputhook.js"></script>
+<script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/openseadragon/openseadragon.min.js"></script>
+<script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/openseadragon/openseadragon-viewerinputhook.js"></script>
 
-	    <!-- 3D-Models -->
-	    <script type="text/javascript"
-	        src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/three/three.min.js"></script>
-	    <script type="text/javascript"
-	        src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/three/loaders/OBJLoader.js"></script>
-	    <script type="text/javascript"
-	        src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/three/loaders/MTLLoader.js"></script>
-	    <script type="text/javascript"
-	        src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/three/loaders/PLYLoader.js"></script>
-	    <script type="text/javascript"
-	        src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/three/loaders/STLLoader.js"></script>
-	    <script type="text/javascript"
-	        src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/three/loaders/FBXLoader.js"></script>
-	    <script type="text/javascript"
-	        src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/three/loaders/TDSLoader.js"></script>
-	    <script type="text/javascript"
-	        src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/three/loaders/DRACOLoader.js"></script>
-	    <script type="text/javascript"
-	        src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/three/loaders/GLTFLoader.js"></script>
-	    <script type="text/javascript"
-	        src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/three/controls/OrbitControls.js"></script>
-	    <script type="text/javascript"
-	        src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/three/dependencies/inflate.min.js"></script>
-	    <script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/x3dom/x3dom.js"></script>
-	    
-	    <script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/imageView.min.js"></script>
-    	<script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/objectView.min.js"></script>
+<!-- 3D-Models -->
+<script
+    type="text/javascript"
+    src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/three/three.min.js"></script>
+<script
+    type="text/javascript"
+    src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/three/loaders/OBJLoader.js"></script>
+<script
+    type="text/javascript"
+    src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/three/loaders/MTLLoader.js"></script>
+<script
+    type="text/javascript"
+    src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/three/loaders/PLYLoader.js"></script>
+<script
+    type="text/javascript"
+    src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/three/loaders/STLLoader.js"></script>
+<script
+    type="text/javascript"
+    src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/three/loaders/FBXLoader.js"></script>
+<script
+    type="text/javascript"
+    src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/three/loaders/TDSLoader.js"></script>
+<script
+    type="text/javascript"
+    src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/three/loaders/DRACOLoader.js"></script>
+<script
+    type="text/javascript"
+    src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/three/loaders/GLTFLoader.js"></script>
+<script
+    type="text/javascript"
+    src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/three/controls/OrbitControls.js"></script>
+<script
+    type="text/javascript"
+    src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/three/dependencies/inflate.min.js"></script>
+<script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/x3dom/x3dom.js"></script>
+
+<script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/imageView.min.js"></script>
+<script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/objectView.min.js"></script>
         </head>
         <main>
-        <h:form id="qaform">
-			<!-- big image -->
-			<div class="#{AktuelleSchritteForm.myPlugin.displayOCR ? 'col-sm-9' : ''}">
-			<div class="row">			
-			    <div class="div-image">
-			    	<ui:fragment rendered="#{AktuelleSchritteForm.myPlugin.image != null and AktuelleSchritteForm.myPlugin.image.type == 'image'}">
-				        <div id="mainImage">
-	                        <div id="ajaxloader_image">
-	                            <img src="template/img/goobi/ajaxloader1.gif" />
-	                        </div>
-	                    </div>
-                    </ui:fragment>
-			        <script type="text/javascript">
+            <h:form id="qaform">
+                <!-- big image -->
+                <div class="#{AktuelleSchritteForm.myPlugin.displayOCR ? 'col-sm-9' : ''}">
+                    <div class="row">
+                        <div class="div-image">
+                            <ui:fragment
+                                rendered="#{AktuelleSchritteForm.myPlugin.image != null and AktuelleSchritteForm.myPlugin.image.type == 'image'}">
+                                <div id="mainImage">
+                                    <div id="ajaxloader_image">
+                                        <img src="template/img/goobi/ajaxloader1.gif" />
+                                    </div>
+                                </div>
+                            </ui:fragment>
+                            <script type="text/javascript">
                                     	var configViewer = {
                             			    global: {
                             			    	divId: 'mainImage',
@@ -193,173 +220,230 @@
 										        }
 										    }
                                     </script>
-			    </div>
-			</div>
-			<ui:fragment rendered="#{AktuelleSchritteForm.myPlugin.image.type == 'image'}">
-               <div id="zoomSliderLabel" class="font-light">
-                       <input aria-label="#{msgs.sizeOfImages}"></input><span>%</span>
-               </div>
-             </ui:fragment>
-             
-             <ui:fragment rendered="#{AktuelleSchritteForm.myPlugin.image.type == 'audio'}">
-                                <audio
-                                    class="audioplayer"
-                                    id="audioplayer"
-                                    controls="true"
-                                    played="length"
-                                    preload="auto"
-                                    src="#{AktuelleSchritteForm.myPlugin.image.objectUrl}">
-                                </audio>
-             </ui:fragment>
+                        </div>
+                    </div>
+                    <ui:fragment rendered="#{AktuelleSchritteForm.myPlugin.image.type == 'image'}">
+                        <div
+                            id="zoomSliderLabel"
+                            class="font-light">
+                            <input aria-label="#{msgs.sizeOfImages}"></input><span>%</span>
+                        </div>
+                    </ui:fragment>
 
-             <ui:fragment rendered="#{AktuelleSchritteForm.myPlugin.image.type == 'video'}">
-                                <video
-                                    class="videoplayer"
-                                    id="videoplayer"
-                                    controls="true"
-                                    played="length"
-                                    preload="auto"
-                                    src="#{AktuelleSchritteForm.myPlugin.image.objectUrl}">
-                                </video>
-             </ui:fragment>
+                    <ui:fragment rendered="#{AktuelleSchritteForm.myPlugin.image.type == 'audio'}">
+                        <audio
+                            class="audioplayer"
+                            id="audioplayer"
+                            controls="true"
+                            played="length"
+                            preload="auto"
+                            src="#{AktuelleSchritteForm.myPlugin.image.objectUrl}">
+                        </audio>
+                    </ui:fragment>
 
-             <ui:fragment rendered="#{AktuelleSchritteForm.myPlugin.image.type == 'unknown'}">
-                                <p class="unknown_file_download">
-                                    <h:outputText value="#{msgs.mets_downloadFile}" />
-                                    <a
-                                        href="#{AktuelleSchritteForm.myPlugin.image.objectUrl}"
-                                        download="#{AktuelleSchritteForm.myPlugin.image.tooltip}">Download</a>
-                                </p>
-             </ui:fragment>
-             <ui:fragment rendered="#{AktuelleSchritteForm.myPlugin.image.type == 'object'}">
-                    <div id="image-control-wrapper">
-            			<nav id="viewer_controls_nav">
-                            <ul>
-            					<li><label>#{msgs.rotation_x_axis}</label></li>
-            					<li>
-            						<span class="btn font-size-s" id="rotate-left-x" title="#{msg.rotateLeft}">
-            							<i class="fa fa-undo"></i>
-            						</span>
-            					</li>
-            					<li>
-            						<span class="btn font-size-s" id="rotate-right-x" title="#{msg.rotateRight}">
-            							<i class="fa fa-repeat"></i>
-            						</span>
-            					</li>
-            				</ul>
-                            <ul>
-                            <li><label>#{msgs.rotation_y_axis}</label></li>
-                                <li>
-                                    <span class="btn font-size-s" id="rotate-left-y" title="#{msg.rotateLeft}">
-                                        <i class="fa fa-undo"></i>
-                                    </span>
-                                </li>
-                                <li>
-                                    <span class="btn font-size-s" id="rotate-right-y" title="#{msg.rotateRight}">
-                                        <i class="fa fa-repeat"></i>
-                                    </span>
-                                </li>
-                            </ul>
-                            <ul>
-                                <li><label>#{msgs.rotation_z_axis}</label></li>
-                                <li>
-                                    <span class="btn font-size-s" id="rotate-left-z" title="#{msg.rotateLeft}">
-                                        <i class="fa fa-undo"></i>
-                                    </span>
-                                </li>
-                                <li>
-                                    <span class="btn font-size-s" id="rotate-right-z" title="#{msg.rotateRight}">
-                                        <i class="fa fa-repeat"></i>
-                                    </span>
-                                </li>
-                            </ul>
-                            <ul>
-                                <li>
-                                    <span class="btn font-size-s" id="reset-position" title="#{msg.resetImage}">
-                                        <i class="fa fa-refresh"></i>
-                                    </span>
-                                </li>
-                            </ul>
-            			</nav>
-            			</div>
-                </ui:fragment>
-                <div style="position:absolute;top:10px; right:10px;">
-               		<h:commandLink styleClass="btn btn-lightgrey"
-						rendered="#{AktuelleSchritteForm.myPlugin.displayOcrButton}"
-						title="Show OCR-result"
-						action="#{AktuelleSchritteForm.myPlugin.toggleOCR()}">
-						<i class="fa fa-file-text-o"></i>
-					</h:commandLink>
-							<!-- exit fullscreen -->
-							<!-- style="position:absolute;top:10px; right:10px; " -->
-				<h:commandLink styleClass="btn btn-lightgrey" 
-					action="ImageQAPlugin" title="#{msgs.imageDefaultDisplay}" >
-					<i class="fa fa-close"></i>
-				</h:commandLink>
-				</div>
-				<!-- previous image -->
-				<h:commandLink id="imageBack" styleClass="btn btn-lightgrey font-size-s" title="#{msgs.lw_previousImage}"
-					style="position:absolute;top:50vh; left:10px; height:50px;">
-					<i class="fa fa-chevron-left" style="margin-top:18px"/>
-					<f:ajax execute="@form" render="@form" onevent="freeJSResources"/>
-					<x:updateActionListener value="#{AktuelleSchritteForm.myPlugin.imageIndex - 1}" property="#{AktuelleSchritteForm.myPlugin.imageIndex}" />
-				</h:commandLink>
-				
-				<!-- next image -->
-				<h:commandLink id="imageNext" styleClass="btn btn-lightgrey font-size-s" title="#{msgs.lw_nextImage}"
-					style="position:absolute;top:50vh; right:10px; height:50px;">
-					<i class="fa fa-chevron-right" style="margin-top:18px"/>
-					<f:ajax execute="@form" render="@form" onevent="freeJSResources"/>
-					<x:updateActionListener value="#{AktuelleSchritteForm.myPlugin.imageIndex + 1}" property="#{AktuelleSchritteForm.myPlugin.imageIndex}" />
-				</h:commandLink>
-				
-				<!-- file name -->
-				<h:outputText styleClass="font-light" style="position:absolute;bottom:10px; left:10px;" 
-					value="#{AktuelleSchritteForm.myPlugin.image.imageName}" />
-				
-				<!-- image number -->
-				<div style="position:absolute;bottom:10px; right:10px;">
-	                <x:outputText id="txtImageMoveTo1" styleClass="font-light"
-	                    value="#{AktuelleSchritteForm.myPlugin.imageIndex +1} #{msgs.von}  #{AktuelleSchritteForm.myPlugin.sizeOfImageList}"
-	                    onclick="document.getElementById(this.id).nextSibling.style.display='inline';
+                    <ui:fragment rendered="#{AktuelleSchritteForm.myPlugin.image.type == 'video'}">
+                        <video
+                            class="videoplayer"
+                            id="videoplayer"
+                            controls="true"
+                            played="length"
+                            preload="auto"
+                            src="#{AktuelleSchritteForm.myPlugin.image.objectUrl}">
+                        </video>
+                    </ui:fragment>
+
+                    <ui:fragment rendered="#{AktuelleSchritteForm.myPlugin.image.type == 'unknown'}">
+                        <p class="unknown_file_download">
+                            <h:outputText value="#{msgs.mets_downloadFile}" />
+                            <a
+                                href="#{AktuelleSchritteForm.myPlugin.image.objectUrl}"
+                                download="#{AktuelleSchritteForm.myPlugin.image.tooltip}">Download</a>
+                        </p>
+                    </ui:fragment>
+                    <ui:fragment rendered="#{AktuelleSchritteForm.myPlugin.image.type == 'object'}">
+                        <div id="image-control-wrapper">
+                            <nav id="viewer_controls_nav">
+                                <ul>
+                                    <li><label>#{msgs.rotation_x_axis}</label></li>
+                                    <li><span
+                                        class="btn font-size-s"
+                                        id="rotate-left-x"
+                                        title="#{msg.rotateLeft}"> <i class="fa fa-undo"></i>
+                                    </span></li>
+                                    <li><span
+                                        class="btn font-size-s"
+                                        id="rotate-right-x"
+                                        title="#{msg.rotateRight}"> <i class="fa fa-repeat"></i>
+                                    </span></li>
+                                </ul>
+                                <ul>
+                                    <li><label>#{msgs.rotation_y_axis}</label></li>
+                                    <li><span
+                                        class="btn font-size-s"
+                                        id="rotate-left-y"
+                                        title="#{msg.rotateLeft}"> <i class="fa fa-undo"></i>
+                                    </span></li>
+                                    <li><span
+                                        class="btn font-size-s"
+                                        id="rotate-right-y"
+                                        title="#{msg.rotateRight}"> <i class="fa fa-repeat"></i>
+                                    </span></li>
+                                </ul>
+                                <ul>
+                                    <li><label>#{msgs.rotation_z_axis}</label></li>
+                                    <li><span
+                                        class="btn font-size-s"
+                                        id="rotate-left-z"
+                                        title="#{msg.rotateLeft}"> <i class="fa fa-undo"></i>
+                                    </span></li>
+                                    <li><span
+                                        class="btn font-size-s"
+                                        id="rotate-right-z"
+                                        title="#{msg.rotateRight}"> <i class="fa fa-repeat"></i>
+                                    </span></li>
+                                </ul>
+                                <ul>
+                                    <li><span
+                                        class="btn font-size-s"
+                                        id="reset-position"
+                                        title="#{msg.resetImage}"> <i class="fa fa-refresh"></i>
+                                    </span></li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </ui:fragment>
+                    <div style="position: absolute; top: 10px; right: 10px;">
+                        <h:commandLink
+                            styleClass="btn btn-lightgrey"
+                            rendered="#{AktuelleSchritteForm.myPlugin.displayOcrButton}"
+                            title="#{msgs.mets_showOcrForCurrentImage}"
+                            pt:aria-label="#{msgs.mets_showOcrForCurrentImage}"
+                            action="#{AktuelleSchritteForm.myPlugin.toggleOCR()}">
+                            <i class="fa fa-file-text-o"></i>
+                        </h:commandLink>
+                        <!-- exit fullscreen -->
+                        <!-- style="position:absolute;top:10px; right:10px; " -->
+                        <h:commandLink
+                            styleClass="btn btn-lightgrey"
+                            action="ImageQAPlugin"
+                            pt:aria-label="#{msgs.imageDefaultDisplay}"
+                            title="#{msgs.imageDefaultDisplay}">
+                            <i class="fa fa-close"></i>
+                        </h:commandLink>
+                    </div>
+                    <!-- previous image -->
+                    <h:commandLink
+                        id="imageBack"
+                        styleClass="btn btn-lightgrey font-size-s"
+                        pt:aria-label="#{msgs.lw_previousImage}"
+                        title="#{msgs.lw_previousImage}"
+                        style="position:absolute;top:50vh; left:10px; height:50px;">
+                        <i
+                            class="fa fa-chevron-left"
+                            style="margin-top: 18px" />
+                        <f:ajax
+                            execute="@form"
+                            render="@form"
+                            onevent="freeJSResources" />
+                        <x:updateActionListener
+                            value="#{AktuelleSchritteForm.myPlugin.imageIndex - 1}"
+                            property="#{AktuelleSchritteForm.myPlugin.imageIndex}" />
+                    </h:commandLink>
+
+                    <!-- next image -->
+                    <h:commandLink
+                        id="imageNext"
+                        styleClass="btn btn-lightgrey font-size-s"
+                        pt:aria-label="#{msgs.lw_nextImage}"
+                        title="#{msgs.lw_nextImage}"
+                        style="position:absolute;top:50vh; right:10px; height:50px;">
+                        <i
+                            class="fa fa-chevron-right"
+                            style="margin-top: 18px" />
+                        <f:ajax
+                            execute="@form"
+                            render="@form"
+                            onevent="freeJSResources" />
+                        <x:updateActionListener
+                            value="#{AktuelleSchritteForm.myPlugin.imageIndex + 1}"
+                            property="#{AktuelleSchritteForm.myPlugin.imageIndex}" />
+                    </h:commandLink>
+
+                    <!-- file name -->
+                    <h1>
+                        <h:outputText
+                            styleClass="font-white"
+                            style="position:absolute;bottom:10px; left:10px; font-size:12px;"
+                            value="#{AktuelleSchritteForm.myPlugin.image.imageName}" />
+                    </h1>
+
+                    <!-- image number -->
+                    <div style="position: absolute; bottom: 10px; right: 10px;">
+                        <x:outputText
+                            id="txtImageMoveTo1"
+                            styleClass="font-white"
+                            value="#{AktuelleSchritteForm.myPlugin.imageIndex +1} #{msgs.von}  #{AktuelleSchritteForm.myPlugin.sizeOfImageList}"
+                            onclick="document.getElementById(this.id).nextSibling.style.display='inline';
 	                    document.getElementById(this.id).style.display='none';  
 	                    document.getElementById(this.id).nextSibling.focus(); 
-	                    document.getElementById(this.id).nextSibling.select();" /> 
-					<!-- jump to page -->
-	                <x:inputText value="#{AktuelleSchritteForm.myPlugin.imageMoveTo}" style="display:none;font-size:9px;width:30px"
-	                    required="true" id="txtImageMoveTo2"
-	                    onblur="document.getElementById(this.id).style.display='none';document.getElementById(this.id).previousSibling.style.display='inline';"
-	                    onkeypress="copyValue(this,event);" />
-	                <x:commandButton action="#{NavigationForm.Reload}" value="go" style="display:none" />
-				</div>
-								<!-- first and last page -->				
-				<div style="position:absolute;top:10px;left:10px;display:none;">
-					<h:commandLink styleClass="btn btn-lightgrey font-size-s margin-right-10" title="#{msgs.firstImage}">
-						<i class="fa fa-double-angle-left"></i>
-						<f:ajax execute="@form" render="@form" />
-						<x:updateActionListener value="0" property="#{AktuelleSchritteForm.myPlugin.imageIndex}" />
-					</h:commandLink>
-					<h:commandLink styleClass="btn btn-lightgrey font-size-s" title="#{msgs.lastImage}">
-						<i class="fa fa-double-angle-right"></i>
-						<f:ajax execute="@form" render="@form" />
-						<x:updateActionListener value="#{AktuelleSchritteForm.myPlugin.sizeOfImageList - 1}" property="#{AktuelleSchritteForm.myPlugin.imageIndex}" />
-					</h:commandLink>
-				</div>
-				
-			</div>
-			<!-- // big image -->
-				<ui:fragment rendered="#{AktuelleSchritteForm.myPlugin.displayOCR}">
-					<div class="col-sm-3">
-						<div id="ocrText" class="ocr-text">	
-						<h:outputText value="#{AktuelleSchritteForm.myPlugin.ocrText}" escape="false">
-						</h:outputText>
-						</div>
-					</div>
-				</ui:fragment>
-		</h:form>
+	                    document.getElementById(this.id).nextSibling.select();" />
+                        <!-- jump to page -->
+                        <x:inputText
+                            value="#{AktuelleSchritteForm.myPlugin.imageMoveTo}"
+                            style="display:none;font-size:9px;width:30px"
+                            required="true"
+                            id="txtImageMoveTo2"
+                            onblur="document.getElementById(this.id).style.display='none';document.getElementById(this.id).previousSibling.style.display='inline';"
+                            onkeypress="copyValue(this,event);" />
+                        <x:commandButton
+                            action="#{NavigationForm.Reload}"
+                            value="go"
+                            style="display:none" />
+                    </div>
+                    <!-- first and last page -->
+                    <div style="position: absolute; top: 10px; left: 10px; display: none;">
+                        <h:commandLink
+                            styleClass="btn btn-lightgrey font-size-s margin-right-10"
+                            title="#{msgs.firstImage}">
+                            <i class="fa fa-double-angle-left"></i>
+                            <f:ajax
+                                execute="@form"
+                                render="@form" />
+                            <x:updateActionListener
+                                value="0"
+                                property="#{AktuelleSchritteForm.myPlugin.imageIndex}" />
+                        </h:commandLink>
+                        <h:commandLink
+                            styleClass="btn btn-lightgrey font-size-s"
+                            title="#{msgs.lastImage}">
+                            <i class="fa fa-double-angle-right"></i>
+                            <f:ajax
+                                execute="@form"
+                                render="@form" />
+                            <x:updateActionListener
+                                value="#{AktuelleSchritteForm.myPlugin.sizeOfImageList - 1}"
+                                property="#{AktuelleSchritteForm.myPlugin.imageIndex}" />
+                        </h:commandLink>
+                    </div>
+
+                </div>
+                <!-- // big image -->
+                <ui:fragment rendered="#{AktuelleSchritteForm.myPlugin.displayOCR}">
+                    <div class="col-sm-3">
+                        <div
+                            id="ocrText"
+                            class="ocr-text">
+                            <h:outputText
+                                value="#{AktuelleSchritteForm.myPlugin.ocrText}"
+                                escape="false">
+                            </h:outputText>
+                        </div>
+                    </div>
+                </ui:fragment>
+            </h:form>
 
 
-        <script type="text/javascript">
+            <script type="text/javascript">
 		     
         	// Find the right method, call on correct element
 	        function launchIntoFullscreen(element) {

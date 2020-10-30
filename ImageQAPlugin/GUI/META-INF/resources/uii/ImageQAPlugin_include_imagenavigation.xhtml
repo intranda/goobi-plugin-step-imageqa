@@ -18,7 +18,7 @@
  -->
 <ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://xmlns.jcp.org/jsf/facelets" xmlns:composite="http://xmlns.jcp.org/jsf/composite"
 	xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:f="http://xmlns.jcp.org/jsf/core" 
-	xmlns:x="http://myfaces.apache.org/tomahawk">
+	xmlns:x="http://myfaces.apache.org/tomahawk" xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
 
 	<composite:interface>
 	</composite:interface>
@@ -29,6 +29,7 @@
 				<h:commandLink 
 					action="#{AktuelleSchritteForm.myPlugin.imageLeftmost}"
 					styleClass="btn font-size-s margin-right-10" 
+                    pt:aria-label="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.lastImage:msgs.firstImage}"
 					title="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.lastImage:msgs.firstImage}">
 					<i class="fa fa-double-angle-left"></i>
 					<f:ajax execute="@form" render="@form :qaform:bigimage" onevent="freeJSResources"/>
@@ -37,7 +38,8 @@
 				<h:commandLink 
 					action="#{AktuelleSchritteForm.myPlugin.imageLeft}"
 					id="imageBack" 
-					styleClass="btn btn-primary font-size-s" 
+					styleClass="btn btn-primary font-size-s"
+                    pt:aria-label="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.lw_nextImage:msgs.lw_previousImage}" 
 					title="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.lw_nextImage:msgs.lw_previousImage}">
 					<i class="fa fa-angle-left"></i>
 					<h:outputText value=" #{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.lw_nextImage:msgs.lw_previousImage}" />
@@ -61,7 +63,8 @@
 				<h:commandLink 
 					action="#{AktuelleSchritteForm.myPlugin.imageRight}"
 					id="imageNext" 
-					styleClass="btn btn-primary font-size-s" 
+					styleClass="btn btn-primary font-size-s"
+                    pt:aria-label="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.lw_previousImage:msgs.lw_nextImage}" 
 					title="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.lw_previousImage:msgs.lw_nextImage}">
 					<h:outputText value="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.lw_previousImage:msgs.lw_nextImage} " />
 					<i class="fa fa-angle-right"></i>
@@ -70,7 +73,8 @@
 						
 				<h:commandLink 
 					action="#{AktuelleSchritteForm.myPlugin.imageRightmost}"
-					styleClass="btn font-size-s margin-sides-10" 
+					styleClass="btn font-size-s margin-sides-10"
+                    pt:aria-label="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.firstImage:msgs.lastImage}" 
 					title="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.firstImage:msgs.lastImage}">
 					<i class="fa fa-double-angle-right"></i>
 					<f:ajax execute="@form" render="@form :qaform:bigimage" onevent="freeJSResources"/>

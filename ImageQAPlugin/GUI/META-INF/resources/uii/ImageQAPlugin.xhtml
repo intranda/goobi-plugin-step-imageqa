@@ -150,6 +150,7 @@
                             <ui:fragment rendered="#{AktuelleSchritteForm.myPlugin.possibleImageFolder.size() gt 1}">
 					            <h:selectOneMenu
 				                    id="folder"
+                                    pt:aria-label="#{msgs.plugin_fileUpload_selectFolder}"
 				                    styleClass="form-control"
 				                    style="width:auto; display:inline-block"
 				                    value="#{AktuelleSchritteForm.myPlugin.selectedImageFolder}">

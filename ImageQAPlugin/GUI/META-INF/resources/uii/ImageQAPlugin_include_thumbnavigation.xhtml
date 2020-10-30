@@ -16,7 +16,7 @@
  * Temple Place, Suite 330, Boston, MA 02111-1307 USA
  * 
  -->
-<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://xmlns.jcp.org/jsf/facelets" xmlns:composite="http://xmlns.jcp.org/jsf/composite" xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:x="http://myfaces.apache.org/tomahawk">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:pt="http://xmlns.jcp.org/jsf/passthrough" xmlns:ui="http://xmlns.jcp.org/jsf/facelets" xmlns:composite="http://xmlns.jcp.org/jsf/composite" xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:x="http://myfaces.apache.org/tomahawk">
 
     <composite:interface>
     </composite:interface>
@@ -29,6 +29,7 @@
                 <h:commandLink
                     styleClass="btn font-size-s margin-sides-10"
                     action="#{AktuelleSchritteForm.myPlugin.cmdMoveFirst}"
+                    pt:aria-label="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.lastPage:msgs.firstPage}"
                     title="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.lastPage:msgs.firstPage}">
                     <i class="fa fa-double-angle-left"></i>
                     <f:ajax
@@ -38,6 +39,7 @@
                 <h:commandLink
                     styleClass="btn btn-primary font-size-s"
                     action="#{AktuelleSchritteForm.myPlugin.cmdMovePrevious}"
+                    pt:aria-label="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.pageNext:msgs.pagePrevious}"
                     title="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.pageNext:msgs.pagePrevious}">
                     <i class="fa fa-angle-left"></i>
                     <f:ajax
@@ -73,6 +75,7 @@
                 <h:commandLink
                     styleClass="btn btn-primary font-size-s"
                     action="#{AktuelleSchritteForm.myPlugin.cmdMoveNext}"
+                    pt:aria-label="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.pagePrevious:msgs.pageNext}"
                     title="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.pagePrevious:msgs.pageNext}">
                     <h:outputText value="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.pagePrevious:msgs.pageNext} " />
                     <i class="fa fa-angle-right"></i>
@@ -83,6 +86,7 @@
                 <h:commandLink
                     styleClass="btn font-size-s margin-sides-10"
                     action="#{AktuelleSchritteForm.myPlugin.cmdMoveLast}"
+                    pt:aria-label="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.firstPage:msgs.lastPage}"
                     title="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.firstPage:msgs.lastPage}">
                     <i class="fa fa-double-angle-right"></i>
                     <f:ajax
