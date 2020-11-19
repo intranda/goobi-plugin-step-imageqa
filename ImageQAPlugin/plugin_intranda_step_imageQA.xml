@@ -1,32 +1,32 @@
-<!-- 
- * This file is part of a plugin for Goobi - a Workflow tool for the support of mass digitization.
- * 
- * Visit the websites for more information. 
- *          - https://goobi.io
- *          - https://www.intranda.com
- *          - https://github.com/intranda/goobi
- * 
- * This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free
- * Software Foundation; either version 2 of the License, or (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59
- * Temple Place, Suite 330, Boston, MA 02111-1307 USA
- * 
- -->
+<!--
+    * This file is part of a plugin for Goobi - a Workflow tool for the support of mass digitization.
+    *
+    * Visit the websites for more information.
+    * - https://goobi.io
+    * - https://www.intranda.com
+    * - https://github.com/intranda/goobi
+    *
+    * This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free
+    * Software Foundation; either version 2 of the License, or (at your option) any later version.
+    *
+    * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+    *
+    * You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59
+    * Temple Place, Suite 330, Boston, MA 02111-1307 USA
+    *
+-->
 <config_plugin>
     <!--
         order of configuration is:
-          1.) project name and step name matches
-          2.) step name matches and project is *
-          3.) project name matches and step name is *
-          4.) project name and step name are *
--->
+        1.) project name and step name matches
+        2.) step name matches and project is *
+        3.) project name matches and step name is *
+        4.) project name and step name are *
+    -->
     <config>
         <!-- define plugin type in which screen the plugin is displayed, allowed values are 'part', 'full' (default) or 'both' -->
-        <guiType>full</guiType> 
+        <guiType>full</guiType>
         <!-- which projects to use for (can be more then one, otherwise use *) -->
         <project>*</project>
         <step>*</step>
@@ -42,7 +42,6 @@
         <mainImageFormat>jpg</mainImageFormat>
         <!-- use the high speed JavaScript fullscreen view -->
         <useJSFullscreen>false</useJSFullscreen>
-
         <imagesize>800</imagesize>
         <imagesize>1800</imagesize>
         <imagesize>3000</imagesize>
@@ -53,10 +52,9 @@
         <useTilesFullscreen>true</useTilesFullscreen>
         <noShortcutPrefix>false</noShortcutPrefix>
         <thumbnailsOnly>false</thumbnailsOnly>
-
         <!-- allow deletion of images -->
         <allowDeletion>false</allowDeletion>
-        <deletion command="/opt/digiverso/goobi/scripts/deleteImage.sh|IMAGE_FOLDER|IMAGE_FILE"/>
+        <deletion command="/opt/digiverso/goobi/scripts/deleteImage.sh|IMAGE_FOLDER|IMAGE_FILE" />
         <!-- allow rotation of images -->
         <allowRotation>false</allowRotation>
         <rotationCommands>
@@ -75,7 +73,6 @@
         <!-- configure button to display ocr -->
         <displayocr>true</displayocr>
     </config>
-
     <config>
         <!-- which projects to use for (can be more then one, otherwise use *) -->
         <project>My special project</project>
@@ -93,12 +90,12 @@
         <imagesize>3000</imagesize>
         <!-- allow deletion of images -->
         <allowDeletion>false</allowDeletion>
-        <deletionCommand>/opt/digiverso/goobi/scripts/deleteImage.sh IMAGE_FOLDER IMAGE_FILE</deletionCommand>
+        <deletion command="/opt/digiverso/goobi/scripts/deleteImage.sh|IMAGE_FOLDER|IMAGE_FILE" />
         <!-- allow rotation of images -->
         <allowRotation>false</allowRotation>
         <rotationCommands>
-            <left>/usr/local/bin/mogrify -rotate -90 IMAGE_FILE</left>
-            <right>/usr/local/bin/mogrify -rotate 90 IMAGE_FILE</right>
+            <left command="/usr/bin/mogrify|-rotate|-90|IMAGE_FILE" />
+            <right command="/usr/bin/mogrify|-rotate|90|IMAGE_FILE" />
         </rotationCommands>
         <!-- allow renaming of images -->
         <allowRenaming>false</allowRenaming>
@@ -110,7 +107,6 @@
         <allowTaskFinishButtons>false</allowTaskFinishButtons>
         <displayocr>true</displayocr>
     </config>
-
     <config>
         <project>*</project>
         <step>ImageQA</step>
@@ -121,16 +117,17 @@
         <!-- which image sizes to use for the big image -->
         <imagesize>800</imagesize>
         <imagesize>3000</imagesize>
-
         <!-- allow renaming of images -->
         <allowRenaming>false</allowRenaming>
         <renamingPattern>
             <field defaultValue="${process:Archive}"></field>
             <field defaultValue="${process:Object}"></field>
-            <field defaultValue="1" number="true" format="0000"></field>
+            <field
+                defaultValue="1"
+                number="true"
+                format="0000"
+            ></field>
         </renamingPattern>
         <displayocr>true</displayocr>
-
     </config>
-
 </config_plugin>
