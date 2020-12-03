@@ -48,7 +48,7 @@
         <tileSize>256</tileSize>
         <scaleFactors>1</scaleFactors>
         <scaleFactors>32</scaleFactors>
-        <useTiles>false</useTiles>
+        <useTiles>true</useTiles>
         <useTilesFullscreen>true</useTilesFullscreen>
         <noShortcutPrefix>false</noShortcutPrefix>
         <thumbnailsOnly>false</thumbnailsOnly>
