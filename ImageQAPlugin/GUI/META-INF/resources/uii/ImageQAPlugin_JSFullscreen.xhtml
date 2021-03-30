@@ -27,7 +27,8 @@
     template="/uii/template/template_blank.html"
     xmlns:x="http://myfaces.apache.org/tomahawk"
     xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
-    xmlns:intranda="http://xmlns.jcp.org/jsf/composite/composites">
+    xmlns:intranda="http://xmlns.jcp.org/jsf/composite/composites"
+    xmlns:jsf="http://xmlns.jcp.org/jsf">
 
     <ui:define name="content">
         <main>
@@ -106,10 +107,10 @@ body {
             <!--  The actual riot tag that renders the images and handles the info.json cache -->
             <fullscreen></fullscreen>
             <h:form id="actions">
-                <h:commandLink
+                <button
                     style="display: none;"
-                    action="ImageQAPlugin"
-                    id="leave"></h:commandLink>
+                    jsf:action="ImageQAPlugin"
+                    jsf:id="leave"></button>
             </h:form>
             <script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/reactiveX/rx.lite.min.js"></script>
             <script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/q-promises/q.min.js"></script>

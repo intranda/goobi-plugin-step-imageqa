@@ -23,7 +23,8 @@
     xmlns:h="http://xmlns.jcp.org/jsf/html"
     xmlns:f="http://xmlns.jcp.org/jsf/core"
     xmlns:x="http://myfaces.apache.org/tomahawk"
-    xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+    xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+    xmlns:jsf="http://xmlns.jcp.org/jsf">
 
     <composite:interface>
     </composite:interface>
@@ -51,29 +52,29 @@
                     </li>
 
                     <li>
-                    	<h:commandLink 
-                    		styleClass="btn font-size-s margin-left-10" 
+                    	<button 
+                    		class="btn font-size-s margin-left-10" 
                     		title="#{msgs.imageFullscreen}"
-							action="ImageQAPlugin_JSFullscreen" 
-							rendered="#{AktuelleSchritteForm.myPlugin.useJSFullscreen}">
+							jsf:action="ImageQAPlugin_JSFullscreen" 
+							jsf:rendered="#{AktuelleSchritteForm.myPlugin.useJSFullscreen}">
 							<i class="fa fa-arrows-alt"></i>
-						</h:commandLink>
-                        <h:commandLink
-                            styleClass="btn font-size-s margin-left-10"
+						</button>
+                        <button
+                            class="btn font-size-s margin-left-10"
                             title="#{msgs.imageFullscreen}"
-                            action="ImageQAPlugin_Fullscreen"
-                            rendered="#{! AktuelleSchritteForm.myPlugin.useJSFullscreen}">
+                            jsf:action="ImageQAPlugin_Fullscreen"
+                            jsf:rendered="#{! AktuelleSchritteForm.myPlugin.useJSFullscreen}">
                             <i class="fa fa-arrows-alt"></i>
-                        </h:commandLink>
+                        </button>
                     </li>
                     <li>
-                        <h:commandLink
-                            styleClass="btn font-size-s"
-                            rendered="#{AktuelleSchritteForm.myPlugin.displayOcrButton}"
+                        <button
+                            class="btn font-size-s"
+                            jsf:rendered="#{AktuelleSchritteForm.myPlugin.displayOcrButton}"
                             title="Show OCR-result"
-                            action="#{AktuelleSchritteForm.myPlugin.toggleOCR()}">
+                            jsf:action="#{AktuelleSchritteForm.myPlugin.toggleOCR()}">
                             <i class="fa fa-file-text-o"></i>
-                        </h:commandLink>
+                        </button>
                     </li>
                     <li>
                         <span

@@ -18,7 +18,7 @@
  -->
 <ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://xmlns.jcp.org/jsf/facelets" xmlns:composite="http://xmlns.jcp.org/jsf/composite"
 	xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:f="http://xmlns.jcp.org/jsf/core" 
-	xmlns:x="http://myfaces.apache.org/tomahawk" xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+	xmlns:x="http://myfaces.apache.org/tomahawk" xmlns:pt="http://xmlns.jcp.org/jsf/passthrough" xmlns:jsf="http://xmlns.jcp.org/jsf">
 
 	<composite:interface>
 	</composite:interface>
@@ -167,10 +167,10 @@
 						</span>
 					</li>
 					<li>
-						<h:commandLink styleClass="btn font-size-s margin-left-10" title="#{msgs.imageFullscreen}"
-							action="ImageQAPlugin_Fullscreen">
+						<button class="btn font-size-s margin-left-10" title="#{msgs.imageFullscreen}"
+							jsf:action="ImageQAPlugin_Fullscreen">
 							<i class="fa fa-arrows-alt"></i>
-						</h:commandLink>
+						</button>
 					</li>
 					<li>
 						<span class="btn font-size-s margin-right-10" id="reset-position" title="#{msg.resetImage}">

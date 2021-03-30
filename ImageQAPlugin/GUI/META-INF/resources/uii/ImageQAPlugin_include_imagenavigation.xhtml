@@ -18,7 +18,7 @@
  -->
 <ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://xmlns.jcp.org/jsf/facelets" xmlns:composite="http://xmlns.jcp.org/jsf/composite"
 	xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:f="http://xmlns.jcp.org/jsf/core" 
-	xmlns:x="http://myfaces.apache.org/tomahawk" xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+	xmlns:x="http://myfaces.apache.org/tomahawk" xmlns:pt="http://xmlns.jcp.org/jsf/passthrough" xmlns:jsf="http://xmlns.jcp.org/jsf">
 
 	<composite:interface>
 	</composite:interface>
@@ -26,25 +26,25 @@
 	<composite:implementation>
 		<!-- navigation for big image -->
 		<div class="pull-center image-navigation">
-				<h:commandLink 
-					action="#{AktuelleSchritteForm.myPlugin.imageLeftmost}"
-					styleClass="btn font-size-s margin-right-10" 
-                    pt:aria-label="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.lastImage:msgs.firstImage}"
+				<button 
+					jsf:action="#{AktuelleSchritteForm.myPlugin.imageLeftmost}"
+					class="btn font-size-s margin-right-10" 
+                    aria-label="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.lastImage:msgs.firstImage}"
 					title="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.lastImage:msgs.firstImage}">
 					<i class="fa fa-double-angle-left"></i>
 					<f:ajax execute="@form" render="@form :qaform:bigimage" onevent="freeJSResources"/>
-				</h:commandLink>
+				</button>
 					
-				<h:commandLink 
-					action="#{AktuelleSchritteForm.myPlugin.imageLeft}"
-					id="imageBack" 
-					styleClass="btn btn-primary font-size-s"
-                    pt:aria-label="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.lw_nextImage:msgs.lw_previousImage}" 
+				<button 
+					jsf:action="#{AktuelleSchritteForm.myPlugin.imageLeft}"
+					jsf:id="imageBack" 
+					class="btn btn-primary font-size-s"
+                    aria-label="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.lw_nextImage:msgs.lw_previousImage}" 
 					title="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.lw_nextImage:msgs.lw_previousImage}">
 					<i class="fa fa-angle-left"></i>
 					<h:outputText value=" #{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.lw_nextImage:msgs.lw_previousImage}" />
 					<f:ajax execute="@form" render="@form :qaform:bigimage" onevent="freeJSResources"/>
-				</h:commandLink>
+				</button>
 				<div class="margin-sides-10">
                 
                 <x:outputText id="txtImageMoveTo1"
@@ -60,25 +60,25 @@
                     onkeypress="copyValue(this,event);" />
                 <x:commandButton action="#{NavigationForm.Reload}" value="go" style="display:none" />
 				</div>
-				<h:commandLink 
-					action="#{AktuelleSchritteForm.myPlugin.imageRight}"
-					id="imageNext" 
-					styleClass="btn btn-primary font-size-s"
-                    pt:aria-label="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.lw_previousImage:msgs.lw_nextImage}" 
+				<button 
+					jsf:action="#{AktuelleSchritteForm.myPlugin.imageRight}"
+					jsf:id="imageNext" 
+					class="btn btn-primary font-size-s"
+                    aria-label="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.lw_previousImage:msgs.lw_nextImage}" 
 					title="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.lw_previousImage:msgs.lw_nextImage}">
 					<h:outputText value="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.lw_previousImage:msgs.lw_nextImage} " />
 					<i class="fa fa-angle-right"></i>
 					<f:ajax execute="@form" render="@form :qaform:bigimage" onevent="freeJSResources" />
-				</h:commandLink>
+				</button>
 						
-				<h:commandLink 
-					action="#{AktuelleSchritteForm.myPlugin.imageRightmost}"
-					styleClass="btn font-size-s margin-sides-10"
-                    pt:aria-label="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.firstImage:msgs.lastImage}" 
+				<button 
+					jsf:action="#{AktuelleSchritteForm.myPlugin.imageRightmost}"
+					class="btn font-size-s margin-sides-10"
+                    aria-label="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.firstImage:msgs.lastImage}" 
 					title="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.firstImage:msgs.lastImage}">
 					<i class="fa fa-double-angle-right"></i>
 					<f:ajax execute="@form" render="@form :qaform:bigimage" onevent="freeJSResources"/>
-				</h:commandLink>
+				</button>
 				
 		</div>
 		<!-- // navigation for big image -->

@@ -27,7 +27,8 @@
     template="/uii/template/template.html"
     xmlns:x="http://myfaces.apache.org/tomahawk"
     xmlns:intranda="http://xmlns.jcp.org/jsf/composite/composites"
-    xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+    xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+    xmlns:jsf="http://xmlns.jcp.org/jsf">
 
     <ui:param
         name="myPageTitle"
@@ -164,60 +165,60 @@
 				                        itemLabel="#{item}"
 				                        itemValue="#{item}" />
 				                </h:selectOneMenu>
-				                <h:commandLink
-				                    styleClass="btn btn-mini margin-sides-10"
-				                    id="changefolder"
-				                    action="#{AktuelleSchritteForm.myPlugin.changeFolder}">
+				                <button
+				                    class="btn btn-mini margin-sides-10"
+				                    jsf:id="changefolder"
+				                    jsf:action="#{AktuelleSchritteForm.myPlugin.changeFolder}">
 				                    <i class="fa fa-folder-open-o margin-right-5"></i>
 				                    <h:outputText value="#{msgs.plugin_fileUpload_changeFolder}" />
-				                </h:commandLink>
+				                </button>
 					        </ui:fragment>
                         
-                            <h:commandLink
-                                styleClass="btn font-size-s margin-left-10"
+                            <button
+                                class="btn font-size-s margin-left-10"
                                 title="#{msgs.imageFullscreen}"
-                                action="ImageQAPlugin_JSFullscreen"
-                                rendered="#{AktuelleSchritteForm.myPlugin.thumbnailsOnly and AktuelleSchritteForm.myPlugin.useJSFullscreen}">
+                                jsf:action="ImageQAPlugin_JSFullscreen"
+                                jsf:rendered="#{AktuelleSchritteForm.myPlugin.thumbnailsOnly and AktuelleSchritteForm.myPlugin.useJSFullscreen}">
                                 <i class="fa fa-arrows-alt"></i>
-                            </h:commandLink>
-                            <h:commandLink
-                                styleClass="btn font-size-s margin-left-10"
+                            </button>
+                            <button
+                                class="btn font-size-s margin-left-10"
                                 title="#{msgs.imageFullscreen}"
-                                action="ImageQAPlugin_Fullscreen"
-                                rendered="#{AktuelleSchritteForm.myPlugin.thumbnailsOnly and not AktuelleSchritteForm.myPlugin.useJSFullscreen}">
+                                jsf:action="ImageQAPlugin_Fullscreen"
+                                jsf:rendered="#{AktuelleSchritteForm.myPlugin.thumbnailsOnly and not AktuelleSchritteForm.myPlugin.useJSFullscreen}">
                                 <i class="fa fa-arrows-alt"></i>
-                            </h:commandLink>
-                            <h:commandLink
-                                id="id10"
-                                pt:aria-label="#{msgs.reload}"
-                                action="#{NavigationForm.Reload}"
-                                styleClass="btn btn-mini">
+                            </button>
+                            <button
+                                jsf:id="id10"
+                                aria-label="#{msgs.reload}"
+                                jsf:action="#{NavigationForm.Reload}"
+                                class="btn btn-mini">
                                 <i class="fa fa-refresh" />
-                            </h:commandLink>
+                            </button>
 
-                            <h:commandLink
-                                id="id11"
-                                action="#{AktuelleSchritteForm.SchrittDurchBenutzerAbschliessen}"
-                                styleClass="btn btn-mini"
-                                rendered="#{NavigationForm.uiStatus.pluginSimulation != true and AktuelleSchritteForm.myPlugin.allowTaskFinishButtons == true}"
+                            <button
+                                jsf:id="id11"
+                                jsf:action="#{AktuelleSchritteForm.SchrittDurchBenutzerAbschliessen}"
+                                class="btn btn-mini"
+                                jsf:rendered="#{NavigationForm.uiStatus.pluginSimulation != true and AktuelleSchritteForm.myPlugin.allowTaskFinishButtons == true}"
                                 title="#{msgs.task_leavePluginAndFinishTask}">
                                 <i class="fa fa-check" />
                                 <x:updateActionListener
                                     property="#{NavigationForm.uiStatus.pluginSimulation}"
                                     value="#{false}" />
-                            </h:commandLink>
+                            </button>
 
-                            <h:commandLink
-                                id="id12"
-                                action="#{AktuelleSchritteForm.myPlugin.cancel}"
-                                styleClass="btn btn-mini"
-                                rendered="#{NavigationForm.uiStatus.pluginSimulation != true and AktuelleSchritteForm.myPlugin.allowTaskFinishButtons == true}"
+                            <button
+                                jsf:id="id12"
+                                jsf:action="#{AktuelleSchritteForm.myPlugin.cancel}"
+                                class="btn btn-mini"
+                                jsf:rendered="#{NavigationForm.uiStatus.pluginSimulation != true and AktuelleSchritteForm.myPlugin.allowTaskFinishButtons == true}"
                                 title="#{msgs.pluginLeave}">
                                 <i class="fa fa-close" />
                                 <x:updateActionListener
                                     property="#{NavigationForm.uiStatus.pluginSimulation}"
                                     value="#{false}" />
-                            </h:commandLink>
+                            </button>
 
                         </div>
                     </div>
@@ -250,9 +251,11 @@
                                             <div class="goobi-thumbnail-image">
 
                                                 <div class="thumb">
-                                                    <h:commandLink
+                                                    <button
+                                                    	jsf:id="imageClick"
+                                                    	class="button-no-style"
                                                         title="#{image.tooltip}"
-                                                        action="#{AktuelleSchritteForm.myPlugin.imageClick}">
+                                                        jsf:action="#{AktuelleSchritteForm.myPlugin.imageClick}">
                                                         <ui:fragment rendered="#{image.type == 'image'}">
                                                             <canvas
                                                                 class="thumb-canvas"
@@ -283,7 +286,7 @@
                                                             render="@form :qaform:bigimage"
                                                             onevent="freeJSResources"
                                                             disabled="#{AktuelleSchritteForm.myPlugin.thumbnailsOnly}" />
-                                                    </h:commandLink>
+                                                    </button>
                                                 </div>
 
                                             </div>
@@ -316,29 +319,29 @@
                                                             data-target="#myModal-#{status.index}"> <i class="fa fa-pencil" />
                                                         </a>
                                                     </h:panelGroup>
-                                                    <h:commandLink
-                                                        styleClass="btn thumbnail-control delete"
+                                                    <button
+                                                        class="btn thumbnail-control delete"
                                                         title="#{msgs.plugin_intranda_step_imageQA_delete} #{image.tooltip}"
-                                                        action="#{AktuelleSchritteForm.myPlugin.deleteImage(image)}"
-                                                        rendered="#{AktuelleSchritteForm.myPlugin.allowDeletion}">
+                                                        jsf:action="#{AktuelleSchritteForm.myPlugin.deleteImage(image)}"
+                                                        jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowDeletion}">
                                                         <i class="fa fa-trash"></i>
-                                                    </h:commandLink>
+                                                    </button>
                                                 </div>
                                                 <div class="goobi-thumbnail-controls-right pull-right">
-                                                    <h:commandLink
-                                                        styleClass="btn thumbnail-control rotate-left"
+                                                    <button
+                                                        class="btn thumbnail-control rotate-left"
                                                         title="#{msgs.plugin_intranda_step_imageQA_rotateLeft} #{image.tooltip}"
-                                                        action="#{AktuelleSchritteForm.myPlugin.rotateLeft(image)}"
-                                                        rendered="#{AktuelleSchritteForm.myPlugin.allowRotation}">
+                                                        jsf:action="#{AktuelleSchritteForm.myPlugin.rotateLeft(image)}"
+                                                        jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowRotation}">
                                                         <i class="fa fa-undo"></i>
-                                                    </h:commandLink>
-                                                    <h:commandLink
-                                                        styleClass="btn thumbnail-control rotate-right"
+                                                    </button>
+                                                    <button
+                                                        class="btn thumbnail-control rotate-right"
                                                         title="#{msgs.plugin_intranda_step_imageQA_rotateRight} #{image.tooltip}"
-                                                        action="#{AktuelleSchritteForm.myPlugin.rotateRight(image)}"
-                                                        rendered="#{AktuelleSchritteForm.myPlugin.allowRotation}">
+                                                        jsf:action="#{AktuelleSchritteForm.myPlugin.rotateRight(image)}"
+                                                        jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowRotation}">
                                                         <i class="fa fa-repeat"></i>
-                                                    </h:commandLink>
+                                                    </button>
                                                 </div>
                                             </h:panelGroup>
 
@@ -367,33 +370,33 @@
                                                             data-target="#myModal-#{status.index}"> <i class="fa fa-pencil" />
                                                         </a>
                                                     </h:panelGroup>
-                                                    <h:commandLink
-                                                        styleClass="btn thumbnail-control delete"
+                                                    <button
+                                                        class="btn thumbnail-control delete"
                                                         title="#{msgs.plugin_intranda_step_imageQA_delete} #{image.tooltip}"
-                                                        action="#{AktuelleSchritteForm.myPlugin.deleteImage(image)}"
-                                                        rendered="#{AktuelleSchritteForm.myPlugin.allowDeletion}"
+                                                        jsf:action="#{AktuelleSchritteForm.myPlugin.deleteImage(image)}"
+                                                        jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowDeletion}"
                                                         onclick="if (!confirm('#{msgs.wirklichAusfuehren}')) return false">
                                                         <i class="fa fa-trash"></i>
-                                                    </h:commandLink>
+                                                    </button>
                                                 </div>
 
                                                 <div class="goobi-thumbnail-controls-right pull-right">
-                                                    <h:commandLink
-                                                        styleClass="btn thumbnail-control rotate-left"
+                                                    <button
+                                                        class="btn thumbnail-control rotate-left"
                                                         title="#{msgs.plugin_intranda_step_imageQA_rotateLeft} #{image.tooltip}"
-                                                        action="#{AktuelleSchritteForm.myPlugin.rotateLeft(image)}"
-                                                        rendered="#{AktuelleSchritteForm.myPlugin.allowRotation}"
+                                                        jsf:action="#{AktuelleSchritteForm.myPlugin.rotateLeft(image)}"
+                                                        jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowRotation}"
                                                         onclick="if (!confirm('#{msgs.wirklichAusfuehren}')) return false">
                                                         <i class="fa fa-undo"></i>
-                                                    </h:commandLink>
-                                                    <h:commandLink
-                                                        styleClass="btn thumbnail-control rotate-right"
+                                                    </button>
+                                                    <button
+                                                        class="btn thumbnail-control rotate-right"
                                                         title="#{msgs.plugin_intranda_step_imageQA_rotateRight} #{image.tooltip}"
-                                                        action="#{AktuelleSchritteForm.myPlugin.rotateRight(image)}"
-                                                        rendered="#{AktuelleSchritteForm.myPlugin.allowRotation}"
+                                                        jsf:action="#{AktuelleSchritteForm.myPlugin.rotateRight(image)}"
+                                                        jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowRotation}"
                                                         onclick="if (!confirm('#{msgs.wirklichAusfuehren}')) return false">
                                                         <i class="fa fa-repeat"></i>
-                                                    </h:commandLink>
+                                                    </button>
                                                 </div>
                                             </h:panelGroup>
 
@@ -447,17 +450,17 @@
                                                             data-dismiss="modal"> <h:outputText value="#{msgs.abbrechen}" />
                                                         </a>
 
-                                                        <h:commandLink
-                                                            action="#{AktuelleSchritteForm.myPlugin.renameImages(image)}"
+                                                        <button
+                                                            jsf:action="#{AktuelleSchritteForm.myPlugin.renameImages(image)}"
                                                             title="#{msgs.uebernehmen}"
-                                                            rel="tooltip"
-                                                            styleClass="btn btn-green font-size-s">
+                                                            jsf:rel="tooltip"
+                                                            class="btn btn-green font-size-s">
                                                             <i class="fa fa-floppy-o margin-right-10"></i>
                                                             <h:outputText value="#{msgs.uebernehmen}" />
                                                             <f:passThroughAttribute
                                                                 name="data-toggle"
                                                                 value="tooltip" />
-                                                        </h:commandLink>
+                                                        </button>
 
                                                     </div>
                                                 </div>
@@ -716,29 +719,29 @@
                     <div class="form-actions">
 
                         <!-- Save and finish the task -->
-                        <h:commandLink
-                            styleClass="btn btn-green font-size-s"
-                            id="finishAndClose"
-                            rendered="#{NavigationForm.uiStatus.pluginSimulation != true and AktuelleSchritteForm.myPlugin.allowTaskFinishButtons == true}"
-                            action="#{AktuelleSchritteForm.SchrittDurchBenutzerAbschliessen}">
+                        <button
+                            class="btn btn-green font-size-s"
+                            jsf:id="finishAndClose"
+                            jsf:rendered="#{NavigationForm.uiStatus.pluginSimulation != true and AktuelleSchritteForm.myPlugin.allowTaskFinishButtons == true}"
+                            jsf:action="#{AktuelleSchritteForm.SchrittDurchBenutzerAbschliessen}">
                             <i class="fa fa-check margin-right-5"></i>
                             <h:outputText value="#{msgs.task_leavePluginAndFinishTask}" />
                             <x:updateActionListener
                                 property="#{NavigationForm.uiStatus.pluginSimulation}"
                                 value="#{false}" />
-                        </h:commandLink>
+                        </button>
 
                         <!-- Save -->
-                        <h:commandLink
-                            styleClass="btn btn-lightgrey pull-right font-size-s"
-                            id="absenden"
-                            action="#{AktuelleSchritteForm.myPlugin.cancel}">
+                        <button
+                            class="btn btn-lightgrey pull-right font-size-s"
+                            jsf:id="absenden"
+                            jsf:action="#{AktuelleSchritteForm.myPlugin.cancel}">
                             <i class="fa fa-close margin-right-5"></i>
                             <h:outputText value="#{msgs.pluginLeave}" />
                             <x:updateActionListener
                                 property="#{NavigationForm.uiStatus.pluginSimulation}"
                                 value="#{false}" />
-                        </h:commandLink>
+                        </button>
 
                     </div>
 

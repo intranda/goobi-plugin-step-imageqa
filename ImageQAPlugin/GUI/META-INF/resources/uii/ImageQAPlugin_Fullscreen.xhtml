@@ -27,7 +27,8 @@
     template="/uii/template/template_blank.html"
     xmlns:x="http://myfaces.apache.org/tomahawk"
     xmlns:intranda="http://xmlns.jcp.org/jsf/composite/composites"
-    xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+    xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+    xmlns:jsf="http://xmlns.jcp.org/jsf">
 
     <link
         rel="stylesheet"
@@ -313,29 +314,29 @@
                         </div>
                     </ui:fragment>
                     <div style="position: absolute; top: 10px; right: 10px;">
-                        <h:commandLink
-                            styleClass="btn btn-lightgrey"
-                            rendered="#{AktuelleSchritteForm.myPlugin.displayOcrButton}"
+                        <button
+                            class="btn btn-lightgrey"
+                            jsf:rendered="#{AktuelleSchritteForm.myPlugin.displayOcrButton}"
                             title="#{msgs.mets_showOcrForCurrentImage}"
-                            pt:aria-label="#{msgs.mets_showOcrForCurrentImage}"
-                            action="#{AktuelleSchritteForm.myPlugin.toggleOCR()}">
+                            aria-label="#{msgs.mets_showOcrForCurrentImage}"
+                            jsf:action="#{AktuelleSchritteForm.myPlugin.toggleOCR()}">
                             <i class="fa fa-file-text-o"></i>
-                        </h:commandLink>
+                        </button>
                         <!-- exit fullscreen -->
                         <!-- style="position:absolute;top:10px; right:10px; " -->
-                        <h:commandLink
-                            styleClass="btn btn-lightgrey"
-                            action="ImageQAPlugin"
-                            pt:aria-label="#{msgs.imageDefaultDisplay}"
+                        <button
+                            class="btn btn-lightgrey"
+                            jsf:action="ImageQAPlugin"
+                            aria-label="#{msgs.imageDefaultDisplay}"
                             title="#{msgs.imageDefaultDisplay}">
                             <i class="fa fa-close"></i>
-                        </h:commandLink>
+                        </button>
                     </div>
                     <!-- previous image -->
-                    <h:commandLink
-                        id="imageBack"
-                        styleClass="btn btn-lightgrey font-size-s"
-                        pt:aria-label="#{msgs.lw_previousImage}"
+                    <button
+                        jsf:id="imageBack"
+                        class="btn btn-lightgrey font-size-s"
+                        aria-label="#{msgs.lw_previousImage}"
                         title="#{msgs.lw_previousImage}"
                         style="position:absolute;top:50vh; left:10px; height:50px;">
                         <i
@@ -348,13 +349,13 @@
                         <x:updateActionListener
                             value="#{AktuelleSchritteForm.myPlugin.imageIndex - 1}"
                             property="#{AktuelleSchritteForm.myPlugin.imageIndex}" />
-                    </h:commandLink>
+                    </button>
 
                     <!-- next image -->
-                    <h:commandLink
-                        id="imageNext"
-                        styleClass="btn btn-lightgrey font-size-s"
-                        pt:aria-label="#{msgs.lw_nextImage}"
+                    <button
+                        jsf:id="imageNext"
+                        class="btn btn-lightgrey font-size-s"
+                        aria-label="#{msgs.lw_nextImage}"
                         title="#{msgs.lw_nextImage}"
                         style="position:absolute;top:50vh; right:10px; height:50px;">
                         <i
@@ -367,7 +368,7 @@
                         <x:updateActionListener
                             value="#{AktuelleSchritteForm.myPlugin.imageIndex + 1}"
                             property="#{AktuelleSchritteForm.myPlugin.imageIndex}" />
-                    </h:commandLink>
+                    </button>
 
                     <!-- file name -->
                     <h1>
@@ -402,8 +403,9 @@
                     </div>
                     <!-- first and last page -->
                     <div style="position: absolute; top: 10px; left: 10px; display: none;">
-                        <h:commandLink
-                            styleClass="btn btn-lightgrey font-size-s margin-right-10"
+                        <button
+                        	jsf:id="firstImg"
+                            class="btn btn-lightgrey font-size-s margin-right-10"
                             title="#{msgs.firstImage}">
                             <i class="fa fa-double-angle-left"></i>
                             <f:ajax
@@ -412,9 +414,10 @@
                             <x:updateActionListener
                                 value="0"
                                 property="#{AktuelleSchritteForm.myPlugin.imageIndex}" />
-                        </h:commandLink>
-                        <h:commandLink
-                            styleClass="btn btn-lightgrey font-size-s"
+                        </button>
+                        <button
+                        	jsf:id="lastImg"
+                            class="btn btn-lightgrey font-size-s"
                             title="#{msgs.lastImage}">
                             <i class="fa fa-double-angle-right"></i>
                             <f:ajax
@@ -423,7 +426,7 @@
                             <x:updateActionListener
                                 value="#{AktuelleSchritteForm.myPlugin.sizeOfImageList - 1}"
                                 property="#{AktuelleSchritteForm.myPlugin.imageIndex}" />
-                        </h:commandLink>
+                        </button>
                     </div>
 
                 </div>
