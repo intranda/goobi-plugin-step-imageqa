@@ -139,6 +139,8 @@ public class ImageQAPlugin implements IStepPlugin {
 
     private int imageIndex = 0;
 
+    private boolean allImagesSelected = false;
+
     private String imageFolderName = "";
 
     private List<SelectableImage> allImages = new ArrayList<>();
@@ -1068,6 +1070,19 @@ public class ImageQAPlugin implements IStepPlugin {
         initialize(this.step, returnPath);
 
         setImageIndex(myindex);
+    }
+
+    public void setAllImagesSelected(boolean value) {
+        this.allImagesSelected = value;
+        if (value) {
+            this.selectAllImages();
+        } else {
+            this.unselectAllImages();
+        }
+    }
+
+    public boolean getAllImagesSelected() {
+        return this.allImagesSelected;
     }
 
     public void selectAllImages() {
