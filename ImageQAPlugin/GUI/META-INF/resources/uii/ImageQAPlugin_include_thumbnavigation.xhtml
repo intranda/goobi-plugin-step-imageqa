@@ -126,6 +126,26 @@
                     <li>
                         <button
                             class="dropdown-item thumbnail-control rotate-right"
+                            jsf:action="#{AktuelleSchritteForm.myPlugin.selectAllImagesOnCurrentPage}"
+                            jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowSelectionPage}">
+                            <i class="btn fa fa-check-square-o margin-right-10"></i>
+                            <h:outputText value="#{msgs.plugin_intranda_step_imageQA_selectAllImagesOnCurrentPage}" />
+                        </button>
+                    </li>
+
+                    <li>
+                        <button
+                            class="dropdown-item thumbnail-control rotate-right"
+                            jsf:action="#{AktuelleSchritteForm.myPlugin.unselectAllImagesOnCurrentPage}"
+                            jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowSelectionPage}">
+                            <i class="btn fa fa-square-o margin-right-10"></i>
+                            <h:outputText value="#{msgs.plugin_intranda_step_imageQA_unselectAllImagesOnCurrentPage}" />
+                        </button>
+                    </li>
+
+                    <li>
+                        <button
+                            class="dropdown-item thumbnail-control rotate-right"
                             jsf:action="#{AktuelleSchritteForm.myPlugin.selectAllImages}"
                             jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowSelectionAll}">
                             <i class="btn fa fa-check-square-o margin-right-10"></i>

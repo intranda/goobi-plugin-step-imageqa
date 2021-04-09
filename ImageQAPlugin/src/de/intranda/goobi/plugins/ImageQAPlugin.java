@@ -122,6 +122,7 @@ public class ImageQAPlugin implements IStepPlugin {
     private boolean allowRotation = false;
     private boolean allowRenaming = false;
     private boolean allowSelection = false;
+    private boolean allowSelectionPage = false;
     private boolean allowSelectionAll = false;
     private boolean allowDownload = false;
     private boolean allowDownloadAsPdf = false;
@@ -138,8 +139,6 @@ public class ImageQAPlugin implements IStepPlugin {
     private int pageNo = 0;
 
     private int imageIndex = 0;
-
-    private boolean allImagesSelected = false;
 
     private String imageFolderName = "";
 
@@ -318,6 +317,7 @@ public class ImageQAPlugin implements IStepPlugin {
         allowRotation = myconfig.getBoolean("allowRotation", false);
         allowRenaming = myconfig.getBoolean("allowRenaming", false);
         allowSelection = myconfig.getBoolean("allowSelection", false);
+        allowSelectionPage = myconfig.getBoolean("allowSelectionPage", false);
         allowSelectionAll = myconfig.getBoolean("allowSelectionAll", false);
         allowDownload = myconfig.getBoolean("allowDownload", false);
         allowDownloadAsPdf = myconfig.getBoolean("allowDownloadAsPdf", false);
@@ -830,7 +830,7 @@ public class ImageQAPlugin implements IStepPlugin {
         if (displayMode.equals("part")) {
             return getLastPageNumberPartGUI();
         } else {
-            int ret = new Double(Math.floor(this.allImages.size() / numberOfImagesInFullGUI)).intValue();
+            int ret = this.allImages.size() / numberOfImagesInFullGUI;
             if (this.allImages.size() % numberOfImagesInFullGUI == 0) {
                 ret--;
             }
@@ -839,7 +839,7 @@ public class ImageQAPlugin implements IStepPlugin {
     }
 
     public int getLastPageNumberPartGUI() {
-        int ret = new Double(Math.floor(this.allImages.size() / numberOfImagesInPartGUI)).intValue();
+        int ret = this.allImages.size() / numberOfImagesInPartGUI;
         if (this.allImages.size() % numberOfImagesInPartGUI == 0) {
             ret--;
         }
@@ -1072,17 +1072,31 @@ public class ImageQAPlugin implements IStepPlugin {
         setImageIndex(myindex);
     }
 
-    public void setAllImagesSelected(boolean value) {
-        this.allImagesSelected = value;
-        if (value) {
-            this.selectAllImages();
-        } else {
-            this.unselectAllImages();
-        }
+    public void selectAllImagesOnCurrentPage() {
+        this.selectOrUnselectAllImagesOnCurrentPage(true);
     }
 
-    public boolean getAllImagesSelected() {
-        return this.allImagesSelected;
+    public void unselectAllImagesOnCurrentPage() {
+        this.selectOrUnselectAllImagesOnCurrentPage(false);
+    }
+
+    public void selectOrUnselectAllImagesOnCurrentPage(boolean value) {
+        // Get the current number of images on a page
+        int imagesOnPage;
+        if (this.displayMode.equals("part")) {
+            imagesOnPage = this.numberOfImagesInPartGUI;
+        } else {
+            imagesOnPage = this.numberOfImagesInFullGUI;
+        }
+
+        // Get the first and the last index of the images in the current page
+        int firstIndex = this.pageNo * imagesOnPage;
+        int lastIndex = firstIndex + imagesOnPage - 1;
+
+        // Change all images on the current page
+        for (int index = firstIndex; index <= lastIndex; index++) {
+            allImages.get(index).setSelected(value);
+        }
     }
 
     public void selectAllImages() {

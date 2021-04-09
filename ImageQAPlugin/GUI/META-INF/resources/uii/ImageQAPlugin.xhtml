@@ -230,18 +230,6 @@
                                 layout="block"
                                 rendered="#{AktuelleSchritteForm.myPlugin.sizeOfImageList gt 0}">
 
-                                <ui:fragment id="container_select_all">
-                                    <h:commandLink
-                                        id="select_all"
-                                        title="Select / Deselect all"
-                                        rel="tooltip">
-                                        <x:selectBooleanCheckbox
-                                            id="checkbox_select_all"
-                                            value="#{AktuelleSchritteForm.myPlugin.allImagesSelected}" />
-                                    </h:commandLink>
-                                    #{msgs.selectAll}
-                                </ui:fragment>
-                                
                                 <div class="row">
                                     <f:subview id="first">
                                         <ui:include src="ImageQAPlugin_include_thumbnavigation.xhtml" />

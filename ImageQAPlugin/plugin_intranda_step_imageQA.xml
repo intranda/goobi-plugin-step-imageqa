@@ -65,6 +65,7 @@
         <allowRenaming>false</allowRenaming>
         <!-- allow selection of images -->
         <allowSelection>false</allowSelection>
+        <allowSelectionPage>false</allowSelectionPage>
         <allowSelectionAll>false</allowSelectionAll>
         <allowDownload>false</allowDownload>
         <allowDownloadAsPdf>false</allowDownloadAsPdf>
