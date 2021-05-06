@@ -1093,6 +1093,12 @@ public class ImageQAPlugin implements IStepPlugin {
         int firstIndex = this.pageNo * imagesOnPage;
         int lastIndex = firstIndex + imagesOnPage - 1;
 
+        // When it is the last page, the last indexable image might be some indices earlier
+        int lastReachableIndex = allImages.size() - 1;
+        if (lastReachableIndex < lastIndex) {
+            lastIndex = lastReachableIndex;
+        }
+
         // Change all images on the current page
         for (int index = firstIndex; index <= lastIndex; index++) {
             allImages.get(index).setSelected(value);
