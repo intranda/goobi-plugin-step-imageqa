@@ -222,7 +222,8 @@ public class ImageQAPlugin implements IStepPlugin {
         this.noShortcutPrefix = myconfig.getBoolean("noShortcutPrefix", false);
         this.thumbnailsOnly = myconfig.getBoolean("thumbnailsOnly", false);
 
-       this.showImageComments = ConfigurationHelper.getInstance().getMetsEditorShowImageComments();
+        this.showImageComments = myconfig.getBoolean("showImageComments", false);
+//       this.showImageComments = ConfigurationHelper.getInstance().getMetsEditorShowImageComments();
     }
 
     public void changeFolder() {
