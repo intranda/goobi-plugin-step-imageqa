@@ -91,6 +91,7 @@ import de.unigoettingen.sub.commons.contentlib.exceptions.ImageManipulatorExcept
 import de.unigoettingen.sub.commons.contentlib.imagelib.ImageManager;
 import de.unigoettingen.sub.commons.contentlib.imagelib.JpegInterpreter;
 import lombok.Data;
+import lombok.Getter;
 import lombok.extern.log4j.Log4j;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 import ugh.dl.DigitalDocument;
@@ -221,6 +222,8 @@ public class ImageQAPlugin implements IStepPlugin {
         this.noShortcutPrefix = myconfig.getBoolean("noShortcutPrefix", false);
         this.thumbnailsOnly = myconfig.getBoolean("thumbnailsOnly", false);
 
+        this.showImageComments = myconfig.getBoolean("showImageComments", false);
+//       this.showImageComments = ConfigurationHelper.getInstance().getMetsEditorShowImageComments();
     }
 
     public void changeFolder() {
@@ -1225,5 +1228,44 @@ public class ImageQAPlugin implements IStepPlugin {
         if (displayOCR) {
             updateOCR();
         }
+    }
+    
+    //this is set whenever setImage() is called.
+    @Getter
+    private boolean showImageComments = false;
+
+    private ImageCommentHelper commentHelper;
+
+    private ImageCommentHelper getCommentHelper() {
+
+        if (commentHelper == null) {
+            commentHelper = new ImageCommentHelper();
+        }
+
+        return commentHelper;
+    }
+
+    public String getCommentForImage() {
+
+        if (getImage() == null) {
+            return null;
+        }
+
+        return getCommentHelper().getComment(this.imageFolderName, getImage().getImageName());
+    }
+
+    public void setCommentForImage(String comment) {
+
+        if (getImage() == null) {
+            return;
+        }
+
+        //only save new log entry if the comment has changed
+        String oldComment = getCommentForImage();
+        if (comment == null || (oldComment != null && comment.contentEquals(oldComment)) || (oldComment == null && comment.isEmpty())) {
+            return;
+        }
+
+        getCommentHelper().setComment(this.imageFolderName, getImage().getImageName(), comment);
     }
 }

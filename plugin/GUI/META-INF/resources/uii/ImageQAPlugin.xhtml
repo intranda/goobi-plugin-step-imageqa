@@ -16,8 +16,7 @@
  * Temple Place, Suite 330, Boston, MA 02111-1307 USA
  * 
  -->
-<ui:composition
-    xmlns="http://www.w3.org/1999/xhtml"
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
     xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
     xmlns:c="http://java.sun.com/jsp/jstl/core"
     xmlns:h="http://xmlns.jcp.org/jsf/html"
@@ -30,39 +29,32 @@
     xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
     xmlns:jsf="http://xmlns.jcp.org/jsf">
 
-    <ui:param
-        name="myPageTitle"
+    <ui:param name="myPageTitle"
         value="#{msgs.plugin}: #{msgs[('plugin_').concat(AktuelleSchritteForm.myPlugin.title)]}" />
 
     <ui:define name="breadcrumb">
-        <intranda:breadcrumb
-            label="#{msgs.startseite}"
-            action="index"
+        <intranda:breadcrumb label="#{msgs.startseite}" action="index"
             navId="a0" />
 
-        <c:if test="#{LoginForm.hasRole('Workflow_Processes') and NavigationForm.uiStatus.pluginSimulation == true}">
-            <intranda:breadcrumb
-                id="processAll"
+        <c:if
+            test="#{LoginForm.hasRole('Workflow_Processes') and NavigationForm.uiStatus.pluginSimulation == true}">
+            <intranda:breadcrumb id="processAll"
                 label="#{ProzessverwaltungForm.modusAnzeige=='aktuell'?msgs.aktuelleProzesse:msgs.prozessvorlagen}"
-                action="process_all"
-                navId="a1" />
-            <intranda:breadcrumb
-                id="processEdit"
+                action="process_all" navId="a1" />
+            <intranda:breadcrumb id="processEdit"
                 label="#{ProzessverwaltungForm.modusAnzeige=='aktuell'?msgs.prozessDetails:msgs.process_templateDetails}"
                 action="process_edit" />
         </c:if>
 
         <c:if test="#{NavigationForm.uiStatus.pluginSimulation != true}">
-            <intranda:breadcrumb
-                label="#{msgs.aktuelleSchritte}"
+            <intranda:breadcrumb label="#{msgs.aktuelleSchritte}"
                 action="#{AktuelleSchritteForm.paginator.returnToPreviousPage}" />
             <intranda:breadcrumb
                 label="#{AktuelleSchritteForm.mySchritt.prozess.titel}"
                 action="#{AktuelleSchritteForm.myPlugin.cancel}" />
         </c:if>
 
-        <intranda:breadcrumb
-            label="#{myPageTitle}"
+        <intranda:breadcrumb label="#{myPageTitle}"
             noSeparator="#{true}" />
     </ui:define>
 
@@ -71,70 +63,110 @@
 
     <ui:define name="content">
         <main>
-            <link
-                rel="stylesheet"
-                href="imageQA.css" />
+            <link rel="stylesheet" href="imageQA.css" />
             <style>
 /* Thumbnails */
 .goobi-thumbnail {
 	float: left;
 	margin: 7px;
-	width: #{AktuelleSchritteForm.myPlugin.thumbnailSize +2}px;
-    height: #{AktuelleSchritteForm.myPlugin.thumbnailSize+55}px;
+	width: #{AktuelleSchritteForm.myPlugin.thumbnailSize +2
+}
+
+px
+
+
+
+
+;
+height
+
+
+
+
+:
+
+
+ 
+
+
+#{
+AktuelleSchritteForm
+
+
+
+
+.myPlugin
+
+
+
+
+.thumbnailSize
++
+55
+}
+px
+
+
+
+
+;
 }
 .goobi-thumbnail .goobi-thumbnail-image {
 	float: left;
 	width: 100%;
 	min-height: 100px;
 	overflow: hidden;
-	max-height: #{AktuelleSchritteForm.myPlugin.thumbnailSize +2}px;
+	max-height: #{AktuelleSchritteForm.myPlugin.thumbnailSize +2
+}
+px
+
+
+
+
+;
 }
 </style>
 
-            <script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/reactiveX/rx.lite.min.js"></script>
-            <script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/q-promises/q.min.js"></script>
+            <script
+                src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/reactiveX/rx.lite.min.js"></script>
+            <script
+                src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/q-promises/q.min.js"></script>
 
-            <script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/openseadragon/openseadragon.min.js"></script>
-            <script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/openseadragon/openseadragon-viewerinputhook.js"></script>
+            <script
+                src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/openseadragon/openseadragon.min.js"></script>
+            <script
+                src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/openseadragon/openseadragon-viewerinputhook.js"></script>
 
             <!-- 3D-Models -->
-            <script
-                type="text/javascript"
+            <script type="text/javascript"
                 src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/three/three.min.js"></script>
-            <script
-                type="text/javascript"
+            <script type="text/javascript"
                 src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/three/loaders/OBJLoader.js"></script>
-            <script
-                type="text/javascript"
+            <script type="text/javascript"
                 src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/three/loaders/MTLLoader.js"></script>
-            <script
-                type="text/javascript"
+            <script type="text/javascript"
                 src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/three/loaders/PLYLoader.js"></script>
-            <script
-                type="text/javascript"
+            <script type="text/javascript"
                 src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/three/loaders/STLLoader.js"></script>
-            <script
-                type="text/javascript"
+            <script type="text/javascript"
                 src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/three/loaders/FBXLoader.js"></script>
-            <script
-                type="text/javascript"
+            <script type="text/javascript"
                 src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/three/loaders/TDSLoader.js"></script>
-            <script
-                type="text/javascript"
+            <script type="text/javascript"
                 src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/three/loaders/DRACOLoader.js"></script>
-            <script
-                type="text/javascript"
+            <script type="text/javascript"
                 src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/three/loaders/GLTFLoader.js"></script>
-            <script
-                type="text/javascript"
+            <script type="text/javascript"
                 src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/three/controls/OrbitControls.js"></script>
-            <script
-                type="text/javascript"
+            <script type="text/javascript"
                 src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/three/dependencies/inflate.min.js"></script>
-            <script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/x3dom/x3dom.js"></script>
+            <script
+                src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/x3dom/x3dom.js"></script>
 
-            <script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/imageView.min.js"></script>
-            <script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/objectView.min.js"></script>
+            <script
+                src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/imageView.min.js"></script>
+            <script
+                src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/objectView.min.js"></script>
 
 
             <h:form id="qaform">
@@ -142,38 +174,37 @@
                     <div class="box-title">
                         <h2>
                             <i class="fa fa-puzzle-piece" />
-                            <h:outputText
-                                id="id9a"
+                            <h:outputText id="id9a"
                                 value="#{AktuelleSchritteForm.myPlugin.step.titel}" />
                         </h2>
                         <div class="actions">
-                        
-                            <ui:fragment rendered="#{AktuelleSchritteForm.myPlugin.possibleImageFolder.size() gt 1}">
-					            <h:selectOneMenu
-				                    id="folder"
+
+                            <ui:fragment
+                                rendered="#{AktuelleSchritteForm.myPlugin.possibleImageFolder.size() gt 1}">
+                                <h:selectOneMenu id="folder"
                                     pt:aria-label="#{msgs.plugin_fileUpload_selectFolder}"
-				                    styleClass="form-control"
-				                    style="width:auto; display:inline-block"
-				                    value="#{AktuelleSchritteForm.myPlugin.selectedImageFolder}">
-				                    <f:selectItem
-				                        itemValue=""
-				                        itemLabel="#{msgs.bitteAuswaehlen}"
-				                        itemDisabled="true" />
-				                    <f:selectItems
-				                        value="#{AktuelleSchritteForm.myPlugin.possibleImageFolder}"
-				                        var="item"
-				                        itemLabel="#{item}"
-				                        itemValue="#{item}" />
-				                </h:selectOneMenu>
-				                <button
-				                    class="btn btn-mini margin-sides-10"
-				                    jsf:id="changefolder"
-				                    jsf:action="#{AktuelleSchritteForm.myPlugin.changeFolder}">
-				                    <i class="fa fa-folder-open-o margin-right-5"></i>
-				                    <h:outputText value="#{msgs.plugin_fileUpload_changeFolder}" />
-				                </button>
-					        </ui:fragment>
-                        
+                                    styleClass="form-control"
+                                    style="width:auto; display:inline-block"
+                                    value="#{AktuelleSchritteForm.myPlugin.selectedImageFolder}">
+                                    <f:selectItem itemValue=""
+                                        itemLabel="#{msgs.bitteAuswaehlen}"
+                                        itemDisabled="true" />
+                                    <f:selectItems
+                                        value="#{AktuelleSchritteForm.myPlugin.possibleImageFolder}"
+                                        var="item" itemLabel="#{item}"
+                                        itemValue="#{item}" />
+                                </h:selectOneMenu>
+                                <button
+                                    class="btn btn-mini margin-sides-10"
+                                    jsf:id="changefolder"
+                                    jsf:action="#{AktuelleSchritteForm.myPlugin.changeFolder}">
+                                    <i
+                                        class="fa fa-folder-open-o margin-right-5"></i>
+                                    <h:outputText
+                                        value="#{msgs.plugin_fileUpload_changeFolder}" />
+                                </button>
+                            </ui:fragment>
+
                             <button
                                 class="btn font-size-s margin-left-10"
                                 title="#{msgs.imageFullscreen}"
@@ -188,16 +219,14 @@
                                 jsf:rendered="#{AktuelleSchritteForm.myPlugin.thumbnailsOnly and not AktuelleSchritteForm.myPlugin.useJSFullscreen}">
                                 <i class="fa fa-arrows-alt"></i>
                             </button>
-                            <button
-                                jsf:id="id10"
+                            <button jsf:id="id10"
                                 aria-label="#{msgs.reload}"
                                 jsf:action="#{NavigationForm.Reload}"
                                 class="btn btn-mini">
                                 <i class="fa fa-refresh" />
                             </button>
 
-                            <button
-                                jsf:id="id11"
+                            <button jsf:id="id11"
                                 jsf:action="#{AktuelleSchritteForm.SchrittDurchBenutzerAbschliessen}"
                                 class="btn btn-mini"
                                 jsf:rendered="#{NavigationForm.uiStatus.pluginSimulation != true and AktuelleSchritteForm.myPlugin.allowTaskFinishButtons == true}"
@@ -208,8 +237,7 @@
                                     value="#{false}" />
                             </button>
 
-                            <button
-                                jsf:id="id12"
+                            <button jsf:id="id12"
                                 jsf:action="#{AktuelleSchritteForm.myPlugin.cancel}"
                                 class="btn btn-mini"
                                 jsf:rendered="#{NavigationForm.uiStatus.pluginSimulation != true and AktuelleSchritteForm.myPlugin.allowTaskFinishButtons == true}"
@@ -226,13 +254,13 @@
                     <div class="box-content">
                         <div
                             class="#{AktuelleSchritteForm.myPlugin.thumbnailsOnly ? 'col-sm-12' : AktuelleSchritteForm.myPlugin.displayOCR ? 'col-sm-5' : 'col-sm-7'} col-xs-12">
-                            <h:panelGroup
-                                layout="block"
+                            <h:panelGroup layout="block"
                                 rendered="#{AktuelleSchritteForm.myPlugin.sizeOfImageList gt 0}">
 
                                 <div class="row">
                                     <f:subview id="first">
-                                        <ui:include src="ImageQAPlugin_include_thumbnavigation.xhtml" />
+                                        <ui:include
+                                            src="ImageQAPlugin_include_thumbnavigation.xhtml" />
                                     </f:subview>
                                 </div>
 
@@ -241,22 +269,23 @@
                                     class="flex-container margin-top-most margin-bottom-most"
                                     dir="#{AktuelleSchritteForm.myPlugin.flowDir}">
 
-                                    <ui:repeat
-                                        var="image"
+                                    <ui:repeat var="image"
                                         value="#{AktuelleSchritteForm.myPlugin.paginatorList}"
                                         varStatus="status">
                                         <div
                                             class="goobi-thumbnail #{AktuelleSchritteForm.myPlugin.image.imageName eq image.imageName?'img-active':'font-light'}"
                                             dir="auto">
-                                            <div class="goobi-thumbnail-image">
+                                            <div
+                                                class="goobi-thumbnail-image">
 
                                                 <div class="thumb">
                                                     <button
-                                                    	jsf:id="imageClick"
-                                                    	class="button-no-style"
+                                                        jsf:id="imageClick"
+                                                        class="button-no-style"
                                                         title="#{image.tooltip}"
                                                         jsf:action="#{AktuelleSchritteForm.myPlugin.imageClick}">
-                                                        <ui:fragment rendered="#{image.type == 'image'}">
+                                                        <ui:fragment
+                                                            rendered="#{image.type == 'image'}">
                                                             <canvas
                                                                 class="thumb-canvas"
                                                                 data-image_small="#{image.thumbnailUrl}"
@@ -266,7 +295,8 @@
 
                                                         </ui:fragment>
                                                         <!-- 3D OBJECT -->
-                                                        <ui:fragment rendered="#{image.type == 'object' or image.type == 'x3dom'}">
+                                                        <ui:fragment
+                                                            rendered="#{image.type == 'object' or image.type == 'x3dom'}">
                                                             <img
                                                                 class="thumbnails__thumb-placeholder"
                                                                 src="#{HelperForm.servletPathWithHostAsUrl}/uii/template/img/goobi_3d_object_placeholder.png" />
@@ -290,33 +320,49 @@
                                                 </div>
 
                                             </div>
-                                            <div class="goobi-thumbnail-caption">
-                                                <h:outputText value="#{image.imageNameShort}"></h:outputText>
+                                            <div
+                                                class="goobi-thumbnail-caption">
+                                                <h:outputText
+                                                    value="#{image.imageNameShort}"></h:outputText>
                                             </div>
 
                                             <h:panelGroup
                                                 styleClass="goobi-thumbnail-controls"
                                                 rendered="#{NavigationForm.uiStatus.plugin_qa_confirmation == false}">
 
-                                                <div class="goobi-thumbnail-controls-left pull-left">
+                                                <div
+                                                    class="goobi-thumbnail-controls-left pull-left">
                                                     <!-- select current image -->
-                                                    <h:panelGroup rendered="#{AktuelleSchritteForm.myPlugin.allowSelection}">
-                                                        <span class="btn thumbnail-control checkbox"> <label class="control checkbox">
-                                                                <h:selectBooleanCheckbox value="#{image.selected}" /> <span class="control-indicator">
-                                                                    <i class="fa fa fa-check-square-o"></i> <i class="fa fa fa-square-o"></i>
+                                                    <h:panelGroup
+                                                        rendered="#{AktuelleSchritteForm.myPlugin.allowSelection}">
+                                                        <span
+                                                            class="btn thumbnail-control checkbox">
+                                                            <label
+                                                            class="control checkbox">
+                                                                <h:selectBooleanCheckbox
+                                                                    value="#{image.selected}" />
+                                                                <span
+                                                                class="control-indicator">
+                                                                    <i
+                                                                    class="fa fa fa-check-square-o"></i>
+                                                                    <i
+                                                                    class="fa fa fa-square-o"></i>
                                                             </span>
                                                         </label>
 
                                                         </span>
                                                     </h:panelGroup>
                                                     <!--  modal rendern  -->
-                                                    <h:panelGroup rendered="#{AktuelleSchritteForm.myPlugin.allowRenaming}">
+                                                    <h:panelGroup
+                                                        rendered="#{AktuelleSchritteForm.myPlugin.allowRenaming}">
                                                         <a
                                                             class="btn thumbnail-control rename"
                                                             title="#{msgs.plugin_intranda_step_imageQA_rename} #{image.tooltip}"
                                                             href="#"
                                                             data-toggle="modal"
-                                                            data-target="#myModal-#{status.index}"> <i class="fa fa-pencil" />
+                                                            data-target="#myModal-#{status.index}">
+                                                            <i
+                                                            class="fa fa-pencil" />
                                                         </a>
                                                     </h:panelGroup>
                                                     <button
@@ -324,23 +370,27 @@
                                                         title="#{msgs.plugin_intranda_step_imageQA_delete} #{image.tooltip}"
                                                         jsf:action="#{AktuelleSchritteForm.myPlugin.deleteImage(image)}"
                                                         jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowDeletion}">
-                                                        <i class="fa fa-trash"></i>
+                                                        <i
+                                                            class="fa fa-trash"></i>
                                                     </button>
                                                 </div>
-                                                <div class="goobi-thumbnail-controls-right pull-right">
+                                                <div
+                                                    class="goobi-thumbnail-controls-right pull-right">
                                                     <button
                                                         class="btn thumbnail-control rotate-left"
                                                         title="#{msgs.plugin_intranda_step_imageQA_rotateLeft} #{image.tooltip}"
                                                         jsf:action="#{AktuelleSchritteForm.myPlugin.rotateLeft(image)}"
                                                         jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowRotation}">
-                                                        <i class="fa fa-undo"></i>
+                                                        <i
+                                                            class="fa fa-undo"></i>
                                                     </button>
                                                     <button
                                                         class="btn thumbnail-control rotate-right"
                                                         title="#{msgs.plugin_intranda_step_imageQA_rotateRight} #{image.tooltip}"
                                                         jsf:action="#{AktuelleSchritteForm.myPlugin.rotateRight(image)}"
                                                         jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowRotation}">
-                                                        <i class="fa fa-repeat"></i>
+                                                        <i
+                                                            class="fa fa-repeat"></i>
                                                     </button>
                                                 </div>
                                             </h:panelGroup>
@@ -348,12 +398,23 @@
                                             <h:panelGroup
                                                 styleClass="goobi-thumbnail-controls"
                                                 rendered="#{NavigationForm.uiStatus.plugin_qa_confirmation != false}">
-                                                <div class="goobi-thumbnail-controls-left pull-left">
+                                                <div
+                                                    class="goobi-thumbnail-controls-left pull-left">
                                                     <!-- select current image -->
-                                                    <h:panelGroup rendered="#{AktuelleSchritteForm.myPlugin.allowSelection}">
-                                                        <span class="btn thumbnail-control checkbox"> <label class="control checkbox">
-                                                                <h:selectBooleanCheckbox value="#{image.selected}" /> <span class="control-indicator">
-                                                                    <i class="fa fa fa-check-square-o"></i> <i class="fa fa fa-square-o"></i>
+                                                    <h:panelGroup
+                                                        rendered="#{AktuelleSchritteForm.myPlugin.allowSelection}">
+                                                        <span
+                                                            class="btn thumbnail-control checkbox">
+                                                            <label
+                                                            class="control checkbox">
+                                                                <h:selectBooleanCheckbox
+                                                                    value="#{image.selected}" />
+                                                                <span
+                                                                class="control-indicator">
+                                                                    <i
+                                                                    class="fa fa fa-check-square-o"></i>
+                                                                    <i
+                                                                    class="fa fa fa-square-o"></i>
                                                             </span>
                                                         </label>
 
@@ -361,13 +422,16 @@
                                                     </h:panelGroup>
 
                                                     <!--  modal rendern  -->
-                                                    <h:panelGroup rendered="#{AktuelleSchritteForm.myPlugin.allowRenaming}">
+                                                    <h:panelGroup
+                                                        rendered="#{AktuelleSchritteForm.myPlugin.allowRenaming}">
                                                         <a
                                                             class="btn thumbnail-control rename"
                                                             title="#{msgs.plugin_intranda_step_imageQA_rename} #{image.tooltip}"
                                                             href="#"
                                                             data-toggle="modal"
-                                                            data-target="#myModal-#{status.index}"> <i class="fa fa-pencil" />
+                                                            data-target="#myModal-#{status.index}">
+                                                            <i
+                                                            class="fa fa-pencil" />
                                                         </a>
                                                     </h:panelGroup>
                                                     <button
@@ -376,18 +440,21 @@
                                                         jsf:action="#{AktuelleSchritteForm.myPlugin.deleteImage(image)}"
                                                         jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowDeletion}"
                                                         onclick="if (!confirm('#{msgs.wirklichAusfuehren}')) return false">
-                                                        <i class="fa fa-trash"></i>
+                                                        <i
+                                                            class="fa fa-trash"></i>
                                                     </button>
                                                 </div>
 
-                                                <div class="goobi-thumbnail-controls-right pull-right">
+                                                <div
+                                                    class="goobi-thumbnail-controls-right pull-right">
                                                     <button
                                                         class="btn thumbnail-control rotate-left"
                                                         title="#{msgs.plugin_intranda_step_imageQA_rotateLeft} #{image.tooltip}"
                                                         jsf:action="#{AktuelleSchritteForm.myPlugin.rotateLeft(image)}"
                                                         jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowRotation}"
                                                         onclick="if (!confirm('#{msgs.wirklichAusfuehren}')) return false">
-                                                        <i class="fa fa-undo"></i>
+                                                        <i
+                                                            class="fa fa-undo"></i>
                                                     </button>
                                                     <button
                                                         class="btn thumbnail-control rotate-right"
@@ -395,41 +462,44 @@
                                                         jsf:action="#{AktuelleSchritteForm.myPlugin.rotateRight(image)}"
                                                         jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowRotation}"
                                                         onclick="if (!confirm('#{msgs.wirklichAusfuehren}')) return false">
-                                                        <i class="fa fa-repeat"></i>
+                                                        <i
+                                                            class="fa fa-repeat"></i>
                                                     </button>
                                                 </div>
                                             </h:panelGroup>
 
                                         </div>
 
-                                        <div
-                                            class="modal fade"
+                                        <div class="modal fade"
                                             id="myModal-#{status.index}"
-                                            tabindex="-1"
-                                            role="dialog"
+                                            tabindex="-1" role="dialog"
                                             aria-labelledby="myModalLabel">
-                                            <div
-                                                class="modal-dialog"
+                                            <div class="modal-dialog"
                                                 role="document">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <a
-                                                            href="#"
+                                                <div
+                                                    class="modal-content">
+                                                    <div
+                                                        class="modal-header">
+                                                        <a href="#"
                                                             class="btn btn-blue pull-right"
                                                             title="#{msgs.cancel}"
-                                                            data-dismiss="modal"> <i class="fa fa-times"></i>
+                                                            data-dismiss="modal">
+                                                            <i
+                                                            class="fa fa-times"></i>
                                                         </a>
                                                         <h4
                                                             class="modal-title"
                                                             id="myModalLabel-#{status.index}">
-                                                            <h:outputText value="#{msgs.plugin_intranda_step_imageQA_renameTitle}: #{image.imageName}" />
+                                                            <h:outputText
+                                                                value="#{msgs.plugin_intranda_step_imageQA_renameTitle}: #{image.imageName}" />
                                                         </h4>
                                                     </div>
-                                                    <div class="modal-body">
-                                                        <h:outputText value="#{msgs.plugin_intranda_step_imageQA_renameDescription}" />
+                                                    <div
+                                                        class="modal-body">
+                                                        <h:outputText
+                                                            value="#{msgs.plugin_intranda_step_imageQA_renameDescription}" />
 
-                                                        <div
-                                                            class="row"
+                                                        <div class="row"
                                                             style="margin-top: 15px;">
                                                             <ui:repeat
                                                                 var="namePart"
@@ -441,13 +511,15 @@
                                                         </div>
 
                                                     </div>
-                                                    <div class="modal-footer">
+                                                    <div
+                                                        class="modal-footer">
 
-                                                        <a
-                                                            href="#"
+                                                        <a href="#"
                                                             class="btn pull-left font-size-s"
                                                             title="#{msgs.abbrechen}"
-                                                            data-dismiss="modal"> <h:outputText value="#{msgs.abbrechen}" />
+                                                            data-dismiss="modal">
+                                                            <h:outputText
+                                                                value="#{msgs.abbrechen}" />
                                                         </a>
 
                                                         <button
@@ -455,8 +527,10 @@
                                                             title="#{msgs.uebernehmen}"
                                                             jsf:rel="tooltip"
                                                             class="btn btn-green font-size-s">
-                                                            <i class="fa fa-floppy-o margin-right-10"></i>
-                                                            <h:outputText value="#{msgs.uebernehmen}" />
+                                                            <i
+                                                                class="fa fa-floppy-o margin-right-10"></i>
+                                                            <h:outputText
+                                                                value="#{msgs.uebernehmen}" />
                                                             <f:passThroughAttribute
                                                                 name="data-toggle"
                                                                 value="tooltip" />
@@ -473,10 +547,10 @@
 
                                 <div class="row">
                                     <f:subview id="second">
-                                        <ui:param
-                                            name="position"
+                                        <ui:param name="position"
                                             value="second"></ui:param>
-                                        <ui:include src="ImageQAPlugin_include_thumbnavigation.xhtml" />
+                                        <ui:include
+                                            src="ImageQAPlugin_include_thumbnavigation.xhtml" />
                                     </f:subview>
                                 </div>
 
@@ -491,22 +565,28 @@
 
                                 <div class="row pull-center">
                                     <f:subview id="first_image">
-                                        <ui:include src="ImageQAPlugin_include_imagenavigation.xhtml" />
+                                        <ui:include
+                                            src="ImageQAPlugin_include_imagenavigation.xhtml" />
                                     </f:subview>
-                                    <ui:fragment rendered="#{AktuelleSchritteForm.myPlugin.image.type == 'image'}">
-                                        <ui:include src="ImageQAPlugin_include_imageControls.xhtml" />
+                                    <ui:fragment
+                                        rendered="#{AktuelleSchritteForm.myPlugin.image.type == 'image'}">
+                                        <ui:include
+                                            src="ImageQAPlugin_include_imageControls.xhtml" />
                                     </ui:fragment>
-                                    <ui:fragment rendered="#{AktuelleSchritteForm.myPlugin.image.type == 'object'}">
-                                        <ui:include src="ImageQAPlugin_include_objectControls.xhtml" />
+                                    <ui:fragment
+                                        rendered="#{AktuelleSchritteForm.myPlugin.image.type == 'object'}">
+                                        <ui:include
+                                            src="ImageQAPlugin_include_objectControls.xhtml" />
                                     </ui:fragment>
                                 </div>
 
                                 <!-- big image -->
 
-                                <ui:fragment rendered="#{AktuelleSchritteForm.myPlugin.image.type == 'audio'}">
-                                    <div class="row margin-top-most margin-bottom-most">
-                                        <audio
-                                            class="audioplayer"
+                                <ui:fragment
+                                    rendered="#{AktuelleSchritteForm.myPlugin.image.type == 'audio'}">
+                                    <div
+                                        class="row margin-top-most margin-bottom-most">
+                                        <audio class="audioplayer"
                                             id="audioplayer"
                                             controls="true"
                                             played="length"
@@ -516,10 +596,11 @@
                                     </div>
                                 </ui:fragment>
 
-                                <ui:fragment rendered="#{AktuelleSchritteForm.myPlugin.image.type == 'video'}">
-                                    <div class="row margin-top-most margin-bottom-most">
-                                        <video
-                                            class="videoplayer"
+                                <ui:fragment
+                                    rendered="#{AktuelleSchritteForm.myPlugin.image.type == 'video'}">
+                                    <div
+                                        class="row margin-top-most margin-bottom-most">
+                                        <video class="videoplayer"
                                             id="videoplayer"
                                             controls="true"
                                             played="length"
@@ -529,10 +610,13 @@
                                     </div>
                                 </ui:fragment>
 
-                                <ui:fragment rendered="#{AktuelleSchritteForm.myPlugin.image.type == 'unknown'}">
-                                    <div class="row margin-top-most margin-bottom-most">
+                                <ui:fragment
+                                    rendered="#{AktuelleSchritteForm.myPlugin.image.type == 'unknown'}">
+                                    <div
+                                        class="row margin-top-most margin-bottom-most">
                                         <p class="unknown_file_download">
-                                            <h:outputText value="#{msgs.mets_downloadFile}" />
+                                            <h:outputText
+                                                value="#{msgs.mets_downloadFile}" />
                                             <a
                                                 href="#{AktuelleSchritteForm.myPlugin.image.objectUrl}"
                                                 download="#{AktuelleSchritteForm.myPlugin.image.tooltip}">Download</a>
@@ -541,43 +625,112 @@
                                 </ui:fragment>
 
 
-                                <ui:fragment rendered="#{AktuelleSchritteForm.myPlugin.image.type == 'image'}">
+                                <ui:fragment
+                                    rendered="#{AktuelleSchritteForm.myPlugin.image.type == 'image'}">
 
-                                    <div class="row margin-top-most margin-bottom-most">
-                                        <div class="#{AktuelleSchritteForm.myPlugin.displayOCR ? 'col-xs-12 col-sm-6' : ''}">
+                                    <div
+                                        class="row margin-top-most margin-bottom-most">
+                                        <div
+                                            class="#{AktuelleSchritteForm.myPlugin.displayOCR ? 'col-xs-12 col-sm-6' : ''}">
                                             <div class="div-image">
-                                                <div
-                                                    id="mainImage"
+                                                <div id="mainImage"
                                                     class="margin-bottom-regular">
-                                                    <div id="ajaxloader_image">
-                                                        <img src="template/img/goobi/ajaxloader2.gif" aria-label="#{msgs.image}"/>
+                                                    <div
+                                                        id="ajaxloader_image">
+                                                        <img
+                                                            src="template/img/goobi/ajaxloader2.gif"
+                                                            aria-label="#{msgs.image}" />
                                                     </div>
                                                 </div>
-                                                <div class="big-image-caption margin-top-regular font-light">
-                                                    <h:outputText value="#{AktuelleSchritteForm.myPlugin.image.imageName}" />
+                                                <div
+                                                    class="big-image-caption margin-top-regular font-light">
+                                                    <h:outputText
+                                                        value="#{AktuelleSchritteForm.myPlugin.image.imageName}" />
                                                 </div>
 
-                                            </div>
-                                        </div>
-                                        <!-- OCR text -->
-                                        <ui:fragment rendered="#{AktuelleSchritteForm.myPlugin.displayOCR}">
-                                            <div class="col-xs-12 col-sm-6 border-light">
                                                 <div
-                                                    id="ocrText"
-                                                    class="ocr-text">
-                                                    <h:outputText
-                                                        value="#{AktuelleSchritteForm.myPlugin.ocrText}"
-                                                        escape="false">
-                                                    </h:outputText>
+                                                    id="imageCommentArea"
+                                                    class="row">
+                                                    <div class="col-sm-2 margin-top-regular">
+                                                        <h:outputText
+                                                            rendered="#{AktuelleSchritteForm.myPlugin.showImageComments}"
+                                                            styleClass="form-group__label"
+                                                            value="#{msgs.comment}:"
+                                                            title="#{msgs.comment}" />
+                                                    </div>
+
+                                                    <div class="col-sm-10 margin-top-regular">
+                                                        <!-- TEXTAREA -->
+                                                        <h:inputTextarea
+                                                            id="Comment"
+                                                            style="height: 25px;"
+                                                            rendered="#{AktuelleSchritteForm.myPlugin.showImageComments}"
+                                                            styleClass="form-control"
+                                                            value="#{AktuelleSchritteForm.myPlugin.commentForImage}"
+                                                            disabled="false"
+                                                            readonly="false">
+                                                            <f:ajax
+                                                                execute="@form"
+                                                                event="valueChange" />
+                                                        </h:inputTextarea>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </ui:fragment>
-                                        <!--  OCR text -->
+                                        </div>
+
+
+<!--                                         Image comments -->
+<!--                                         <ui:fragment -->
+<!--                                             rendered="#{AktuelleSchritteForm.myPlugin.showImageComments}"> -->
+<!--                                             <div id="imageCommentArea" -->
+<!--                                                 class="row justify-content-between"> -->
+<!--                                                 <div class="col-3"> -->
+<!--                                                     <h:outputText -->
+<!--                                                         styleClass="form-group__label" -->
+<!--                                                         value="#{msgs.comment} :" -->
+<!--                                                         title="#{msgs.comment}" /> -->
+<!--                                                 </div> -->
+
+<!--                                                 <div class="col-9"> -->
+<!--                                                     TEXTAREA -->
+<!--                                                     <h:inputTextarea -->
+<!--                                                         id="Comment" -->
+<!--                                                         styleClass="form-control" -->
+<!--                                                         value="#{AktuelleSchritteForm.myPlugin.commentForImage}" -->
+<!--                                                         disabled="false" -->
+<!--                                                         readonly="false"> -->
+<!--                                                         <f:ajax -->
+<!--                                                             execute="@form" -->
+<!--                                                             event="valueChange" /> -->
+<!--                                                     </h:inputTextarea> -->
+<!--                                                 </div> -->
+<!--                                             </div> -->
+<!--                                         </ui:fragment> -->
+<!--                                         /Image comments -->
                                     </div>
+
+                                    <!-- OCR text -->
+                                    <ui:fragment
+                                        rendered="#{AktuelleSchritteForm.myPlugin.displayOCR}">
+                                        <div
+                                            class="col-xs-12 col-sm-6 border-light">
+                                            <div id="ocrText"
+                                                class="ocr-text">
+                                                <h:outputText
+                                                    value="#{AktuelleSchritteForm.myPlugin.ocrText}"
+                                                    escape="false">
+                                                </h:outputText>
+                                            </div>
+                                        </div>
+                                    </ui:fragment>
+                                    <!--  OCR text -->
+
+
                                     <!-- // big image -->
                                     <div class="row">
                                         <f:subview id="second_image">
-                                            <ui:include src="ImageQAPlugin_include_imagenavigation.xhtml" />
+                                            <ui:include
+                                                src="ImageQAPlugin_include_imagenavigation.xhtml" />
                                         </f:subview>
                                     </div>
 
@@ -708,8 +861,7 @@
                                     </script>
                             </h:panelGroup>
                         </h:panelGroup>
-                        <h:panelGroup
-                            layout="block"
+                        <h:panelGroup layout="block"
                             rendered="#{AktuelleSchritteForm.myPlugin.sizeOfImageList == 0}"
                             styleClass="col-sm-12">
                             <h:outputText value="#{msgs.noImagesFound}" />
@@ -719,13 +871,13 @@
                     <div class="form-actions">
 
                         <!-- Save and finish the task -->
-                        <button
-                            class="btn btn-green font-size-s"
+                        <button class="btn btn-green font-size-s"
                             jsf:id="finishAndClose"
                             jsf:rendered="#{NavigationForm.uiStatus.pluginSimulation != true and AktuelleSchritteForm.myPlugin.allowTaskFinishButtons == true}"
                             jsf:action="#{AktuelleSchritteForm.SchrittDurchBenutzerAbschliessen}">
                             <i class="fa fa-check margin-right-5"></i>
-                            <h:outputText value="#{msgs.task_leavePluginAndFinishTask}" />
+                            <h:outputText
+                                value="#{msgs.task_leavePluginAndFinishTask}" />
                             <x:updateActionListener
                                 property="#{NavigationForm.uiStatus.pluginSimulation}"
                                 value="#{false}" />

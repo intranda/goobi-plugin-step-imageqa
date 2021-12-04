@@ -73,6 +73,9 @@
         <allowTaskFinishButtons>true</allowTaskFinishButtons>
         <!-- configure button to display ocr -->
         <displayocr>true</displayocr>
+          <!-- If true, show image comments and allow comments to be made -->      
+        <showImageComments>false</showImageComments>
+        
     </config>
     <config>
         <!-- which projects to use for (can be more then one, otherwise use *) -->
