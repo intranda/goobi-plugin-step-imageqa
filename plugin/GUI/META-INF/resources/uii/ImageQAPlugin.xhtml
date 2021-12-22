@@ -69,61 +69,15 @@
 .goobi-thumbnail {
 	float: left;
 	margin: 7px;
-	width: #{AktuelleSchritteForm.myPlugin.thumbnailSize +2
-}
-
-px
-
-
-
-
-;
-height
-
-
-
-
-:
-
-
- 
-
-
-#{
-AktuelleSchritteForm
-
-
-
-
-.myPlugin
-
-
-
-
-.thumbnailSize
-+
-55
-}
-px
-
-
-
-
-;
+	width: #{AktuelleSchritteForm.myPlugin.thumbnailSize +2}px;
+    height: #{AktuelleSchritteForm.myPlugin.thumbnailSize + 55}px;
 }
 .goobi-thumbnail .goobi-thumbnail-image {
 	float: left;
 	width: 100%;
 	min-height: 100px;
 	overflow: hidden;
-	max-height: #{AktuelleSchritteForm.myPlugin.thumbnailSize +2
-}
-px
-
-
-
-
-;
+	max-height: #{AktuelleSchritteForm.myPlugin.thumbnailSize +2}px;
 }
 </style>
 
@@ -642,32 +596,33 @@ px
                                                             aria-label="#{msgs.image}" />
                                                     </div>
                                                 </div>
-                                                <div
-                                                    class="big-image-caption margin-top-regular font-light">
-                                                    <h:outputText
-                                                        value="#{AktuelleSchritteForm.myPlugin.image.imageName}" />
+                                                <div class="row">
+                                                    <div class="col-sm-12">
+                                                        <f:subview id="second_image">
+                                                            <ui:include
+                                                                src="ImageQAPlugin_include_imagenavigation.xhtml" />
+                                                        </f:subview>
+                                                        <div
+                                                            class="big-image-caption margin-top-regular font-light pull-right">
+                                                            <h:outputText
+                                                                value="#{AktuelleSchritteForm.myPlugin.image.imageName}" />
+                                                        </div>
+                                                    </div>
                                                 </div>
 
                                                 <div
                                                     id="imageCommentArea"
                                                     class="row">
-                                                    <div class="col-sm-2 margin-top-regular">
-                                                        <h:outputText
-                                                            rendered="#{AktuelleSchritteForm.myPlugin.showImageComments}"
-                                                            styleClass="form-group__label"
-                                                            value="#{msgs.comment}:"
-                                                            title="#{msgs.comment}" />
-                                                    </div>
-
-                                                    <div class="col-sm-10 margin-top-regular">
+                                                    <div class="col-sm-12 margin-top-regular">
                                                         <!-- TEXTAREA -->
                                                         <h:inputTextarea
                                                             id="Comment"
-                                                            style="height: 25px;"
+                                                            style="height: 50px;"
                                                             rendered="#{AktuelleSchritteForm.myPlugin.showImageComments}"
                                                             styleClass="form-control"
                                                             value="#{AktuelleSchritteForm.myPlugin.commentForImage}"
                                                             disabled="false"
+                                                            pt:placeholder="#{msgs.comment}"
                                                             readonly="false">
                                                             <f:ajax
                                                                 execute="@form"
@@ -677,36 +632,6 @@ px
                                                 </div>
                                             </div>
                                         </div>
-
-
-<!--                                         Image comments -->
-<!--                                         <ui:fragment -->
-<!--                                             rendered="#{AktuelleSchritteForm.myPlugin.showImageComments}"> -->
-<!--                                             <div id="imageCommentArea" -->
-<!--                                                 class="row justify-content-between"> -->
-<!--                                                 <div class="col-3"> -->
-<!--                                                     <h:outputText -->
-<!--                                                         styleClass="form-group__label" -->
-<!--                                                         value="#{msgs.comment} :" -->
-<!--                                                         title="#{msgs.comment}" /> -->
-<!--                                                 </div> -->
-
-<!--                                                 <div class="col-9"> -->
-<!--                                                     TEXTAREA -->
-<!--                                                     <h:inputTextarea -->
-<!--                                                         id="Comment" -->
-<!--                                                         styleClass="form-control" -->
-<!--                                                         value="#{AktuelleSchritteForm.myPlugin.commentForImage}" -->
-<!--                                                         disabled="false" -->
-<!--                                                         readonly="false"> -->
-<!--                                                         <f:ajax -->
-<!--                                                             execute="@form" -->
-<!--                                                             event="valueChange" /> -->
-<!--                                                     </h:inputTextarea> -->
-<!--                                                 </div> -->
-<!--                                             </div> -->
-<!--                                         </ui:fragment> -->
-<!--                                         /Image comments -->
                                     </div>
 
                                     <!-- OCR text -->
@@ -727,12 +652,6 @@ px
 
 
                                     <!-- // big image -->
-                                    <div class="row">
-                                        <f:subview id="second_image">
-                                            <ui:include
-                                                src="ImageQAPlugin_include_imagenavigation.xhtml" />
-                                        </f:subview>
-                                    </div>
 
                                 </ui:fragment>
                                 <script type="text/javascript">
