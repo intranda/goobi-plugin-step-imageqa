@@ -222,8 +222,8 @@ public class ImageQAPlugin implements IStepPlugin {
         this.noShortcutPrefix = myconfig.getBoolean("noShortcutPrefix", false);
         this.thumbnailsOnly = myconfig.getBoolean("thumbnailsOnly", false);
 
-        this.showImageComments = myconfig.getBoolean("showImageComments", false);
-//       this.showImageComments = ConfigurationHelper.getInstance().getMetsEditorShowImageComments();
+        //        this.showImageComments = myconfig.getBoolean("showImageComments", false);
+        this.showImageComments = ConfigurationHelper.getInstance().getMetsEditorShowImageComments();
     }
 
     public void changeFolder() {
@@ -655,7 +655,7 @@ public class ImageQAPlugin implements IStepPlugin {
             FacesContext context = FacesContextHelper.getCurrentFacesContext();
             HttpSession session = (HttpSession) context.getExternalContext().getSession(false);
             String currentImageURL = context.getExternalContext().getRequestContextPath() + ConfigurationHelper.getTempImagesPath() + session.getId()
-            + "_" + image.getImageName() + "_large_" + ".jpg";
+                    + "_" + image.getImageName() + "_large_" + ".jpg";
             return currentImageURL.replaceAll("\\\\", "/");
         }
     }
@@ -1229,7 +1229,7 @@ public class ImageQAPlugin implements IStepPlugin {
             updateOCR();
         }
     }
-    
+
     //this is set whenever setImage() is called.
     @Getter
     private boolean showImageComments = false;
