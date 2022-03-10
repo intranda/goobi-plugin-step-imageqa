@@ -328,23 +328,34 @@
                                                             class="fa fa-trash"></i>
                                                     </button>
                                                 </div>
-                                                <div
-                                                    class="goobi-thumbnail-controls-right pull-right">
+                                                <div class="goobi-thumbnail-controls-right pull-right">
+                                                    <button
+                                                        class="btn thumbnail-control flip-horizontal"
+                                                        title="#{msgs.plugin_intranda_step_imageQA_flipHorizontal} #{image.tooltip}"
+                                                        jsf:action="#{AktuelleSchritteForm.myPlugin.flipHorizontal(image)}"
+                                                        jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowFlipping}">
+                                                        <i class="fa fa-arrows-h"></i>
+                                                    </button>
+                                                    <button
+                                                        class="btn thumbnail-control flip-vertical"
+                                                        title="#{msgs.plugin_intranda_step_imageQA_flipVertical} #{image.tooltip}"
+                                                        jsf:action="#{AktuelleSchritteForm.myPlugin.flipVertical(image)}"
+                                                        jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowFlipping}">
+                                                        <i class="fa fa-arrows-v"></i>
+                                                    </button>
                                                     <button
                                                         class="btn thumbnail-control rotate-left"
                                                         title="#{msgs.plugin_intranda_step_imageQA_rotateLeft} #{image.tooltip}"
                                                         jsf:action="#{AktuelleSchritteForm.myPlugin.rotateLeft(image)}"
                                                         jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowRotation}">
-                                                        <i
-                                                            class="fa fa-undo"></i>
+                                                        <i class="fa fa-undo"></i>
                                                     </button>
                                                     <button
                                                         class="btn thumbnail-control rotate-right"
                                                         title="#{msgs.plugin_intranda_step_imageQA_rotateRight} #{image.tooltip}"
                                                         jsf:action="#{AktuelleSchritteForm.myPlugin.rotateRight(image)}"
                                                         jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowRotation}">
-                                                        <i
-                                                            class="fa fa-repeat"></i>
+                                                        <i class="fa fa-repeat"></i>
                                                     </button>
                                                 </div>
                                             </h:panelGroup>
@@ -401,6 +412,22 @@
 
                                                 <div
                                                     class="goobi-thumbnail-controls-right pull-right">
+                                                    <button
+                                                        class="btn thumbnail-control flip-horizontal"
+                                                        title="#{msgs.plugin_intranda_step_imageQA_flipHorizontal} #{image.tooltip}"
+                                                        jsf:action="#{AktuelleSchritteForm.myPlugin.flipHorizontal(image)}"
+                                                        jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowFlipping}"
+                                                        onclick="if (!confirm('#{msgs.wirklichAusfuehren}')) return false">
+                                                        <i class="fa fa-arrows-h"></i>
+                                                    </button>
+                                                    <button
+                                                        class="btn thumbnail-control flip-vertical"
+                                                        title="#{msgs.plugin_intranda_step_imageQA_flipVertical} #{image.tooltip}"
+                                                        jsf:action="#{AktuelleSchritteForm.myPlugin.flipVertical(image)}"
+                                                        jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowFlipping}"
+                                                        onclick="if (!confirm('#{msgs.wirklichAusfuehren}')) return false">
+                                                        <i class="fa fa-arrows-v"></i>
+                                                    </button>
                                                     <button
                                                         class="btn thumbnail-control rotate-left"
                                                         title="#{msgs.plugin_intranda_step_imageQA_rotateLeft} #{image.tooltip}"

@@ -125,7 +125,7 @@
                 <ul class="dropdown-menu pull-right">
                     <li>
                         <button
-                            class="dropdown-item thumbnail-control rotate-right"
+                            class="dropdown-item thumbnail-control select-page"
                             jsf:action="#{AktuelleSchritteForm.myPlugin.selectAllImagesOnCurrentPage}"
                             jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowSelectionPage}">
                             <i class="btn fa fa-check-square-o margin-right-10"></i>
@@ -135,7 +135,7 @@
 
                     <li>
                         <button
-                            class="dropdown-item thumbnail-control rotate-right"
+                            class="dropdown-item thumbnail-control unselect-page"
                             jsf:action="#{AktuelleSchritteForm.myPlugin.unselectAllImagesOnCurrentPage}"
                             jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowSelectionPage}">
                             <i class="btn fa fa-square-o margin-right-10"></i>
@@ -145,7 +145,7 @@
 
                     <li>
                         <button
-                            class="dropdown-item thumbnail-control rotate-right"
+                            class="dropdown-item thumbnail-control select-all"
                             jsf:action="#{AktuelleSchritteForm.myPlugin.selectAllImages}"
                             jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowSelectionAll}">
                             <i class="btn fa fa-check-square-o margin-right-10"></i>
@@ -155,7 +155,7 @@
 
                     <li>
                         <button
-                            class="dropdown-item thumbnail-control rotate-right"
+                            class="dropdown-item thumbnail-control unselect-all"
                             jsf:action="#{AktuelleSchritteForm.myPlugin.unselectAllImages}"
                             jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowSelectionAll}">
                             <i class="btn fa fa-square-o margin-right-10"></i>
@@ -173,6 +173,29 @@
                             <h:outputText value="#{msgs.plugin_intranda_step_imageQA_deleteSelection}" />
                         </button>
                     </li>
+
+                    <li>
+                        <button
+                            class="dropdown-item thumbnail-control flip-horizontal"
+                            jsf:action="#{AktuelleSchritteForm.myPlugin.flipSelectionHorizontal}"
+                            jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowSelection and AktuelleSchritteForm.myPlugin.allowFlipping}"
+                            onclick="if (!confirm('#{msgs.wirklichAusfuehren}')) return false">
+                            <i class="btn fa fa-arrows-h margin-right-10"></i>
+                            <h:outputText value="#{msgs.plugin_intranda_step_imageQA_flipHorizontalSelection}" />
+                        </button>
+                    </li>
+
+                    <li>
+                        <button
+                            class="dropdown-item thumbnail-control flip-vertical"
+                            jsf:action="#{AktuelleSchritteForm.myPlugin.flipSelectionVertical}"
+                            jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowSelection and AktuelleSchritteForm.myPlugin.allowFlipping}"
+                            onclick="if (!confirm('#{msgs.wirklichAusfuehren}')) return false">
+                            <i class="btn fa fa-arrows-v margin-right-10"></i>
+                            <h:outputText value="#{msgs.plugin_intranda_step_imageQA_flipVerticalSelection}" />
+                        </button>
+                    </li>
+
                     <li>
                         <button
                             class="dropdown-item thumbnail-control rotate-left"
@@ -183,6 +206,7 @@
                             <h:outputText value="#{msgs.plugin_intranda_step_imageQA_rotateLefteSelection}" />
                         </button>
                     </li>
+
                     <li>
                         <button
                             class="dropdown-item thumbnail-control rotate-right"
@@ -196,7 +220,7 @@
 
                     <li>
                         <button
-                            class="dropdown-item thumbnail-control rotate-right"
+                            class="dropdown-item thumbnail-control download"
                             jsf:action="#{AktuelleSchritteForm.myPlugin.downloadSelectedImages}"
                             jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowSelection and AktuelleSchritteForm.myPlugin.allowDownload}"
                             onclick="if (!confirm('#{msgs.wirklichAusfuehren}')) return false">
@@ -207,7 +231,7 @@
 
                     <li>
                         <button
-                            class="dropdown-item thumbnail-control rotate-right"
+                            class="dropdown-item thumbnail-control download-pdf"
                             jsf:action="#{AktuelleSchritteForm.myPlugin.downloadSelectedImagesAsPdf}"
                             jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowSelection and AktuelleSchritteForm.myPlugin.allowDownloadAsPdf}"
                             onclick="if (!confirm('#{msgs.wirklichAusfuehren}')) return false">

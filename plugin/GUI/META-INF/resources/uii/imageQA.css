@@ -29,32 +29,39 @@
 }
 
 .goobi-thumbnail-controls-left {
-	width: 60%;
-}
-
-.goobi-thumbnail-controls-right {
 	width: 40%;
 }
 
+.goobi-thumbnail-controls-right {
+	width: 60%;
+}
+
 .goobi-thumbnail-controls-left {
-	padding-left: 25px;
+	padding-left: 17px;
 }
 
 .goobi-thumbnail-controls-left .thumbnail-control {
 	margin-right: 3px;
+	width: 23px;
 }
 
 .goobi-thumbnail-controls-right {
-	padding-right: 25px;
+	padding-right: 17px;
 	text-align: right;
 }
 
 .goobi-thumbnail-controls-right .thumbnail-control {
 	margin-left: 3px;
+	width: 23px;
 }
 
 .thumbnail-control {
 	padding: 3px 5px;
+	width: 23px;
+}
+
+.dropdown-menu .dropdown-item .btn {
+	width: 30px;
 }
 
 .thumbnail-control.checkbox {

@@ -120,6 +120,7 @@ public class ImageQAPlugin implements IStepPlugin {
     private String THUMBNAIL_FORMAT = "png";
     private String MAINIMAGE_FORMAT = "jpg";
     private boolean allowDeletion = false;
+    private boolean allowFlipping = false;
     private boolean allowRotation = false;
     private boolean allowRenaming = false;
     private boolean allowSelection = false;
@@ -130,6 +131,8 @@ public class ImageQAPlugin implements IStepPlugin {
     private boolean allowTaskFinishButtons = true;
     private boolean useTiles = false;
     private boolean useTilesFullscreen = false;
+    private List<String> flippingCommandHorizontal = null;
+    private List<String> flippingCommandVertical = null;
     private List<String> rotationCommandLeft = null;
     private List<String> rotationCommandRight = null;
     private List<String> deletionCommand = null;
@@ -317,6 +320,7 @@ public class ImageQAPlugin implements IStepPlugin {
     public void initConfig(SubnodeConfiguration myconfig) {
         guiType = myconfig.getString("guiType", "full"); // full, part, both
         allowDeletion = myconfig.getBoolean("allowDeletion", false);
+        allowFlipping = myconfig.getBoolean("allowFlipping", false);
         allowRotation = myconfig.getBoolean("allowRotation", false);
         allowRenaming = myconfig.getBoolean("allowRenaming", false);
         allowSelection = myconfig.getBoolean("allowSelection", false);
@@ -326,6 +330,8 @@ public class ImageQAPlugin implements IStepPlugin {
         allowDownloadAsPdf = myconfig.getBoolean("allowDownloadAsPdf", false);
         allowTaskFinishButtons = myconfig.getBoolean("allowTaskFinishButtons", true);
         deletionCommand = Arrays.asList(myconfig.getStringArray("deletion/@command"));
+        flippingCommandHorizontal = Arrays.asList(myconfig.getStringArray("flippingCommands/horizontal/@command"));
+        flippingCommandVertical = Arrays.asList(myconfig.getStringArray("flippingCommands/vertical/@command"));
         rotationCommandLeft = Arrays.asList(myconfig.getStringArray("rotationCommands/left/@command"));
         rotationCommandRight = Arrays.asList(myconfig.getStringArray("rotationCommands/right/@command"));
 
@@ -976,6 +982,14 @@ public class ImageQAPlugin implements IStepPlugin {
         }
     }
 
+    public void flipHorizontal(Image myimage) {
+        callScript(myimage, flippingCommandHorizontal, false);
+    }
+
+    public void flipVertical(Image myimage) {
+        callScript(myimage, flippingCommandVertical, false);
+    }
+
     public void rotateRight(Image myimage) {
         callScript(myimage, rotationCommandRight, false);
     }
@@ -994,6 +1008,22 @@ public class ImageQAPlugin implements IStepPlugin {
                 } else {
                     callScript(image, deletionCommand, true);
                 }
+            }
+        }
+    }
+
+    public void flipSelectionHorizontal() {
+        for (SelectableImage image : allImages) {
+            if (image.isSelected()) {
+                callScript(image, flippingCommandHorizontal, false);
+            }
+        }
+    }
+
+    public void flipSelectionVertical() {
+        for (SelectableImage image : allImages) {
+            if (image.isSelected()) {
+                callScript(image, flippingCommandVertical, false);
             }
         }
     }
