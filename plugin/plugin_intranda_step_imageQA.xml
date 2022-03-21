@@ -61,6 +61,12 @@
             <left command="/usr/bin/mogrify|-rotate|-90|IMAGE_FILE" />
             <right command="/usr/bin/mogrify|-rotate|90|IMAGE_FILE" />
         </rotationCommands>
+        <!-- allow flipping of images -->
+        <allowFlipping>true</allowFlipping>
+        <flippingCommands>
+            <horizontal command="/bin/true" />
+            <vertical command="/bin/true" />
+        </flippingCommands>
         <!-- allow renaming of images -->
         <allowRenaming>false</allowRenaming>
         <!-- allow selection of images -->
