@@ -28,11 +28,11 @@
 	</button>
 	
 	<!-- file name -->
-    <h1>
-	<span class="font-white" style="position:absolute;bottom:10px; left:10px; font-size: 12px;">
-		{currentImage().imageName} 
-	</span>
-    </h1>
+	<h1 style="margin: 0px;">
+		<span class="font-white" style="position:absolute;bottom:10px; left:10px; font-size: 12px;">
+			{currentImage().imageName} 
+		</span>
+	</h1>
 	
 	<!-- image number -->
 	<div style="position:absolute;bottom:10px; right:10px;">
