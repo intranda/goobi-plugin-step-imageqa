@@ -92,7 +92,7 @@ import de.unigoettingen.sub.commons.contentlib.imagelib.ImageManager;
 import de.unigoettingen.sub.commons.contentlib.imagelib.JpegInterpreter;
 import lombok.Data;
 import lombok.Getter;
-import lombok.extern.log4j.Log4j;
+import lombok.extern.log4j.Log4j2;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 import ugh.dl.DigitalDocument;
 import ugh.dl.DocStruct;
@@ -104,7 +104,7 @@ import ugh.exceptions.WriteException;
 
 @Data
 @PluginImplementation
-@Log4j
+@Log4j2
 public class ImageQAPlugin implements IStepPlugin {
 
     private static final DecimalFormat PAGENUMBERFORMAT = new DecimalFormat("0000");
