@@ -532,7 +532,7 @@ public class ImageQAPlugin implements IStepPlugin {
         if (!overwrite && StorageProvider.getInstance().isFileExists(outputFile)) {
             return outputFile;
         }
-        Path tempFile = Files.createTempFile("resize_tmp", ".tif");
+        Path tempFile = Files.createTempFile("resize_tmp", ".tif"); // NOSONAR, using temp file is save
         try (OutputStream outputFileStream = Files.newOutputStream(tempFile)) {
             RenderedImage ri = im.scaleImageByPixel(dim, ImageManager.SCALE_TO_BOX, 0);
             try (JpegInterpreter pi = new JpegInterpreter(ri)) {
