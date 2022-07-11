@@ -21,7 +21,6 @@ package de.intranda.goobi.plugins;
 import java.awt.Dimension;
 import java.awt.image.RenderedImage;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -86,8 +85,6 @@ import de.sub.goobi.helper.exceptions.SwapException;
 import de.sub.goobi.metadaten.Image;
 import de.unigoettingen.sub.commons.contentlib.exceptions.ContentLibException;
 import de.unigoettingen.sub.commons.contentlib.exceptions.ContentLibImageException;
-import de.unigoettingen.sub.commons.contentlib.exceptions.ImageManagerException;
-import de.unigoettingen.sub.commons.contentlib.exceptions.ImageManipulatorException;
 import de.unigoettingen.sub.commons.contentlib.imagelib.ImageManager;
 import de.unigoettingen.sub.commons.contentlib.imagelib.JpegInterpreter;
 import lombok.Data;
@@ -108,7 +105,6 @@ import ugh.exceptions.WriteException;
 public class ImageQAPlugin implements IStepPlugin {
 
     private static final DecimalFormat PAGENUMBERFORMAT = new DecimalFormat("0000");
-    private static final DecimalFormat FILENUMBERFORMAT = new DecimalFormat("00000000");
     private static final Gson gson = new Gson();
 
     private Step step;
@@ -225,7 +221,6 @@ public class ImageQAPlugin implements IStepPlugin {
         this.noShortcutPrefix = myconfig.getBoolean("noShortcutPrefix", false);
         this.thumbnailsOnly = myconfig.getBoolean("thumbnailsOnly", false);
 
-        //        this.showImageComments = myconfig.getBoolean("showImageComments", false);
         this.showImageComments = ConfigurationHelper.getInstance().getMetsEditorShowImageComments();
     }
 
@@ -253,10 +248,8 @@ public class ImageQAPlugin implements IStepPlugin {
             int order = 1;
             for (String imagename : imageNameList) {
                 SelectableImage currentImage;
-                Path imagePath = Paths.get(imageFolderName, imagename);
                 try {
                     currentImage = new SelectableImage(getStep().getProzess(), imageFolderName, imagename, order, THUMBNAIL_SIZE_IN_PIXEL);
-                    //                    currentImage = new SelectableImage(imagePath, order, THUMBNAIL_SIZE_IN_PIXEL);
                     currentImage.initNameParts(nameParts);
                     allImages.add(currentImage);
                     order++;
@@ -273,6 +266,7 @@ public class ImageQAPlugin implements IStepPlugin {
 
         } catch (Exception e) {
             //by default, false
+            log.error(e);
         }
 
     }
@@ -299,8 +293,7 @@ public class ImageQAPlugin implements IStepPlugin {
             for (Metadata md : lstMetadata) {
                 if (md.getType().getName().equals("_directionRTL")) {
                     try {
-                        boolean value = Boolean.valueOf(md.getValue());
-                        return value;
+                        return Boolean.parseBoolean(md.getValue());
                     } catch (Exception e) {
 
                     }
@@ -438,14 +431,13 @@ public class ImageQAPlugin implements IStepPlugin {
     }
 
     /**
-     * TODO document
      * 
      */
     public List<SelectableImage> getPaginatorList() {
         if (displayMode.equals("part")) {
             return getPaginatorListForPartGUI();
         } else {
-            List<SelectableImage> subList = new ArrayList<>();
+            List<SelectableImage> subList = null;
             if (pageNo * numberOfImagesInFullGUI > allImages.size()) {
                 pageNo = 0;
             }
@@ -459,7 +451,7 @@ public class ImageQAPlugin implements IStepPlugin {
     }
 
     public List<SelectableImage> getPaginatorListForPartGUI() {
-        List<SelectableImage> subList = new ArrayList<>();
+        List<SelectableImage> subList = null;
         if (allImages.size() > (pageNo * numberOfImagesInPartGUI) + numberOfImagesInPartGUI) {
             subList = allImages.subList(pageNo * numberOfImagesInPartGUI, (pageNo * numberOfImagesInPartGUI) + numberOfImagesInPartGUI);
         } else {
@@ -480,30 +472,31 @@ public class ImageQAPlugin implements IStepPlugin {
     @SuppressWarnings("unused")
     private Dimension scaleFile(String inFileName, String outFileName, List<String> sizes) throws IOException, ContentLibImageException {
 
-        final ImageManager im = new ImageManager(new File(inFileName).toURI());
-        Dimension originalImageSize = new Dimension(im.getMyInterpreter().getWidth(), im.getMyInterpreter().getHeight());
-        String outputFilePath = FilenameUtils.getFullPath(outFileName);
-        String outputFileBasename = FilenameUtils.getBaseName(outFileName);
-        String outputFileSuffix = FilenameUtils.getExtension(outFileName);
-        List<Future<Path>> createdFiles = new ArrayList<>();
-        for (String sizeString : sizes) {
-            int size = Integer.parseInt(sizeString);
-            final Dimension dim = new Dimension();
-            dim.setSize(size, size);
-            final String filename = outputFilePath + outputFileBasename + "_" + size + "." + outputFileSuffix;
-            createdFiles.add(executor.submit(new Callable<Path>() {
+        try (final ImageManager im = new ImageManager(new File(inFileName).toURI())) {
+            Dimension originalImageSize = new Dimension(im.getMyInterpreter().getWidth(), im.getMyInterpreter().getHeight());
+            String outputFilePath = FilenameUtils.getFullPath(outFileName);
+            String outputFileBasename = FilenameUtils.getBaseName(outFileName);
+            String outputFileSuffix = FilenameUtils.getExtension(outFileName);
+            List<Future<Path>> createdFiles = new ArrayList<>();
+            for (String sizeString : sizes) {
+                int size = Integer.parseInt(sizeString);
+                final Dimension dim = new Dimension();
+                dim.setSize(size, size);
+                final String filename = outputFilePath + outputFileBasename + "_" + size + "." + outputFileSuffix;
+                createdFiles.add(executor.submit(new Callable<Path>() {
 
-                @Override
-                public Path call() throws Exception {
-                    return scaleToSize(im, dim, filename, false);
-                }
-            }));
-        }
-        while (!oneImageFinished(createdFiles)) {
+                    @Override
+                    public Path call() throws Exception {
+                        return scaleToSize(im, dim, filename, false);
+                    }
+                }));
+            }
+            while (!oneImageFinished(createdFiles)) {
 
+            }
+            log.debug("First image finished generation");
+            return originalImageSize;
         }
-        log.debug("First image finished generation");
-        return originalImageSize;
 
     }
 
@@ -515,6 +508,7 @@ public class ImageQAPlugin implements IStepPlugin {
                     return false;
                 }
             } catch (InterruptedException | ExecutionException e) {
+                log.error(e);
             }
         }
         return true;
@@ -527,13 +521,13 @@ public class ImageQAPlugin implements IStepPlugin {
                     return true;
                 }
             } catch (InterruptedException | ExecutionException e) {
+                log.error(e);
             }
         }
         return false;
     }
 
-    private Path scaleToSize(ImageManager im, Dimension dim, String filename, boolean overwrite)
-            throws ImageManipulatorException, FileNotFoundException, ImageManagerException, IOException, ContentLibException {
+    private Path scaleToSize(ImageManager im, Dimension dim, String filename, boolean overwrite) throws IOException, ContentLibException {
         Path outputFile = Paths.get(filename);
         if (!overwrite && StorageProvider.getInstance().isFileExists(outputFile)) {
             return outputFile;
@@ -543,7 +537,6 @@ public class ImageQAPlugin implements IStepPlugin {
             RenderedImage ri = im.scaleImageByPixel(dim, ImageManager.SCALE_TO_BOX, 0);
             try (JpegInterpreter pi = new JpegInterpreter(ri)) {
                 pi.writeToStream(null, outputFileStream);
-                outputFileStream.close();
                 log.debug("Written file " + outputFile);
             }
         }
@@ -587,7 +580,7 @@ public class ImageQAPlugin implements IStepPlugin {
     }
 
     public String getDescription() {
-        return PLUGIN_NAME;
+        return getTitle();
     }
 
     @Override
@@ -637,7 +630,7 @@ public class ImageQAPlugin implements IStepPlugin {
         filename = FilenameUtils.removeExtension(filename);
         ocrText = "";
         ocrText = FilesystemHelper.getOcrFileContent(step.getProzess(), filename);
-        if (ocrText == "") {
+        if (ocrText.equals("")) {
             ocrExists = false;
         } else {
             ocrExists = true;
@@ -661,7 +654,7 @@ public class ImageQAPlugin implements IStepPlugin {
             FacesContext context = FacesContextHelper.getCurrentFacesContext();
             HttpSession session = (HttpSession) context.getExternalContext().getSession(false);
             String currentImageURL = context.getExternalContext().getRequestContextPath() + ConfigurationHelper.getTempImagesPath() + session.getId()
-                    + "_" + image.getImageName() + "_large_" + ".jpg";
+            + "_" + image.getImageName() + "_large_" + ".jpg";
             return currentImageURL.replaceAll("\\\\", "/");
         }
     }
@@ -738,8 +731,7 @@ public class ImageQAPlugin implements IStepPlugin {
     private String getImagePath(Image image) {
         FacesContext context = FacesContextHelper.getCurrentFacesContext();
         HttpSession session = (HttpSession) context.getExternalContext().getSession(false);
-        String path = ConfigurationHelper.getTempImagesPathAsCompleteDirectory() + session.getId() + "_" + image.getImageName() + "_large" + ".jpg";
-        return path;
+        return ConfigurationHelper.getTempImagesPathAsCompleteDirectory() + session.getId() + "_" + image.getImageName() + "_large" + ".jpg";
     }
 
     public String cmdMoveFirst() {
@@ -855,10 +847,6 @@ public class ImageQAPlugin implements IStepPlugin {
         return ret;
     }
 
-    //    public boolean hasNextPagePartGUI() {
-    //        return this.allImages.size() > numberOfImagesInPartGUI;
-    //    }
-
     public boolean isFirstPage() {
         return this.pageNo == 0;
     }
@@ -867,24 +855,16 @@ public class ImageQAPlugin implements IStepPlugin {
         return this.pageNo >= getLastPageNumber();
     }
 
-    //    public boolean hasNextPage() {
-    //        return this.allImages.size() > numberOfImagesInFullGUI;
-    //    }
-
-    //    public boolean hasPreviousPage() {
-    //        return this.pageNo > 0;
-    //    }
-
     public Long getPageNumberCurrent() {
-        return Long.valueOf(this.pageNo + 1);
+        return Long.valueOf(this.pageNo + 1l);
     }
 
     public Long getPageNumberLast() {
-        return Long.valueOf(getLastPageNumber() + 1);
+        return Long.valueOf(getLastPageNumber() + 1l);
     }
 
     public Long getPageNumberLastPartGUI() {
-        return Long.valueOf(getLastPageNumberPartGUI() + 1);
+        return Long.valueOf(getLastPageNumberPartGUI() + 1l);
     }
 
     public int getSizeOfImageList() {
@@ -896,14 +876,14 @@ public class ImageQAPlugin implements IStepPlugin {
     }
 
     public void setThumbnailSize(int value) {
-
+        //
     }
 
     public String renameImages(SelectableImage myimage) {
 
-        System.out.println("Dateien werden jetzt umbenannt auf der Basis von: " + myimage.getNameParts());
+        log.debug("Dateien werden jetzt umbenannt auf der Basis von: " + myimage.getNameParts());
 
-        int imageIndex = getAllImages().indexOf(myimage);
+        int index = getAllImages().indexOf(myimage);
         Iterator<SelectableImage> iterator = getAllImages().listIterator();
 
         int pageCounter = 0;
@@ -917,7 +897,7 @@ public class ImageQAPlugin implements IStepPlugin {
             String suffix = currentImage.getImageName().substring(currentImage.getImageName().lastIndexOf("."));
             String currentCombinedName = currentImage.getCombinedName();
 
-            if (currentImageIndex >= imageIndex && (myPreviousCombinedName.equals(currentCombinedName) || myCombinedName.equals(currentCombinedName)
+            if (currentImageIndex >= index && (myPreviousCombinedName.equals(currentCombinedName) || myCombinedName.equals(currentCombinedName)
                     || currentImage.isNotYetNamed())) {
                 imageNameFound = true;
                 currentImage.setNameParts(myimage.getNameParts());
@@ -946,9 +926,6 @@ public class ImageQAPlugin implements IStepPlugin {
                 Path newFile = renamingMap.get(currentFile);
                 if (StorageProvider.getInstance().isFileExists(newFile) && !newFile.equals(currentFile)) {
                     // logger.error("Trying to rename " + currentFile.getName() + " to " +
-                    // newFile.getName() + ". But file already exists");
-                    // Helper.setFehlerMeldung("Trying to rename " + currentFile.getName() + " to "
-                    // + newFile.getName() + ". But file already exists");
                     // break;
                 } else {
                     try {
@@ -1001,8 +978,8 @@ public class ImageQAPlugin implements IStepPlugin {
     public void deleteSelection() {
         Iterator<SelectableImage> iterator = allImages.iterator();
         while (iterator.hasNext()) {
-            SelectableImage image = iterator.next();
-            if (image.isSelected()) {
+            SelectableImage nextImage = iterator.next();
+            if (nextImage.isSelected()) {
                 if (deletionCommand == null || deletionCommand.isEmpty()) {
                     deleteImageViaJava(image);
                 } else {
@@ -1013,32 +990,32 @@ public class ImageQAPlugin implements IStepPlugin {
     }
 
     public void flipSelectionHorizontal() {
-        for (SelectableImage image : allImages) {
-            if (image.isSelected()) {
+        for (SelectableImage im : allImages) {
+            if (im.isSelected()) {
                 callScript(image, flippingCommandHorizontal, false);
             }
         }
     }
 
     public void flipSelectionVertical() {
-        for (SelectableImage image : allImages) {
-            if (image.isSelected()) {
+        for (SelectableImage im : allImages) {
+            if (im.isSelected()) {
                 callScript(image, flippingCommandVertical, false);
             }
         }
     }
 
     public void rotateSelectionRight() {
-        for (SelectableImage image : allImages) {
-            if (image.isSelected()) {
+        for (SelectableImage im : allImages) {
+            if (im.isSelected()) {
                 callScript(image, rotationCommandRight, false);
             }
         }
     }
 
     public void rotateSelectionLeft() {
-        for (SelectableImage image : allImages) {
-            if (image.isSelected()) {
+        for (SelectableImage im : allImages) {
+            if (im.isSelected()) {
                 callScript(image, rotationCommandLeft, false);
             }
         }
@@ -1067,10 +1044,10 @@ public class ImageQAPlugin implements IStepPlugin {
         if (selectOtherImage && myindex == allImages.indexOf(myimage)) {
             myindex--;
         }
-        ConfigurationHelper config = ConfigurationHelper.getInstance();
+        ConfigurationHelper configuration = ConfigurationHelper.getInstance();
         String imageURI = imageFolderName + myimage.getImageName();
         String imageFolderURI = imageFolderName;
-        if (config.useS3()) {
+        if (configuration.useS3()) {
             imageURI = S3FileUtils.string2Key(imageURI);
             imageFolderURI = S3FileUtils.string2Prefix(imageFolderURI);
         }
@@ -1139,14 +1116,14 @@ public class ImageQAPlugin implements IStepPlugin {
     }
 
     public void selectAllImages() {
-        for (SelectableImage image : allImages) {
-            image.setSelected(true);
+        for (SelectableImage im : allImages) {
+            im.setSelected(true);
         }
     }
 
     public void unselectAllImages() {
-        for (SelectableImage image : allImages) {
-            image.setSelected(false);
+        for (SelectableImage im : allImages) {
+            im.setSelected(false);
         }
     }
 
@@ -1162,20 +1139,20 @@ public class ImageQAPlugin implements IStepPlugin {
             OutputStream responseOutputStream = ec.getResponseOutputStream();
             ZipOutputStream out = new ZipOutputStream(responseOutputStream);
 
-            for (SelectableImage image : allImages) {
-                if (image.isSelected()) {
+            for (SelectableImage im : allImages) {
+                if (im.isSelected()) {
 
-                    Path currentImagePath = Paths.get(imageFolderName, image.getImageName());
+                    Path currentImagePath = Paths.get(imageFolderName, im.getImageName());
 
-                    InputStream in = StorageProvider.getInstance().newInputStream(currentImagePath);
-                    out.putNextEntry(new ZipEntry(image.getImageName()));
-                    byte[] b = new byte[1024];
-                    int count;
+                    try (InputStream in = StorageProvider.getInstance().newInputStream(currentImagePath)) {
+                        out.putNextEntry(new ZipEntry(im.getImageName()));
+                        byte[] b = new byte[1024];
+                        int count;
 
-                    while ((count = in.read(b)) > 0) {
-                        out.write(b, 0, count);
+                        while ((count = in.read(b)) > 0) {
+                            out.write(b, 0, count);
+                        }
                     }
-                    in.close();
                 }
             }
             out.flush();
@@ -1184,17 +1161,17 @@ public class ImageQAPlugin implements IStepPlugin {
             facesContext.responseComplete();
         } catch (IOException e) {
             log.error(e);
-        } finally {
         }
     }
 
-    public void downloadSelectedImagesAsPdf() throws IOException, DAOException, SwapException, InterruptedException {
+    public void downloadSelectedImagesAsPdf() throws IOException {
 
         // prepare contentserver URL
         FacesContext context = FacesContextHelper.getCurrentFacesContext();
         String contentServerUrl = ConfigurationHelper.getInstance().getGoobiContentServerUrl();
         if (contentServerUrl == null || contentServerUrl.length() == 0) {
             HttpServletRequest req = (HttpServletRequest) context.getExternalContext().getRequest();
+            @SuppressWarnings("deprecation")
             String fullpath = HttpUtils.getRequestURL(req).toString();
             String servletpath = context.getExternalContext().getRequestServletPath();
             String myBasisUrl = fullpath.substring(0, fullpath.indexOf(servletpath));
@@ -1231,6 +1208,7 @@ public class ImageQAPlugin implements IStepPlugin {
         }
     }
 
+    @SuppressWarnings("unused")
     private String getImageFolderShort() {
         String imageFolder = Paths.get(imageFolderName).getFileName().toString();
         if (imageFolder.startsWith("master_") || imageFolder.startsWith("orig_")) {
