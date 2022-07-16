@@ -83,6 +83,7 @@ import de.sub.goobi.helper.StorageProvider;
 import de.sub.goobi.helper.exceptions.DAOException;
 import de.sub.goobi.helper.exceptions.SwapException;
 import de.sub.goobi.metadaten.Image;
+import de.sub.goobi.metadaten.ImageCommentHelper;
 import de.unigoettingen.sub.commons.contentlib.exceptions.ContentLibException;
 import de.unigoettingen.sub.commons.contentlib.exceptions.ContentLibImageException;
 import de.unigoettingen.sub.commons.contentlib.imagelib.ImageManager;
@@ -1245,20 +1246,16 @@ public class ImageQAPlugin implements IStepPlugin {
     private ImageCommentHelper commentHelper;
 
     private ImageCommentHelper getCommentHelper() {
-
         if (commentHelper == null) {
             commentHelper = new ImageCommentHelper();
         }
-
         return commentHelper;
     }
 
     public String getCommentForImage() {
-
         if (getImage() == null) {
             return null;
         }
-
         return getCommentHelper().getComment(this.imageFolderName, getImage().getImageName());
     }
 
@@ -1267,13 +1264,11 @@ public class ImageQAPlugin implements IStepPlugin {
         if (getImage() == null) {
             return;
         }
-
         //only save new log entry if the comment has changed
         String oldComment = getCommentForImage();
         if (comment == null || (oldComment != null && comment.contentEquals(oldComment)) || (oldComment == null && comment.isEmpty())) {
             return;
         }
-
         getCommentHelper().setComment(this.imageFolderName, getImage().getImageName(), comment);
     }
 }
