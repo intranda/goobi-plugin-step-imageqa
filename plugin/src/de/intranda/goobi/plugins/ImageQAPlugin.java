@@ -213,7 +213,7 @@ public class ImageQAPlugin implements IStepPlugin {
         String imageFolder = null;
         try {
             imageFolder = step.getProzess().getConfiguredImageFolder(selectedImageFolder);
-        } catch (IOException | InterruptedException | SwapException | DAOException e) {
+        } catch (IOException  | SwapException | DAOException e) {
             log.error(e);
         }
 
@@ -229,7 +229,7 @@ public class ImageQAPlugin implements IStepPlugin {
         String imageFolder = null;
         try {
             imageFolder = step.getProzess().getConfiguredImageFolder(selectedImageFolder);
-        } catch (IOException | InterruptedException | SwapException | DAOException e) {
+        } catch (IOException  | SwapException | DAOException e) {
             log.error(e);
         }
         initImageList(config, imageFolder);
@@ -360,7 +360,7 @@ public class ImageQAPlugin implements IStepPlugin {
                 if (!StorageProvider.getInstance().isDirectory(Paths.get(step.getProzess().getOcrDirectory()))) {
                     displayOcrButton = false;
                 }
-            } catch (SwapException | DAOException | IOException | InterruptedException e) {
+            } catch (SwapException | IOException e) {
                 log.debug("OCR folder could not be accessed", e);
             }
         }
