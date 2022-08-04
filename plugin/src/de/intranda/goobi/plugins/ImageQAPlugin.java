@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URI;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -53,6 +54,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpUtils;
+import javax.ws.rs.core.UriBuilder;
 
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.SubnodeConfiguration;
@@ -74,6 +76,7 @@ import de.intranda.goobi.SelectableImage;
 import de.intranda.goobi.SelectableImageForJSON;
 import de.sub.goobi.config.ConfigPlugins;
 import de.sub.goobi.config.ConfigurationHelper;
+import de.sub.goobi.forms.HelperForm;
 import de.sub.goobi.helper.FacesContextHelper;
 import de.sub.goobi.helper.FilesystemHelper;
 import de.sub.goobi.helper.Helper;
@@ -1167,35 +1170,22 @@ public class ImageQAPlugin implements IStepPlugin {
 
     public void downloadSelectedImagesAsPdf() throws IOException {
 
-        // prepare contentserver URL
-        FacesContext context = FacesContextHelper.getCurrentFacesContext();
-        String contentServerUrl = ConfigurationHelper.getInstance().getGoobiContentServerUrl();
-        if (contentServerUrl == null || contentServerUrl.length() == 0) {
-            HttpServletRequest req = (HttpServletRequest) context.getExternalContext().getRequest();
-            @SuppressWarnings("deprecation")
-            String fullpath = HttpUtils.getRequestURL(req).toString();
-            String servletpath = context.getExternalContext().getRequestServletPath();
-            String myBasisUrl = fullpath.substring(0, fullpath.indexOf(servletpath));
-            contentServerUrl = myBasisUrl + "/cs/cs";
-        }
-
-        contentServerUrl += "?action=pdf&images=";
-
+        Path imagesPath = Paths.get(imageFolderName);       
         // put all selected images into a URL
-        String url = "";
-        for (SelectableImage image : allImages) {
-            if (image.isSelected()) {
+        String imagesParameter = allImages.stream().filter(SelectableImage::isSelected).map(SelectableImage::getImageName).collect(Collectors.joining("$"));
 
-                Path currentImagePath = Paths.get(imageFolderName, image.getImageName());
-                url = url + StorageProvider.getInstance().getURI(currentImagePath) + "$";
-            }
-        }
+        
+        URI goobiContentServerUrl = UriBuilder.fromUri(new HelperForm().getServletPathWithHostAsUrl())
+                .path("api").path("process").path("image")
+                .path(Integer.toString(step.getProzess().getId()))
+                .path("media")        //dummy, replaced by images query param
+                .path("00000001.tif") //dummy, replaced by images query param
+                .path(step.getProzess().getTitel() + ".pdf")
+                .queryParam("imageSource", imagesPath.toUri())
+                .queryParam("images", imagesParameter)
+                .build();
 
-        // generate the final URL
-        String imageString = url.substring(0, url.length() - 1);
-        String targetFileName = "&targetFileName=" + step.getProzess().getTitel() + ".pdf";
-        URL goobiContentServerUrl = new URL(contentServerUrl + imageString + targetFileName);
-
+        FacesContext context = FacesContextHelper.getCurrentFacesContext();
         // generate the pdf and deliver it as download
         if (!context.getResponseComplete()) {
             HttpServletResponse response = (HttpServletResponse) context.getExternalContext().getResponse();
