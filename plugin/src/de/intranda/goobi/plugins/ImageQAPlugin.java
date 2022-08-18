@@ -25,7 +25,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -50,10 +49,8 @@ import java.util.zip.ZipOutputStream;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.servlet.http.HttpUtils;
 import javax.ws.rs.core.UriBuilder;
 
 import org.apache.commons.configuration.HierarchicalConfiguration;
@@ -985,9 +982,9 @@ public class ImageQAPlugin implements IStepPlugin {
             SelectableImage nextImage = iterator.next();
             if (nextImage.isSelected()) {
                 if (deletionCommand == null || deletionCommand.isEmpty()) {
-                    deleteImageViaJava(image);
+                    deleteImageViaJava(nextImage);
                 } else {
-                    callScript(image, deletionCommand, true);
+                    callScript(nextImage, deletionCommand, true);
                 }
             }
         }
@@ -996,7 +993,7 @@ public class ImageQAPlugin implements IStepPlugin {
     public void flipSelectionHorizontal() {
         for (SelectableImage im : allImages) {
             if (im.isSelected()) {
-                callScript(image, flippingCommandHorizontal, false);
+                callScript(im, flippingCommandHorizontal, false);
             }
         }
     }
@@ -1004,7 +1001,7 @@ public class ImageQAPlugin implements IStepPlugin {
     public void flipSelectionVertical() {
         for (SelectableImage im : allImages) {
             if (im.isSelected()) {
-                callScript(image, flippingCommandVertical, false);
+                callScript(im, flippingCommandVertical, false);
             }
         }
     }
@@ -1012,7 +1009,7 @@ public class ImageQAPlugin implements IStepPlugin {
     public void rotateSelectionRight() {
         for (SelectableImage im : allImages) {
             if (im.isSelected()) {
-                callScript(image, rotationCommandRight, false);
+                callScript(im, rotationCommandRight, false);
             }
         }
     }
@@ -1020,7 +1017,7 @@ public class ImageQAPlugin implements IStepPlugin {
     public void rotateSelectionLeft() {
         for (SelectableImage im : allImages) {
             if (im.isSelected()) {
-                callScript(image, rotationCommandLeft, false);
+                callScript(im, rotationCommandLeft, false);
             }
         }
     }
@@ -1170,11 +1167,11 @@ public class ImageQAPlugin implements IStepPlugin {
 
     public void downloadSelectedImagesAsPdf() throws IOException {
 
-        Path imagesPath = Paths.get(imageFolderName);       
+        Path imagesPath = Paths.get(imageFolderName);
         // put all selected images into a URL
         String imagesParameter = allImages.stream().filter(SelectableImage::isSelected).map(SelectableImage::getImageName).collect(Collectors.joining("$"));
 
-        
+
         URI goobiContentServerUrl = UriBuilder.fromUri(new HelperForm().getServletPathWithHostAsUrl())
                 .path("api").path("process").path("image")
                 .path(Integer.toString(step.getProzess().getId()))
