@@ -62,7 +62,7 @@
             <right command="/usr/bin/mogrify|-rotate|90|IMAGE_FILE" />
         </rotationCommands>
         <!-- allow flipping of images -->
-        <allowFlipping>true</allowFlipping>
+        <allowFlipping>false</allowFlipping>
         <flippingCommands>
             <horizontal command="/bin/true" />
             <vertical command="/bin/true" />
