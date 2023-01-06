@@ -89,8 +89,7 @@
                 <div class="#{AktuelleSchritteForm.myPlugin.displayOCR ? 'col-sm-9' : ''}">
                     <div class="row">
                         <div class="div-image">
-                            <ui:fragment
-                                rendered="#{AktuelleSchritteForm.myPlugin.image != null and AktuelleSchritteForm.myPlugin.image.type == 'image'}">
+                            <ui:fragment rendered="#{AktuelleSchritteForm.myPlugin.image.type == 'image' or AktuelleSchritteForm.myPlugin.image.type == 'object' }">
                                 <div id="mainImage">
                                     <div id="ajaxloader_image">
                                         <img src="template/img/goobi/ajaxloader1.gif" />
