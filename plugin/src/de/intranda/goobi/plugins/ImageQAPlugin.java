@@ -84,6 +84,7 @@ import de.sub.goobi.helper.exceptions.DAOException;
 import de.sub.goobi.helper.exceptions.SwapException;
 import de.sub.goobi.metadaten.Image;
 import de.sub.goobi.metadaten.ImageCommentHelper;
+import de.sub.goobi.metadaten.ImageCommentPropertyHelper;
 import de.unigoettingen.sub.commons.contentlib.exceptions.ContentLibException;
 import de.unigoettingen.sub.commons.contentlib.exceptions.ContentLibImageException;
 import de.unigoettingen.sub.commons.contentlib.imagelib.ImageManager;
@@ -1229,6 +1230,48 @@ public class ImageQAPlugin implements IStepPlugin {
     //this is set whenever setImage() is called.
     @Getter
     private boolean showImageComments = false;
+
+    // =========================== Use ImageCommentPropertyHelper Instead =========================== //
+
+    private ImageCommentPropertyHelper commentPropertyHelper;
+
+    private ImageCommentPropertyHelper getCommentPropertyHelper() {
+        if (commentPropertyHelper == null) {
+            // This method is somehow already called when we start Goobi, by which time step is still uninitialized. Therefore the following if block is needed to ensure a successful start.
+            // But null as returned value will never be used by the methods getCommentPropertyForImage and setCommentPropertyForImage, since they are both triggered within a step.
+            if (step == null) {
+                log.debug("step is not initialized yet");
+                return null;
+            }
+
+            commentPropertyHelper = new ImageCommentPropertyHelper(step.getProzess());
+        }
+        return commentPropertyHelper;
+    }
+
+    public String getCommentPropertyForImage() {
+        if (getImage() == null) {
+            return null;
+        }
+
+        return getCommentPropertyHelper().getComment(this.imageFolderName, getImage().getImageName());
+    }
+
+    public void setCommentPropertyForImage(String comment) {
+
+        if (getImage() == null) {
+            return;
+        }
+
+        //only save new log entry if the comment has changed
+        String oldComment = getCommentPropertyForImage();
+        if (comment == null || (oldComment != null && comment.contentEquals(oldComment)) || (oldComment == null && comment.isEmpty())) {
+            return;
+        }
+        getCommentPropertyHelper().setComment(this.imageFolderName, getImage().getImageName(), comment);
+    }
+
+    // =========================== Use ImageCommentPropertyHelper Instead =========================== //
 
     private ImageCommentHelper commentHelper;
 
