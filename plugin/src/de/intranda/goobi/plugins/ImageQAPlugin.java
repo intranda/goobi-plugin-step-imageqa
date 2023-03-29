@@ -83,7 +83,6 @@ import de.sub.goobi.helper.StorageProvider;
 import de.sub.goobi.helper.exceptions.DAOException;
 import de.sub.goobi.helper.exceptions.SwapException;
 import de.sub.goobi.metadaten.Image;
-import de.sub.goobi.metadaten.ImageCommentHelper;
 import de.sub.goobi.metadaten.ImageCommentPropertyHelper;
 import de.unigoettingen.sub.commons.contentlib.exceptions.ContentLibException;
 import de.unigoettingen.sub.commons.contentlib.exceptions.ContentLibImageException;
@@ -1231,7 +1230,7 @@ public class ImageQAPlugin implements IStepPlugin {
     @Getter
     private boolean showImageComments = false;
 
-    // =========================== Use ImageCommentPropertyHelper Instead =========================== //
+    // =========================== Use ImageCommentPropertyHelper To Save Comments =========================== //
 
     private ImageCommentPropertyHelper commentPropertyHelper;
 
@@ -1271,34 +1270,6 @@ public class ImageQAPlugin implements IStepPlugin {
         getCommentPropertyHelper().setComment(this.imageFolderName, getImage().getImageName(), comment);
     }
 
-    // =========================== Use ImageCommentPropertyHelper Instead =========================== //
+    // =========================== Use ImageCommentPropertyHelper To Save Comments =========================== //
 
-    private ImageCommentHelper commentHelper;
-
-    private ImageCommentHelper getCommentHelper() {
-        if (commentHelper == null) {
-            commentHelper = new ImageCommentHelper();
-        }
-        return commentHelper;
-    }
-
-    public String getCommentForImage() {
-        if (getImage() == null) {
-            return null;
-        }
-        return getCommentHelper().getComment(this.imageFolderName, getImage().getImageName());
-    }
-
-    public void setCommentForImage(String comment) {
-
-        if (getImage() == null) {
-            return;
-        }
-        //only save new log entry if the comment has changed
-        String oldComment = getCommentForImage();
-        if (comment == null || (oldComment != null && comment.contentEquals(oldComment)) || (oldComment == null && comment.isEmpty())) {
-            return;
-        }
-        getCommentHelper().setComment(this.imageFolderName, getImage().getImageName(), comment);
-    }
 }
