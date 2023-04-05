@@ -5,7 +5,7 @@
     xmlns:f="http://java.sun.com/jsf/core"
     xmlns:h="http://java.sun.com/jsf/html"
     xmlns:x="http://myfaces.apache.org/tomahawk"
-    xmlns:intranda="http://xmlns.jcp.org/jsf/composite/composites">
+    xmlns:intranda="http://xmlns.jcp.org/jsf/composite/compositesPG">
 
     <link
         rel="stylesheet"
@@ -16,7 +16,8 @@
 		    float: left;
 		    margin: 7px;
 		    width: #{AktuelleSchritteForm.myPlugin.thumbnailSize +2}px;
-		    height:#{AktuelleSchritteForm.myPlugin.thumbnailSize+55}px;            
+		    height:#{AktuelleSchritteForm.myPlugin.thumbnailSize+55}px;
+            text-align: center;        
 		}
 		.goobi-thumbnail .goobi-thumbnail-image {
 		    float: left;
@@ -32,111 +33,97 @@
 	</style>
 
     <h:form>
+        <intranda:box
+            boxType="neutral"
+            boxPadding="false"
+            icon="fa-puzzle-piece"
+            title="#{msgs.plugin}: #{msgs[('plugin_').concat(AktuelleSchritteForm.myPlugin.title)]}">
+            
+            <h:panelGroup
+                layout="block"
+                rendered="#{AktuelleSchritteForm.myPlugin.sizeOfImageList gt 0}">
 
-        <div class="box box-color lightgrey box-bordered">
+                <div class="row thumbnavigationcenter">
+					<ui:fragment rendered="#{AktuelleSchritteForm.myPlugin.pageNumberLastPartGUI gt 1}">
+                        <f:subview id="first">
+                            <ui:include src="../../../ImageQAPlugin_include_thumbnavigationPartGui.xhtml" />
+                        </f:subview>
+					</ui:fragment>
+                </div>
+                
+                <!-- Thumbnail list -->
+                <div
+                    class="flex-container mt-3"
+                    dir="#{AktuelleSchritteForm.myPlugin.flowDir}">
 
-            <div class="box-title">
-                <h3>
-                    <i class="fa fa-puzzle-piece"></i>
-                    <h:outputText value="#{msgs.plugin}: #{msgs[('plugin_').concat(AktuelleSchritteForm.myPlugin.title)]}" />
-                </h3>
-            </div>
+                    <ui:repeat
+                        var="image"
+                        value="#{AktuelleSchritteForm.myPlugin.paginatorListForPartGUI}"
+                        varStatus="status">
+                        <div
+                            class="goobi-thumbnail #{AktuelleSchritteForm.myPlugin.image.imageName eq image.imageName?'img-active':'font-light'}"
+                            dir="auto">
+                            <div class="goobi-thumbnail-image">
 
+                                <div class="thumb">
+                                    <h:commandLink title="#{image.tooltip}">
+                                        <canvas
+                                            class="thumb-canvas"
+                                            data-image_small="#{image.thumbnailUrl}"
+                                            data-image_large="#{image.largeThumbnailUrl}"
+                                            title="#{image.tooltip}"
+                                            id="thumbnail-#{status.index}"></canvas>
+                                        <f:setPropertyActionListener
+                                            value="#{image.order -1}"
+                                            target="#{AktuelleSchritteForm.myPlugin.imageIndex}" />
+                                        <f:ajax
+                                            execute="@form"
+                                            render="@form :qaform:bigimage"
+                                            onevent="freeJSResources" />
 
-            <div class="box-content nopadding">
-
-                <h:panelGroup
-                    layout="block"
-                    rendered="#{AktuelleSchritteForm.myPlugin.sizeOfImageList gt 0}">
-
-                    <div class="row thumbnavigationcenter">
-						<ui:fragment rendered="#{AktuelleSchritteForm.myPlugin.pageNumberLastPartGUI gt 1}">
-	                        <f:subview id="first">
-	                            <ui:include src="../../../ImageQAPlugin_include_thumbnavigationPartGui.xhtml" />
-	                        </f:subview>
-						</ui:fragment>
-	                </div>
-                    
-                    <!-- Thumbnail list -->
-                    <div
-                        class="flex-container margin-top-most"
-                        dir="#{AktuelleSchritteForm.myPlugin.flowDir}">
-
-                        <ui:repeat
-                            var="image"
-                            value="#{AktuelleSchritteForm.myPlugin.paginatorListForPartGUI}"
-                            varStatus="status">
-                            <div
-                                class="goobi-thumbnail #{AktuelleSchritteForm.myPlugin.image.imageName eq image.imageName?'img-active':'font-light'}"
-                                dir="auto">
-                                <div class="goobi-thumbnail-image">
-
-                                    <div class="thumb">
-                                        <h:commandLink title="#{image.tooltip}">
-                                            <canvas
-                                                class="thumb-canvas"
-                                                data-image_small="#{image.thumbnailUrl}"
-                                                data-image_large="#{image.largeThumbnailUrl}"
-                                                title="#{image.tooltip}"
-                                                id="thumbnail-#{status.index}"></canvas>
-                                            <f:setPropertyActionListener
-                                                value="#{image.order -1}"
-                                                target="#{AktuelleSchritteForm.myPlugin.imageIndex}" />
-                                            <f:ajax
-                                                execute="@form"
-                                                render="@form :qaform:bigimage"
-                                                onevent="freeJSResources" />
-
-                                        </h:commandLink>
-                                    </div>
-
-                                </div>
-                                <div class="goobi-thumbnail-caption">
-                                    <h:outputText value="#{image.imageNameShort}"></h:outputText>
+                                    </h:commandLink>
                                 </div>
 
                             </div>
+                            <div class="goobi-thumbnail-caption">
+                                <h:outputText value="#{image.imageNameShort}"></h:outputText>
+                            </div>
 
-                        </ui:repeat>
-                    </div>
-                </h:panelGroup>
+                        </div>
 
-
-
-                <script type="text/javascript">
-                                                                    window.onload = function() {
-                                                                        loadImages();
-                                                                    }
-
-                                                                    function loadThumbnails() {
-                                                                        var height = parseInt( '#{AktuelleSchritteForm.myPlugin.thumbnailSize}' );
-                                                                        if ( height ) {
-                                                                            $( '.goobi-thumbnail-image' ).css( 'height', ( height + 25 ) + 'px' );
-                                                                            $( '.goobi-thumbnail-image .thumb' ).css( 'max-height', height + 'px' );
-                                                                            $( '.goobi-thumbnail-image .thumb canvas' ).css( 'max-height', height + 'px' );
-                                                                            $( '.goobi-thumbnail-image' ).css( 'max-width', ( height ) + 'px' );
-                                                                        }
-                                                                    }
-
-                                                                    $( document ).ready( function() {
-                                                                        loadThumbnails();
-                                                                    } );
-                                                                    
-                                                                    jsf.ajax.addOnEvent( function( data ) {
-                                                                        var ajaxstatus = data.status; // Can be "begin", "complete" and "success"
-                                                                        switch ( ajaxstatus ) {
-                                                                            case "success": // This is called when ajax response is successfully processed.
-                                                                                loadThumbnails();
-                                                                                break;
-                                                                        }
-                                                                    } );
-                                                                </script>
-
-
-
-            </div>
-        </div>
+                    </ui:repeat>
+                </div>
+            </h:panelGroup>
+        </intranda:box>
     </h:form>
 
+    <script type="text/javascript">
+        window.onload = function() {
+            loadImages();
+        }
+
+        function loadThumbnails() {
+            var height = parseInt( '#{AktuelleSchritteForm.myPlugin.thumbnailSize}' );
+            if ( height ) {
+                $( '.goobi-thumbnail-image' ).css( 'height', ( height + 25 ) + 'px' );
+                $( '.goobi-thumbnail-image .thumb' ).css( 'max-height', height + 'px' );
+                $( '.goobi-thumbnail-image .thumb canvas' ).css( 'max-height', height + 'px' );
+                $( '.goobi-thumbnail-image' ).css( 'max-width', ( height ) + 'px' );
+            }
+        }
+
+        $( document ).ready( function() {
+            loadThumbnails();
+        } );
+        
+        jsf.ajax.addOnEvent( function( data ) {
+            var ajaxstatus = data.status; // Can be "begin", "complete" and "success"
+            switch ( ajaxstatus ) {
+                case "success": // This is called when ajax response is successfully processed.
+                    loadThumbnails();
+                    break;
+            }
+        } );
+    </script>
 
 </ui:composition>
