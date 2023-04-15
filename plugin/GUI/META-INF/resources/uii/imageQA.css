@@ -19,7 +19,8 @@
 }
 
 .thumb-canvas {
-	border: 1px solid #ccc;
+	/* border: 1px solid #ccc;*/
+	background-color: var(--clr-neutral-200);
 }
 
 .goobi-thumbnail .goobi-thumbnail-controls {
@@ -29,15 +30,17 @@
 }
 
 .goobi-thumbnail-controls-left {
-	width: 40%;
+	width: 50%;
+	display: inline;
 }
 
 .goobi-thumbnail-controls-right {
-	width: 60%;
+	width: 50%;
+	display: inline;
 }
 
 .goobi-thumbnail-controls-left {
-	padding-left: 17px;
+	padding-left: 5px;
 }
 
 .goobi-thumbnail-controls-left .thumbnail-control {
@@ -46,7 +49,7 @@
 }
 
 .goobi-thumbnail-controls-right {
-	padding-right: 17px;
+	padding-right: 5px;
 	text-align: right;
 }
 
@@ -66,7 +69,9 @@
 
 .thumbnail-control.checkbox {
 	position: relative;
-	margin: 0 3px 0 0;
+	margin: 0;
+	margin-right: 3px;
+	height: 25px;
 }
 
 .thumbnail-control.checkbox label {
@@ -76,11 +81,12 @@
 
 .thumbnail-control.checkbox .control-indicator .fa-square-o,
 	.thumbnail-control.checkbox .control-indicator .fa-check-square-o {
-	margin-top: 4px;
+	margin-top: 0px;
 }
 
 .thumbnail-control.checkbox .control-indicator .fa-square-o {
-	padding-right: 2px;
+    padding-right: 2px;
+    margin-left: 1px;
 }
 
 .thumbnail-control.checkbox .control-indicator .fa-check-square-o {
@@ -104,6 +110,10 @@
 	display: none;
 }
 
+.imageqa-thumb-massbutton{
+	width: 15px;	
+}
+
 .big-image-caption {
 	text-align: center;
 }
@@ -124,10 +134,6 @@
 	display: inline-block;
 	padding: 0;
 	border-bottom: 0 !important;
-}
-
-#image-control-wrapper {
-	margin-left: 6px;
 }
 
 #mainImage {
@@ -344,8 +350,8 @@
 
 #image-control-wrapper {
 	display: inline-block;
-	margin-bottom: -1rem;
-	margin-left: 0px;
+	margin-bottom: 1rem;
+	margin-left: -7px;
 }
 
 #viewer_controls_nav ul li #zoomSliderLabel {

@@ -64,24 +64,13 @@
                             class="goobi-thumbnail #{AktuelleSchritteForm.myPlugin.image.imageName eq image.imageName?'img-active':'font-light'}"
                             dir="auto">
                             <div class="goobi-thumbnail-image">
-
                                 <div class="thumb">
-                                    <h:commandLink title="#{image.tooltip}">
-                                        <canvas
-                                            class="thumb-canvas"
-                                            data-image_small="#{image.thumbnailUrl}"
-                                            data-image_large="#{image.largeThumbnailUrl}"
-                                            title="#{image.tooltip}"
-                                            id="thumbnail-#{status.index}"></canvas>
-                                        <f:setPropertyActionListener
-                                            value="#{image.order -1}"
-                                            target="#{AktuelleSchritteForm.myPlugin.imageIndex}" />
-                                        <f:ajax
-                                            execute="@form"
-                                            render="@form :qaform:bigimage"
-                                            onevent="freeJSResources" />
-
-                                    </h:commandLink>
+                                    <canvas
+                                        class="thumb-canvas"
+                                        data-image_small="#{image.thumbnailUrl}"
+                                        data-image_large="#{image.largeThumbnailUrl}"
+                                        title="#{image.tooltip}"
+                                        id="thumbnail-#{status.index}"></canvas>
                                 </div>
 
                             </div>

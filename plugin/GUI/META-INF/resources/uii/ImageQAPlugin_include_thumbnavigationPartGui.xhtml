@@ -17,12 +17,13 @@
  * 
  -->
 <ui:composition xmlns="http://www.w3.org/1999/xhtml" 
-    xmlns:jsf="http://xmlns.jcp.org/jsf" 
-    xmlns:ui="http://xmlns.jcp.org/jsf/facelets" 
-    xmlns:composite="http://xmlns.jcp.org/jsf/composite" 
-    xmlns:h="http://xmlns.jcp.org/jsf/html" 
-    xmlns:f="http://xmlns.jcp.org/jsf/core" 
-    xmlns:x="http://myfaces.apache.org/tomahawk">
+	xmlns:jsf="http://xmlns.jcp.org/jsf" 
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough" 
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets" 
+	xmlns:composite="http://xmlns.jcp.org/jsf/composite" 
+	xmlns:h="http://xmlns.jcp.org/jsf/html" 
+	xmlns:f="http://xmlns.jcp.org/jsf/core" 
+	xmlns:x="http://myfaces.apache.org/tomahawk">
 
     <composite:interface>
     </composite:interface>
@@ -70,6 +71,7 @@
                 </button>
             </span>
         </h:panelGroup>
+        
         <!-- navigation buttons for Thumbnail list -->
         <ui:fragment rendered="#{AktuelleSchritteForm.myPlugin.pageNumberLastPartGUI gt 1}">
             <div class="d-inline">
@@ -84,7 +86,7 @@
                     -->
                 </button>
                 <button 
-                	class="btn btn-primary" 
+                	class="btn btn-primary-400" 
            			jsf:action="#{AktuelleSchritteForm.myPlugin.cmdMovePrevious}" 
                 	title="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.pageNext:msgs.pagePrevious}">
                     <i class="fa fa-angle-left"></i>
@@ -93,7 +95,7 @@
                      -->
                     <f:setPropertyActionListener target="#{AktuelleSchritteForm.myPlugin.displayMode}" value="part" />
                     <span>
-                        <h:outputText value=" #{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.pageNext:msgs.pagePrevious}" />
+                        <h:outputText value="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.pageNext:msgs.pagePrevious}" />
                     </span>
                 </button>
     
@@ -112,9 +114,9 @@
              	   jsf:action="#{AktuelleSchritteForm.myPlugin.cmdMoveNext}" 
                 	title="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.pagePrevious:msgs.pageNext}">
                     <span>
-                        <h:outputText value="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.pagePrevious:msgs.pageNext} " />
+                        <h:outputText value="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.pagePrevious:msgs.pageNext}" />
                     </span>
-                    <i class="fa fa-angle-right"></i>
+                    <i class="fa fa-angle-right ms-2"></i>
                     <f:setPropertyActionListener target="#{AktuelleSchritteForm.myPlugin.displayMode}" value="part" />
                     <!-- 
                     <f:ajax execute="@form" render="@form :qaform" />
