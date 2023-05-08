@@ -16,28 +16,35 @@
  * Temple Place, Suite 330, Boston, MA 02111-1307 USA
  * 
  -->
-<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:jsf="http://xmlns.jcp.org/jsf" xmlns:pt="http://xmlns.jcp.org/jsf/passthrough" xmlns:ui="http://xmlns.jcp.org/jsf/facelets" xmlns:composite="http://xmlns.jcp.org/jsf/composite" xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:x="http://myfaces.apache.org/tomahawk">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:jsf="http://xmlns.jcp.org/jsf" 
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough" 
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets" 
+	xmlns:composite="http://xmlns.jcp.org/jsf/composite" 
+	xmlns:h="http://xmlns.jcp.org/jsf/html" 
+	xmlns:f="http://xmlns.jcp.org/jsf/core" 
+	xmlns:x="http://myfaces.apache.org/tomahawk">
 
     <composite:interface>
     </composite:interface>
 
     <composite:implementation>
 
-        <!-- navigation buttons for Thumbnail list -->
+        <!-- PAGINATOR -->
         <div class="text-center">
             <ui:fragment rendered="#{AktuelleSchritteForm.myPlugin.pageNumberLast gt 1}">
                 <button
-                    class="btn font-size-s margin-sides-10"
+                    class="btn btn-blank me-3"
                     jsf:action="#{AktuelleSchritteForm.myPlugin.cmdMoveFirst}"
                     aria-label="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.lastPage:msgs.firstPage}"
                     title="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.lastPage:msgs.firstPage}">
-                    <i class="fa fa-double-angle-left"></i>
+                    <i class="fa fa-angle-double-left"></i>
                     <f:ajax
                         execute="@form"
                         render="@form :qaform" />
                 </button>
                 <button
-                    class="btn btn-primary font-size-s"
+                    class="btn btn-neutral-600"
                     jsf:action="#{AktuelleSchritteForm.myPlugin.cmdMovePrevious}"
                     aria-label="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.pageNext:msgs.pagePrevious}"
                     title="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.pageNext:msgs.pagePrevious}">
@@ -45,10 +52,12 @@
                     <f:ajax
                         execute="@form"
                         render="@form :qaform" />
-                    <h:outputText value=" #{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.pageNext:msgs.pagePrevious}" />
+                    <span>
+                        <h:outputText value="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.pageNext:msgs.pagePrevious}" />
+                    </span>
                 </button>
 
-                <div class="margin-sides-10">
+                <div class="ms-3 me-3 d-inline">
                     <x:outputText
                         id="txtMoveTo1"
                         value="#{msgs.seite} #{AktuelleSchritteForm.myPlugin.pageNumberCurrent} #{msgs.von} #{AktuelleSchritteForm.myPlugin.pageNumberLast}"
@@ -73,175 +82,230 @@
                 </div>
 
                 <button
-                    class="btn btn-primary font-size-s"
+                    class="btn btn-neutral-600"
                     jsf:action="#{AktuelleSchritteForm.myPlugin.cmdMoveNext}"
                     aria-label="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.pagePrevious:msgs.pageNext}"
                     title="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.pagePrevious:msgs.pageNext}">
-                    <h:outputText value="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.pagePrevious:msgs.pageNext} " />
-                    <i class="fa fa-angle-right"></i>
+                    <span>
+                        <h:outputText value="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.pagePrevious:msgs.pageNext}" />
+                    </span>
+                    <i class="fa fa-angle-right ms-2"></i>
                     <f:ajax
                         execute="@form"
                         render="@form :qaform" />
                 </button>
                 <button
-                    class="btn font-size-s margin-sides-10"
+                    class="btn btn-blank ms-3"
                     jsf:action="#{AktuelleSchritteForm.myPlugin.cmdMoveLast}"
                     aria-label="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.firstPage:msgs.lastPage}"
                     title="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.firstPage:msgs.lastPage}">
-                    <i class="fa fa-double-angle-right"></i>
+                    <i class="fa fa-angle-double-right"></i>
                     <f:ajax
                         execute="@form"
                         render="@form :qaform" />
                 </button>
             </ui:fragment>
-            <!-- // navigation buttons for Thumbnail list -->
+            <!-- // PAGINATOR -->
 
+
+            <!-- CONFIRMATION BUTTON -->
             <button
             	jsf:id="confirm"
-                class="btn font-size-s pull-right"
-                style="margin-right:50px;"
+                class="btn btn-blank"
+                style="margin:0 50px;"
                 jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowDeletion or AktuelleSchritteForm.myPlugin.allowRotation or AktuelleSchritteForm.myPlugin.allowRenaming}">
                 <i class="fa #{NavigationForm.uiStatus.plugin_qa_confirmation == false?'fa fa-square-o':'fa fa-check-square-o'} margin-right-5" />
-                <h:outputText
-                    styleClass="font-size-s"
-                    value="#{msgs.plugin_intranda_step_imageQA_confirmImageManipulation}" />
+                <span>
+                    <h:outputText
+                        styleClass=""
+                        value="#{msgs.plugin_intranda_step_imageQA_confirmImageManipulation}" />
+                </span>
                 <f:setPropertyActionListener
                     value="#{NavigationForm.uiStatus.plugin_qa_confirmation == false?true:false}"
                     target="#{NavigationForm.uiStatus.plugin_qa_confirmation}" />
             </button>
-            <h:panelGroup
-                styleClass="btn-group margin-right-10 pull-right"
-                style="margin-top:1px"
+            <!-- // CONFIRMATION BUTTON -->
+
+
+            <!-- MASS PROCESS BUTTONS -->
+            <div
+                class="btn-group"
+                data-bs-toggle="tooltip"
                 title="#{msgs.options}"
-                data-toggle="tooltip"
-                rendered="#{AktuelleSchritteForm.myPlugin.allowSelection and (AktuelleSchritteForm.myPlugin.allowDeletion or AktuelleSchritteForm.myPlugin.allowRotation or AktuelleSchritteForm.myPlugin.allowDownload)}">
+                jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowSelection and (AktuelleSchritteForm.myPlugin.allowDeletion or AktuelleSchritteForm.myPlugin.allowRotation or AktuelleSchritteForm.myPlugin.allowDownload)}">
+                <!-- show columns -->
+                <div
+                    id="dropdown"
+                    class="dropdown">
+                    <button
+                        type="button"
+                        aria-label="#{msgs.options}"
+                        id="selectDisplay"
+                        class="btn gw-table__filters__option dropdown-toggle"
+                        data-bs-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false">
+                        <i class="fa fa-cog" />
+                        <span class="caret"></span>
+                    </button>
 
-                <a
-                    class="btn dropdown-toggle fa fa-cog"
-                    style="padding: 7px 6px 8px 6px;"
-                    data-toggle="dropdown">
-                    <span class="caret"></span>
-                </a>
-                <ul class="dropdown-menu pull-right">
-                    <li>
-                        <button
-                            class="dropdown-item thumbnail-control select-page"
-                            jsf:action="#{AktuelleSchritteForm.myPlugin.selectAllImagesOnCurrentPage}"
-                            jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowSelectionPage}">
-                            <i class="btn fa fa-check-square-o margin-right-10"></i>
-                            <h:outputText value="#{msgs.plugin_intranda_step_imageQA_selectAllImagesOnCurrentPage}" />
-                        </button>
-                    </li>
+                    <ul class="dropdown-menu">
 
-                    <li>
-                        <button
-                            class="dropdown-item thumbnail-control unselect-page"
-                            jsf:action="#{AktuelleSchritteForm.myPlugin.unselectAllImagesOnCurrentPage}"
-                            jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowSelectionPage}">
-                            <i class="btn fa fa-square-o margin-right-10"></i>
-                            <h:outputText value="#{msgs.plugin_intranda_step_imageQA_unselectAllImagesOnCurrentPage}" />
-                        </button>
-                    </li>
+                        <!-- SELECT PAGE -->
+                        <li>
+                            <button
+                                class="dropdown-item"
+                                jsf:action="#{AktuelleSchritteForm.myPlugin.selectAllImagesOnCurrentPage}"
+                                jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowSelectionPage}">
+                                <i class="fa fa-check-square-o imageqa-thumb-massbutton"></i>
+                                <span>
+                                    <h:outputText value="#{msgs.plugin_intranda_step_imageQA_selectAllImagesOnCurrentPage}" />
+                                </span>
+                            </button>
+                        </li>
 
-                    <li>
-                        <button
-                            class="dropdown-item thumbnail-control select-all"
-                            jsf:action="#{AktuelleSchritteForm.myPlugin.selectAllImages}"
-                            jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowSelectionAll}">
-                            <i class="btn fa fa-check-square-o margin-right-10"></i>
-                            <h:outputText value="#{msgs.plugin_intranda_step_imageQA_selectAllImages}" />
-                        </button>
-                    </li>
+                        <!-- UNSELECT PAGE -->
+                        <li>
+                            <button
+                                class="dropdown-item"
+                                jsf:action="#{AktuelleSchritteForm.myPlugin.unselectAllImagesOnCurrentPage}"
+                                jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowSelectionPage}">
+                                <i class="fa fa-square-o imageqa-thumb-massbutton"></i>
+                                <span>
+                                    <h:outputText
+                                        value="#{msgs.plugin_intranda_step_imageQA_unselectAllImagesOnCurrentPage}" />
+                                </span>
+                            </button>
+                        </li>
 
-                    <li>
-                        <button
-                            class="dropdown-item thumbnail-control unselect-all"
-                            jsf:action="#{AktuelleSchritteForm.myPlugin.unselectAllImages}"
-                            jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowSelectionAll}">
-                            <i class="btn fa fa-square-o margin-right-10"></i>
-                            <h:outputText value="#{msgs.plugin_intranda_step_imageQA_unselectAllImages}" />
-                        </button>
-                    </li>
+                        <!-- SELECT ALL -->
+                        <li>
+                            <button
+                                class="dropdown-item"
+                                jsf:action="#{AktuelleSchritteForm.myPlugin.selectAllImages}"
+                                jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowSelectionAll}">
+                                <i class="fa fa-check-square-o imageqa-thumb-massbutton"></i>
+                                <span>
+                                    <h:outputText value="#{msgs.plugin_intranda_step_imageQA_selectAllImages}" />
+                                </span>
+                            </button>
+                        </li>
 
-                    <li>
-                        <button
-                            class="dropdown-item thumbnail-control delete"
-                            jsf:action="#{AktuelleSchritteForm.myPlugin.deleteSelection}"
-                            jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowSelection and AktuelleSchritteForm.myPlugin.allowDeletion}"
-                            onclick="if (!confirm('#{msgs.wirklichAusfuehren}')) return false">
-                            <i class="btn fa fa-trash margin-right-10"></i>
-                            <h:outputText value="#{msgs.plugin_intranda_step_imageQA_deleteSelection}" />
-                        </button>
-                    </li>
+                        <!-- UNSELECT ALL -->
+                        <li>
+                            <button
+                                class="dropdown-item"
+                                jsf:action="#{AktuelleSchritteForm.myPlugin.unselectAllImages}"
+                                jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowSelectionAll}">
+                                <i class="fa fa-square-o imageqa-thumb-massbutton"></i>
+                                <span>
+                                    <h:outputText value="#{msgs.plugin_intranda_step_imageQA_unselectAllImages}" />
+                                </span>
+                            </button>
+                        </li>
 
-                    <li>
-                        <button
-                            class="dropdown-item thumbnail-control flip-horizontal"
-                            jsf:action="#{AktuelleSchritteForm.myPlugin.flipSelectionHorizontal}"
-                            jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowSelection and AktuelleSchritteForm.myPlugin.allowFlipping}"
-                            onclick="if (!confirm('#{msgs.wirklichAusfuehren}')) return false">
-                            <i class="btn fa fa-arrows-h margin-right-10"></i>
-                            <h:outputText value="#{msgs.plugin_intranda_step_imageQA_flipHorizontalSelection}" />
-                        </button>
-                    </li>
+                        <!-- DELETE -->
+                        <li>
+                            <button
+                                class="dropdown-item"
+                                jsf:action="#{AktuelleSchritteForm.myPlugin.deleteSelection}"
+                                jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowSelection and AktuelleSchritteForm.myPlugin.allowDeletion}"
+                                onclick="if (!confirm('#{msgs.wirklichAusfuehren}')) return false">
+                                <i class="fa fa-trash imageqa-thumb-massbutton"></i>
+                                <span>
+                                    <h:outputText value="#{msgs.plugin_intranda_step_imageQA_deleteSelection}" />
+                                </span>
+                            </button>
+                        </li>
 
-                    <li>
-                        <button
-                            class="dropdown-item thumbnail-control flip-vertical"
-                            jsf:action="#{AktuelleSchritteForm.myPlugin.flipSelectionVertical}"
-                            jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowSelection and AktuelleSchritteForm.myPlugin.allowFlipping}"
-                            onclick="if (!confirm('#{msgs.wirklichAusfuehren}')) return false">
-                            <i class="btn fa fa-arrows-v margin-right-10"></i>
-                            <h:outputText value="#{msgs.plugin_intranda_step_imageQA_flipVerticalSelection}" />
-                        </button>
-                    </li>
+                        <!-- FLIP -->
+                        <li>
+                            <button
+                                class="dropdown-item"
+                                jsf:action="#{AktuelleSchritteForm.myPlugin.flipSelectionHorizontal}"
+                                jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowSelection and AktuelleSchritteForm.myPlugin.allowFlipping}"
+                                onclick="if (!confirm('#{msgs.wirklichAusfuehren}')) return false">
+                                <i class="fa fa-arrows-h imageqa-thumb-massbutton"></i>
+                                <span>
+                                    <h:outputText value="#{msgs.plugin_intranda_step_imageQA_flipHorizontalSelection}" />
+                                </span>
+                            </button>
+                        </li>
 
-                    <li>
-                        <button
-                            class="dropdown-item thumbnail-control rotate-left"
-                            jsf:action="#{AktuelleSchritteForm.myPlugin.rotateSelectionLeft}"
-                            jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowSelection and AktuelleSchritteForm.myPlugin.allowRotation}"
-                            onclick="if (!confirm('#{msgs.wirklichAusfuehren}')) return false">
-                            <i class="btn fa fa-undo margin-right-10"></i>
-                            <h:outputText value="#{msgs.plugin_intranda_step_imageQA_rotateLefteSelection}" />
-                        </button>
-                    </li>
+                        <!-- FLOP -->
+                        <li>
+                            <button
+                                class="dropdown-item"
+                                jsf:action="#{AktuelleSchritteForm.myPlugin.flipSelectionVertical}"
+                                jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowSelection and AktuelleSchritteForm.myPlugin.allowFlipping}"
+                                onclick="if (!confirm('#{msgs.wirklichAusfuehren}')) return false">
+                                <i class="fa fa-arrows-v imageqa-thumb-massbutton"></i>
+                                <span>
+                                    <h:outputText value="#{msgs.plugin_intranda_step_imageQA_flipVerticalSelection}" />
+                                </span>
+                            </button>
+                        </li>
 
-                    <li>
-                        <button
-                            class="dropdown-item thumbnail-control rotate-right"
-                            jsf:action="#{AktuelleSchritteForm.myPlugin.rotateSelectionRight}"
-                            jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowSelection and AktuelleSchritteForm.myPlugin.allowRotation}"
-                            onclick="if (!confirm('#{msgs.wirklichAusfuehren}')) return false">
-                            <i class="btn fa fa-repeat margin-right-10"></i>
-                            <h:outputText value="#{msgs.plugin_intranda_step_imageQA_rotateRighteSelection}" />
-                        </button>
-                    </li>
+                        <!-- ROTATION LEFT -->
+                        <li>
+                            <button
+                                class="dropdown-item"
+                                jsf:action="#{AktuelleSchritteForm.myPlugin.rotateSelectionLeft}"
+                                jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowSelection and AktuelleSchritteForm.myPlugin.allowRotation}"
+                                onclick="if (!confirm('#{msgs.wirklichAusfuehren}')) return false">
+                                <i class="fa fa-undo imageqa-thumb-massbutton"></i>
+                                <span>
+                                    <h:outputText value="#{msgs.plugin_intranda_step_imageQA_rotateLefteSelection}" />
+                                </span>
+                            </button>
+                        </li>
 
-                    <li>
-                        <button
-                            class="dropdown-item thumbnail-control download"
-                            jsf:action="#{AktuelleSchritteForm.myPlugin.downloadSelectedImages}"
-                            jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowSelection and AktuelleSchritteForm.myPlugin.allowDownload}"
-                            onclick="if (!confirm('#{msgs.wirklichAusfuehren}')) return false">
-                            <i class="btn fa fa-download margin-right-10"></i>
-                            <h:outputText value="#{msgs.plugin_intranda_step_imageQA_downloadSelectedImages}" />
-                        </button>
-                    </li>
+                        <!-- ROTATION RIGHT -->
+                        <li>
+                            <button
+                                class="dropdown-item"
+                                jsf:action="#{AktuelleSchritteForm.myPlugin.rotateSelectionRight}"
+                                jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowSelection and AktuelleSchritteForm.myPlugin.allowRotation}"
+                                onclick="if (!confirm('#{msgs.wirklichAusfuehren}')) return false">
+                                <i class="fa fa-repeat imageqa-thumb-massbutton"></i>
+                                <span>
+                                    <h:outputText value="#{msgs.plugin_intranda_step_imageQA_rotateRighteSelection}" />
+                                </span>
+                            </button>
+                        </li>
 
-                    <li>
-                        <button
-                            class="dropdown-item thumbnail-control download-pdf"
-                            jsf:action="#{AktuelleSchritteForm.myPlugin.downloadSelectedImagesAsPdf}"
-                            jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowSelection and AktuelleSchritteForm.myPlugin.allowDownloadAsPdf}"
-                            onclick="if (!confirm('#{msgs.wirklichAusfuehren}')) return false">
-                            <i class="btn fa fa-file-pdf-o margin-right-10"></i>
-                            <h:outputText value="#{msgs.plugin_intranda_step_imageQA_downloadSelectedImagesAsPdf}" />
-                        </button>
-                    </li>
+                        <!-- DOWNLOAD IMAGES -->
+                        <li>
+                            <button
+                                class="dropdown-item"
+                                jsf:action="#{AktuelleSchritteForm.myPlugin.downloadSelectedImages}"
+                                jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowSelection and AktuelleSchritteForm.myPlugin.allowDownload}"
+                                onclick="if (!confirm('#{msgs.wirklichAusfuehren}')) return false">
+                                <i class="fa fa-download imageqa-thumb-massbutton"></i>
+                                <span>
+                                    <h:outputText value="#{msgs.plugin_intranda_step_imageQA_downloadSelectedImages}" />
+                                </span>
+                            </button>
+                        </li>
 
-                </ul>
-            </h:panelGroup>
+                        <!-- DOWNLOAD AS PDF -->
+                        <li>
+                            <button
+                                class="dropdown-item"
+                                jsf:action="#{AktuelleSchritteForm.myPlugin.downloadSelectedImagesAsPdf}"
+                                jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowSelection and AktuelleSchritteForm.myPlugin.allowDownloadAsPdf}"
+                                onclick="if (!confirm('#{msgs.wirklichAusfuehren}')) return false">
+                                <i class="fa fa-file-pdf-o imageqa-thumb-massbutton"></i>
+                                <span>
+                                    <h:outputText
+                                        value="#{msgs.plugin_intranda_step_imageQA_downloadSelectedImagesAsPdf}" />
+                                </span>
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!-- // MASS PROCESS BUTTONS -->
 
         </div>
     </composite:implementation>

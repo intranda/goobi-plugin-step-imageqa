@@ -32,11 +32,11 @@
     <composite:implementation>
         <div id="image-control-wrapper">
             <nav id="viewer_controls_nav">
-                <ul style="margin-top: 1px;">
+                <ul>
 
                     <li>
                         <span
-                            class="btn font-size-s"
+                            class="btn btn-blank me-1"
                             title="#{msg.rotateLeft}"
                             onclick="viewImage.controls.rotateLeft();">
                             <i class="fa fa-undo"></i>
@@ -44,32 +44,31 @@
                     </li>
                     <li>
                         <span
-                            class="btn font-size-s"
+                            class="btn btn-blank me-3"
                             title="#{msg.rotateRight}"
                             onclick="viewImage.controls.rotateRight();">
                             <i class="fa fa-repeat"></i>
                         </span>
                     </li>
-
                     <li>
-                    	<button 
-                    		class="btn font-size-s margin-left-10" 
-                    		title="#{msgs.imageFullscreen}"
-							jsf:action="ImageQAPlugin_JSFullscreen" 
-							jsf:rendered="#{AktuelleSchritteForm.myPlugin.useJSFullscreen}">
-							<i class="fa fa-arrows-alt"></i>
-						</button>
                         <button
-                            class="btn font-size-s margin-left-10"
+                            class="btn btn-blank me-1"
                             title="#{msgs.imageFullscreen}"
                             jsf:action="ImageQAPlugin_Fullscreen"
                             jsf:rendered="#{! AktuelleSchritteForm.myPlugin.useJSFullscreen}">
                             <i class="fa fa-arrows-alt"></i>
                         </button>
+                    	<button 
+                    		class="btn btn-blank me-1" 
+                    		title="#{msgs.imageFullscreen}"
+							jsf:action="ImageQAPlugin_JSFullscreen" 
+							jsf:rendered="#{AktuelleSchritteForm.myPlugin.useJSFullscreen}">
+							<i class="fa fa-arrows-alt"></i>
+						</button>
                     </li>
                     <li>
                         <button
-                            class="btn font-size-s"
+                            class="btn btn-blank me-1"
                             jsf:rendered="#{AktuelleSchritteForm.myPlugin.displayOcrButton}"
                             title="Show OCR-result"
                             jsf:action="#{AktuelleSchritteForm.myPlugin.toggleOCR()}">
@@ -78,7 +77,7 @@
                     </li>
                     <li>
                         <span
-                            class="btn font-size-s margin-right-10"
+                            class="btn btn-blank me-1"
                             title="#{msg.resetImage}"
                             onclick="viewImage.controls.reset(true);">
                             <i class="fa fa-refresh"></i>
