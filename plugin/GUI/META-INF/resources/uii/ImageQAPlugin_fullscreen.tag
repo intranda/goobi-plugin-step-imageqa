@@ -58,7 +58,7 @@ this.currentImage = {};
 this.infoJsonCache = {};
 
 this.on("mount", () => {
-	console.log(this.opts);
+	console.log("mounting fullscreen", this.opts);
 	this.useTiles = this.opts.useTiles;
 	this.imageSizes = this.opts.imageSizes;
 	this.tileSizes = this.opts.tileSizes;
@@ -122,6 +122,7 @@ jumpToPage(e) {
 	this.update();
 	this.loadCurrentImage();
 }
+
 
 pagenumerInputKeyup(e) {
 	if(e.key == "Enter") {

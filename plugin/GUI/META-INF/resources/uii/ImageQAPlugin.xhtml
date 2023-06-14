@@ -952,7 +952,10 @@
 		
 			function copyValue(element, e) {
 		    	console.log(element.id);
-		    	if (element.id =='qaform:first:txtMoveTo2') {
+		    	console.log("data attr ", element.dataset.input);
+		    	if(element.dataset.input) {
+		    		document.querySelectorAll("[data-input='"+element.dataset.input+"']").forEach(input => input.value = element.value ); 
+		    	} else if (element.id =='qaform:first:txtMoveTo2') {
 		        	document.getElementById('qaform:second:txtMoveTo2').value = element.value;
 		    	} else if (element.id =='qaform:second:txtMoveTo2'){
 		        	document.getElementById('qaform:first:txtMoveTo2').value = element.value;

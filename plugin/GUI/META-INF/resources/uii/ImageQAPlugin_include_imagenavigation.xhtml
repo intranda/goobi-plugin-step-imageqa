@@ -58,7 +58,7 @@
                         document.getElementById(this.id).nextSibling.select();" /> 
                     <!-- JUMP TO PAGE -->
                     <x:inputText value="#{AktuelleSchritteForm.myPlugin.imageMoveTo}" style="display:none;font-size:9px;width:30px"
-                        required="true" id="txtImageMoveTo2"
+                        required="true" id="txtImageMoveTo2" pt:data-input="imageMoveTo"
                         onblur="document.getElementById(this.id).style.display='none';document.getElementById(this.id).previousSibling.style.display='inline';"
                         onkeypress="copyValue(this,event);" />
                     <x:commandButton action="#{NavigationForm.Reload}" value="go" style="display:none" />

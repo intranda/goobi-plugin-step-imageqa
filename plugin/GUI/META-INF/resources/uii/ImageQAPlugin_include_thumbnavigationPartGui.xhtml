@@ -105,7 +105,7 @@
                     document.getElementById(this.id).nextSibling.focus();
                     document.getElementById(this.id).nextSibling.select();" />
                     <!-- Seite direkt anspringen -->
-                    <x:inputText value="#{AktuelleSchritteForm.myPlugin.txtMoveTo}" style="display:none;font-size:9px;width:30px" required="true" id="txtMoveTo2" onblur="document.getElementById(this.id).style.display='none';document.getElementById(this.id).previousSibling.style.display='inline';" onkeypress="copyValue(this,event);" />
+                    <x:inputText value="#{AktuelleSchritteForm.myPlugin.txtMoveTo}" style="display:none;font-size:9px;width:30px" required="true" pt:data-input="thumbsMoveTo" id="txtMoveTo2" onblur="document.getElementById(this.id).style.display='none';document.getElementById(this.id).previousSibling.style.display='inline';" onkeypress="copyValue(this,event);" />
                     <x:commandButton action="#{NavigationForm.Reload}" value="go" style="display:none" id="cmdMoveTo" />
                 </div>
     
