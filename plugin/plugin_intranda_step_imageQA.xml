@@ -56,7 +56,9 @@
         <allowDeletion>false</allowDeletion>
         <deletion command="/opt/digiverso/goobi/scripts/deleteImage.sh|IMAGE_FOLDER|IMAGE_FILE" />
         <!-- allow rotation of images -->
-        <allowRotation>false</allowRotation>
+        <!-- OPTIONAL attribute @persistentRotationAboveBigImage is used to configure the behaviors of the rotation buttons above the big image, DEFAULT false. -->
+        <!-- If set true and allowRotation is also true, then a click on a rotation button above the big image will also result in a rotation of the actual image file. -->
+        <allowRotation persistentRotationAboveBigImage="false">false</allowRotation>
         <rotationCommands>
             <left command="/usr/bin/mogrify|-rotate|-90|IMAGE_FILE" />
             <right command="/usr/bin/mogrify|-rotate|90|IMAGE_FILE" />
@@ -102,6 +104,7 @@
         <allowDeletion>false</allowDeletion>
         <deletion command="/opt/digiverso/goobi/scripts/deleteImage.sh|IMAGE_FOLDER|IMAGE_FILE" />
         <!-- allow rotation of images -->
+        <!-- Without setting the attribute @persistentRotationAboveBigImage, its default value false will be used. -->
         <allowRotation>false</allowRotation>
         <rotationCommands>
             <left command="/usr/bin/mogrify|-rotate|-90|IMAGE_FILE" />
