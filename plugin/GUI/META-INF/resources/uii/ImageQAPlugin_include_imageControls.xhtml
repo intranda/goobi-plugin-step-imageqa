@@ -38,17 +38,33 @@
                         <span
                             class="btn btn-blank me-1"
                             title="#{msg.rotateLeft}"
+                            jsf:rendered="#{! AktuelleSchritteForm.myPlugin.allowPersistentRotation}"
                             onclick="viewImage.controls.rotateLeft();">
                             <i class="fa fa-undo"></i>
                         </span>
+                        <button
+                            class="btn btn-blank me-1"
+                            title="#{msg.rotateLeft}"
+                            jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowPersistentRotation}"
+                            jsf:action="#{AktuelleSchritteForm.myPlugin.rotateCurrentImageToLeft}">
+                            <i class="fa fa-undo"></i>
+                        </button>
                     </li>
                     <li>
                         <span
                             class="btn btn-blank me-3"
                             title="#{msg.rotateRight}"
+                            jsf:rendered="#{! AktuelleSchritteForm.myPlugin.allowPersistentRotation}"
                             onclick="viewImage.controls.rotateRight();">
                             <i class="fa fa-repeat"></i>
                         </span>
+                        <button
+                            class="btn btn-blank me-3"
+                            title="#{msg.rotateRight}"
+                            jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowPersistentRotation}"
+                            jsf:action="#{AktuelleSchritteForm.myPlugin.rotateCurrentImageToRight}">
+                            <i class="fa fa-repeat"></i>
+                        </button>
                     </li>
                     <li>
                         <button

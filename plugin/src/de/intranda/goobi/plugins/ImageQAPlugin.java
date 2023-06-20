@@ -135,6 +135,8 @@ public class ImageQAPlugin implements IStepPlugin {
     private List<String> deletionCommand = null;
     boolean askForConfirmation = true;
 
+    private boolean persistentRotationAboveBigImage = false;
+
     private String guiType;
 
     private int pageNo = 0;
@@ -316,6 +318,7 @@ public class ImageQAPlugin implements IStepPlugin {
         allowDeletion = myconfig.getBoolean("allowDeletion", false);
         allowFlipping = myconfig.getBoolean("allowFlipping", false);
         allowRotation = myconfig.getBoolean("allowRotation", false);
+        persistentRotationAboveBigImage = myconfig.getBoolean("allowRotation/@persistentRotationAboveBigImage", false);
         allowRenaming = myconfig.getBoolean("allowRenaming", false);
         allowSelection = myconfig.getBoolean("allowSelection", false);
         allowSelectionPage = myconfig.getBoolean("allowSelectionPage", false);
@@ -1270,6 +1273,21 @@ public class ImageQAPlugin implements IStepPlugin {
         getCommentPropertyHelper().setComment(this.imageFolderName, getImage().getImageName(), comment);
     }
 
-    // =========================== Use ImageCommentPropertyHelper To Save Comments =========================== //
+    // ========================== // Use ImageCommentPropertyHelper To Save Comments ========================== //
+
+    // ============================== Handle Persistent Rotation Above Big Image ============================== //
+    public void rotateCurrentImageToLeft() {
+        rotateLeft(getImage());
+    }
+
+    public void rotateCurrentImageToRight() {
+        rotateRight(getImage());
+    }
+
+    public boolean isAllowPersistentRotation() {
+        return allowRotation && persistentRotationAboveBigImage;
+    }
+
+    // ============================= // Handle Persistent Rotation Above Big Image ============================= //
 
 }
