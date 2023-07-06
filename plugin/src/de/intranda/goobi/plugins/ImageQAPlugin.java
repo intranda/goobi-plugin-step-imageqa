@@ -883,14 +883,30 @@ public class ImageQAPlugin implements IStepPlugin {
         //
     }
 
-    public String renameImages(SelectableImage myImage) {
+    //    public String renameImages(SelectableImage myImage) {
+    //        // check the list of selected images, if it is not empty, then rename only selected images
+    //        List<SelectableImage> selectedImages = allImages.stream().filter(SelectableImage::isSelected).collect(Collectors.toList());
+    //
+    //        return selectedImages.size() > 0 ? renameSelectedImages(selectedImages, myImage) : renameImagesToEnd(myImage);
+    //    }
+    //
+    //    public String renameSelectedImages(List<SelectableImage> selectedImages, SelectableImage myImage) {
+    //        Iterator<SelectableImage> iterator = selectedImages.listIterator();
+    //
+    //        Map<Path, Path> renamingMap = prepareRenamingMap(iterator, myImage);
+    //
+    //        renameImageFilesOnDisk(renamingMap);
+    //
+    //        return "";
+    //    }
 
+    public String renameImages(SelectableImage myImage) {
         log.debug("Dateien werden jetzt umbenannt auf der Basis von: " + myImage.getNameParts());
 
         Iterator<SelectableImage> iterator = getAllImages().listIterator();
 
         // rename SelectableImage objects, prepare renamingMap
-        Map<Path, Path> renamingMap = prepareRenamingMap(iterator, myImage);
+        Map<Path, Path> renamingMap = prepareRenamingMap(myImage);
 
         // rename image files on the disk
         renameImageFilesOnDisk(renamingMap);
@@ -908,7 +924,17 @@ public class ImageQAPlugin implements IStepPlugin {
         return "";
     }
 
-    private Map<Path, Path> prepareRenamingMap(Iterator<SelectableImage> iterator, SelectableImage myImage) {
+    private Map<Path, Path> prepareRenamingMap(SelectableImage myImage) {
+        List<SelectableImage> images = allImages.stream().filter(SelectableImage::isSelected).collect(Collectors.toList());
+        boolean renameSelectedOnly = images.size() > 0;
+
+        Iterator<SelectableImage> iterator = renameSelectedOnly ? images.listIterator() : allImages.listIterator();
+
+        return renameSelectedOnly ? prepareRenamingMapForSelected(iterator, myImage) : prepareRenamingMapForAll(iterator, myImage);
+    }
+
+    private Map<Path, Path> prepareRenamingMapForAll(Iterator<SelectableImage> iterator, SelectableImage myImage) {
+        log.debug("preparing renamingMap for all");
         int index = getAllImages().indexOf(myImage);
         int pageCounter = 0;
         String myCombinedName = myImage.getCombinedName();
@@ -918,25 +944,61 @@ public class ImageQAPlugin implements IStepPlugin {
         while (iterator.hasNext()) {
             SelectableImage currentImage = iterator.next();
             int currentImageIndex = getAllImages().indexOf(currentImage);
-            String suffix = currentImage.getImageName().substring(currentImage.getImageName().lastIndexOf("."));
             String currentCombinedName = currentImage.getCombinedName();
 
             if (currentImageIndex >= index && (myPreviousCombinedName.equals(currentCombinedName) || myCombinedName.equals(currentCombinedName)
                     || currentImage.isNotYetNamed())) {
                 imageNameFound = true;
                 currentImage.setNameParts(myImage.getNameParts());
-                String currentPageCounter = PAGENUMBERFORMAT.format(++pageCounter);
-                currentImage.setPageCounterLabel(currentPageCounter);
-                String newFilename = currentImage.getNamePrefix() + "_" + myCombinedName + currentPageCounter + suffix;
-                Path imageFile = Paths.get(imageFolderName, currentImage.getImageName());
-                Path newImageFile = Paths.get(imageFolderName, newFilename);
-                renamingMap.put(imageFile, newImageFile);
-                currentImage.setImageName(newFilename);
+                // add currentImage to renamingMap
+                addImageToRenamingMap(renamingMap, currentImage, myCombinedName, ++pageCounter);
+
             } else if (myCombinedName.equals(currentCombinedName)) {
                 pageCounter++;
             } else if (imageNameFound) {
                 break;
             }
+        }
+
+        return renamingMap;
+    }
+
+    private void addImageToRenamingMap(Map<Path, Path> renamingMap, SelectableImage currentImage, String newCombinedName, int pageCounter) {
+        log.debug("adding image to the renamingMap");
+        String suffix = currentImage.getImageName().substring(currentImage.getImageName().lastIndexOf("."));
+        String currentPageCounter = PAGENUMBERFORMAT.format(pageCounter);
+        currentImage.setPageCounterLabel(currentPageCounter);
+        String newFilename = currentImage.getNamePrefix() + "_" + newCombinedName + currentPageCounter + suffix;
+        Path imageFile = Paths.get(imageFolderName, currentImage.getImageName());
+        Path newImageFile = Paths.get(imageFolderName, newFilename);
+        renamingMap.put(imageFile, newImageFile);
+        currentImage.setImageName(newFilename);
+    }
+
+    private Map<Path, Path> prepareRenamingMapForSelected(Iterator<SelectableImage> iterator, SelectableImage myImage) {
+        log.debug("preparing the renamingMap for selected images");
+        int pageCounter = 0;
+        String myCombinedName = myImage.getCombinedName();
+        Map<Path, Path> renamingMap = new LinkedHashMap<>();
+        Iterator<SelectableImage> allImagesIterator = allImages.listIterator();
+        while (iterator.hasNext()) {
+            SelectableImage selectedImage = iterator.next();
+            while (allImagesIterator.hasNext()) {
+                SelectableImage currentImage = allImagesIterator.next();
+                // check if currentImage is selected
+                if (currentImage == selectedImage) {
+                    // update name of selectedImage
+                    break;
+                }
+
+                // currentImage is not selectedImage, check if it meets the pattern
+                String currentCombinedName = currentImage.getCombinedName();
+                if (currentCombinedName.equals(myCombinedName)) {
+                    ++pageCounter;
+                }
+            }
+            // add selectedImage to renamingMap
+            addImageToRenamingMap(renamingMap, selectedImage, myCombinedName, ++pageCounter);
         }
 
         return renamingMap;
