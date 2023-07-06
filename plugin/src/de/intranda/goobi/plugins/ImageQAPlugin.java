@@ -920,7 +920,6 @@ public class ImageQAPlugin implements IStepPlugin {
         int pageCounter = 0;
         String newCombinedName = myImage.getCombinedName();
         String oldCombinedName = myImage.getCombinedNameFromFilename();
-        boolean imageNameFound = false;
 
         Iterator<SelectableImage> iterator = allImages.listIterator();
         while (iterator.hasNext()) {
@@ -934,22 +933,22 @@ public class ImageQAPlugin implements IStepPlugin {
             // A A A B B B C C C 
             // if we want to set all A to B, then all items containing B will also be updated, since they contain the new combined name
             // if we want to set all A to D, then only the items containing A will be updated, since the other items contain neither the old nor the new combined name
-            // if we want to set all A to C, then all items that contain previously C will NOT be updated due to the imageFound check below
+            // if we want to set all A to C, then all items that contain previously C will also be updated
             boolean combinedNamesCondition = indexCondition && checkCombinedNames(currentCombinedName, newCombinedName, oldCombinedName);
             // when current image is not named yet
             boolean unnamedCondition = indexCondition && currentImage.isNotYetNamed();
             // rename current image if either condition applies
             boolean renameCurrentImage = combinedNamesCondition || unnamedCondition;
             if (renameCurrentImage) {
-                imageNameFound = true;
                 currentImage.setNameParts(myImage.getNameParts());
                 // add currentImage to renamingMap
                 addImageToRenamingMap(renamingMap, currentImage, newCombinedName, ++pageCounter);
-
-            } else if (newCombinedName.equals(currentCombinedName)) {
-                pageCounter++;
-            } else if (imageNameFound) {
-                break;
+            } else if ( newCombinedName.equals(currentCombinedName)) {
+                ++pageCounter;
+                // update names of images that meet the pattern and come after the clicked one
+                if (indexCondition) {
+                    addImageToRenamingMap(renamingMap, currentImage, newCombinedName, pageCounter);
+                }
             }
         }
 
@@ -974,7 +973,7 @@ public class ImageQAPlugin implements IStepPlugin {
     private Map<Path, Path> prepareRenamingMapForSelected(List<SelectableImage> selectedImages, SelectableImage myImage) {
         log.debug("preparing the renamingMap for selected images");
         int pageCounter = 0;
-        String myCombinedName = myImage.getCombinedName();
+        String newCombinedName = myImage.getCombinedName();
         Map<Path, Path> renamingMap = new LinkedHashMap<>();
         Iterator<SelectableImage> selectedIterator = selectedImages.listIterator();
         Iterator<SelectableImage> allImagesIterator = allImages.listIterator();
@@ -985,15 +984,15 @@ public class ImageQAPlugin implements IStepPlugin {
                 SelectableImage currentImage = allImagesIterator.next();
                 if (currentImage == selectedImage) {
                     // add selectedImage to renamingMap
-                    addImageToRenamingMap(renamingMap, selectedImage, myCombinedName, ++pageCounter);
+                    addImageToRenamingMap(renamingMap, selectedImage, newCombinedName, ++pageCounter);
                     // break out to continue with the next selected image
                     break;
                 }
 
                 // currentImage is not selectedImage, check if it meets the pattern, and if so update its name
                 String currentCombinedName = currentImage.getCombinedName();
-                if (currentCombinedName.equals(myCombinedName)) {
-                    addImageToRenamingMap(renamingMap, currentImage, myCombinedName, ++pageCounter);
+                if (currentCombinedName.equals(newCombinedName)) {
+                    addImageToRenamingMap(renamingMap, currentImage, newCombinedName, ++pageCounter);
                 }
             }
         }
@@ -1002,8 +1001,8 @@ public class ImageQAPlugin implements IStepPlugin {
         while (allImagesIterator.hasNext()) {
             SelectableImage currentImage = allImagesIterator.next();
             String currentCombinedName = currentImage.getCombinedName();
-            if (currentCombinedName.equals(myCombinedName)) {
-                addImageToRenamingMap(renamingMap, currentImage, myCombinedName, ++pageCounter);
+            if (currentCombinedName.equals(newCombinedName)) {
+                addImageToRenamingMap(renamingMap, currentImage, newCombinedName, ++pageCounter);
             }
         }
 
