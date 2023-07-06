@@ -981,24 +981,35 @@ public class ImageQAPlugin implements IStepPlugin {
         String myCombinedName = myImage.getCombinedName();
         Map<Path, Path> renamingMap = new LinkedHashMap<>();
         Iterator<SelectableImage> allImagesIterator = allImages.listIterator();
+
         while (iterator.hasNext()) {
             SelectableImage selectedImage = iterator.next();
             while (allImagesIterator.hasNext()) {
                 SelectableImage currentImage = allImagesIterator.next();
                 // check if currentImage is selected
                 if (currentImage == selectedImage) {
-                    // update name of selectedImage
+                    // break out to update name of selectedImage
                     break;
                 }
 
-                // currentImage is not selectedImage, check if it meets the pattern
+                // currentImage is not selectedImage, check if it meets the pattern, and if so update its name
                 String currentCombinedName = currentImage.getCombinedName();
                 if (currentCombinedName.equals(myCombinedName)) {
-                    ++pageCounter;
+                    addImageToRenamingMap(renamingMap, currentImage, myCombinedName, ++pageCounter);
                 }
             }
+
             // add selectedImage to renamingMap
             addImageToRenamingMap(renamingMap, selectedImage, myCombinedName, ++pageCounter);
+        }
+
+        // update names of all images that meet the pattern
+        while (allImagesIterator.hasNext()) {
+            SelectableImage currentImage = allImagesIterator.next();
+            String currentCombinedName = currentImage.getCombinedName();
+            if (currentCombinedName.equals(myCombinedName)) {
+                addImageToRenamingMap(renamingMap, currentImage, myCombinedName, ++pageCounter);
+            }
         }
 
         return renamingMap;
