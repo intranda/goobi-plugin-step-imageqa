@@ -883,27 +883,8 @@ public class ImageQAPlugin implements IStepPlugin {
         //
     }
 
-    //    public String renameImages(SelectableImage myImage) {
-    //        // check the list of selected images, if it is not empty, then rename only selected images
-    //        List<SelectableImage> selectedImages = allImages.stream().filter(SelectableImage::isSelected).collect(Collectors.toList());
-    //
-    //        return selectedImages.size() > 0 ? renameSelectedImages(selectedImages, myImage) : renameImagesToEnd(myImage);
-    //    }
-    //
-    //    public String renameSelectedImages(List<SelectableImage> selectedImages, SelectableImage myImage) {
-    //        Iterator<SelectableImage> iterator = selectedImages.listIterator();
-    //
-    //        Map<Path, Path> renamingMap = prepareRenamingMap(iterator, myImage);
-    //
-    //        renameImageFilesOnDisk(renamingMap);
-    //
-    //        return "";
-    //    }
-
     public String renameImages(SelectableImage myImage) {
         log.debug("Dateien werden jetzt umbenannt auf der Basis von: " + myImage.getNameParts());
-
-        Iterator<SelectableImage> iterator = getAllImages().listIterator();
 
         // rename SelectableImage objects, prepare renamingMap
         Map<Path, Path> renamingMap = prepareRenamingMap(myImage);
@@ -930,11 +911,11 @@ public class ImageQAPlugin implements IStepPlugin {
 
         Iterator<SelectableImage> iterator = renameSelectedOnly ? images.listIterator() : allImages.listIterator();
 
-        return renameSelectedOnly ? prepareRenamingMapForSelected(iterator, myImage) : prepareRenamingMapForAll(iterator, myImage);
+        return renameSelectedOnly ? prepareRenamingMapForSelected(iterator, myImage) : prepareRenamingMapNoneSelected(iterator, myImage);
     }
 
-    private Map<Path, Path> prepareRenamingMapForAll(Iterator<SelectableImage> iterator, SelectableImage myImage) {
-        log.debug("preparing renamingMap for all");
+    private Map<Path, Path> prepareRenamingMapNoneSelected(Iterator<SelectableImage> iterator, SelectableImage myImage) {
+        log.debug("preparing renamingMap where none is selected");
         int index = getAllImages().indexOf(myImage);
         int pageCounter = 0;
         String myCombinedName = myImage.getCombinedName();
@@ -964,7 +945,6 @@ public class ImageQAPlugin implements IStepPlugin {
     }
 
     private void addImageToRenamingMap(Map<Path, Path> renamingMap, SelectableImage currentImage, String newCombinedName, int pageCounter) {
-        log.debug("adding image to the renamingMap");
         String suffix = currentImage.getImageName().substring(currentImage.getImageName().lastIndexOf("."));
         String currentPageCounter = PAGENUMBERFORMAT.format(pageCounter);
         currentImage.setPageCounterLabel(currentPageCounter);
@@ -986,7 +966,6 @@ public class ImageQAPlugin implements IStepPlugin {
             SelectableImage selectedImage = iterator.next();
             while (allImagesIterator.hasNext()) {
                 SelectableImage currentImage = allImagesIterator.next();
-                // check if currentImage is selected
                 if (currentImage == selectedImage) {
                     // break out to update name of selectedImage
                     break;
