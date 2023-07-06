@@ -883,16 +883,36 @@ public class ImageQAPlugin implements IStepPlugin {
         //
     }
 
-    public String renameImages(SelectableImage myimage) {
+    public String renameImages(SelectableImage myImage) {
 
-        log.debug("Dateien werden jetzt umbenannt auf der Basis von: " + myimage.getNameParts());
+        log.debug("Dateien werden jetzt umbenannt auf der Basis von: " + myImage.getNameParts());
 
-        int index = getAllImages().indexOf(myimage);
         Iterator<SelectableImage> iterator = getAllImages().listIterator();
 
+        // rename SelectableImage objects, prepare renamingMap
+        Map<Path, Path> renamingMap = prepareRenamingMap(iterator, myImage);
+
+        // rename image files on the disk
+        renameImageFilesOnDisk(renamingMap);
+
+        if (!renamingMap.isEmpty()) {
+            Helper.setFehlerMeldung("Error renaming files - file " + renamingMap.keySet().iterator().next() + " could not be renamed to "
+                    + renamingMap.get(renamingMap.keySet().iterator().next()));
+        }
+
+        allImages = new ArrayList<>();
+
+        initialize(this.step, returnPath);
+
+        setImageIndex(imageIndex);
+        return "";
+    }
+
+    private Map<Path, Path> prepareRenamingMap(Iterator<SelectableImage> iterator, SelectableImage myImage) {
+        int index = getAllImages().indexOf(myImage);
         int pageCounter = 0;
-        String myCombinedName = myimage.getCombinedName();
-        String myPreviousCombinedName = myimage.getCombinedNameFromFilename();
+        String myCombinedName = myImage.getCombinedName();
+        String myPreviousCombinedName = myImage.getCombinedNameFromFilename();
         boolean imageNameFound = false;
         Map<Path, Path> renamingMap = new LinkedHashMap<>();
         while (iterator.hasNext()) {
@@ -904,7 +924,7 @@ public class ImageQAPlugin implements IStepPlugin {
             if (currentImageIndex >= index && (myPreviousCombinedName.equals(currentCombinedName) || myCombinedName.equals(currentCombinedName)
                     || currentImage.isNotYetNamed())) {
                 imageNameFound = true;
-                currentImage.setNameParts(myimage.getNameParts());
+                currentImage.setNameParts(myImage.getNameParts());
                 String currentPageCounter = PAGENUMBERFORMAT.format(++pageCounter);
                 currentImage.setPageCounterLabel(currentPageCounter);
                 String newFilename = currentImage.getNamePrefix() + "_" + myCombinedName + currentPageCounter + suffix;
@@ -919,6 +939,10 @@ public class ImageQAPlugin implements IStepPlugin {
             }
         }
 
+        return renamingMap;
+    }
+
+    private void renameImageFilesOnDisk(Map<Path, Path> renamingMap) {
         boolean renamed = true;
         while (renamed && !renamingMap.isEmpty()) {
             List<Path> toBeRenamedList = new ArrayList<>(renamingMap.keySet());
@@ -942,17 +966,6 @@ public class ImageQAPlugin implements IStepPlugin {
                 }
             }
         }
-        if (!renamingMap.isEmpty()) {
-            Helper.setFehlerMeldung("Error renaming files - file " + renamingMap.keySet().iterator().next() + " could not be renamed to "
-                    + renamingMap.get(renamingMap.keySet().iterator().next()));
-        }
-
-        allImages = new ArrayList<>();
-
-        initialize(this.step, returnPath);
-
-        setImageIndex(imageIndex);
-        return "";
     }
 
     public void deleteImage(Image myimage) {
