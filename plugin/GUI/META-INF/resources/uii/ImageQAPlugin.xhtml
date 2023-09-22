@@ -265,6 +265,7 @@
 
                                                     <!-- THUMBNAIL DISPLAY -->
                                                     <div class="thumb text-center">
+                                                        
                                                         <button
                                                             jsf:id="imageClick"
                                                             class="border-0 btn"
@@ -287,10 +288,26 @@
                                                                     class="thumbnails__thumb-placeholder"
                                                                     src="#{HelperForm.servletPathWithHostAsUrl}/uii/template/img/goobi_3d_object_placeholder.png" />
                                                             </ui:fragment>
+                                                            
+                                                            <!-- VIDEO -->
+                                                            <ui:fragment
+                                                                rendered="#{image.type == 'video'}">
+                                                                <img
+                                                                    class="thumbnails__thumb-placeholder"
+                                                                    src="#{HelperForm.servletPathWithHostAsUrl}/uii/template/img/goobi_placeholder_video.png" />
+                                                            </ui:fragment>
+
+                                                            <!-- AUDIO -->
+                                                            <ui:fragment
+                                                                rendered="#{image.type == 'audio'}">
+                                                                <img
+                                                                    class="thumbnails__thumb-placeholder"
+                                                                    src="#{HelperForm.servletPathWithHostAsUrl}/uii/template/img/goobi_placeholder_audio.png" />
+                                                            </ui:fragment>
 
                                                             <!-- PLACEHOLDER -->
                                                             <ui:fragment
-                                                                rendered="#{image.type != 'image' and image.type != 'object' and  image.type != 'x3dom'}">
+                                                                rendered="#{image.type != 'image' and image.type != 'object' and image.type != 'x3dom' and image.type != 'video' and image.type != 'audio'}">
                                                                 <img
                                                                     class="thumbnails__thumb-placeholder"
                                                                     src="#{HelperForm.servletPathWithHostAsUrl}/uii/template/img/thumbnail-placeholder.png" />
