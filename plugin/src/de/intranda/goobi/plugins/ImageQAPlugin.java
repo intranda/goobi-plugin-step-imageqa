@@ -43,6 +43,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.stream.Collectors;
+import java.util.zip.Deflater;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -98,13 +99,13 @@ import ugh.dl.Fileformat;
 import ugh.dl.Metadata;
 import ugh.exceptions.PreferencesException;
 import ugh.exceptions.ReadException;
-import ugh.exceptions.WriteException;
 
 @Data
 @PluginImplementation
 @Log4j2
 public class ImageQAPlugin implements IStepPlugin {
 
+    private static final long serialVersionUID = 132745467429762012L;
     private static final DecimalFormat PAGENUMBERFORMAT = new DecimalFormat("0000");
     private static final Gson gson = new Gson();
 
@@ -215,7 +216,7 @@ public class ImageQAPlugin implements IStepPlugin {
         String imageFolder = null;
         try {
             imageFolder = step.getProzess().getConfiguredImageFolder(selectedImageFolder);
-        } catch (IOException  | SwapException | DAOException e) {
+        } catch (IOException | SwapException | DAOException e) {
             log.error(e);
         }
 
@@ -231,7 +232,7 @@ public class ImageQAPlugin implements IStepPlugin {
         String imageFolder = null;
         try {
             imageFolder = step.getProzess().getConfiguredImageFolder(selectedImageFolder);
-        } catch (IOException  | SwapException | DAOException e) {
+        } catch (IOException | SwapException | DAOException e) {
             log.error(e);
         }
         initImageList(config, imageFolder);
@@ -275,7 +276,7 @@ public class ImageQAPlugin implements IStepPlugin {
     }
 
     public boolean readPagesRTLFromXML()
-            throws ReadException, PreferencesException, WriteException, IOException, InterruptedException, SwapException, DAOException {
+            throws ReadException, PreferencesException, IOException, SwapException {
         org.goobi.beans.Process myProzess = this.getStep().getProzess();
 
         Fileformat gdzfile = myProzess.readMetadataFile();
@@ -294,11 +295,11 @@ public class ImageQAPlugin implements IStepPlugin {
 
             List<Metadata> lstMetadata = logicalTopstruct.getAllMetadata();
             for (Metadata md : lstMetadata) {
-                if (md.getType().getName().equals("_directionRTL")) {
+                if ("_directionRTL".equals(md.getType().getName())) {
                     try {
                         return Boolean.parseBoolean(md.getValue());
                     } catch (Exception e) {
-
+                        // do nothing
                     }
                 }
             }
@@ -438,7 +439,7 @@ public class ImageQAPlugin implements IStepPlugin {
      * 
      */
     public List<SelectableImage> getPaginatorList() {
-        if (displayMode.equals("part")) {
+        if ("part".equals(displayMode)) {
             return getPaginatorListForPartGUI();
         } else {
             List<SelectableImage> subList = null;
@@ -495,9 +496,7 @@ public class ImageQAPlugin implements IStepPlugin {
                     }
                 }));
             }
-            while (!oneImageFinished(createdFiles)) {
 
-            }
             log.debug("First image finished generation");
             return originalImageSize;
         }
@@ -516,19 +515,6 @@ public class ImageQAPlugin implements IStepPlugin {
             }
         }
         return true;
-    }
-
-    private boolean oneImageFinished(List<Future<Path>> createdFiles) {
-        for (Future<Path> future : createdFiles) {
-            try {
-                if (future.isDone() && future.get() != null) {
-                    return true;
-                }
-            } catch (InterruptedException | ExecutionException e) {
-                log.error(e);
-            }
-        }
-        return false;
     }
 
     private Path scaleToSize(ImageManager im, Dimension dim, String filename, boolean overwrite) throws IOException, ContentLibException {
@@ -634,7 +620,7 @@ public class ImageQAPlugin implements IStepPlugin {
         filename = FilenameUtils.removeExtension(filename);
         ocrText = "";
         ocrText = FilesystemHelper.getOcrFileContent(step.getProzess(), filename);
-        if (ocrText.equals("")) {
+        if ("".equals(ocrText)) {
             ocrExists = false;
         } else {
             ocrExists = true;
@@ -658,8 +644,8 @@ public class ImageQAPlugin implements IStepPlugin {
             FacesContext context = FacesContextHelper.getCurrentFacesContext();
             HttpSession session = (HttpSession) context.getExternalContext().getSession(false);
             String currentImageURL = context.getExternalContext().getRequestContextPath() + ConfigurationHelper.getTempImagesPath() + session.getId()
-            + "_" + image.getImageName() + "_large_" + ".jpg";
-            return currentImageURL.replaceAll("\\\\", "/");
+                    + "_" + image.getImageName() + "_large_" + ".jpg";
+            return currentImageURL.replace('\\', '/');
         }
     }
 
@@ -744,11 +730,9 @@ public class ImageQAPlugin implements IStepPlugin {
                 this.pageNo = getLastPageNumber();
                 getPaginatorList();
             }
-        } else {
-            if (this.pageNo != 0) {
-                this.pageNo = 0;
-                getPaginatorList();
-            }
+        } else if (this.pageNo != 0) {
+            this.pageNo = 0;
+            getPaginatorList();
         }
         displayMode = "";
         return "";
@@ -760,11 +744,9 @@ public class ImageQAPlugin implements IStepPlugin {
                 this.pageNo++;
                 getPaginatorList();
             }
-        } else {
-            if (!isFirstPage()) {
-                this.pageNo--;
-                getPaginatorList();
-            }
+        } else if (!isFirstPage()) {
+            this.pageNo--;
+            getPaginatorList();
         }
         displayMode = "";
         return "";
@@ -776,11 +758,9 @@ public class ImageQAPlugin implements IStepPlugin {
                 this.pageNo--;
                 getPaginatorList();
             }
-        } else {
-            if (!isLastPage()) {
-                this.pageNo++;
-                getPaginatorList();
-            }
+        } else if (!isLastPage()) {
+            this.pageNo++;
+            getPaginatorList();
         }
         displayMode = "";
         return "";
@@ -792,11 +772,9 @@ public class ImageQAPlugin implements IStepPlugin {
                 this.pageNo = 0;
                 getPaginatorList();
             }
-        } else {
-            if (this.pageNo != getLastPageNumber()) {
-                this.pageNo = getLastPageNumber();
-                getPaginatorList();
-            }
+        } else if (this.pageNo != getLastPageNumber()) {
+            this.pageNo = getLastPageNumber();
+            getPaginatorList();
         }
         displayMode = "";
         return "";
@@ -810,6 +788,7 @@ public class ImageQAPlugin implements IStepPlugin {
                 getPaginatorList();
             }
         } catch (NumberFormatException e) {
+            // do nothing
         }
     }
 
@@ -824,6 +803,7 @@ public class ImageQAPlugin implements IStepPlugin {
                 setImageIndex(pageNumber - 1);
             }
         } catch (NumberFormatException e) {
+            // do nothing
         }
     }
 
@@ -832,7 +812,7 @@ public class ImageQAPlugin implements IStepPlugin {
     }
 
     public int getLastPageNumber() {
-        if (displayMode.equals("part")) {
+        if ("part".equals(displayMode)) {
             return getLastPageNumberPartGUI();
         } else {
             int ret = this.allImages.size() / numberOfImagesInFullGUI;
@@ -907,7 +887,7 @@ public class ImageQAPlugin implements IStepPlugin {
 
     private Map<Path, Path> prepareRenamingMap(SelectableImage myImage) {
         List<SelectableImage> selectedImages = allImages.stream().filter(SelectableImage::isSelected).collect(Collectors.toList());
-        boolean renameSelectedOnly = selectedImages.size() > 0;
+        boolean renameSelectedOnly = !selectedImages.isEmpty();
 
         return renameSelectedOnly ? prepareRenamingMapForSelected(selectedImages, myImage) : prepareRenamingMapNoneSelected(myImage);
     }
@@ -925,12 +905,12 @@ public class ImageQAPlugin implements IStepPlugin {
         while (iterator.hasNext()) {
             SelectableImage currentImage = iterator.next();
             String currentCombinedName = currentImage.getCombinedName();
-            
+
             // only update names of images starting from the clicked one
             boolean indexCondition = allImages.indexOf(currentImage) >= index;
             // current combined name should be either equal to the new one or to the old one
             // for example, given the following list of combined names
-            // A A A B B B C C C 
+            // A A A B B B C C C
             // if we want to set all A to B, then all items containing B will also be updated, since they contain the new combined name
             // if we want to set all A to D, then only the items containing A will be updated, since the other items contain neither the old nor the new combined name
             // if we want to set all A to C, then all items that contain previously C will also be updated
@@ -943,7 +923,7 @@ public class ImageQAPlugin implements IStepPlugin {
                 currentImage.setNameParts(myImage.getNameParts());
                 // add currentImage to renamingMap
                 addImageToRenamingMap(renamingMap, currentImage, newCombinedName, ++pageCounter);
-            } else if ( newCombinedName.equals(currentCombinedName)) {
+            } else if (newCombinedName.equals(currentCombinedName)) {
                 ++pageCounter;
                 // update names of images that meet the pattern and come after the clicked one
                 if (indexCondition) {
@@ -1014,14 +994,11 @@ public class ImageQAPlugin implements IStepPlugin {
         while (renamed && !renamingMap.isEmpty()) {
             List<Path> toBeRenamedList = new ArrayList<>(renamingMap.keySet());
             Collections.reverse(toBeRenamedList);
-            Iterator<Path> iter = toBeRenamedList.iterator();
             renamed = false;
-            while (iter.hasNext()) {
-                Path currentFile = iter.next();
+            for (Path currentFile : toBeRenamedList) {
                 Path newFile = renamingMap.get(currentFile);
                 if (StorageProvider.getInstance().isFileExists(newFile) && !newFile.equals(currentFile)) {
                     // logger.error("Trying to rename " + currentFile.getName() + " to " +
-                    // break;
                 } else {
                     try {
                         StorageProvider.getInstance().move(currentFile, newFile);
@@ -1060,9 +1037,7 @@ public class ImageQAPlugin implements IStepPlugin {
     }
 
     public void deleteSelection() {
-        Iterator<SelectableImage> iterator = allImages.iterator();
-        while (iterator.hasNext()) {
-            SelectableImage nextImage = iterator.next();
+        for (SelectableImage nextImage : allImages) {
             if (nextImage.isSelected()) {
                 if (deletionCommand == null || deletionCommand.isEmpty()) {
                     deleteImageViaJava(nextImage);
@@ -1177,7 +1152,7 @@ public class ImageQAPlugin implements IStepPlugin {
     public void selectOrUnselectAllImagesOnCurrentPage(boolean value) {
         // Get the current number of images on a page
         int imagesOnPage;
-        if (this.displayMode.equals("part")) {
+        if ("part".equals(this.displayMode)) {
             imagesOnPage = this.numberOfImagesInPartGUI;
         } else {
             imagesOnPage = this.numberOfImagesInFullGUI;
@@ -1222,7 +1197,7 @@ public class ImageQAPlugin implements IStepPlugin {
             ec.setResponseHeader("Content-Disposition", "attachment; filename=" + step.getProzess().getTitel() + ".zip");
             OutputStream responseOutputStream = ec.getResponseOutputStream();
             ZipOutputStream out = new ZipOutputStream(responseOutputStream);
-
+            out.setLevel(Deflater.NO_COMPRESSION);
             for (SelectableImage im : allImages) {
                 if (im.isSelected()) {
 
@@ -1252,13 +1227,15 @@ public class ImageQAPlugin implements IStepPlugin {
 
         Path imagesPath = Paths.get(imageFolderName);
         // put all selected images into a URL
-        String imagesParameter = allImages.stream().filter(SelectableImage::isSelected).map(SelectableImage::getImageName).collect(Collectors.joining("$"));
-
+        String imagesParameter =
+                allImages.stream().filter(SelectableImage::isSelected).map(SelectableImage::getImageName).collect(Collectors.joining("$"));
 
         URI goobiContentServerUrl = UriBuilder.fromUri(new HelperForm().getServletPathWithHostAsUrl())
-                .path("api").path("process").path("image")
+                .path("api")
+                .path("process")
+                .path("image")
                 .path(Integer.toString(step.getProzess().getId()))
-                .path("media")        //dummy, replaced by images query param
+                .path("media") //dummy, replaced by images query param
                 .path("00000001.tif") //dummy, replaced by images query param
                 .path(step.getProzess().getTitel() + ".pdf")
                 .queryParam("imageSource", imagesPath.toUri())
