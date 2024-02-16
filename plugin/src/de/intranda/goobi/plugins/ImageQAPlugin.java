@@ -43,7 +43,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.stream.Collectors;
-import java.util.zip.Deflater;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -1197,7 +1196,6 @@ public class ImageQAPlugin implements IStepPlugin {
             ec.setResponseHeader("Content-Disposition", "attachment; filename=" + step.getProzess().getTitel() + ".zip");
             OutputStream responseOutputStream = ec.getResponseOutputStream();
             ZipOutputStream out = new ZipOutputStream(responseOutputStream);
-            out.setLevel(Deflater.NO_COMPRESSION);
             for (SelectableImage im : allImages) {
                 if (im.isSelected()) {
 
