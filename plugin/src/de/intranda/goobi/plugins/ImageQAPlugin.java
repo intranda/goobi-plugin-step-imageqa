@@ -33,11 +33,13 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -64,6 +66,7 @@ import org.apache.commons.configuration.reloading.FileChangedReloadingStrategy;
 import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
+import org.goobi.beans.ImageComment;
 import org.goobi.beans.Step;
 import org.goobi.production.enums.PluginGuiType;
 import org.goobi.production.enums.PluginType;
@@ -1363,7 +1366,12 @@ public class ImageQAPlugin implements IStepPlugin {
             return null;
         }
 
-        return getCommentPropertyHelper().getComment(this.imageFolderName, getImage().getImageName());
+        String onlyImageFolder = Paths.get(imageFolderName).getFileName().toString();
+        Optional<ImageComment> comment = getCommentPropertyHelper().getComment(onlyImageFolder, getImage().getImageName());
+        if (!comment.isPresent()) {
+            return null;
+        }
+        return comment.get().getComment();
     }
 
     public void setCommentPropertyForImage(String comment) {
@@ -1377,7 +1385,17 @@ public class ImageQAPlugin implements IStepPlugin {
         if (comment == null || (oldComment != null && comment.contentEquals(oldComment)) || (oldComment == null && comment.isEmpty())) {
             return;
         }
-        getCommentPropertyHelper().setComment(this.imageFolderName, getImage().getImageName(), comment);
+
+        String onlyImageFolder = Paths.get(imageFolderName).getFileName().toString();
+        ImageComment newComment = new ImageComment(
+                comment,
+                getImage().getImageName(),
+                onlyImageFolder,
+                new Date(),
+                Helper.getCurrentUser().getLogin(),
+                "",
+                ImageComment.ImageCommentLocation.PLUGIN_IMAGEQA);
+        getCommentPropertyHelper().setComment(imageFolderName, getImage().getImageName(), newComment);
     }
 
     // ========================== // Use ImageCommentPropertyHelper To Save Comments ========================== //
