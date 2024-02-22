@@ -1393,7 +1393,7 @@ public class ImageQAPlugin implements IStepPlugin {
                 onlyImageFolder,
                 new Date(),
                 Helper.getCurrentUser().getLogin(),
-                "",
+                step.getNormalizedTitle(),
                 ImageComment.ImageCommentLocation.PLUGIN_IMAGEQA);
         getCommentPropertyHelper().setComment(imageFolderName, getImage().getImageName(), newComment);
     }
