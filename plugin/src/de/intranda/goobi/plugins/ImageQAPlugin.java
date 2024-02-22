@@ -1394,7 +1394,7 @@ public class ImageQAPlugin implements IStepPlugin {
                 new Date(),
                 Helper.getCurrentUser().getNachVorname(),
                 step.getTitelLokalisiert(),
-                ImageComment.ImageCommentLocation.PLUGIN_IMAGEQA);
+                ImageComment.ImageCommentLocation.IMAGE_COMMENT_LOCATION_PLUGIN_IMAGEQA);
         getCommentPropertyHelper().setComment(newComment);
     }
 
