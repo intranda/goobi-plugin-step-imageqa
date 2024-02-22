@@ -1392,10 +1392,10 @@ public class ImageQAPlugin implements IStepPlugin {
                 getImage().getImageName(),
                 onlyImageFolder,
                 new Date(),
-                Helper.getCurrentUser().getLogin(),
-                step.getNormalizedTitle(),
+                Helper.getCurrentUser().getNachVorname(),
+                step.getTitelLokalisiert(),
                 ImageComment.ImageCommentLocation.PLUGIN_IMAGEQA);
-        getCommentPropertyHelper().setComment(imageFolderName, getImage().getImageName(), newComment);
+        getCommentPropertyHelper().setComment(newComment);
     }
 
     // ========================== // Use ImageCommentPropertyHelper To Save Comments ========================== //
