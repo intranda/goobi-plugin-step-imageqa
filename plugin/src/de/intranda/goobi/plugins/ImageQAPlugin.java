@@ -20,6 +20,7 @@ package de.intranda.goobi.plugins;
  */
 import java.awt.Dimension;
 import java.awt.image.RenderedImage;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -53,6 +54,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.core.UriBuilder;
 
+import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
+import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
+import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream;
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.SubnodeConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
@@ -171,6 +175,8 @@ public class ImageQAPlugin implements IStepPlugin {
     private List<String> possibleImageFolder;
 
     private SubnodeConfiguration config;
+
+    private String downloadMode = "tar"; // zip, tar or tgz
 
     @Override
     public void initialize(Step step, String returnPath) {
@@ -1186,34 +1192,80 @@ public class ImageQAPlugin implements IStepPlugin {
     }
 
     public void downloadSelectedImages() {
-
         try {
             FacesContext facesContext = FacesContextHelper.getCurrentFacesContext();
             ExternalContext ec = facesContext.getExternalContext();
             ec.responseReset();
-            ec.setResponseContentType("application/zip");
-
-            ec.setResponseHeader("Content-Disposition", "attachment; filename=" + step.getProzess().getTitel() + ".zip");
             OutputStream responseOutputStream = ec.getResponseOutputStream();
-            ZipOutputStream out = new ZipOutputStream(responseOutputStream);
-            for (SelectableImage im : allImages) {
-                if (im.isSelected()) {
-
-                    Path currentImagePath = Paths.get(imageFolderName, im.getImageName());
-
-                    try (InputStream in = StorageProvider.getInstance().newInputStream(currentImagePath)) {
-                        out.putNextEntry(new ZipEntry(im.getImageName()));
-                        byte[] b = new byte[1024];
-                        int count;
-
-                        while ((count = in.read(b)) > 0) {
-                            out.write(b, 0, count);
+            // zip file
+            if ("zip".equals(downloadMode)) {
+                ec.setResponseContentType("application/zip");
+                ec.setResponseHeader("Content-Disposition", "attachment; filename=" + step.getProzess().getTitel() + ".zip");
+                ZipOutputStream out = new ZipOutputStream(responseOutputStream);
+                for (SelectableImage im : allImages) {
+                    if (im.isSelected()) {
+                        Path currentImagePath = Paths.get(imageFolderName, im.getImageName());
+                        try (InputStream in = StorageProvider.getInstance().newInputStream(currentImagePath)) {
+                            out.putNextEntry(new ZipEntry(im.getImageName()));
+                            byte[] b = new byte[1024];
+                            int count;
+                            while ((count = in.read(b)) > 0) {
+                                out.write(b, 0, count);
+                            }
                         }
                     }
                 }
+                out.flush();
+                out.close();
+            } else if ("tar".equals(downloadMode)) {
+                // tar file
+                ec.setResponseContentType("application/x-tar");
+                ec.setResponseHeader("Content-Disposition", "attachment; filename=" + step.getProzess().getTitel() + ".tar");
+
+                try (BufferedOutputStream bof = new BufferedOutputStream(responseOutputStream);
+                        TarArchiveOutputStream tar = new TarArchiveOutputStream(bof)) {
+                    for (SelectableImage im : allImages) {
+                        if (im.isSelected()) {
+                            Path file = Paths.get(imageFolderName, im.getImageName());
+                            TarArchiveEntry tarEntry = new TarArchiveEntry(file.toFile(), file.getFileName().toString());
+                            tar.putArchiveEntry(tarEntry);
+                            Files.copy(file, tar);
+                            tar.closeArchiveEntry();
+                        }
+                    }
+
+                    tar.finish();
+                } catch (IOException e) {
+                    log.error(e);
+                }
+
             }
-            out.flush();
-            out.close();
+
+            else if ("tgz".equals(downloadMode)) {
+                // tar file
+                ec.setResponseContentType("application/gzip");
+                ec.setResponseHeader("Content-Disposition", "attachment; filename=" + step.getProzess().getTitel() + ".tgz");
+
+                try (
+                        BufferedOutputStream bof = new BufferedOutputStream(responseOutputStream);
+                        GzipCompressorOutputStream gzos = new GzipCompressorOutputStream(bof);
+                        TarArchiveOutputStream tar = new TarArchiveOutputStream(gzos)) {
+                    for (SelectableImage im : allImages) {
+                        if (im.isSelected()) {
+                            Path file = Paths.get(imageFolderName, im.getImageName());
+                            TarArchiveEntry tarEntry = new TarArchiveEntry(file.toFile(), file.getFileName().toString());
+                            tar.putArchiveEntry(tarEntry);
+                            Files.copy(file, tar);
+                            tar.closeArchiveEntry();
+                        }
+                    }
+
+                    tar.finish();
+                } catch (IOException e) {
+                    log.error(e);
+                }
+
+            }
 
             facesContext.responseComplete();
         } catch (IOException e) {
