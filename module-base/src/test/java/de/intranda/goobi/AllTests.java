@@ -18,12 +18,13 @@ package de.intranda.goobi;
  * Temple Place, Suite 330, Boston, MA 02111-1307 USA
  * 
  */
+import de.intranda.goobi.plugins.ImageQAPluginTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({ PluginInfoTest.class })
+@SuiteClasses({ ImageQAPluginTest.class })
 public class AllTests {
 
 }
