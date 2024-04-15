@@ -34,7 +34,6 @@ pipeline {
         anyOf {
           branch 'master'
           branch 'sonar_*'
-          branch 'release_*'
         }
       }
       steps {
@@ -81,7 +80,7 @@ pipeline {
 
   post {
     always {
-      junit "**/target/surefire-reports/*.xml"
+      junit allowEmptyResults: true, testResults: "**/target/surefire-reports/*.xml"
       step([
         $class           : 'JacocoPublisher',
         execPattern      : '**/target/jacoco.exec',
