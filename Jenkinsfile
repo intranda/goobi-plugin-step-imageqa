@@ -34,6 +34,7 @@ pipeline {
         anyOf {
           branch 'master'
           branch 'sonar_*'
+          branch 'release_*'
         }
       }
       steps {
