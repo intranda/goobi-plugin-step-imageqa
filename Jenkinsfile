@@ -52,7 +52,7 @@ pipeline {
       steps {
         script {
           if (fileExists('module-lib/pom.xml')) {
-            sh 'cat pom.xml | grep "\-SNAPSHOT"'
+            sh 'cat pom.xml | grep "SNAPSHOT"'
             sh 'mvn -N deploy'
             sh 'mvn -f module-lib/pom.xml deploy'
           }
@@ -69,7 +69,7 @@ pipeline {
       steps {
         script {
           if (fileExists('module-lib/pom.xml')) {
-            sh 'cat pom.xml | grep "\-SNAPSHOT" || true'
+            sh 'cat pom.xml | grep "SNAPSHOT" || true'
             sh 'mvn -N deploy'
             sh 'mvn -f module-lib/pom.xml deploy'
           }
