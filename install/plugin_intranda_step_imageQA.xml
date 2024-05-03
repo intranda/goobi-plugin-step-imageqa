@@ -42,15 +42,24 @@
         <mainImageFormat>jpg</mainImageFormat>
         <!-- use the high speed JavaScript fullscreen view -->
         <useJSFullscreen>false</useJSFullscreen>
+        <!-- Once can define one or more imageSize elements which define the size of the delivered images if useTiles is "false". 
+        The given size if the length of the longer edge of the image. Smaller imageSizes are loaded first, larger ones may only be loaded after zooming in sufficiently-->
         <imagesize>800</imagesize>
         <imagesize>1800</imagesize>
         <imagesize>3000</imagesize>
+        <!-- Size of an edge of the loaded tiles if useTiles is "true". Smaller values increase the number of tiles loaded, but decrease loading times per tile to some degree -->
         <tileSize>256</tileSize>
+        <!-- Scaling factors for the tiles suggested by IIIF. This is interpreted by openseadragon. 
+            Basically, the smallest scale factor is the scale of the tiles at max zoom (a factor of '1' means the original image size is used). The largest scale factor is the scale used for the first loaded tiles. Giving any more scale factors generally has no noticable effect. -->
         <scaleFactors>1</scaleFactors>
         <scaleFactors>32</scaleFactors>
+        <!-- Whether to deliver the image in individual tiles which are loaded simultaneously or as a full image (size determined by <imageSize>). Generally using tiles provides smoother loading and zooming and is also usually faster --> 
         <useTiles>true</useTiles>
+        <!-- Whether to use tiles in the fullscreen mode -->
         <useTilesFullscreen>true</useTilesFullscreen>
+        <!-- whether to use shortcut prefixed set for the current goobi user when using arrow keys to navigate the fullscreen view --> 
         <noShortcutPrefix>false</noShortcutPrefix>
+        <!-- if set to true, only the small thumbnail images are shown, not the larger image to the right -->
         <thumbnailsOnly>false</thumbnailsOnly>
         <!-- allow deletion of images -->
         <allowDeletion>false</allowDeletion>
