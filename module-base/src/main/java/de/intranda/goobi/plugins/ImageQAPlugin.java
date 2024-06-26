@@ -216,10 +216,13 @@ public class ImageQAPlugin implements IStepPlugin {
 
         config = myconfig;
         possibleImageFolder = Arrays.asList(myconfig.getStringArray("foldername"));
-        if (!possibleImageFolder.isEmpty()) {
-            selectedImageFolder = possibleImageFolder.get(0);
-        } else {
-            selectedImageFolder = "master";
+        // Don't re-initialize this variable after possible callScript call
+        if (selectedImageFolder == null) {
+            if (!possibleImageFolder.isEmpty()) {
+                selectedImageFolder = possibleImageFolder.get(0);
+            } else {
+                selectedImageFolder = "master";
+            }
         }
         String imageFolder = null;
         try {
