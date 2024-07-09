@@ -16,23 +16,22 @@
  * Temple Place, Suite 330, Boston, MA 02111-1307 USA
  * 
  -->
-<ui:composition
-    xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-    xmlns:c="http://java.sun.com/jsp/jstl/core"
-    xmlns:h="http://xmlns.jcp.org/jsf/html"
-    xmlns:f="http://xmlns.jcp.org/jsf/core"
-    xmlns:o="http://omnifaces.org/ui"
-    xmlns:of="http://omnifaces.org/functions"
-    template="/uii/template/template_blank.html"
-    xmlns:x="http://myfaces.apache.org/tomahawk"
-    xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
-    xmlns:intranda="http://xmlns.jcp.org/jsf/composite/composites"
-    xmlns:jsf="http://xmlns.jcp.org/jsf">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:o="http://omnifaces.org/ui"
+	xmlns:of="http://omnifaces.org/functions"
+	template="/uii/template/template_blank.html"
+	xmlns:x="http://myfaces.apache.org/tomahawk"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:intranda="http://xmlns.jcp.org/jsf/composite/composites"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
 
-    <ui:define name="content">
-        <main>
-            <style>
+	<ui:define name="content">
+		<main>
+			<style>
 #mainImage {
 	background: black;
 	border: none;
@@ -104,31 +103,34 @@ body {
 }
 </style>
 
-            <!--  The actual riot tag that renders the images and handles the info.json cache -->
-            <fullscreen></fullscreen>
-            <h:form id="actions">
-                <button
-                    style="display: none;"
-                    jsf:action="ImageQAPlugin"
-                    jsf:id="leave"></button>
-            </h:form>
-            <script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/reactiveX/rx.lite.min.js"></script>
-            <script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/q-promises/q.min.js"></script>
-
-            <script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/imageView.min.js"></script>
-            <script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/openseadragon/openseadragon.min.js"></script>
-            <script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/openseadragon/openseadragon-viewerinputhook.js"></script>
-
-            <script
-                src="template/js/riot+compiler.min.js"
-                type="text/javascript"></script>
-            <script
-                src="ImageQAPlugin_fullscreen.tag"
-                type="riot/tag"></script>
+			<!--  The actual riot tag that renders the images and handles the info.json cache -->
+			<fullscreen></fullscreen>
+			<h:form id="actions">
+				<button style="display: none;" jsf:action="ImageQAPlugin"
+					jsf:id="leave"></button>
+			</h:form>
+			<input type="hidden" id="persistenceId"
+				value="#{AktuelleSchritteForm.myPlugin.title.concat('_fullscreen_').concat(AktuelleSchritteForm.myPlugin.process.id)}" />
 
 
+			<script
+				src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/reactiveX/rx.lite.min.js"></script>
+			<script
+				src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/q-promises/q.min.js"></script>
 
-            <script type="text/javascript">
+			<script
+				src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/imageView.min.js"></script>
+			<script
+				src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/openseadragon/openseadragon.min.js"></script>
+			<script
+				src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/openseadragon/openseadragon-viewerinputhook.js"></script>
+
+			<script src="template/js/riot+compiler.min.js" type="text/javascript"></script>
+			<script src="ImageQAPlugin_fullscreen.tag" type="riot/tag"></script>
+
+
+
+			<script type="text/javascript">
 	
 	       window.onload = function() {
 	    	   var opts = {
@@ -139,13 +141,14 @@ body {
    					allImages: '#{AktuelleSchritteForm.myPlugin.allImagesJSON}',
    					shortcutPrefix: '#{LoginForm.myBenutzer.shortcutPrefix}',
    					startImage: #{AktuelleSchritteForm.myPlugin.imageIndex},
-   					noShortcutPrefix: #{AktuelleSchritteForm.myPlugin.noShortcutPrefix}
+   					noShortcutPrefix: #{AktuelleSchritteForm.myPlugin.noShortcutPrefix},
+   					persistZoom: #{AktuelleSchritteForm.myPlugin.persistZoom},
               };
 	       	   riot.mount("fullscreen", opts);
 		    }
 			
 		</script>
-        </main>
-    </ui:define>
+		</main>
+	</ui:define>
 
 </ui:composition>

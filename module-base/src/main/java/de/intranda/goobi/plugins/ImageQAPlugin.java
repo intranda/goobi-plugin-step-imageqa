@@ -68,6 +68,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.goobi.beans.ImageComment;
 import org.goobi.beans.Step;
+import org.goobi.production.enums.LogType;
 import org.goobi.production.enums.PluginGuiType;
 import org.goobi.production.enums.PluginType;
 import org.goobi.production.enums.StepReturnValue;
@@ -207,7 +208,15 @@ public class ImageQAPlugin implements IStepPlugin {
                 try {
                     myconfig = xmlConfig.configurationAt("//config[./project = '" + projectName + "'][./step = '*']");
                 } catch (IllegalArgumentException e2) {
-                    myconfig = xmlConfig.configurationAt("//config[./project = '*'][./step = '*']");
+                    try {
+                        myconfig = xmlConfig.configurationAt("//config[./project = '*'][./step = '*']");
+                    } catch (IllegalArgumentException e3) {
+                        log.error("Error reading config file {}", xmlConfig.getFileName(), e3);
+                        Helper.addMessageToProcessJournal(step.getProcessId(), LogType.ERROR,
+                                "Error reading config file " + xmlConfig.getFileName() + ": " + e3.toString());
+                        return;
+
+                    }
                 }
             }
         }
@@ -1399,6 +1408,18 @@ public class ImageQAPlugin implements IStepPlugin {
                 step.getTitelLokalisiert(),
                 ImageComment.ImageCommentLocation.IMAGE_COMMENT_LOCATION_PLUGIN_IMAGEQA);
         getCommentPropertyHelper().setComment(newComment);
+    }
+
+    public boolean isPersistZoom() {
+        return getConfig().getBoolean("persistZoom", true);
+    }
+
+    public Step getStep() {
+        return this.step;
+    }
+
+    public org.goobi.beans.Process getProcess() {
+        return this.step.getProzess();
     }
 
     // ========================== // Use ImageCommentPropertyHelper To Save Comments ========================== //

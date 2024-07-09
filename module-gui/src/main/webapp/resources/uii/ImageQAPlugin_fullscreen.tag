@@ -150,28 +150,36 @@ previousImage() {
 loadCurrentImage() {
 	var infoJson = this.infoJsonCache[this.imageIndex];
 	if(infoJson) {
-		this.viewImage.setTileSource(infoJson);
+		this.viewImage.setTileSource(infoJson)
+		.then(() => {
+			this.viewImage.controls.persistence = new ImageView.Controls.Persistence(this.viewImage.config, this.viewImage);
+		})
 	} else {
-		this.viewImage.setTileSource(this.currentImage().url);
+		this.viewImage.setTileSource(this.currentImage().url)
+		.then(() => {
+			this.viewImage.controls.persistence = new ImageView.Controls.Persistence(this.viewImage.config, this.viewImage);
+		})
 	}
 }
 
 loadInfoJsonCache(start) {
 	var promises = [];
 	for(let i=start; i<start+5; i++) {
-		promises.push(
-			fetch(this.allImages[i].url)
-				.then((response) => {
-					response.json().then((infoJson) => {
-// 						infoJson.sizes = this.imageSizes;
-						this.infoJsonCache[i] = infoJson;
+		if(this.allImages[i]) {
+			promises.push(
+				fetch(this.allImages[i].url)
+					.then((response) => {
+						response.json().then((infoJson) => {
+	// 						infoJson.sizes = this.imageSizes;
+							this.infoJsonCache[i] = infoJson;
+						}).catch(err => {
+							console.log(err);
+						})
 					}).catch(err => {
 						console.log(err);
 					})
-				}).catch(err => {
-					console.log(err);
-				})
-		);
+			);
+		}
 	}
 	Promise.all(promises).then(responses => {
 		var nextStart = start+5;
@@ -212,7 +220,16 @@ loadInitialImage() {
 				        mimeType: "image/jpeg",
 				        tileSource: infoJson
 				    }
-				};					
+				};				
+				
+				let imageZoomPersistenzeId = $( '#persistenceId' ).val();
+                if(this.opts.persistZoom && imageZoomPersistenzeId && imageZoomPersistenzeId.length > 0) {
+                    console.log("persist image zoom with id ", imageZoomPersistenzeId);
+                    configViewer.global.persistenceId = imageZoomPersistenzeId;
+                    configViewer.global.persistZoom =  true;
+                    configViewer.global.persistRotation = true;                    
+                }
+				
 			    this.viewImage = new ImageView.Image( configViewer );
 			    this.viewImage.load()
 			    .then((image) => {
