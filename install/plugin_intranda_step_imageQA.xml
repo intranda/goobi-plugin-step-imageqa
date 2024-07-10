@@ -92,7 +92,8 @@
         <displayocr>true</displayocr>
           <!-- If true, show image comments and allow comments to be made -->      
         <showImageComments>false</showImageComments>
-        
+        <!-- If true, the current zoom factor and position is carried over when navigation to the next main image -->
+        <persistZoom>true</persistZoom>
     </config>
     <config>
         <!-- which projects to use for (can be more then one, otherwise use *) -->

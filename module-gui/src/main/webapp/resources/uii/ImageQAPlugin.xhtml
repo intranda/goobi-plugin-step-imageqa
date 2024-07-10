@@ -690,6 +690,11 @@
                                         <div class="#{AktuelleSchritteForm.myPlugin.displayOCR ? 'col-xs-12 col-sm-6' : ''}">
                                             <div class="div-image">
 
+												<input
+													type="hidden"
+						                            id="persistenceId"
+						                            value="#{AktuelleSchritteForm.myPlugin.title.concat('_').concat(AktuelleSchritteForm.myPlugin.process.id)}" />
+
                                                 <!-- AJAX LOADER -->
                                                 <div id="mainImage">
                                                     <div
@@ -764,6 +769,7 @@
                                 <!-- // IMAGE AND OBJECT DISPLAY ON THE RIGHT -->
                                 
                                 <script type="text/javascript">
+                              		//<![CDATA[
                                     var configViewer = {
                                         global: {
                                             divId: 'mainImage',
@@ -815,6 +821,15 @@
                                     var mediaType = "#{AktuelleSchritteForm.myPlugin.image.type}";
                                     if(mediaType == "image") {
                                                 
+                                    	//init zoom persistence
+                                    	let imageZoomPersistenzeId = $( '#persistenceId' ).val();
+                                        if(#{AktuelleSchritteForm.myPlugin.persistZoom} && imageZoomPersistenzeId && imageZoomPersistenzeId.length > 0) {
+                                            console.log("persist image zoom with id ", imageZoomPersistenzeId);
+                                            configViewer.global.persistenceId = imageZoomPersistenzeId;
+                                            configViewer.global.persistZoom =  true;
+                                            configViewer.global.persistRotation = true;                    
+                                        }
+                                    	
                                         var viewImage = new ImageView.Image( configViewer );
                                         viewImage.load()
                                         .then(function(image) {
@@ -886,6 +901,7 @@
                                                 }
                                             }
                                         }
+                                   		//]]>
                                     </script>
                             </h:panelGroup>
                         </h:panelGroup>
