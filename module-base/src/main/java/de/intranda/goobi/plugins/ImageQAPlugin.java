@@ -33,6 +33,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -45,6 +46,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -66,6 +69,7 @@ import org.apache.commons.configuration.reloading.FileChangedReloadingStrategy;
 import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
+import org.checkerframework.checker.regex.qual.Regex;
 import org.goobi.beans.ImageComment;
 import org.goobi.beans.Step;
 import org.goobi.production.enums.LogType;
@@ -128,6 +132,9 @@ public class ImageQAPlugin implements IStepPlugin {
     private boolean allowFlipping = false;
     private boolean allowRotation = false;
     private boolean allowRenaming = false;
+    private boolean allowReordering = false;
+    private String reorderingPrefix = "REORDER_";
+    private Pattern reorderingPrefixPattern = Pattern.compile("^(" + reorderingPrefix + "\\d{6}_).*$");
     private boolean allowSelection = false;
     private boolean allowSelectionPage = false;
     private boolean allowSelectionAll = false;
@@ -341,6 +348,9 @@ public class ImageQAPlugin implements IStepPlugin {
         allowRotation = myconfig.getBoolean("allowRotation", false);
         persistentRotationAboveBigImage = myconfig.getBoolean("allowRotation/@persistentRotationAboveBigImage", false);
         allowRenaming = myconfig.getBoolean("allowRenaming", false);
+        allowReordering = myconfig.getBoolean("allowReordering", false);
+        reorderingPrefix = myconfig.getString("reorderingPrefix", "REORDER_");
+        reorderingPrefixPattern = Pattern.compile("^(" + reorderingPrefix + "\\d{6}_).*$");
         allowSelection = myconfig.getBoolean("allowSelection", false);
         allowSelectionPage = myconfig.getBoolean("allowSelectionPage", false);
         allowSelectionAll = myconfig.getBoolean("allowSelectionAll", false);
@@ -1030,6 +1040,59 @@ public class ImageQAPlugin implements IStepPlugin {
                 }
             }
         }
+    }
+
+    public void reorderPrevious(Image myimage) {
+        int index = allImages.indexOf(myimage);
+        swapImages(index, index-1);
+        setImageIndex(Math.max(0, index-1));
+    }
+
+    public void reorderNext(Image myimage) {
+        int index = allImages.indexOf(myimage);
+        swapImages(index, index+1);
+        setImageIndex(Math.min(allImages.size()-1, index+1));
+    }
+
+    private void swapImages(int a, int b) {
+        if (a < 0 || b < 0 || a >= allImages.size() - 1 || b >= allImages.size() - 1) {
+            return;
+        }
+
+        SelectableImage tmp = allImages.get(a);
+        allImages.set(a, allImages.get(b));
+        allImages.set(b, tmp);
+
+        saveOrder();
+    }
+
+    private void saveOrder() {
+        Map<Path, Path> renamingMap = new HashMap<>();
+
+        for (int i = 0; i < allImages.size(); i++) {
+            SelectableImage currentImage = allImages.get(i);
+            String oldName = currentImage.getImageName();
+            Matcher m = reorderingPrefixPattern.matcher(oldName);
+            if (m.find()) {
+                oldName = oldName.substring(m.group(1).length());
+            }
+            String newName = reorderingPrefix + String.format("%06d_", i+1) + oldName;
+            renamingMap.put(Paths.get(imageFolderName, currentImage.getImageName()), Paths.get(imageFolderName, newName));
+        }
+
+        renamingMap.entrySet().stream()
+                .sorted(Map.Entry.comparingByKey())
+                .forEachOrdered(System.err::println);
+        renameImageFilesOnDisk(renamingMap);
+
+        if (!renamingMap.isEmpty()) {
+            Helper.setFehlerMeldung("Error renaming files - file " + renamingMap.keySet().iterator().next() + " could not be renamed to "
+                    + renamingMap.get(renamingMap.keySet().iterator().next()));
+        }
+
+        allImages = new ArrayList<>();
+
+        initialize(this.step, returnPath);
     }
 
     public void deleteImage(Image myimage) {

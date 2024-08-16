@@ -79,7 +79,10 @@
             <vertical command="/bin/true" />
         </flippingCommands>
         <!-- allow renaming of images -->
-        <allowRenaming>false</allowRenaming>
+        <allowRenaming>true</allowRenaming>
+        <!-- allow reordering of images -->
+        <allowReordering>true</allowReordering>
+        <reorderingPrefix>REORDER_</reorderingPrefix>
         <!-- allow selection of images -->
         <allowSelection>false</allowSelection>
         <allowSelectionPage>false</allowSelectionPage>
