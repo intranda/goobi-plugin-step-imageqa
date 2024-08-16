@@ -151,6 +151,8 @@ The configuration of the plugin is structured as follows: ​
         </flippingCommands>
         <!-- allow renaming of images -->
         <allowRenaming>false</allowRenaming>
+        <allowReordering>false</allowReordering>
+        <reorderingPrefix>REORDER_</reorderingPrefix>
         <!-- allow selection of images -->
         <allowSelection>false</allowSelection>
         <allowDownload>false</allowDownload>
@@ -187,32 +189,34 @@ The configuration of the plugin is structured as follows: ​
 
 The parameters within this configuration file have the following meanings: ​
 
-| Value | Description |
-| :--- | :--- |
-| `guiType` | With this parameter you can define how the user interface should behave. Possible values are `part`, `full` and `both`. |
-| `project` | This parameter determines for which project the current block `<config>` is to apply. The name of the project is used here. This parameter can occur several times per `<config>` block. |
-| `step` | This parameter controls for which work steps the block &lt;config&gt; should apply. The name of the work step is used here. This parameter can occur several times per `<config>` block. |
+| Value | Description                                                                                                                                                                                                                                                                                    |
+| :--- |:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `guiType` | With this parameter you can define how the user interface should behave. Possible values are `part`, `full` and `both`.                                                                                                                                                                        |
+| `project` | This parameter determines for which project the current block `<config>` is to apply. The name of the project is used here. This parameter can occur several times per `<config>` block.                                                                                                       |
+| `step` | This parameter controls for which work steps the block &lt;config&gt; should apply. The name of the work step is used here. This parameter can occur several times per `<config>` block.                                                                                                       |
 | `foldername` | Specify here the directory from which the images are to be displayed. If several directories are used in the repeatable parameter, the user can choose between these directories. Possible values for this are e.g. `master`, `media` or also individual folders such as `photos` and `scans`. |
-| `numberOfImagesPerPage` | Here you can define how many thumbnails should be displayed simultaneously in the regular display. |
-| `thumbnailsize` | This allows you to specify the size of the thumbnails to be displayed. |
-| `numberOfImagesInPartGUI` | With this parameter you can define how many thumbnails should be displayed within the accepted task. |
-| `thumbnailFormat` | Here you define the file format for displaying the thumbnails. |
-| `mainImageFormat` | Define the file format for displaying the large image here. |
-| `imagesize` | With this parameter, which can be repeated, the individual zoom levels of the images can be defined. The more levels are defined, the more often a higher resolution version of the image is generated and loaded when zooming the image. |
-| `tileSize` | This parameter defines the size of the tiles for a tiled display of the images. |
-| `useTilesFullscreen` | Specify here whether a display based on tiles should also be shown within the full screen display. |
-| `allowDeletion` | This parameter can be used to allow deletion of individual images. |
-| `deletionCommand` | This sets the command for the delete operation. This can, among other things, allow images to be moved to other directories instead of actually being deleted. |
-| `allowRotation` | When this function is activated, the displayed images may be rotated in 90 degree increments. |
-| `rotationCommands` | This allows you to specify which command line calls should be used to rotate the images. |
-| `allowRenaming` | With this parameter a functionality for the specific naming of image files can be activated. |
-| `allowSelection` | With this parameter one checkbox per image can be activated, which allows an individual selection of each image. |
-| `allowSelectionPage` | This parameter allows you to specify whether a button for selecting all images on the current page should be displayed. |
-| `allowSelectionAll` | This parameter allows you to specify whether a button for selecting all images should be displayed. |
-| `allowDownload` | Here you can determine whether a download of the selected pages within a zip file should be allowed. |
-| `allowDownloadAsPdf` | Here you can determine whether a download of the selected pages as one large PDF file should be allowed. |
-| `allowTaskFinishButtons` | This parameter can be used to enable buttons to complete the task to be displayed in the regular plugin interface, so that the plugin does not have to be exited first. |
-| `displayocr` | Here you can determine whether the button for displaying full text results should be activated. |
-| `useJSFullscreen` | This parameter can be used to specify that the full screen display is to be done using JavaScript alone. This display is much more performant, but does not allow the full text to be displayed parallel to the image. |
-| `allowFlipping` | If this function is activated, the displayed images may be mirrored horizontally and vertically
-| `flippingCommands` | This allows you to specify which command line calls should be used to mirror the images.
+| `numberOfImagesPerPage` | Here you can define how many thumbnails should be displayed simultaneously in the regular display.                                                                                                                                                                                             |
+| `thumbnailsize` | This allows you to specify the size of the thumbnails to be displayed.                                                                                                                                                                                                                         |
+| `numberOfImagesInPartGUI` | With this parameter you can define how many thumbnails should be displayed within the accepted task.                                                                                                                                                                                           |
+| `thumbnailFormat` | Here you define the file format for displaying the thumbnails.                                                                                                                                                                                                                                 |
+| `mainImageFormat` | Define the file format for displaying the large image here.                                                                                                                                                                                                                                    |
+| `imagesize` | With this parameter, which can be repeated, the individual zoom levels of the images can be defined. The more levels are defined, the more often a higher resolution version of the image is generated and loaded when zooming the image.                                                      |
+| `tileSize` | This parameter defines the size of the tiles for a tiled display of the images.                                                                                                                                                                                                                |
+| `useTilesFullscreen` | Specify here whether a display based on tiles should also be shown within the full screen display.                                                                                                                                                                                             |
+| `allowDeletion` | This parameter can be used to allow deletion of individual images.                                                                                                                                                                                                                             |
+| `deletionCommand` | This sets the command for the delete operation. This can, among other things, allow images to be moved to other directories instead of actually being deleted.                                                                                                                                 |
+| `allowRotation` | When this function is activated, the displayed images may be rotated in 90 degree increments.                                                                                                                                                                                                  |
+| `rotationCommands` | This allows you to specify which command line calls should be used to rotate the images.                                                                                                                                                                                                       |
+| `allowRenaming` | With this parameter a functionality for the specific naming of image files can be activated.                                                                                                                                                                                                   |
+| `allowReordering` | With this parameter a functionality to reorder images can be activated.                                                                                                                                                                                                                        |
+| `reorderingPrefix` | With this parameter the filename prefix after a reordering can bet set. The default filename prefix after reordering is: "REORDER_".                                                                                                                                                           |
+| `allowSelection` | With this parameter one checkbox per image can be activated, which allows an individual selection of each image.                                                                                                                                                                               |
+| `allowSelectionPage` | This parameter allows you to specify whether a button for selecting all images on the current page should be displayed.                                                                                                                                                                        |
+| `allowSelectionAll` | This parameter allows you to specify whether a button for selecting all images should be displayed.                                                                                                                                                                                            |
+| `allowDownload` | Here you can determine whether a download of the selected pages within a zip file should be allowed.                                                                                                                                                                                           |
+| `allowDownloadAsPdf` | Here you can determine whether a download of the selected pages as one large PDF file should be allowed.                                                                                                                                                                                       |
+| `allowTaskFinishButtons` | This parameter can be used to enable buttons to complete the task to be displayed in the regular plugin interface, so that the plugin does not have to be exited first.                                                                                                                        |
+| `displayocr` | Here you can determine whether the button for displaying full text results should be activated.                                                                                                                                                                                                |
+| `useJSFullscreen` | This parameter can be used to specify that the full screen display is to be done using JavaScript alone. This display is much more performant, but does not allow the full text to be displayed parallel to the image.                                                                         |
+| `allowFlipping` | If this function is activated, the displayed images may be mirrored horizontally and vertically                                                                                                                                                                                                
+| `flippingCommands` | This allows you to specify which command line calls should be used to mirror the images.                                                                                                                                                                                                       

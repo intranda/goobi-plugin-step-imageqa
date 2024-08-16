@@ -81,6 +81,7 @@
         <!-- allow renaming of images -->
         <allowRenaming>true</allowRenaming>
         <allowReordering>true</allowReordering>
+        <reorderingPrefix>REORDER_</reorderingPrefix>
         <!-- allow selection of images -->
         <allowSelection>false</allowSelection>
         <allowSelectionPage>false</allowSelectionPage>
