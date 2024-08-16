@@ -80,6 +80,7 @@
         </flippingCommands>
         <!-- allow renaming of images -->
         <allowRenaming>true</allowRenaming>
+        <!-- allow reordering of images -->
         <allowReordering>true</allowReordering>
         <reorderingPrefix>REORDER_</reorderingPrefix>
         <!-- allow selection of images -->

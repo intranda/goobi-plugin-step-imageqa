@@ -107,6 +107,9 @@ The configuration of the plugin is structured as follows: ​
         </flippingCommands>
         <!-- allow renaming of images -->
         <allowRenaming>false</allowRenaming>
+        <!-- allow reordering of images -->
+        <allowReordering>false</allowReordering>
+        <reorderingPrefix>REORDER_</reorderingPrefix>
         <!-- allow selection of images -->
         <allowSelection>false</allowSelection>
         <allowSelectionPage>false</allowSelectionPage>
@@ -151,6 +154,7 @@ The configuration of the plugin is structured as follows: ​
         </flippingCommands>
         <!-- allow renaming of images -->
         <allowRenaming>false</allowRenaming>
+        <!-- allow reordering of images -->
         <allowReordering>false</allowReordering>
         <reorderingPrefix>REORDER_</reorderingPrefix>
         <!-- allow selection of images -->
