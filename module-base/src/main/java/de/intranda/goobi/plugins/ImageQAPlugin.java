@@ -1080,9 +1080,6 @@ public class ImageQAPlugin implements IStepPlugin {
             renamingMap.put(Paths.get(imageFolderName, currentImage.getImageName()), Paths.get(imageFolderName, newName));
         }
 
-        renamingMap.entrySet().stream()
-                .sorted(Map.Entry.comparingByKey())
-                .forEachOrdered(System.err::println);
         renameImageFilesOnDisk(renamingMap);
 
         if (!renamingMap.isEmpty()) {
