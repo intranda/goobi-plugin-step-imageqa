@@ -1055,7 +1055,7 @@ public class ImageQAPlugin implements IStepPlugin {
     }
 
     private void swapImages(int a, int b) {
-        if (a < 0 || b < 0 || a >= allImages.size() - 1 || b >= allImages.size() - 1) {
+        if (a < 0 || b < 0 || a >= allImages.size() || b >= allImages.size()) {
             return;
         }
 
@@ -1080,9 +1080,6 @@ public class ImageQAPlugin implements IStepPlugin {
             renamingMap.put(Paths.get(imageFolderName, currentImage.getImageName()), Paths.get(imageFolderName, newName));
         }
 
-        renamingMap.entrySet().stream()
-                .sorted(Map.Entry.comparingByKey())
-                .forEachOrdered(System.err::println);
         renameImageFilesOnDisk(renamingMap);
 
         if (!renamingMap.isEmpty()) {
