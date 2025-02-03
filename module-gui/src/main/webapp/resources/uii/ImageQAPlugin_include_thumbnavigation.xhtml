@@ -22,8 +22,7 @@
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets" 
 	xmlns:composite="http://xmlns.jcp.org/jsf/composite" 
 	xmlns:h="http://xmlns.jcp.org/jsf/html" 
-	xmlns:f="http://xmlns.jcp.org/jsf/core" 
-	xmlns:x="http://myfaces.apache.org/tomahawk">
+	xmlns:f="http://xmlns.jcp.org/jsf/core" >
 
     <composite:interface>
     </composite:interface>
@@ -58,7 +57,7 @@
                 </button>
 
                 <div class="ms-3 me-3 d-inline">
-                    <x:outputText
+                    <h:outputText
                         id="txtMoveTo1"
                         value="#{msgs.seite} #{AktuelleSchritteForm.myPlugin.pageNumberCurrent} #{msgs.von} #{AktuelleSchritteForm.myPlugin.pageNumberLast}"
                         onclick="document.getElementById(this.id).nextSibling.style.display='inline';
@@ -66,14 +65,14 @@
 	                document.getElementById(this.id).nextSibling.focus();
 	                document.getElementById(this.id).nextSibling.select();" />
                     <!-- Seite direkt anspringen -->
-                    <x:inputText
+                    <h:inputText
                         value="#{AktuelleSchritteForm.myPlugin.txtMoveTo}"
                         style="display:none;font-size:9px;width:30px"
                         required="true"
                         id="txtMoveTo2" pt:data-input="thumbsMoveTo"
                         onblur="document.getElementById(this.id).style.display='none';document.getElementById(this.id).previousSibling.style.display='inline';"
                         onkeypress="copyValue(this,event);" />
-                    <x:commandButton
+                    <h:commandButton
                         action="#{NavigationForm.Reload}"
                         value="go"
                         style="display:none"

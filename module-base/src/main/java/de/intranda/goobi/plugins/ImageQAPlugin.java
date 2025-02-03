@@ -33,7 +33,6 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -52,13 +51,6 @@ import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import javax.ws.rs.core.UriBuilder;
-
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream;
@@ -69,7 +61,6 @@ import org.apache.commons.configuration.reloading.FileChangedReloadingStrategy;
 import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
-import org.checkerframework.checker.regex.qual.Regex;
 import org.goobi.beans.ImageComment;
 import org.goobi.beans.Step;
 import org.goobi.production.enums.LogType;
@@ -100,6 +91,12 @@ import de.unigoettingen.sub.commons.contentlib.exceptions.ContentLibException;
 import de.unigoettingen.sub.commons.contentlib.exceptions.ContentLibImageException;
 import de.unigoettingen.sub.commons.contentlib.imagelib.ImageManager;
 import de.unigoettingen.sub.commons.contentlib.imagelib.JpegInterpreter;
+import jakarta.faces.context.ExternalContext;
+import jakarta.faces.context.FacesContext;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import jakarta.ws.rs.core.UriBuilder;
 import lombok.Data;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
@@ -125,9 +122,9 @@ public class ImageQAPlugin implements IStepPlugin {
 
     private int numberOfImagesInFullGUI = 10;
     private int numberOfImagesInPartGUI = 5;
-    private int THUMBNAIL_SIZE_IN_PIXEL = 175;
-    private String THUMBNAIL_FORMAT = "png";
-    private String MAINIMAGE_FORMAT = "jpg";
+    private int thumbnailSizeInPixel = 175;
+    private String thumbnailFormat = "png";
+    private String mainImageFormat = "jpg";
     private boolean allowDeletion = false;
     private boolean allowFlipping = false;
     private boolean allowRotation = false;
@@ -160,13 +157,13 @@ public class ImageQAPlugin implements IStepPlugin {
 
     private String imageFolderName = "";
 
-    private List<SelectableImage> allImages = new ArrayList<>();
+    private transient List<SelectableImage> allImages = new ArrayList<>();
 
-    private Image image = null;
+    private transient Image image = null;
     private List<String> imageSizes = new ArrayList<>();
     private String tileSize;
     private List<String> scaleFactors = new ArrayList<>();
-    private ExecutorService executor;
+    private transient ExecutorService executor;
 
     private String returnPath;
     // ocr display variables
@@ -280,7 +277,7 @@ public class ImageQAPlugin implements IStepPlugin {
             for (String imagename : imageNameList) {
                 SelectableImage currentImage;
                 try {
-                    currentImage = new SelectableImage(getStep().getProzess(), imageFolderName, imagename, order, THUMBNAIL_SIZE_IN_PIXEL);
+                    currentImage = new SelectableImage(getStep().getProzess(), imageFolderName, imagename, order, thumbnailSizeInPixel);
                     currentImage.initNameParts(nameParts);
                     allImages.add(currentImage);
                     order++;
@@ -365,9 +362,9 @@ public class ImageQAPlugin implements IStepPlugin {
 
         numberOfImagesInFullGUI = myconfig.getInt("numberOfImagesPerPage", 50);
         numberOfImagesInPartGUI = myconfig.getInt("numberOfImagesInPartGUI", 8);
-        THUMBNAIL_SIZE_IN_PIXEL = myconfig.getInt("thumbnailsize", 200);
-        THUMBNAIL_FORMAT = myconfig.getString("thumbnailFormat", "png");
-        MAINIMAGE_FORMAT = myconfig.getString("mainImageFormat", "jpg");
+        thumbnailSizeInPixel = myconfig.getInt("thumbnailsize", 200);
+        thumbnailFormat = myconfig.getString("thumbnailFormat", "png");
+        mainImageFormat = myconfig.getString("mainImageFormat", "jpg");
         imageSizes = Arrays.asList(myconfig.getStringArray("imagesize"));
         if (imageSizes == null || imageSizes.isEmpty()) {
             imageSizes = new ArrayList<>();
@@ -460,7 +457,7 @@ public class ImageQAPlugin implements IStepPlugin {
                 nameParts.add(new NamePart(fieldConfig, getStep()));
             }
             return nameParts;
-        } catch (Throwable e) {
+        } catch (Exception e) {
             return Collections.singletonList(new NamePart(""));
         }
     }
@@ -886,7 +883,7 @@ public class ImageQAPlugin implements IStepPlugin {
     }
 
     public int getThumbnailSize() {
-        return THUMBNAIL_SIZE_IN_PIXEL;
+        return thumbnailSizeInPixel;
     }
 
     public void setThumbnailSize(int value) {
@@ -1044,14 +1041,14 @@ public class ImageQAPlugin implements IStepPlugin {
 
     public void reorderPrevious(Image myimage) {
         int index = allImages.indexOf(myimage);
-        swapImages(index, index-1);
-        setImageIndex(Math.max(0, index-1));
+        swapImages(index, index - 1);
+        setImageIndex(Math.max(0, index - 1));
     }
 
     public void reorderNext(Image myimage) {
         int index = allImages.indexOf(myimage);
-        swapImages(index, index+1);
-        setImageIndex(Math.min(allImages.size()-1, index+1));
+        swapImages(index, index + 1);
+        setImageIndex(Math.min(allImages.size() - 1, index + 1));
     }
 
     private void swapImages(int a, int b) {
@@ -1076,7 +1073,7 @@ public class ImageQAPlugin implements IStepPlugin {
             if (m.find()) {
                 oldName = oldName.substring(m.group(1).length());
             }
-            String newName = reorderingPrefix + String.format("%06d_", i+1) + oldName;
+            String newName = reorderingPrefix + String.format("%06d_", i + 1) + oldName;
             renamingMap.put(Paths.get(imageFolderName, currentImage.getImageName()), Paths.get(imageFolderName, newName));
         }
 
@@ -1474,6 +1471,7 @@ public class ImageQAPlugin implements IStepPlugin {
         return getConfig().getBoolean("persistZoom", true);
     }
 
+    @Override
     public Step getStep() {
         return this.step;
     }

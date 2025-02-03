@@ -4,7 +4,6 @@
     xmlns:composite="http://java.sun.com/jsf/composite"
     xmlns:f="http://java.sun.com/jsf/core"
     xmlns:h="http://java.sun.com/jsf/html"
-    xmlns:x="http://myfaces.apache.org/tomahawk"
     xmlns:intranda="http://xmlns.jcp.org/jsf/composite/compositesPG">
 
     <link
@@ -105,7 +104,7 @@
             loadThumbnails();
         } );
         
-        jsf.ajax.addOnEvent( function( data ) {
+        faces.ajax.addOnEvent( function( data ) {
             var ajaxstatus = data.status; // Can be "begin", "complete" and "success"
             switch ( ajaxstatus ) {
                 case "success": // This is called when ajax response is successfully processed.
