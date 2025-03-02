@@ -25,7 +25,6 @@
     xmlns:o="http://omnifaces.org/ui"
     xmlns:of="http://omnifaces.org/functions"
     template="/uii/template/template_blank.html"
-    xmlns:x="http://myfaces.apache.org/tomahawk"
     xmlns:intranda="http://xmlns.jcp.org/jsf/composite/composites"
     xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
     xmlns:jsf="http://xmlns.jcp.org/jsf">
@@ -361,9 +360,9 @@
                             execute="@form"
                             render="@form"
                             onevent="freeJSResources" />
-                        <x:updateActionListener
+                        <f:setPropertyActionListener
                             value="#{AktuelleSchritteForm.myPlugin.imageIndex - 1}"
-                            property="#{AktuelleSchritteForm.myPlugin.imageIndex}" />
+                            target="#{AktuelleSchritteForm.myPlugin.imageIndex}" />
                     </button>
 
                     <!-- next image -->
@@ -380,9 +379,9 @@
                             execute="@form"
                             render="@form"
                             onevent="freeJSResources" />
-                        <x:updateActionListener
+                        <f:setPropertyActionListener
                             value="#{AktuelleSchritteForm.myPlugin.imageIndex + 1}"
-                            property="#{AktuelleSchritteForm.myPlugin.imageIndex}" />
+                            target="#{AktuelleSchritteForm.myPlugin.imageIndex}" />
                     </button>
 
                     <!-- file name -->
@@ -395,7 +394,7 @@
 
                     <!-- image number -->
                     <div style="position: absolute; bottom: 10px; right: 10px;">
-                        <x:outputText
+                        <h:outputText
                             id="txtImageMoveTo1"
                             styleClass="font-white"
                             value="#{AktuelleSchritteForm.myPlugin.imageIndex +1} #{msgs.von}  #{AktuelleSchritteForm.myPlugin.sizeOfImageList}"
@@ -404,14 +403,14 @@
 	                    document.getElementById(this.id).nextSibling.focus(); 
 	                    document.getElementById(this.id).nextSibling.select();" />
                         <!-- jump to page -->
-                        <x:inputText
+                        <h:inputText
                             value="#{AktuelleSchritteForm.myPlugin.imageMoveTo}"
                             style="display:none;font-size:9px;width:30px"
                             required="true"
                             id="txtImageMoveTo2" pt:data-input="imageMoveTo"
                             onblur="document.getElementById(this.id).style.display='none';document.getElementById(this.id).previousSibling.style.display='inline';"
                             onkeypress="copyValue(this,event);" />
-                        <x:commandButton
+                        <h:commandButton
                             action="#{NavigationForm.Reload}"
                             value="go"
                             style="display:none" />
@@ -426,9 +425,9 @@
                             <f:ajax
                                 execute="@form"
                                 render="@form" />
-                            <x:updateActionListener
+                            <f:setPropertyActionListener
                                 value="0"
-                                property="#{AktuelleSchritteForm.myPlugin.imageIndex}" />
+                                target="#{AktuelleSchritteForm.myPlugin.imageIndex}" />
                         </button>
                         <button
                         	jsf:id="lastImg"
@@ -438,9 +437,9 @@
                             <f:ajax
                                 execute="@form"
                                 render="@form" />
-                            <x:updateActionListener
+                            <f:setPropertyActionListener
                                 value="#{AktuelleSchritteForm.myPlugin.sizeOfImageList - 1}"
-                                property="#{AktuelleSchritteForm.myPlugin.imageIndex}" />
+                                target="#{AktuelleSchritteForm.myPlugin.imageIndex}" />
                         </button>
                     </div>
 
@@ -480,7 +479,7 @@
 		    	launchIntoFullscreen(document.documentElement); // the whole page
 		    }
 		
-			jsf.ajax.addOnEvent(function(data) {
+			faces.ajax.addOnEvent(function(data) {
 			    var ajaxstatus = data.status; // Can be "begin", "complete" and "success"
 			      
 			      switch (ajaxstatus) {

@@ -18,7 +18,7 @@
  -->
 <ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://xmlns.jcp.org/jsf/facelets" xmlns:composite="http://xmlns.jcp.org/jsf/composite"
 	xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:f="http://xmlns.jcp.org/jsf/core" 
-	xmlns:x="http://myfaces.apache.org/tomahawk" xmlns:pt="http://xmlns.jcp.org/jsf/passthrough" xmlns:jsf="http://xmlns.jcp.org/jsf">
+xmlns:pt="http://xmlns.jcp.org/jsf/passthrough" xmlns:jsf="http://xmlns.jcp.org/jsf">
 
 	<composite:interface>
 	</composite:interface>
@@ -50,18 +50,18 @@
                 
 				<div class="ms-3 me-3 d-inline">
                     <!-- CURRENT PAGE -->
-                    <x:outputText id="txtImageMoveTo1"
+                    <h:outputText id="txtImageMoveTo1"
                         value="#{AktuelleSchritteForm.myPlugin.imageIndex +1} #{msgs.von}  #{AktuelleSchritteForm.myPlugin.sizeOfImageList}"
                         onclick="document.getElementById(this.id).nextSibling.style.display='inline';
                         document.getElementById(this.id).style.display='none';  
                         document.getElementById(this.id).nextSibling.focus(); 
                         document.getElementById(this.id).nextSibling.select();" /> 
                     <!-- JUMP TO PAGE -->
-                    <x:inputText value="#{AktuelleSchritteForm.myPlugin.imageMoveTo}" style="display:none;font-size:9px;width:30px"
+                    <h:inputText value="#{AktuelleSchritteForm.myPlugin.imageMoveTo}" style="display:none;font-size:9px;width:30px"
                         required="true" id="txtImageMoveTo2" pt:data-input="imageMoveTo"
                         onblur="document.getElementById(this.id).style.display='none';document.getElementById(this.id).previousSibling.style.display='inline';"
                         onkeypress="copyValue(this,event);" />
-                    <x:commandButton action="#{NavigationForm.Reload}" value="go" style="display:none" />
+                    <h:commandButton action="#{NavigationForm.Reload}" value="go" style="display:none" />
 				</div>
                 
 				<button 

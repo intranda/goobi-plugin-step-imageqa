@@ -24,7 +24,6 @@
     xmlns:o="http://omnifaces.org/ui"
     xmlns:of="http://omnifaces.org/functions"
     template="/uii/templatePG/templatePG.html"
-    xmlns:x="http://myfaces.apache.org/tomahawk"
     xmlns:intranda="http://xmlns.jcp.org/jsf/composite/compositesPG"
     xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
     xmlns:jsf="http://xmlns.jcp.org/jsf">
@@ -201,8 +200,8 @@
                                 jsf:rendered="#{NavigationForm.uiStatus.pluginSimulation != true and AktuelleSchritteForm.myPlugin.allowTaskFinishButtons == true}"
                                 title="#{msgs.task_leavePluginAndFinishTask}">
                                 <i class="fa fa-check" />
-                                <x:updateActionListener
-                                    property="#{NavigationForm.uiStatus.pluginSimulation}"
+                                <f:setPropertyActionListener
+                                    target="#{NavigationForm.uiStatus.pluginSimulation}"
                                     value="#{false}" />
                             </button>
 
@@ -213,8 +212,8 @@
                                 jsf:rendered="#{NavigationForm.uiStatus.pluginSimulation != true and AktuelleSchritteForm.myPlugin.allowTaskFinishButtons == true}"
                                 title="#{msgs.pluginLeave}">
                                 <i class="fa fa-close" />
-                                <x:updateActionListener
-                                    property="#{NavigationForm.uiStatus.pluginSimulation}"
+                                <f:setPropertyActionListener
+                                    target="#{NavigationForm.uiStatus.pluginSimulation}"
                                     value="#{false}" />
                             </button>
                                 
@@ -576,7 +575,7 @@
                                                                 <ui:repeat
                                                                     var="namePart"
                                                                     value="#{image.nameParts}">
-                                                                    <x:inputText
+                                                                    <h:inputText
                                                                         styleClass="form-control namePart"
                                                                         value="#{namePart.value}" />
                                                                 </ui:repeat>
@@ -960,8 +959,8 @@
                         <span>
                             <h:outputText value="#{msgs.task_leavePluginAndFinishTask}" />
                         </span>
-                        <x:updateActionListener
-                            property="#{NavigationForm.uiStatus.pluginSimulation}"
+                        <f:setPropertyActionListener
+                            target="#{NavigationForm.uiStatus.pluginSimulation}"
                             value="#{false}" />
                     </button>
                     <!-- // LEAVE PLUGIN AND FINISH THE TASK -->
@@ -975,8 +974,8 @@
                         <span>
                             <h:outputText value="#{msgs.pluginLeave}" />
                         </span>
-                        <x:updateActionListener
-                            property="#{NavigationForm.uiStatus.pluginSimulation}"
+                        <f:setPropertyActionListener
+                            target="#{NavigationForm.uiStatus.pluginSimulation}"
                             value="#{false}" />
                     </button>
                     <!-- // LEAVE PLUGIN -->
@@ -1007,7 +1006,7 @@
 				loadThumbnails();
 			});
 		
-			jsf.ajax.addOnEvent(function(data) {
+			faces.ajax.addOnEvent(function(data) {
 		    	var ajaxstatus = data.status; // Can be "begin", "complete" and "success"
 		      	switch (ajaxstatus) {
 		        	case "success": // This is called when ajax response is successfully processed.
