@@ -7,40 +7,40 @@
 	<div id="zoomSliderLabel" class="font-light">
             <input aria-label="{msgs.sizeOfImages}"></input><span>%</span>
     </div>
-    
+
     <div style="position:absolute;top:10px; right:10px;">
-		<button class="btn btn-lightgrey" onclick={leave} aria-label="{msgs.imageDefaultDisplay}" title="{msgs.imageDefaultDisplay}" >
+		<button class="btn btn-blank" onclick={leave} aria-label="{msgs.imageDefaultDisplay}" title="{msgs.imageDefaultDisplay}" >
 			<i class="fa fa-close"></i>
 		</button>
 	</div>
 	<!-- previous image -->
-	<button id="imageBack" class="btn btn-lightgrey font-size-s" aria-label="{msgs.lw_previousImage}" title="{msgs.lw_previousImage}"
+	<button id="imageBack" class="btn btn-blank font-size-s" aria-label="{msgs.lw_previousImage}" title="{msgs.lw_previousImage}"
 		style="position:absolute;top:50vh; left:10px; height:50px;padding-top:2px;"
 		onclick={previousImage}>
 		<i class="fa fa-angle-left"></i>
 	</button>
-	
+
 	<!-- next image -->
-	<button id="imageNext" class="btn btn-lightgrey font-size-s" aria-label="{msgs.lw_nextImage}" title="{msgs.lw_nextImage}"
+	<button id="imageNext" class="btn btn-blank font-size-s" aria-label="{msgs.lw_nextImage}" title="{msgs.lw_nextImage}"
 		style="position:absolute;top:50vh; right:10px; height:50px; padding-top:2px;"
 		onclick={nextImage}>
 		<i class="fa fa-angle-right"></i>
 	</button>
-	
+
 	<!-- file name -->
 	<h1 style="margin: 0px;">
 		<span class="font-white" style="position:absolute;bottom:10px; left:10px; font-size: 12px;">
-			{currentImage().imageName} 
+			{currentImage().imageName}
 		</span>
 	</h1>
-	
+
 	<!-- image number -->
 	<div style="position:absolute;bottom:10px; right:10px;">
 	    <span id="txtImageMoveTo1" class="font-white"
 	    	if={!showPagenumberInput}
 	        onclick={showAndFocusImageNumberInput}>
 			{imageIndex +1} {msgs.von}  {allImages.length}
-        </span> 
+        </span>
 		<!-- jump to page -->
         <input value={currentImageNumber} if={showPagenumberInput}
             id="txtImageMoveTo2"
@@ -93,14 +93,14 @@ loadMessages() {
 }
 
 shortcutPrevious(e) {
-	e.stopPropagation(); 
-	this.previousImage(); 
+	e.stopPropagation();
+	this.previousImage();
 	this.update();
 }
 
-shortcutNext(e) { 
-	e.stopPropagation(); 
-	this.nextImage(); 
+shortcutNext(e) {
+	e.stopPropagation();
+	this.nextImage();
 	this.update();
 }
 
@@ -220,23 +220,23 @@ loadInitialImage() {
 				        mimeType: "image/jpeg",
 				        tileSource: infoJson
 				    }
-				};				
-				
+				};
+
 				let imageZoomPersistenzeId = $( '#persistenceId' ).val();
                 if(this.opts.persistZoom && imageZoomPersistenzeId && imageZoomPersistenzeId.length > 0) {
                     console.log("persist image zoom with id ", imageZoomPersistenzeId);
                     configViewer.global.persistenceId = imageZoomPersistenzeId;
                     configViewer.global.persistZoom =  true;
-                    configViewer.global.persistRotation = true;                    
+                    configViewer.global.persistRotation = true;
                 }
-				
+
 			    this.viewImage = new ImageView.Image( configViewer );
 			    this.viewImage.load()
 			    .then((image) => {
 				    this.viewImage.viewer.blendTime = 0.0;
 			    	console.log(this.viewImage.viewer.drawer.getOpacity())
 			        image.onFirstTileLoaded()
-			        .then(function() {										            
+			        .then(function() {
 			        	$('#ajaxloader_image').fadeOut(800);
 			        	resolve();
 			        })
@@ -252,11 +252,11 @@ loadInitialImage() {
 			        reject();
 			    });
 			})
-			
-		}) 
+
+		})
 	})
 }
-    
- 	
+
+
 </script>
 </fullscreen>
