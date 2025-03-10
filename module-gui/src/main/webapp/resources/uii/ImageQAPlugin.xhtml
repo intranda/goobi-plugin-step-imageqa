@@ -68,15 +68,15 @@
 .goobi-thumbnail {
 	float: left;
 	margin: 7px;
-	width: #{AktuelleSchritteForm.myPlugin.thumbnailSize +2}px;
-    height: #{AktuelleSchritteForm.myPlugin.thumbnailSize + 55}px;
+	width: var(--thumbnail-width);
+    height: var(--thumbnail-height);
 }
 .goobi-thumbnail .goobi-thumbnail-image {
 	float: left;
 	width: 100%;
 	min-height: 100px;
 	overflow: hidden;
-	max-height: #{AktuelleSchritteForm.myPlugin.thumbnailSize +2}px;
+	max-height: var(--thumbnail-width);
 }
 </style>
 
@@ -259,7 +259,8 @@
                                         varStatus="status">
                                             <div
                                                 class="goobi-thumbnail #{AktuelleSchritteForm.myPlugin.image.imageName eq image.imageName?'img-active':'font-light'}"
-                                                dir="auto">
+                                                dir="auto"
+                                                style="--thumbnail-width: #{AktuelleSchritteForm.myPlugin.thumbnailSize +2}px; --thumbnail-height: #{AktuelleSchritteForm.myPlugin.thumbnailSize + 55}px;">
                                                 <div class="goobi-thumbnail-image">
 
                                                     <!-- THUMBNAIL DISPLAY -->
@@ -644,7 +645,7 @@
                             <h:panelGroup id="bigimage" layout="block">
 
                                 <!-- PAGINATION FOR OBJECT ON TOP -->
-                                <div class="d-flex justify-content-between flex-wrap">
+                                <div class="d-flex justify-content-between flex-wrap gap-2">
                                     <f:subview id="first_image">
                                         <ui:include
                                             src="ImageQAPlugin_include_imagenavigation.xhtml" />
