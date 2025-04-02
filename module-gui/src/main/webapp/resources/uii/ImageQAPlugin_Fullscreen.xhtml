@@ -33,55 +33,53 @@
         rel="stylesheet"
         href="imageQA.css" />
     <ui:define name="content">
-        <head>
-<link
-    rel="stylesheet"
-    href="imageQA_Fullscreen.css" />
-<script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/static/reactiveX/rx.lite.min.js"></script>
-<script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/static/q-promises/q.min.js"></script>
+        <link
+            rel="stylesheet"
+            href="imageQA_Fullscreen.css" />
+        <script src="#{HelperForm.applicationWebsiteUrl}uii/template/js/static/reactiveX/rx.lite.min.js"></script>
+        <script src="#{HelperForm.applicationWebsiteUrl}uii/template/js/static/q-promises/q.min.js"></script>
 
-<script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/static/openseadragon/openseadragon.min.js"></script>
-<script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/static/openseadragon/openseadragon-viewerinputhook.js"></script>
+        <script src="#{HelperForm.applicationWebsiteUrl}uii/template/js/static/openseadragon/openseadragon.min.js"></script>
+        <script src="#{HelperForm.applicationWebsiteUrl}uii/template/js/static/openseadragon/openseadragon-viewerinputhook.js"></script>
 
-<!-- 3D-Models -->
-<script
-    type="text/javascript"
-    src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/static/three/three.min.js"></script>
-<script
-    type="text/javascript"
-    src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/static/three/loaders/OBJLoader.js"></script>
-<script
-    type="text/javascript"
-    src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/static/three/loaders/MTLLoader.js"></script>
-<script
-    type="text/javascript"
-    src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/static/three/loaders/PLYLoader.js"></script>
-<script
-    type="text/javascript"
-    src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/static/three/loaders/STLLoader.js"></script>
-<script
-    type="text/javascript"
-    src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/static/three/loaders/FBXLoader.js"></script>
-<script
-    type="text/javascript"
-    src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/static/three/loaders/TDSLoader.js"></script>
-<script
-    type="text/javascript"
-    src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/static/three/loaders/DRACOLoader.js"></script>
-<script
-    type="text/javascript"
-    src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/static/three/loaders/GLTFLoader.js"></script>
-<script
-    type="text/javascript"
-    src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/static/three/controls/OrbitControls.js"></script>
-<script
-    type="text/javascript"
-    src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/static/three/dependencies/inflate.min.js"></script>
-<script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/static/x3dom/x3dom.js"></script>
+        <!-- 3D-Models -->
+        <script
+            type="text/javascript"
+            src="#{HelperForm.applicationWebsiteUrl}uii/template/js/static/three/three.min.js"></script>
+        <script
+            type="text/javascript"
+            src="#{HelperForm.applicationWebsiteUrl}uii/template/js/static/three/loaders/OBJLoader.js"></script>
+        <script
+            type="text/javascript"
+            src="#{HelperForm.applicationWebsiteUrl}uii/template/js/static/three/loaders/MTLLoader.js"></script>
+        <script
+            type="text/javascript"
+            src="#{HelperForm.applicationWebsiteUrl}uii/template/js/static/three/loaders/PLYLoader.js"></script>
+        <script
+            type="text/javascript"
+            src="#{HelperForm.applicationWebsiteUrl}uii/template/js/static/three/loaders/STLLoader.js"></script>
+        <script
+            type="text/javascript"
+            src="#{HelperForm.applicationWebsiteUrl}uii/template/js/static/three/loaders/FBXLoader.js"></script>
+        <script
+            type="text/javascript"
+            src="#{HelperForm.applicationWebsiteUrl}uii/template/js/static/three/loaders/TDSLoader.js"></script>
+        <script
+            type="text/javascript"
+            src="#{HelperForm.applicationWebsiteUrl}uii/template/js/static/three/loaders/DRACOLoader.js"></script>
+        <script
+            type="text/javascript"
+            src="#{HelperForm.applicationWebsiteUrl}uii/template/js/static/three/loaders/GLTFLoader.js"></script>
+        <script
+            type="text/javascript"
+            src="#{HelperForm.applicationWebsiteUrl}uii/template/js/static/three/controls/OrbitControls.js"></script>
+        <script
+            type="text/javascript"
+            src="#{HelperForm.applicationWebsiteUrl}uii/template/js/static/three/dependencies/inflate.min.js"></script>
+        <script src="#{HelperForm.applicationWebsiteUrl}uii/template/js/static/x3dom/x3dom.js"></script>
 
-<script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/static/imageView.min.js"></script>
-<script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/static/objectView.min.js"></script>
-        </head>
+        <script src="#{HelperForm.applicationWebsiteUrl}uii/template/js/static/imageView.min.js"></script>
+        <script src="#{HelperForm.applicationWebsiteUrl}uii/template/js/static/objectView.min.js"></script>
         <main>
             <h:form id="qaform">
                 <!-- big image -->
@@ -240,7 +238,7 @@
                     <ui:fragment rendered="#{AktuelleSchritteForm.myPlugin.image.type == 'image'}">
                         <div
                             id="zoomSliderLabel"
-                            class="font-light">
+                            class="fullscreen-control">
                             <input aria-label="#{msgs.sizeOfImages}"></input><span>%</span>
                         </div>
                     </ui:fragment>
@@ -327,9 +325,11 @@
                             </nav>
                         </div>
                     </ui:fragment>
-                    <div style="position: absolute; top: 10px; right: 10px;">
+                    <div
+                        class="fullscreen-control"
+                        style="top: 0; right: 0;">
                         <button
-                            class="btn btn-blank"
+                            class="btn btn-outline"
                             jsf:rendered="#{AktuelleSchritteForm.myPlugin.displayOcrButton}"
                             title="#{msgs.mets_showOcrForCurrentImage}"
                             aria-label="#{msgs.mets_showOcrForCurrentImage}"
@@ -337,9 +337,8 @@
                             <i class="fa fa-file-text-o"></i>
                         </button>
                         <!-- exit fullscreen -->
-                        <!-- style="position:absolute;top:10px; right:10px; " -->
                         <button
-                            class="btn btn-blank"
+                            class="btn btn-outline"
                             jsf:action="ImageQAPlugin"
                             aria-label="#{msgs.imageDefaultDisplay}"
                             title="#{msgs.imageDefaultDisplay}">
@@ -349,13 +348,13 @@
                     <!-- previous image -->
                     <button
                         jsf:id="imageBack"
-                        class="btn btn-blank font-size-s"
+                        class="btn btn-outline fullscreen-control"
                         aria-label="#{msgs.lw_previousImage}"
                         title="#{msgs.lw_previousImage}"
-                        style="position:absolute;top:50vh; left:10px; height:50px;">
-                        <i
+                        style="position:absolute;top:50vh; left:0px; height:50px;">
+                        <span
                             class="fa fa-chevron-left"
-                            style="margin-top: 18px" />
+                            aria-hidden="true" />
                         <f:ajax
                             execute="@form"
                             render="@form"
@@ -368,13 +367,13 @@
                     <!-- next image -->
                     <button
                         jsf:id="imageNext"
-                        class="btn btn-blank font-size-s"
+                        class="btn btn-outline fullscreen-control"
                         aria-label="#{msgs.lw_nextImage}"
                         title="#{msgs.lw_nextImage}"
-                        style="position:absolute;top:50vh; right:10px; height:50px;">
-                        <i
+                        style="position:absolute;top:50vh; right:0px; height:50px;">
+                        <span
                             class="fa fa-chevron-right"
-                            style="margin-top: 18px" />
+                            aria-hidden="true" />
                         <f:ajax
                             execute="@form"
                             render="@form"
@@ -387,13 +386,15 @@
                     <!-- file name -->
                     <h1 style="margin: 0px;">
                         <h:outputText
-                            styleClass="font-white"
-                            style="position:absolute;bottom:10px; left:10px; font-size:12px;"
+                            styleClass="font-white fullscreen-control"
+                            style="position:absolute;bottom:0px; left:0px; "
                             value="#{AktuelleSchritteForm.myPlugin.image.imageName}" />
                     </h1>
 
                     <!-- image number -->
-                    <div style="position: absolute; bottom: 10px; right: 10px;">
+                    <div
+                        class="fullscreen-control"
+                        style="bottom: 0px; right:0px;">
                         <h:outputText
                             id="txtImageMoveTo1"
                             styleClass="font-white"
@@ -416,10 +417,12 @@
                             style="display:none" />
                     </div>
                     <!-- first and last page -->
-                    <div style="position: absolute; top: 10px; left: 10px; display: none;">
+                    <div
+                        class="fullscreen-control"
+                        style="position: absolute; top: 0px; left: 0px; display: none;">
                         <button
                         	jsf:id="firstImg"
-                            class="btn btn-blank font-size-s margin-right-10"
+                            class="btn btn-outline font-size-s margin-right-10"
                             title="#{msgs.firstImage}">
                             <i class="fa fa-double-angle-left"></i>
                             <f:ajax
@@ -431,7 +434,7 @@
                         </button>
                         <button
                         	jsf:id="lastImg"
-                            class="btn btn-blank font-size-s"
+                            class="btn btn-outline font-size-s"
                             title="#{msgs.lastImage}">
                             <i class="fa fa-double-angle-right"></i>
                             <f:ajax

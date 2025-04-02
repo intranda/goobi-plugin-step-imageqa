@@ -4,38 +4,43 @@
 	        <img src="template/img/goobi/ajaxloader1.gif" />
 	    </div>
 	</div>
-	<div id="zoomSliderLabel" class="font-light">
+	<div id="zoomSliderLabel" class="fullscreen-control">
             <input aria-label="{msgs.sizeOfImages}"></input><span>%</span>
     </div>
 
-    <div style="position:absolute;top:10px; right:10px;">
-		<button class="btn btn-blank" onclick={leave} aria-label="{msgs.imageDefaultDisplay}" title="{msgs.imageDefaultDisplay}" >
+    <div
+		class="fullscreen-control"
+		style="top:0; right:0;">
+		<button class="btn btn-outline" onclick={leave} aria-label="{msgs.imageDefaultDisplay}" title="{msgs.imageDefaultDisplay}" >
 			<i class="fa fa-close"></i>
 		</button>
 	</div>
 	<!-- previous image -->
-	<button id="imageBack" class="btn btn-blank font-size-s" aria-label="{msgs.lw_previousImage}" title="{msgs.lw_previousImage}"
-		style="position:absolute;top:50vh; left:10px; height:50px;padding-top:2px;"
+	<button id="imageBack" class="btn btn-outline fullscreen-control" aria-label="{msgs.lw_previousImage}" title="{msgs.lw_previousImage}"
+		style="top:50vh; left:0;"
 		onclick={previousImage}>
 		<i class="fa fa-angle-left"></i>
 	</button>
 
 	<!-- next image -->
-	<button id="imageNext" class="btn btn-blank font-size-s" aria-label="{msgs.lw_nextImage}" title="{msgs.lw_nextImage}"
-		style="position:absolute;top:50vh; right:10px; height:50px; padding-top:2px;"
+	<button id="imageNext" class="btn btn-outline fullscreen-control" aria-label="{msgs.lw_nextImage}" title="{msgs.lw_nextImage}"
+		style="top:50vh; right:0px;"
 		onclick={nextImage}>
 		<i class="fa fa-angle-right"></i>
 	</button>
 
 	<!-- file name -->
 	<h1 style="margin: 0px;">
-		<span class="font-white" style="position:absolute;bottom:10px; left:10px; font-size: 12px;">
+		<span class="fullscreen-control"
+			style="bottom:0; left:0;">
 			{currentImage().imageName}
 		</span>
 	</h1>
 
 	<!-- image number -->
-	<div style="position:absolute;bottom:10px; right:10px;">
+	<div
+		class="fullscreen-control"
+		style="bottom:0; right:0;">
 	    <span id="txtImageMoveTo1" class="font-white"
 	    	if={!showPagenumberInput}
 	        onclick={showAndFocusImageNumberInput}>
@@ -54,8 +59,11 @@
 this.msgs = {};
 this.imageIndex = 0;
 this.allImages = [];
-this.currentImage = {};
 this.infoJsonCache = {};
+
+this.on('beforeMount', () => {
+	this.currentImage = {};
+});
 
 this.on("mount", () => {
 	console.log("mounting fullscreen", this.opts);
