@@ -1,45 +1,50 @@
-<!-- 
+<!--
  * This file is part of a plugin for Goobi - a Workflow tool for the support of mass digitization.
- * 
- * Visit the websites for more information. 
+ *
+ * Visit the websites for more information.
  *          - https://goobi.io
  *          - https://www.intranda.com
  *          - https://github.com/intranda/goobi
- * 
+ *
  * This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free
  * Software Foundation; either version 2 of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59
  * Temple Place, Suite 330, Boston, MA 02111-1307 USA
- * 
+ *
  -->
-<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://xmlns.jcp.org/jsf/facelets" xmlns:composite="http://xmlns.jcp.org/jsf/composite"
-	xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:f="http://xmlns.jcp.org/jsf/core" 
-xmlns:pt="http://xmlns.jcp.org/jsf/passthrough" xmlns:jsf="http://xmlns.jcp.org/jsf">
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:composite="http://xmlns.jcp.org/jsf/composite"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
 
 	<composite:interface>
 	</composite:interface>
 
 	<composite:implementation>
 		<!-- navigation for big image -->
-		<div class="pull-center image-navigation">
-				<button 
+		<div class="image-navigation">
+				<button
 					jsf:action="#{AktuelleSchritteForm.myPlugin.imageLeftmost}"
-					class="btn btn-blank me-3" 
+					class="btn btn-blank me-3"
                     aria-label="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.lastImage:msgs.firstImage}"
 					title="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.lastImage:msgs.firstImage}">
 					<i class="fa fa-angle-double-left"></i>
 					<f:ajax execute="@form" render="@form :qaform:bigimage" onevent="freeJSResources"/>
 				</button>
-					
-				<button 
+
+				<button
 					jsf:action="#{AktuelleSchritteForm.myPlugin.imageLeft}"
-					jsf:id="imageBack" 
+					jsf:id="imageBack"
 					class="btn btn-neutral-600"
-                    aria-label="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.lw_nextImage:msgs.lw_previousImage}" 
+                    aria-label="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.lw_nextImage:msgs.lw_previousImage}"
 					title="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.lw_nextImage:msgs.lw_previousImage}">
 					<i class="fa fa-angle-left"></i>
 					<span>
@@ -47,15 +52,15 @@ xmlns:pt="http://xmlns.jcp.org/jsf/passthrough" xmlns:jsf="http://xmlns.jcp.org/
                     </span>
 					<f:ajax execute="@form" render="@form :qaform:bigimage" onevent="freeJSResources"/>
 				</button>
-                
+
 				<div class="ms-3 me-3 d-inline">
                     <!-- CURRENT PAGE -->
                     <h:outputText id="txtImageMoveTo1"
                         value="#{AktuelleSchritteForm.myPlugin.imageIndex +1} #{msgs.von}  #{AktuelleSchritteForm.myPlugin.sizeOfImageList}"
                         onclick="document.getElementById(this.id).nextSibling.style.display='inline';
-                        document.getElementById(this.id).style.display='none';  
-                        document.getElementById(this.id).nextSibling.focus(); 
-                        document.getElementById(this.id).nextSibling.select();" /> 
+                        document.getElementById(this.id).style.display='none';
+                        document.getElementById(this.id).nextSibling.focus();
+                        document.getElementById(this.id).nextSibling.select();" />
                     <!-- JUMP TO PAGE -->
                     <h:inputText value="#{AktuelleSchritteForm.myPlugin.imageMoveTo}" style="display:none;font-size:9px;width:30px"
                         required="true" id="txtImageMoveTo2" pt:data-input="imageMoveTo"
@@ -63,12 +68,12 @@ xmlns:pt="http://xmlns.jcp.org/jsf/passthrough" xmlns:jsf="http://xmlns.jcp.org/
                         onkeypress="copyValue(this,event);" />
                     <h:commandButton action="#{NavigationForm.Reload}" value="go" style="display:none" />
 				</div>
-                
-				<button 
+
+				<button
 					jsf:action="#{AktuelleSchritteForm.myPlugin.imageRight}"
-					jsf:id="imageNext" 
+					jsf:id="imageNext"
 					class="btn btn-neutral-600"
-                    aria-label="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.lw_previousImage:msgs.lw_nextImage}" 
+                    aria-label="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.lw_previousImage:msgs.lw_nextImage}"
 					title="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.lw_previousImage:msgs.lw_nextImage}">
 					<span>
                         <h:outputText value="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.lw_previousImage:msgs.lw_nextImage} " />
@@ -76,20 +81,18 @@ xmlns:pt="http://xmlns.jcp.org/jsf/passthrough" xmlns:jsf="http://xmlns.jcp.org/
 					<i class="fa fa-angle-right ms-2"></i>
 					<f:ajax execute="@form" render="@form :qaform:bigimage" onevent="freeJSResources" />
 				</button>
-						
-				<button 
+
+				<button
 					jsf:action="#{AktuelleSchritteForm.myPlugin.imageRightmost}"
 					class="btn btn-blank ms-3"
-                    aria-label="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.firstImage:msgs.lastImage}" 
+                    aria-label="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.firstImage:msgs.lastImage}"
 					title="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.firstImage:msgs.lastImage}">
 					<i class="fa fa-angle-double-right"></i>
 					<f:ajax execute="@form" render="@form :qaform:bigimage" onevent="freeJSResources"/>
 				</button>
-				
+
 		</div>
 		<!-- // navigation for big image -->
 
 	</composite:implementation>
 </ui:composition>
-
-

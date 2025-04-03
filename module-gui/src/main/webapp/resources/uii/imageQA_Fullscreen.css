@@ -6,6 +6,7 @@
 }
 
 html, body {
+	background: black;
 	overflow-x: hidden;
 }
 
@@ -28,18 +29,18 @@ html, body {
 }
 
 #zoomSliderLabel {
-	position: absolute;
-	top: 10px;
-	left: 10px;
-	width: 100px;
-	background: transparent;
+	align-items: center;
+	display: flex;
+	top: 0;
+	left: 0;
 	border: none;
 }
 
 #zoomSliderLabel input {
 	border: none;
 	background-color: transparent;
-	width: 60px;
+	color: #aaa;
+	width: 2rem;
 	text-align: right;
 }
 
@@ -49,7 +50,7 @@ html, body {
 }
 
 #viewer_controls_nav {
-	
+
 }
 
 #viewer_controls_nav ul {
@@ -72,4 +73,13 @@ br {
 #ocrText {
 	max-height: 100vh;
 	overflow-y: auto;
+}
+
+.fullscreen-control {
+	--bs-body-color: #aaa;
+	background: rgba(0,0,0,0.6);
+	color: #aaa;
+	font-size: 0.625rem;
+	padding: 1em;
+	position: absolute;
 }

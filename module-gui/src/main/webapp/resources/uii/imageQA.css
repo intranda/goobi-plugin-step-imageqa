@@ -111,7 +111,7 @@
 }
 
 .imageqa-thumb-massbutton{
-	width: 15px;	
+	width: 15px;
 }
 
 .big-image-caption {
@@ -130,10 +130,9 @@
 }
 
 .image-navigation {
-	margin-bottom: 5px;
-	display: inline-block;
-	padding: 0;
-	border-bottom: 0 !important;
+	align-items: center;
+	display: flex;
+	flex-wrap: nowrap;
 }
 
 #mainImage {
@@ -312,8 +311,7 @@
 #viewer_controls_nav ul li .zoom-slider {
 	width: 12rem;
 	height: 1.5rem;
-	margin-top: 0.6rem;
-	margin-right: 0;
+	margin-top: 0.2rem;
 	margin-left: 55px;
 	border: 1px solid #6f6f6f;
 	position: relative;
@@ -340,7 +338,7 @@
 }
 
 .zoom-slider::-webkit-slider-runnable-track {
-	
+
 }
 
 .zoom-slider::focus {

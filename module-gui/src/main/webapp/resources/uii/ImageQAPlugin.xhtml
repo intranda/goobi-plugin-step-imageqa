@@ -1,20 +1,20 @@
-<!-- 
+<!--
  * This file is part of a plugin for Goobi - a Workflow tool for the support of mass digitization.
- * 
- * Visit the websites for more information. 
+ *
+ * Visit the websites for more information.
  *          - https://goobi.io
  *          - https://www.intranda.com
  *          - https://github.com/intranda/goobi
- * 
+ *
  * This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free
  * Software Foundation; either version 2 of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59
  * Temple Place, Suite 330, Boston, MA 02111-1307 USA
- * 
+ *
  -->
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
     xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
@@ -23,8 +23,8 @@
     xmlns:f="http://xmlns.jcp.org/jsf/core"
     xmlns:o="http://omnifaces.org/ui"
     xmlns:of="http://omnifaces.org/functions"
-    template="/uii/templatePG/templatePG.html"
-    xmlns:intranda="http://xmlns.jcp.org/jsf/composite/compositesPG"
+    template="/uii/template/template.html"
+    xmlns:intranda="http://xmlns.jcp.org/jsf/composite/composites"
     xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
     xmlns:jsf="http://xmlns.jcp.org/jsf">
 
@@ -68,72 +68,72 @@
 .goobi-thumbnail {
 	float: left;
 	margin: 7px;
-	width: #{AktuelleSchritteForm.myPlugin.thumbnailSize +2}px;
-    height: #{AktuelleSchritteForm.myPlugin.thumbnailSize + 55}px;
+	width: var(--thumbnail-width);
+    height: var(--thumbnail-height);
 }
 .goobi-thumbnail .goobi-thumbnail-image {
 	float: left;
 	width: 100%;
 	min-height: 100px;
 	overflow: hidden;
-	max-height: #{AktuelleSchritteForm.myPlugin.thumbnailSize +2}px;
+	max-height: var(--thumbnail-width);
 }
 </style>
 
             <script
-                src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/reactiveX/rx.lite.min.js"></script>
+                src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/static/reactiveX/rx.lite.min.js"></script>
             <script
-                src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/q-promises/q.min.js"></script>
+                src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/static/q-promises/q.min.js"></script>
 
             <script
-                src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/openseadragon/openseadragon.min.js"></script>
+                src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/static/openseadragon/openseadragon.min.js"></script>
             <script
-                src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/openseadragon/openseadragon-viewerinputhook.js"></script>
+                src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/static/openseadragon/openseadragon-viewerinputhook.js"></script>
 
             <!-- 3D-Models -->
             <script type="text/javascript"
-                src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/three/three.min.js"></script>
+                src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/static/three/three.min.js"></script>
             <script type="text/javascript"
-                src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/three/loaders/OBJLoader.js"></script>
+                src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/static/three/loaders/OBJLoader.js"></script>
             <script type="text/javascript"
-                src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/three/loaders/MTLLoader.js"></script>
+                src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/static/three/loaders/MTLLoader.js"></script>
             <script type="text/javascript"
-                src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/three/loaders/PLYLoader.js"></script>
+                src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/static/three/loaders/PLYLoader.js"></script>
             <script type="text/javascript"
-                src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/three/loaders/STLLoader.js"></script>
+                src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/static/three/loaders/STLLoader.js"></script>
             <script type="text/javascript"
-                src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/three/loaders/FBXLoader.js"></script>
+                src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/static/three/loaders/FBXLoader.js"></script>
             <script type="text/javascript"
-                src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/three/loaders/TDSLoader.js"></script>
+                src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/static/three/loaders/TDSLoader.js"></script>
             <script type="text/javascript"
-                src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/three/loaders/DRACOLoader.js"></script>
+                src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/static/three/loaders/DRACOLoader.js"></script>
             <script type="text/javascript"
-                src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/three/loaders/GLTFLoader.js"></script>
+                src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/static/three/loaders/GLTFLoader.js"></script>
             <script type="text/javascript"
-                src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/three/controls/OrbitControls.js"></script>
+                src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/static/three/controls/OrbitControls.js"></script>
             <script type="text/javascript"
-                src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/three/dependencies/inflate.min.js"></script>
+                src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/static/three/dependencies/inflate.min.js"></script>
             <script
-                src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/x3dom/x3dom.js"></script>
+                src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/static/x3dom/x3dom.js"></script>
 
             <script
-                src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/imageView.min.js"></script>
+                src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/static/imageView.min.js"></script>
             <script
-                src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/objectView.min.js"></script>
+                src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/static/objectView.min.js"></script>
 
             <h:form id="qaform">
-            
+
                 <!-- BIG BOX -->
                 <intranda:box
                     boxType="neutral"
                     boxTitle="false"
                     boxForm="false">
-        
+
                     <!-- BOX TITLE WITH BUTTONS -->
                     <intranda:boxTitle
                         title="#{AktuelleSchritteForm.myPlugin.step.titel}"
                         icon="fa-puzzle-piece">
-        
+
                         <div class="actions d-flex">
 
                             <!-- CHANGE FOLDER -->
@@ -175,7 +175,7 @@
                                 jsf:rendered="#{AktuelleSchritteForm.myPlugin.thumbnailsOnly and AktuelleSchritteForm.myPlugin.useJSFullscreen}">
                                 <i class="fa fa-arrows-alt"></i>
                             </button>
-                            
+
                              <!-- REGULAR FULLSCREEN BUTTON -->
                             <button
                                 class="btn d-flex align-items-center btn--title-action"
@@ -184,7 +184,7 @@
                                 jsf:rendered="#{AktuelleSchritteForm.myPlugin.thumbnailsOnly and not AktuelleSchritteForm.myPlugin.useJSFullscreen}">
                                 <i class="fa fa-arrows-alt"></i>
                             </button>
-                            
+
                             <!-- RELOAD BUTTON -->
                             <button jsf:id="id10"
                                 aria-label="#{msgs.reload}"
@@ -216,15 +216,15 @@
                                     target="#{NavigationForm.uiStatus.pluginSimulation}"
                                     value="#{false}" />
                             </button>
-                                
+
                         </div>
                     </intranda:boxTitle>
                     <!-- // BOX TITLE WITH BUTTONS -->
 
                     <div class="p-4">
                       <div class="row">
-    
-                        
+
+
                         <!-- PLACEHOLDER FOR LEFT AND RIGHT AREA IF NO CONTENT WAS FOUND -->
                         <h:panelGroup layout="block"
                             rendered="#{AktuelleSchritteForm.myPlugin.sizeOfImageList == 0}"
@@ -232,8 +232,8 @@
                             <h:outputText value="#{msgs.noImagesFound}" />
                         </h:panelGroup>
                         <!-- // PLACEHOLDER FOR LEFT AND RIGHT AREA IF NO CONTENT WAS FOUND -->
-                        
-                        
+
+
                         <!-- LEFT AREA FOR THUMBNAILS -->
                         <div
                             class="#{AktuelleSchritteForm.myPlugin.thumbnailsOnly ? 'col-sm-12' : AktuelleSchritteForm.myPlugin.displayOCR ? 'col-sm-5' : 'col-sm-7'} col-xs-12">
@@ -259,12 +259,13 @@
                                         varStatus="status">
                                             <div
                                                 class="goobi-thumbnail #{AktuelleSchritteForm.myPlugin.image.imageName eq image.imageName?'img-active':'font-light'}"
-                                                dir="auto">
+                                                dir="auto"
+                                                style="--thumbnail-width: #{AktuelleSchritteForm.myPlugin.thumbnailSize +2}px; --thumbnail-height: #{AktuelleSchritteForm.myPlugin.thumbnailSize + 55}px;">
                                                 <div class="goobi-thumbnail-image">
 
                                                     <!-- THUMBNAIL DISPLAY -->
                                                     <div class="thumb text-center">
-                                                        
+
                                                         <button
                                                             jsf:id="imageClick"
                                                             class="border-0 btn"
@@ -287,7 +288,7 @@
                                                                     class="thumbnails__thumb-placeholder"
                                                                     src="#{HelperForm.servletPathWithHostAsUrl}/uii/template/img/goobi_3d_object_placeholder.png" />
                                                             </ui:fragment>
-                                                            
+
                                                             <!-- VIDEO -->
                                                             <ui:fragment
                                                                 rendered="#{image.type == 'video'}">
@@ -377,7 +378,7 @@
                                                                 jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowReordering}">
                                                             <i class="fa fa-caret-right" />
                                                         </button>
-                                                        
+
                                                         <!-- DELETE BUTTON -->
                                                         <button
                                                             class="btn btn-blank thumbnail-control delete"
@@ -452,12 +453,12 @@
                                                         </h:panelGroup>
 
                                                         <!--  BUTTON FOR RENAMING INSIDE OF MODAL  -->
-                                                        <button 
+                                                        <button
                                                             jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowRenaming}"
                                                             type="button"
                                                             title="#{msgs.plugin_intranda_step_imageQA_rename} #{image.tooltip}"
-                                                            class="btn btn-blank thumbnail-control rename" 
-                                                            data-bs-toggle="modal" 
+                                                            class="btn btn-blank thumbnail-control rename"
+                                                            data-bs-toggle="modal"
                                                             data-bs-target="#myModal-#{status.index}">
                                                           <i class="fa fa-pencil " />
                                                         </button>
@@ -479,7 +480,7 @@
                                                                 onclick="if (!confirm('#{msgs.wirklichAusfuehren}')) return false">
                                                             <i class="fa fa-caret-right" />
                                                         </button>
-                                                        
+
                                                         <!-- DELETE BUTTON -->
                                                         <button
                                                             class="btn btn-blank thumbnail-control delete"
@@ -618,7 +619,7 @@
                                         </ui:repeat>
                                 </div>
                                 <!-- // LIST ALL THUMBNAILS ON THE LEFT -->
-                                
+
 
                                 <!-- THUMB PAGINATOR AT BOTTOM -->
                                 <div class="row">
@@ -641,10 +642,10 @@
                             rendered="#{AktuelleSchritteForm.myPlugin.sizeOfImageList gt 0 and not AktuelleSchritteForm.myPlugin.thumbnailsOnly}"
                             class="#{AktuelleSchritteForm.myPlugin.displayOCR ? 'col-xs-12 col-sm-7' : 'col-xs-12 col-sm-5'}"
                             layout="block">
-                            <h:panelGroup id="bigimage">
+                            <h:panelGroup id="bigimage" layout="block">
 
                                 <!-- PAGINATION FOR OBJECT ON TOP -->
-                                <div class="row ms-1">
+                                <div class="d-flex justify-content-between flex-wrap gap-2">
                                     <f:subview id="first_image">
                                         <ui:include
                                             src="ImageQAPlugin_include_imagenavigation.xhtml" />
@@ -739,16 +740,16 @@
                                                 </div>
                                                 <!-- // AJAX LOADER -->
 
-                                                
+
                                                 <!-- PAGINATION FOR OBJECT AT BOTTOM -->
-                                                <div class="row mt-3">
-                                                    <div class="col-sm-9">
+                                                <div class="d-flex justify-content-between mt-3">
+                                                    <div>
                                                         <f:subview id="second_image">
                                                             <ui:include
                                                                 src="ImageQAPlugin_include_imagenavigation.xhtml" />
                                                         </f:subview>
                                                     </div>
-                                                    <div class="col-sm-3 font-light text-end pt-2">
+                                                    <div class="d-flex align-items-center font-light">
                                                         <h:outputText
                                                                 value="#{AktuelleSchritteForm.myPlugin.image.imageName}" />
                                                     </div>
@@ -778,10 +779,10 @@
                                                     </div>
                                                 </div>
                                                 <!-- // IMAGE COMMENTS -->
-                                                
+
                                             </div>
                                         </div>
-                                        
+
                                         <!-- OCR RESULT -->
                                         <ui:fragment rendered="#{AktuelleSchritteForm.myPlugin.displayOCR}">
                                             <div class="col-xs-12 col-sm-6 border">
@@ -795,12 +796,12 @@
                                             </div>
                                         </ui:fragment>
                                         <!--  // OCR RESULT -->
-                                    
+
                                     </div>
 
                                 </ui:fragment>
                                 <!-- // IMAGE AND OBJECT DISPLAY ON THE RIGHT -->
-                                
+
                                 <script type="text/javascript">
                               		//<![CDATA[
                                     var configViewer = {
@@ -823,8 +824,8 @@
                                             // originalImageWidth: "#{AktuelleSchritteForm.myPlugin.image.size.width}",
                                             // originalImageHeight: "#{AktuelleSchritteForm.myPlugin.image.size.height}",
                                         }
-                                    };                                  
-                                                                    
+                                    };
+
                                     var worldConfig = {
                                             controls: {
                                                 xAxis: {
@@ -840,7 +841,7 @@
                                                     rotateRight: '#rotate-right-z'
                                                 },
                                                 position: {
-                                                    reset: '#reset-position'   
+                                                    reset: '#reset-position'
                                                 },
                                                 zoom: {
                                                     resetZoom: '#reset#zoom'
@@ -850,24 +851,24 @@
                                                 id: "mainImage"
                                             },
                                      };
-                                    
+
                                     var mediaType = "#{AktuelleSchritteForm.myPlugin.image.type}";
                                     if(mediaType == "image") {
-                                                
+
                                     	//init zoom persistence
                                     	let imageZoomPersistenzeId = $( '#persistenceId' ).val();
                                         if(#{AktuelleSchritteForm.myPlugin.persistZoom} && imageZoomPersistenzeId && imageZoomPersistenzeId.length > 0) {
                                             console.log("persist image zoom with id ", imageZoomPersistenzeId);
                                             configViewer.global.persistenceId = imageZoomPersistenzeId;
                                             configViewer.global.persistZoom =  true;
-                                            configViewer.global.persistRotation = true;                    
+                                            configViewer.global.persistRotation = true;
                                         }
-                                    	
+
                                         var viewImage = new ImageView.Image( configViewer );
                                         viewImage.load()
                                         .then(function(image) {
                                             image.onFirstTileLoaded()
-                                            .then(function() {                                                  
+                                            .then(function() {
                                                 $('#ajaxloader_image').fadeOut(800);
                                             })
                                             .catch(function() {
@@ -879,7 +880,7 @@
                                             $('#ajaxloader_image').fadeOut(800);
                                             $('#' + configViewer.global.divId).html( 'Failed to load image: "' + error + '"' );
                                         });
-                                    
+
                                     } else if(mediaType == "object") {
                                        $('#ajaxloader_image').show();
                                         var world = WorldGenerator.create(worldConfig);
@@ -904,11 +905,11 @@
                                             $('#ajaxloader_image').fadeOut(2000);
                                              console.err("failed to load: ", error);
                                          })
-                                        
+
                                     } else if(mediaType == "x3dom") {
                                         var objectUrl = "#{AktuelleSchritteForm.myPlugin.image.objectUrl}";
                                        $('#ajaxloader_image').show();
-                                            new X3DLoader().load($('#mainImage'), objectUrl, 
+                                            new X3DLoader().load($('#mainImage'), objectUrl,
                                                 function(){
                                                     $('#ajaxloader_image').fadeOut(2000);
                                                     // console.log("loaded")
@@ -921,9 +922,9 @@
                                                    console.err("error", error);
                                                 })
                                     }
-                                            
+
                                      function freeJSResources(data) {
-                                            if(!data || data.status == 'begin') {                                               
+                                            if(!data || data.status == 'begin') {
                                                 if(viewImage) {
                                                     // console.log("closing OpenSeadragon viewer");
                                                     viewImage.close();
@@ -939,8 +940,8 @@
                             </h:panelGroup>
                         </h:panelGroup>
                         <!-- // RIGHT AREA FOR BIG DISPLAY OF IMAGES, VIDEO, 3D AND AUDIO -->
-                        
-                    
+
+
                       </div>
                     </div>
                 </intranda:box>
@@ -982,16 +983,16 @@
 
                 </div>
                 <!-- // ACTION AREA BELOW -->
-                
+
             </h:form>
 
 
             <script type="text/javascript">
-	        	
+
         	window.onload = function() {
 		    	loadImages();
 		    }
-			
+
 			function loadThumbnails() {
 				var height = parseInt('#{AktuelleSchritteForm.myPlugin.thumbnailSize}');
 				if (height) {
@@ -1001,11 +1002,11 @@
 		    		$('.goobi-thumbnail-image').css('max-width', (height) + 'px');
 				}
 			}
-		
+
 			$( document ).ready(function() {
 				loadThumbnails();
 			});
-		
+
 			faces.ajax.addOnEvent(function(data) {
 		    	var ajaxstatus = data.status; // Can be "begin", "complete" and "success"
 		      	switch (ajaxstatus) {
@@ -1015,12 +1016,12 @@
 		              	break;
 		      		}
 			});
-		
+
 			function copyValue(element, e) {
 		    	console.log(element.id);
 		    	console.log("data attr ", element.dataset.input);
 		    	if(element.dataset.input) {
-		    		document.querySelectorAll("[data-input='"+element.dataset.input+"']").forEach(input => input.value = element.value ); 
+		    		document.querySelectorAll("[data-input='"+element.dataset.input+"']").forEach(input => input.value = element.value );
 		    	} else if (element.id =='qaform:first:txtMoveTo2') {
 		        	document.getElementById('qaform:second:txtMoveTo2').value = element.value;
 		    	} else if (element.id =='qaform:second:txtMoveTo2'){
@@ -1030,7 +1031,7 @@
 		    	} else {
 		        	document.getElementById('qaform:first_image:txtImageMoveTo2').value = element.value;
 		    	}
-		    
+
 			    var keycode;
 				if (window.event)
 					keycode = window.event.keyCode;
@@ -1038,28 +1039,28 @@
 					keycode = e.which;
 				else
 					return true;
-			
+
 				if (keycode == 13) {
 					document.getElementById(element.id).nextSibling.click();
 					return false;
 				} else
 					return true;
 			}
-			
-			$(document).bind('keyup', '#{LoginForm.myBenutzer.shortcutPrefix}+right', function() {            	
+
+			$(document).bind('keyup', '#{LoginForm.myBenutzer.shortcutPrefix}+right', function() {
             	var myButton = document.getElementById("qaform:first_image:imageNext");
             	if (myButton!=null) {
             		myButton.click();
-            	} 
+            	}
             });
-            
-            $(document).bind('keyup', '#{LoginForm.myBenutzer.shortcutPrefix}+left', function() {            	
+
+            $(document).bind('keyup', '#{LoginForm.myBenutzer.shortcutPrefix}+left', function() {
             	var myButton = document.getElementById("qaform:first_image:imageBack");
             	if (myButton!=null) {
             		myButton.click();
-            	} 
+            	}
             });
-            
+
          	// Find the right method, call on correct element
             function launchFullScreen(element) {
               if(element.requestFullScreen) {
@@ -1072,7 +1073,7 @@
             }
 
 	</script>
-    
+
         </main>
     </ui:define>
 

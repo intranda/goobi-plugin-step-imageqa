@@ -1,20 +1,20 @@
-<!-- 
+<!--
  * This file is part of a plugin for Goobi - a Workflow tool for the support of mass digitization.
- * 
- * Visit the websites for more information. 
+ *
+ * Visit the websites for more information.
  *          - https://goobi.io
  *          - https://www.intranda.com
  *          - https://github.com/intranda/goobi
- * 
+ *
  * This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free
  * Software Foundation; either version 2 of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59
  * Temple Place, Suite 330, Boston, MA 02111-1307 USA
- * 
+ *
  -->
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
@@ -27,81 +27,11 @@
 	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
 	xmlns:intranda="http://xmlns.jcp.org/jsf/composite/composites"
 	xmlns:jsf="http://xmlns.jcp.org/jsf">
-
 	<ui:define name="content">
+		<link
+			rel="stylesheet"
+			href="imageQA_Fullscreen.css" />
 		<main>
-			<style>
-#mainImage {
-	background: black;
-	border: none;
-	widht: 100vw;
-	height: 100vh;
-}
-
-#mainImage #ajaxloader_image {
-	position: absolute;
-	left: 50%;
-	top: 50%;
-	margin-left: -34px;
-	margin-top: -21px;
-}
-
-#mainImage #ajaxloader_image img {
-	border: none;
-}
-
-html, body {
-	overflow-x: hidden;
-}
-
-#zoomSliderLabel {
-	position: absolute;
-	top: 10px;
-	left: 10px;
-	width: 100px;
-	background: transparent;
-	border: none;
-}
-
-#zoomSliderLabel input {
-	border: none;
-	background-color: transparent;
-	width: 60px;
-	text-align: right;
-}
-
-#zoomSliderLabel input:focus {
-	background-color: white;
-	color: #666;
-}
-
-#image-control-wrapper {
-	position: absolute;
-	top: 10px;
-	left: 10px;
-}
-
-#image-control-wrapper ul {
-	padding-left: 0;
-}
-
-#image-control-wrapper li {
-	display: inline-block;
-}
-
-#image-control-wrapper li label {
-	width: 50px;
-}
-
-#image-control-wrapper #reset-position {
-	margin-left: 86px;
-}
-
-body {
-	background-color: black;
-}
-</style>
-
 			<!--  The actual riot tag that renders the images and handles the info.json cache -->
 			<fullscreen></fullscreen>
 			<h:form id="actions">
@@ -111,43 +41,40 @@ body {
 			<input type="hidden" id="persistenceId"
 				value="#{AktuelleSchritteForm.myPlugin.title.concat('_fullscreen_').concat(AktuelleSchritteForm.myPlugin.process.id)}" />
 
+		</main>
+			<script
+				src="#{HelperForm.applicationWebsiteUrl}uii/template/js/static/q-promises/q.min.js"></script>
 
 			<script
-				src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/reactiveX/rx.lite.min.js"></script>
+				src="#{HelperForm.applicationWebsiteUrl}uii/template/js/static/imageView.min.js"></script>
 			<script
-				src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/q-promises/q.min.js"></script>
+				src="#{HelperForm.applicationWebsiteUrl}uii/template/js/static/openseadragon/openseadragon.min.js"></script>
+			<script
+				src="#{HelperForm.applicationWebsiteUrl}uii/template/js/static/openseadragon/openseadragon-viewerinputhook.js"></script>
 
-			<script
-				src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/imageView.min.js"></script>
-			<script
-				src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/openseadragon/openseadragon.min.js"></script>
-			<script
-				src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/openseadragon/openseadragon-viewerinputhook.js"></script>
-
-			<script src="template/js/riot+compiler.min.js" type="text/javascript"></script>
+			<script src="#{HelperForm.applicationWebsiteUrl}uii/template/js/static/riot+compiler.min.js" type="text/javascript"></script>
 			<script src="ImageQAPlugin_fullscreen.tag" type="riot/tag"></script>
 
 
 
 			<script type="text/javascript">
-	
-	       window.onload = function() {
-	    	   var opts = {
-              		lang: '#{SpracheForm.locale.language}',
-              		useTiles: #{AktuelleSchritteForm.myPlugin.useTilesFullscreen},
-              		imageSizes: #{AktuelleSchritteForm.myPlugin.displaySizes},
-              		tileSizes: #{AktuelleSchritteForm.myPlugin.tileSize},
-   					allImages: '#{AktuelleSchritteForm.myPlugin.allImagesJSON}',
-   					shortcutPrefix: '#{LoginForm.myBenutzer.shortcutPrefix}',
-   					startImage: #{AktuelleSchritteForm.myPlugin.imageIndex},
-   					noShortcutPrefix: #{AktuelleSchritteForm.myPlugin.noShortcutPrefix},
-   					persistZoom: #{AktuelleSchritteForm.myPlugin.persistZoom},
-              };
-	       	   riot.mount("fullscreen", opts);
-		    }
-			
+
+				document.addEventListener('DOMContentLoaded', function() {
+					let opts = {
+						lang: '#{SpracheForm.locale.language}',
+						useTiles: #{AktuelleSchritteForm.myPlugin.useTilesFullscreen},
+						imageSizes: #{AktuelleSchritteForm.myPlugin.displaySizes},
+						tileSizes: #{AktuelleSchritteForm.myPlugin.tileSize},
+						allImages: '#{AktuelleSchritteForm.myPlugin.allImagesJSON}',
+						shortcutPrefix: '#{LoginForm.myBenutzer.shortcutPrefix}',
+						startImage: #{AktuelleSchritteForm.myPlugin.imageIndex},
+						noShortcutPrefix: #{AktuelleSchritteForm.myPlugin.noShortcutPrefix},
+						persistZoom: #{AktuelleSchritteForm.myPlugin.persistZoom},
+					};
+					riot.mount("fullscreen", opts);
+				});
+
 		</script>
-		</main>
 	</ui:define>
 
 </ui:composition>

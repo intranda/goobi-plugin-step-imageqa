@@ -1,20 +1,20 @@
-<!-- 
+<!--
  * This file is part of a plugin for Goobi - a Workflow tool for the support of mass digitization.
- * 
- * Visit the websites for more information. 
+ *
+ * Visit the websites for more information.
  *          - https://goobi.io
  *          - https://www.intranda.com
  *          - https://github.com/intranda/goobi
- * 
+ *
  * This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free
  * Software Foundation; either version 2 of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59
  * Temple Place, Suite 330, Boston, MA 02111-1307 USA
- * 
+ *
  -->
 <ui:composition
     xmlns="http://www.w3.org/1999/xhtml"
@@ -33,55 +33,53 @@
         rel="stylesheet"
         href="imageQA.css" />
     <ui:define name="content">
-        <head>
-<link
-    rel="stylesheet"
-    href="imageQA_Fullscreen.css" />
-<script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/reactiveX/rx.lite.min.js"></script>
-<script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/q-promises/q.min.js"></script>
+        <link
+            rel="stylesheet"
+            href="imageQA_Fullscreen.css" />
+        <script src="#{HelperForm.applicationWebsiteUrl}uii/template/js/static/reactiveX/rx.lite.min.js"></script>
+        <script src="#{HelperForm.applicationWebsiteUrl}uii/template/js/static/q-promises/q.min.js"></script>
 
-<script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/openseadragon/openseadragon.min.js"></script>
-<script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/openseadragon/openseadragon-viewerinputhook.js"></script>
+        <script src="#{HelperForm.applicationWebsiteUrl}uii/template/js/static/openseadragon/openseadragon.min.js"></script>
+        <script src="#{HelperForm.applicationWebsiteUrl}uii/template/js/static/openseadragon/openseadragon-viewerinputhook.js"></script>
 
-<!-- 3D-Models -->
-<script
-    type="text/javascript"
-    src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/three/three.min.js"></script>
-<script
-    type="text/javascript"
-    src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/three/loaders/OBJLoader.js"></script>
-<script
-    type="text/javascript"
-    src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/three/loaders/MTLLoader.js"></script>
-<script
-    type="text/javascript"
-    src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/three/loaders/PLYLoader.js"></script>
-<script
-    type="text/javascript"
-    src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/three/loaders/STLLoader.js"></script>
-<script
-    type="text/javascript"
-    src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/three/loaders/FBXLoader.js"></script>
-<script
-    type="text/javascript"
-    src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/three/loaders/TDSLoader.js"></script>
-<script
-    type="text/javascript"
-    src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/three/loaders/DRACOLoader.js"></script>
-<script
-    type="text/javascript"
-    src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/three/loaders/GLTFLoader.js"></script>
-<script
-    type="text/javascript"
-    src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/three/controls/OrbitControls.js"></script>
-<script
-    type="text/javascript"
-    src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/three/dependencies/inflate.min.js"></script>
-<script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/x3dom/x3dom.js"></script>
+        <!-- 3D-Models -->
+        <script
+            type="text/javascript"
+            src="#{HelperForm.applicationWebsiteUrl}uii/template/js/static/three/three.min.js"></script>
+        <script
+            type="text/javascript"
+            src="#{HelperForm.applicationWebsiteUrl}uii/template/js/static/three/loaders/OBJLoader.js"></script>
+        <script
+            type="text/javascript"
+            src="#{HelperForm.applicationWebsiteUrl}uii/template/js/static/three/loaders/MTLLoader.js"></script>
+        <script
+            type="text/javascript"
+            src="#{HelperForm.applicationWebsiteUrl}uii/template/js/static/three/loaders/PLYLoader.js"></script>
+        <script
+            type="text/javascript"
+            src="#{HelperForm.applicationWebsiteUrl}uii/template/js/static/three/loaders/STLLoader.js"></script>
+        <script
+            type="text/javascript"
+            src="#{HelperForm.applicationWebsiteUrl}uii/template/js/static/three/loaders/FBXLoader.js"></script>
+        <script
+            type="text/javascript"
+            src="#{HelperForm.applicationWebsiteUrl}uii/template/js/static/three/loaders/TDSLoader.js"></script>
+        <script
+            type="text/javascript"
+            src="#{HelperForm.applicationWebsiteUrl}uii/template/js/static/three/loaders/DRACOLoader.js"></script>
+        <script
+            type="text/javascript"
+            src="#{HelperForm.applicationWebsiteUrl}uii/template/js/static/three/loaders/GLTFLoader.js"></script>
+        <script
+            type="text/javascript"
+            src="#{HelperForm.applicationWebsiteUrl}uii/template/js/static/three/controls/OrbitControls.js"></script>
+        <script
+            type="text/javascript"
+            src="#{HelperForm.applicationWebsiteUrl}uii/template/js/static/three/dependencies/inflate.min.js"></script>
+        <script src="#{HelperForm.applicationWebsiteUrl}uii/template/js/static/x3dom/x3dom.js"></script>
 
-<script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/imageView.min.js"></script>
-<script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/objectView.min.js"></script>
-        </head>
+        <script src="#{HelperForm.applicationWebsiteUrl}uii/template/js/static/imageView.min.js"></script>
+        <script src="#{HelperForm.applicationWebsiteUrl}uii/template/js/static/objectView.min.js"></script>
         <main>
             <h:form id="qaform">
                 <!-- big image -->
@@ -93,7 +91,7 @@
 									type="hidden"
 		                            id="persistenceId"
 		                            value="#{AktuelleSchritteForm.myPlugin.title.concat('_').concat(AktuelleSchritteForm.myPlugin.process.id)}" />
-                               
+
                                 <div id="mainImage">
                                     <div id="ajaxloader_image">
                                         <img src="template/img/goobi/ajaxloader1.gif" />
@@ -101,7 +99,7 @@
                                 </div>
                             </ui:fragment>
                             <script type="text/javascript">
-                          //<![CDATA[    	
+                          //<![CDATA[
                             	var configViewer = {
                             			    global: {
                             			    	divId: 'mainImage',
@@ -122,8 +120,8 @@
 //                              			   		originalImageWidth: "#{AktuelleSchritteForm.myPlugin.image.size.width}",
 //                              			   		originalImageHeight: "#{AktuelleSchritteForm.myPlugin.image.size.height}",
                             			    }
-                            			};									
-                            		    
+                            			};
+
                                     	var worldConfig = {
 									 			controls: {
 									 			    xAxis: {
@@ -139,7 +137,7 @@
 									 			        rotateRight: '#rotate-right-z'
 									 			    },
 									 			    position: {
-									 			    	reset: '#reset-position'   
+									 			    	reset: '#reset-position'
 									 			    },
 									 			    zoom: {
 									 			        resetZoom: '#reset#zoom'
@@ -149,24 +147,24 @@
 									    			id: "mainImage"
 									    		},
 										 };
-                                    	
+
 									 	var mediaType = "#{AktuelleSchritteForm.myPlugin.image.type}";
 									 	if(mediaType == "image") {
-									 		
+
 									 		//init zoom persistence
 	                                    	let imageZoomPersistenzeId = $( '#persistenceId' ).val();
 	                                        if(#{AktuelleSchritteForm.myPlugin.persistZoom} && imageZoomPersistenzeId && imageZoomPersistenzeId.length > 0) {
 	                                            console.log("persist image zoom with id ", imageZoomPersistenzeId);
 	                                            configViewer.global.persistenceId = imageZoomPersistenzeId;
 	                                            configViewer.global.persistZoom =  true;
-	                                            configViewer.global.persistRotation = true;                    
+	                                            configViewer.global.persistRotation = true;
 	                                        }
-									 		
+
 										    var viewImage = new ImageView.Image( configViewer );
 										    viewImage.load()
 										    .then(function(image) {
 										        image.onFirstTileLoaded()
-										        .then(function() {										            
+										        .then(function() {
 										        	$('#ajaxloader_image').fadeOut(800);
 										        })
 										        .catch(function() {
@@ -178,7 +176,7 @@
 										        $('#ajaxloader_image').fadeOut(800);
 										        $('#' + configViewer.global.divId).html( 'Failed to load image: "' + error + '"' );
 										    });
-									    
+
 									 	} else if(mediaType == "object") {
 									 	   $('#ajaxloader_image').show();
 									 		var world = WorldGenerator.create(worldConfig);
@@ -203,11 +201,11 @@
 									 		    $('#ajaxloader_image').fadeOut(2000);
 									 			 console.err("failed to load: ", error);
 									 		 })
-									 		
+
 									 	} else if(mediaType == "x3dom") {
 									 	    var objectUrl = "#{AktuelleSchritteForm.myPlugin.image.objectUrl}";
 									 	   $('#ajaxloader_image').show();
-    									 	    new X3DLoader().load($('#mainImage'), objectUrl, 
+    									 	    new X3DLoader().load($('#mainImage'), objectUrl,
 									 	            function(){
     									 	       		$('#ajaxloader_image').fadeOut(2000);
     									 	       		console.log("loaded")
@@ -220,9 +218,9 @@
 									 	               console.log("error", error);
 									 	            })
 									 	}
-									 	
+
 									 	 function freeJSResources(data) {
-										        if(!data || data.status == 'begin') {									            
+										        if(!data || data.status == 'begin') {
 	    									        if(viewImage) {
 	    									            console.log("closing OpenSeadragon viewer");
 	    									            viewImage.close();
@@ -240,7 +238,7 @@
                     <ui:fragment rendered="#{AktuelleSchritteForm.myPlugin.image.type == 'image'}">
                         <div
                             id="zoomSliderLabel"
-                            class="font-light">
+                            class="fullscreen-control">
                             <input aria-label="#{msgs.sizeOfImages}"></input><span>%</span>
                         </div>
                     </ui:fragment>
@@ -327,9 +325,11 @@
                             </nav>
                         </div>
                     </ui:fragment>
-                    <div style="position: absolute; top: 10px; right: 10px;">
+                    <div
+                        class="fullscreen-control"
+                        style="top: 0; right: 0;">
                         <button
-                            class="btn btn-lightgrey"
+                            class="btn btn-outline"
                             jsf:rendered="#{AktuelleSchritteForm.myPlugin.displayOcrButton}"
                             title="#{msgs.mets_showOcrForCurrentImage}"
                             aria-label="#{msgs.mets_showOcrForCurrentImage}"
@@ -337,9 +337,8 @@
                             <i class="fa fa-file-text-o"></i>
                         </button>
                         <!-- exit fullscreen -->
-                        <!-- style="position:absolute;top:10px; right:10px; " -->
                         <button
-                            class="btn btn-lightgrey"
+                            class="btn btn-outline"
                             jsf:action="ImageQAPlugin"
                             aria-label="#{msgs.imageDefaultDisplay}"
                             title="#{msgs.imageDefaultDisplay}">
@@ -349,13 +348,13 @@
                     <!-- previous image -->
                     <button
                         jsf:id="imageBack"
-                        class="btn btn-lightgrey font-size-s"
+                        class="btn btn-outline fullscreen-control"
                         aria-label="#{msgs.lw_previousImage}"
                         title="#{msgs.lw_previousImage}"
-                        style="position:absolute;top:50vh; left:10px; height:50px;">
-                        <i
+                        style="position:absolute;top:50vh; left:0px; height:50px;">
+                        <span
                             class="fa fa-chevron-left"
-                            style="margin-top: 18px" />
+                            aria-hidden="true" />
                         <f:ajax
                             execute="@form"
                             render="@form"
@@ -368,13 +367,13 @@
                     <!-- next image -->
                     <button
                         jsf:id="imageNext"
-                        class="btn btn-lightgrey font-size-s"
+                        class="btn btn-outline fullscreen-control"
                         aria-label="#{msgs.lw_nextImage}"
                         title="#{msgs.lw_nextImage}"
-                        style="position:absolute;top:50vh; right:10px; height:50px;">
-                        <i
+                        style="position:absolute;top:50vh; right:0px; height:50px;">
+                        <span
                             class="fa fa-chevron-right"
-                            style="margin-top: 18px" />
+                            aria-hidden="true" />
                         <f:ajax
                             execute="@form"
                             render="@form"
@@ -387,20 +386,22 @@
                     <!-- file name -->
                     <h1 style="margin: 0px;">
                         <h:outputText
-                            styleClass="font-white"
-                            style="position:absolute;bottom:10px; left:10px; font-size:12px;"
+                            styleClass="font-white fullscreen-control"
+                            style="position:absolute;bottom:0px; left:0px; "
                             value="#{AktuelleSchritteForm.myPlugin.image.imageName}" />
                     </h1>
 
                     <!-- image number -->
-                    <div style="position: absolute; bottom: 10px; right: 10px;">
+                    <div
+                        class="fullscreen-control"
+                        style="bottom: 0px; right:0px;">
                         <h:outputText
                             id="txtImageMoveTo1"
                             styleClass="font-white"
                             value="#{AktuelleSchritteForm.myPlugin.imageIndex +1} #{msgs.von}  #{AktuelleSchritteForm.myPlugin.sizeOfImageList}"
                             onclick="document.getElementById(this.id).nextSibling.style.display='inline';
-	                    document.getElementById(this.id).style.display='none';  
-	                    document.getElementById(this.id).nextSibling.focus(); 
+	                    document.getElementById(this.id).style.display='none';
+	                    document.getElementById(this.id).nextSibling.focus();
 	                    document.getElementById(this.id).nextSibling.select();" />
                         <!-- jump to page -->
                         <h:inputText
@@ -416,10 +417,12 @@
                             style="display:none" />
                     </div>
                     <!-- first and last page -->
-                    <div style="position: absolute; top: 10px; left: 10px; display: none;">
+                    <div
+                        class="fullscreen-control"
+                        style="position: absolute; top: 0px; left: 0px; display: none;">
                         <button
                         	jsf:id="firstImg"
-                            class="btn btn-lightgrey font-size-s margin-right-10"
+                            class="btn btn-outline font-size-s margin-right-10"
                             title="#{msgs.firstImage}">
                             <i class="fa fa-double-angle-left"></i>
                             <f:ajax
@@ -431,7 +434,7 @@
                         </button>
                         <button
                         	jsf:id="lastImg"
-                            class="btn btn-lightgrey font-size-s"
+                            class="btn btn-outline font-size-s"
                             title="#{msgs.lastImage}">
                             <i class="fa fa-double-angle-right"></i>
                             <f:ajax
@@ -461,7 +464,7 @@
 
 
             <script type="text/javascript">
-		     
+
         	// Find the right method, call on correct element
 	        function launchIntoFullscreen(element) {
 	          if(element.requestFullscreen) {
@@ -474,25 +477,25 @@
 	            element.msRequestFullscreen();
 	          }
 	        }
-	
+
 	       window.onload = function() {
 		    	launchIntoFullscreen(document.documentElement); // the whole page
 		    }
-		
+
 			faces.ajax.addOnEvent(function(data) {
 			    var ajaxstatus = data.status; // Can be "begin", "complete" and "success"
-			      
+
 			      switch (ajaxstatus) {
 			          case "success": // This is called when ajax response is successfully processed.
 			              break;
 			      }
-				
+
 			});
-			
+
 			function copyValue(element, e) {
 			    console.log(element.id);
 			    if(element.dataset.input) {
-		    		document.querySelectorAll("[data-input='"+element.dataset.input+"']").forEach(input => input.value = element.value ); 
+		    		document.querySelectorAll("[data-input='"+element.dataset.input+"']").forEach(input => input.value = element.value );
 		    	} else if (element.id =='qaform:first:txtMoveTo2') {
 			        document.getElementById('qaform:second:txtMoveTo2').value = element.value;
 			    } else if (element.id =='qaform:second:txtMoveTo2'){
@@ -502,7 +505,7 @@
 			    } else {
 			        document.getElementById('qaform:first_image:txtImageMoveTo2').value = element.value;
 			    }
-			    
+
 			    var keycode;
 				if (window.event)
 					keycode = window.event.keyCode;
@@ -510,29 +513,29 @@
 					keycode = e.which;
 				else
 					return true;
-				
+
 				if (keycode == 13) {
 					document.getElementById(element.id).nextSibling.click();
 					return false;
 				} else
 					return true;
-			    
+
 			}
-		
-			$(document).bind('keyup', '#{LoginForm.myBenutzer.shortcutPrefix}+right', function() {            	
+
+			$(document).bind('keyup', '#{LoginForm.myBenutzer.shortcutPrefix}+right', function() {
             	var myButton = document.getElementById("qaform:imageNext");
             	if (myButton!=null) {
             		myButton.click();
-            	} 
+            	}
             });
-            
-            $(document).bind('keyup', '#{LoginForm.myBenutzer.shortcutPrefix}+left', function() {            	
+
+            $(document).bind('keyup', '#{LoginForm.myBenutzer.shortcutPrefix}+left', function() {
             	var myButton = document.getElementById("qaform:imageBack");
             	if (myButton!=null) {
             		myButton.click();
-            	} 
+            	}
             });
-			
+
 		</script>
         </main>
     </ui:define>

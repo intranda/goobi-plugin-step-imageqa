@@ -4,43 +4,48 @@
 	        <img src="template/img/goobi/ajaxloader1.gif" />
 	    </div>
 	</div>
-	<div id="zoomSliderLabel" class="font-light">
+	<div id="zoomSliderLabel" class="fullscreen-control">
             <input aria-label="{msgs.sizeOfImages}"></input><span>%</span>
     </div>
-    
-    <div style="position:absolute;top:10px; right:10px;">
-		<button class="btn btn-lightgrey" onclick={leave} aria-label="{msgs.imageDefaultDisplay}" title="{msgs.imageDefaultDisplay}" >
+
+    <div
+		class="fullscreen-control"
+		style="top:0; right:0;">
+		<button class="btn btn-outline" onclick={leave} aria-label="{msgs.imageDefaultDisplay}" title="{msgs.imageDefaultDisplay}" >
 			<i class="fa fa-close"></i>
 		</button>
 	</div>
 	<!-- previous image -->
-	<button id="imageBack" class="btn btn-lightgrey font-size-s" aria-label="{msgs.lw_previousImage}" title="{msgs.lw_previousImage}"
-		style="position:absolute;top:50vh; left:10px; height:50px;padding-top:2px;"
+	<button id="imageBack" class="btn btn-outline fullscreen-control" aria-label="{msgs.lw_previousImage}" title="{msgs.lw_previousImage}"
+		style="top:50vh; left:0;"
 		onclick={previousImage}>
 		<i class="fa fa-angle-left"></i>
 	</button>
-	
+
 	<!-- next image -->
-	<button id="imageNext" class="btn btn-lightgrey font-size-s" aria-label="{msgs.lw_nextImage}" title="{msgs.lw_nextImage}"
-		style="position:absolute;top:50vh; right:10px; height:50px; padding-top:2px;"
+	<button id="imageNext" class="btn btn-outline fullscreen-control" aria-label="{msgs.lw_nextImage}" title="{msgs.lw_nextImage}"
+		style="top:50vh; right:0px;"
 		onclick={nextImage}>
 		<i class="fa fa-angle-right"></i>
 	</button>
-	
+
 	<!-- file name -->
 	<h1 style="margin: 0px;">
-		<span class="font-white" style="position:absolute;bottom:10px; left:10px; font-size: 12px;">
-			{currentImage().imageName} 
+		<span class="fullscreen-control"
+			style="bottom:0; left:0;">
+			{currentImage().imageName}
 		</span>
 	</h1>
-	
+
 	<!-- image number -->
-	<div style="position:absolute;bottom:10px; right:10px;">
+	<div
+		class="fullscreen-control"
+		style="bottom:0; right:0;">
 	    <span id="txtImageMoveTo1" class="font-white"
 	    	if={!showPagenumberInput}
 	        onclick={showAndFocusImageNumberInput}>
 			{imageIndex +1} {msgs.von}  {allImages.length}
-        </span> 
+        </span>
 		<!-- jump to page -->
         <input value={currentImageNumber} if={showPagenumberInput}
             id="txtImageMoveTo2"
@@ -54,8 +59,11 @@
 this.msgs = {};
 this.imageIndex = 0;
 this.allImages = [];
-this.currentImage = {};
 this.infoJsonCache = {};
+
+this.on('beforeMount', () => {
+	this.currentImage = {};
+});
 
 this.on("mount", () => {
 	console.log("mounting fullscreen", this.opts);
@@ -93,14 +101,14 @@ loadMessages() {
 }
 
 shortcutPrevious(e) {
-	e.stopPropagation(); 
-	this.previousImage(); 
+	e.stopPropagation();
+	this.previousImage();
 	this.update();
 }
 
-shortcutNext(e) { 
-	e.stopPropagation(); 
-	this.nextImage(); 
+shortcutNext(e) {
+	e.stopPropagation();
+	this.nextImage();
 	this.update();
 }
 
@@ -220,23 +228,23 @@ loadInitialImage() {
 				        mimeType: "image/jpeg",
 				        tileSource: infoJson
 				    }
-				};				
-				
+				};
+
 				let imageZoomPersistenzeId = $( '#persistenceId' ).val();
                 if(this.opts.persistZoom && imageZoomPersistenzeId && imageZoomPersistenzeId.length > 0) {
                     console.log("persist image zoom with id ", imageZoomPersistenzeId);
                     configViewer.global.persistenceId = imageZoomPersistenzeId;
                     configViewer.global.persistZoom =  true;
-                    configViewer.global.persistRotation = true;                    
+                    configViewer.global.persistRotation = true;
                 }
-				
+
 			    this.viewImage = new ImageView.Image( configViewer );
 			    this.viewImage.load()
 			    .then((image) => {
 				    this.viewImage.viewer.blendTime = 0.0;
 			    	console.log(this.viewImage.viewer.drawer.getOpacity())
 			        image.onFirstTileLoaded()
-			        .then(function() {										            
+			        .then(function() {
 			        	$('#ajaxloader_image').fadeOut(800);
 			        	resolve();
 			        })
@@ -252,11 +260,11 @@ loadInitialImage() {
 			        reject();
 			    });
 			})
-			
-		}) 
+
+		})
 	})
 }
-    
- 	
+
+
 </script>
 </fullscreen>

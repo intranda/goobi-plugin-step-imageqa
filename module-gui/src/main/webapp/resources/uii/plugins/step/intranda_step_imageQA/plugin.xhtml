@@ -4,7 +4,7 @@
     xmlns:composite="http://java.sun.com/jsf/composite"
     xmlns:f="http://java.sun.com/jsf/core"
     xmlns:h="http://java.sun.com/jsf/html"
-    xmlns:intranda="http://xmlns.jcp.org/jsf/composite/compositesPG">
+    xmlns:intranda="http://xmlns.jcp.org/jsf/composite/composites">
 
     <link
         rel="stylesheet"
@@ -16,14 +16,14 @@
 		    margin: 7px;
 		    width: #{AktuelleSchritteForm.myPlugin.thumbnailSize +2}px;
 		    height:#{AktuelleSchritteForm.myPlugin.thumbnailSize+55}px;
-            text-align: center;        
+            text-align: center;
 		}
 		.goobi-thumbnail .goobi-thumbnail-image {
 		    float: left;
 		    width: 100%;
 		    min-height: 100px;
 		    overflow: hidden;
-		    max-height: #{AktuelleSchritteForm.myPlugin.thumbnailSize +2}px;            
+		    max-height: #{AktuelleSchritteForm.myPlugin.thumbnailSize +2}px;
 		}
 		.img-active {
 		    background-color: white;
@@ -37,7 +37,7 @@
             boxPadding="false"
             icon="fa-puzzle-piece"
             title="#{msgs.plugin}: #{msgs[('plugin_').concat(AktuelleSchritteForm.myPlugin.title)]}">
-            
+
             <h:panelGroup
                 layout="block"
                 rendered="#{AktuelleSchritteForm.myPlugin.sizeOfImageList gt 0}">
@@ -49,7 +49,7 @@
                         </f:subview>
 					</ui:fragment>
                 </div>
-                
+
                 <!-- Thumbnail list -->
                 <div
                     class="flex-container mt-3"
@@ -103,7 +103,7 @@
         $( document ).ready( function() {
             loadThumbnails();
         } );
-        
+
         faces.ajax.addOnEvent( function( data ) {
             var ajaxstatus = data.status; // Can be "begin", "complete" and "success"
             switch ( ajaxstatus ) {
