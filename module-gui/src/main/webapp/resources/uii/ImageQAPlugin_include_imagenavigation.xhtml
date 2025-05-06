@@ -55,12 +55,16 @@
 
 				<div class="ms-3 me-3 d-inline">
                     <!-- CURRENT PAGE -->
-                    <h:outputText id="txtImageMoveTo1"
-                        value="#{AktuelleSchritteForm.myPlugin.imageIndex +1} #{msgs.von}  #{AktuelleSchritteForm.myPlugin.sizeOfImageList}"
+                    <button
+						type="button"
+						class="btn btn-link text-black"
+						id="txtImageMoveTo1"
                         onclick="document.getElementById(this.id).nextSibling.style.display='inline';
                         document.getElementById(this.id).style.display='none';
                         document.getElementById(this.id).nextSibling.focus();
-                        document.getElementById(this.id).nextSibling.select();" />
+                        document.getElementById(this.id).nextSibling.select();">
+						#{AktuelleSchritteForm.myPlugin.imageIndex +1} #{msgs.von}  #{AktuelleSchritteForm.myPlugin.sizeOfImageList}
+					</button>
                     <!-- JUMP TO PAGE -->
                     <h:inputText value="#{AktuelleSchritteForm.myPlugin.imageMoveTo}" style="display:none;font-size:9px;width:30px"
                         required="true" id="txtImageMoveTo2" pt:data-input="imageMoveTo"
