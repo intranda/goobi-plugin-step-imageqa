@@ -31,17 +31,17 @@ The configuration of the plugin takes place within its configuration file `plugi
 
 After the plugin has been completely installed and set up, it will be available for the users of the corresponding tasks. After entering a task, depending on the configuration, some images may be displayed immediately. ​
 
-![Display some images as preview within the accepted task](screen3.png)
+![Display as preview within the accepted task](screen3.png)
 
 If you now enter the plugin by clicking on `Plugin: intranda image control`, you will see the full display, which includes both thumbnails and a large image display. 
 
-![Display of thumbnails and a large image display simultaneously](screen4.png)
+![Display of thumbnails and a large display simultaneously](screen4.png)
 
 Here you can select the desired images to be viewed in higher quality. The large image on the right can be zoomed and rotated for display. You can navigate between the images using the same shortcut keys as in the METS editor in Goobi workflow. ​
 
 Images can also be displayed in a full-screen view for a larger view. In both the regular image display and the full-screen display, the associated full text can also be shown, provided that this has been generated in advance using OCR. ​
 
-![Image display in full screen mode with activated full text display](screen5.png)
+![Display in full screen mode with activated full text display](screen5.png)
 
 Besides the pure image display, the plugin can also handle other object types. For example, it is possible to display 3D objects, which can also be rotated and enlarged for display using additional navigation buttons. ​
 Depending on the individual configuration, the plugin allows many more functions, which are mostly visible within the thumbnail display. If these functions have been configured in the configuration file described above, they can be used, for example, for downloading PDF files, image files, rotations, flippings, deletions and other operations. ​

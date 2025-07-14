@@ -83,3 +83,8 @@ br {
 	padding: 1em;
 	position: absolute;
 }
+
+.fullscreen-control:hover {
+	background: rgba(255,255,255,0.1);
+	color: white;
+}
