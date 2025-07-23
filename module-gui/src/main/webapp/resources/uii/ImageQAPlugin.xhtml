@@ -317,7 +317,7 @@
                                                                 target="#{AktuelleSchritteForm.myPlugin.imageIndex}" />
                                                             <f:ajax
                                                                 execute="@form"
-                                                                render="@form :qaform:bigimage"
+                                                                render="@form :qaform:bigimageWrapper:bigimage"
                                                                 onevent="freeJSResources"
                                                                 disabled="#{AktuelleSchritteForm.myPlugin.thumbnailsOnly}" />
                                                         </button>
@@ -641,7 +641,8 @@
                         <h:panelGroup
                             rendered="#{AktuelleSchritteForm.myPlugin.sizeOfImageList gt 0 and not AktuelleSchritteForm.myPlugin.thumbnailsOnly}"
                             class="#{AktuelleSchritteForm.myPlugin.displayOCR ? 'col-xs-12 col-sm-7' : 'col-xs-12 col-sm-5'}"
-                            layout="block">
+                            layout="block"
+                            id="bigimageWrapper">
                             <h:panelGroup id="bigimage" layout="block">
 
                                 <!-- PAGINATION FOR OBJECT ON TOP -->
@@ -1015,6 +1016,43 @@
 		      		}
 			});
 
+            const clickGoToImageButton = (event) => {
+                syncValues(event.target);
+                if(event.key === 'Enter' || event.keyCode === 13) {
+                    event.preventDefault();
+                    let btn;
+                    const element = event.target;
+                    if (element.id.endsWith('second_image:txtImageMoveTo2')) {
+                        btn = document.querySelector('[id$="first_image:cmdMoveTo"]');
+                    } else if (element.id.endsWith('first_image:txtImageMoveTo2')) {
+                        btn = document.querySelector('[id$="second_image:cmdMoveTo"]');
+                    } else if (element.id.endsWith('second:txtMoveTo2')) {
+                        btn = document.querySelector('[id$="first:cmdMoveTo"]');
+                    } else if (element.id.endsWith('first:txtMoveTo2')) {
+                        btn = document.querySelector('[id$="second:cmdMoveTo"]');
+                    }
+                    if (btn) {
+                        btn.click();
+                    }
+                }
+            };
+
+            const syncValues = (element) => {
+                let otherInput;
+                if (element.id.endsWith('second_image:txtImageMoveTo2')) {
+                    otherInput = document.querySelector('[id$="first_image:txtImageMoveTo2"]');
+                } else if (element.id.endsWith('first_image:txtImageMoveTo2')) {
+                    otherInput = document.querySelector('[id$="second_image:txtImageMoveTo2"]');
+                } else if (element.id.endsWith('second:txtMoveTo2')) {
+                    otherInput = document.querySelector('[id$="first:txtMoveTo2"]');
+                } else if (element.id.endsWith('first:txtMoveTo2')) {
+                    otherInput = document.querySelector('[id$="second:txtMoveTo2"]');
+                }
+                if (otherInput) {
+                    otherInput.value = element.value;
+                }
+            }
+
 			function copyValue(element, e) {
 		    	console.log(element.id);
 		    	console.log("data attr ", element.dataset.input);
@@ -1030,16 +1068,13 @@
 		        	document.getElementById('qaform:first_image:txtImageMoveTo2').value = element.value;
 		    	}
 
-			    var keycode;
-				if (window.event)
-					keycode = window.event.keyCode;
-				else if (e)
-					keycode = e.which;
-				else
-					return true;
+			    const keycode = e.keyCode;
 
 				if (keycode == 13) {
-					document.getElementById(element.id).nextSibling.click();
+                    const btn = document.querySelector('[id$="cmdImageMoveTo"]');
+                    if (btn) {
+                        btn.click();
+                    }
 					return false;
 				} else
 					return true;
