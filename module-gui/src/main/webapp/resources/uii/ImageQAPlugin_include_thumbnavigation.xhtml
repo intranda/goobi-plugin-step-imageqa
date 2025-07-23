@@ -1,28 +1,28 @@
-<!-- 
+<!--
  * This file is part of a plugin for Goobi - a Workflow tool for the support of mass digitization.
- * 
- * Visit the websites for more information. 
+ *
+ * Visit the websites for more information.
  *          - https://goobi.io
  *          - https://www.intranda.com
  *          - https://github.com/intranda/goobi
- * 
+ *
  * This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free
  * Software Foundation; either version 2 of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59
  * Temple Place, Suite 330, Boston, MA 02111-1307 USA
- * 
+ *
  -->
-<ui:composition xmlns="http://www.w3.org/1999/xhtml" 
-	xmlns:jsf="http://xmlns.jcp.org/jsf" 
-	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough" 
-	xmlns:ui="http://xmlns.jcp.org/jsf/facelets" 
-	xmlns:composite="http://xmlns.jcp.org/jsf/composite" 
-	xmlns:h="http://xmlns.jcp.org/jsf/html" 
-	xmlns:f="http://xmlns.jcp.org/jsf/core" 
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:jsf="http://xmlns.jcp.org/jsf"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:composite="http://xmlns.jcp.org/jsf/composite"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:x="http://myfaces.apache.org/tomahawk">
 
     <composite:interface>
@@ -58,13 +58,16 @@
                 </button>
 
                 <div class="ms-3 me-3 d-inline">
-                    <x:outputText
-                        id="txtMoveTo1"
-                        value="#{msgs.seite} #{AktuelleSchritteForm.myPlugin.pageNumberCurrent} #{msgs.von} #{AktuelleSchritteForm.myPlugin.pageNumberLast}"
+                    <button
+                        jsf:id="txtMoveTo1"
+                        type="button"
+                        class="btn btn-link text-black"
                         onclick="document.getElementById(this.id).nextSibling.style.display='inline';
-	                document.getElementById(this.id).style.display='none'; 
-	                document.getElementById(this.id).nextSibling.focus();
-	                document.getElementById(this.id).nextSibling.select();" />
+                            document.getElementById(this.id).style.display='none';
+                            document.getElementById(this.id).nextSibling.focus();
+                            document.getElementById(this.id).nextSibling.select();" >
+                        #{msgs.seite} #{AktuelleSchritteForm.myPlugin.pageNumberCurrent} #{msgs.von} #{AktuelleSchritteForm.myPlugin.pageNumberLast}
+                    </button>
                     <!-- Seite direkt anspringen -->
                     <x:inputText
                         value="#{AktuelleSchritteForm.myPlugin.txtMoveTo}"
@@ -72,8 +75,8 @@
                         required="true"
                         id="txtMoveTo2" pt:data-input="thumbsMoveTo"
                         onblur="document.getElementById(this.id).style.display='none';document.getElementById(this.id).previousSibling.style.display='inline';"
-                        onkeypress="copyValue(this,event);" />
-                    <x:commandButton
+                        onkeypress="clickGoToImageButton(event);" />
+                    <h:commandButton
                         action="#{NavigationForm.Reload}"
                         value="go"
                         style="display:none"
@@ -310,5 +313,3 @@
         </div>
     </composite:implementation>
 </ui:composition>
-
-
