@@ -50,7 +50,8 @@ Depending on the individual configuration, the plugin allows many more functions
 
 
 ## Configuration
-The configuration of the plugin is structured as follows: ​
+The configuration of the plugin is structured as follows:
+
 ```xml
 <config_plugin>
     <!--
