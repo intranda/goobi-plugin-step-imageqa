@@ -760,23 +760,21 @@
                                                 <!-- IMAGE COMMENTS -->
                                                 <div
                                                     id="imageCommentArea"
-                                                    class="row">
-                                                    <div class="col-sm-12 margin-top-regular">
-                                                        <!-- TEXTAREA -->
-                                                        <h:inputTextarea
-                                                            id="Comment"
-                                                            style="height: 50px;"
-                                                            rendered="#{AktuelleSchritteForm.myPlugin.showImageComments}"
-                                                            styleClass="form-control"
-                                                            value="#{AktuelleSchritteForm.myPlugin.commentPropertyForImage}"
-                                                            disabled="false"
-                                                            pt:placeholder="#{msgs.comment}"
-                                                            readonly="false">
-                                                            <f:ajax
-                                                                execute="@form"
-                                                                event="valueChange" />
-                                                        </h:inputTextarea>
-                                                    </div>
+                                                    class="grow-wrap mt-3">
+                                                    <!-- TEXTAREA -->
+                                                    <h:inputTextarea
+                                                        id="Comment"
+                                                        style="height: 50px;"
+                                                        rendered="#{AktuelleSchritteForm.myPlugin.showImageComments}"
+                                                        styleClass="form-control"
+                                                        value="#{AktuelleSchritteForm.myPlugin.commentPropertyForImage}"
+                                                        disabled="false"
+                                                        pt:placeholder="#{msgs.comment}"
+                                                        readonly="false">
+                                                        <f:ajax
+                                                            execute="@form"
+                                                            event="valueChange" />
+                                                    </h:inputTextarea>
                                                 </div>
                                                 <!-- // IMAGE COMMENTS -->
 
