@@ -50,7 +50,8 @@ Depending on the individual configuration, the plugin allows many more functions
 
 
 ## Configuration
-The configuration of the plugin is structured as follows: ​
+The configuration of the plugin is structured as follows:
+
 ```xml
 <config_plugin>
     <!--
@@ -197,7 +198,7 @@ The parameters within this configuration file have the following meanings: ​
 | :--- |:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `guiType` | With this parameter you can define how the user interface should behave. Possible values are `part`, `full` and `both`.                                                                                                                                                                        |
 | `project` | This parameter determines for which project the current block `<config>` is to apply. The name of the project is used here. This parameter can occur several times per `<config>` block.                                                                                                       |
-| `step` | This parameter controls for which work steps the block &lt;config&gt; should apply. The name of the work step is used here. This parameter can occur several times per `<config>` block.                                                                                                       |
+| `step` | This parameter controls for which work steps the block `<config>` should apply. The name of the work step is used here. This parameter can occur several times per `<config>` block.                                                                                                       |
 | `foldername` | Specify here the directory from which the images are to be displayed. If several directories are used in the repeatable parameter, the user can choose between these directories. Possible values for this are e.g. `master`, `media` or also individual folders such as `photos` and `scans`. |
 | `numberOfImagesPerPage` | Here you can define how many thumbnails should be displayed simultaneously in the regular display.                                                                                                                                                                                             |
 | `thumbnailsize` | This allows you to specify the size of the thumbnails to be displayed.                                                                                                                                                                                                                         |

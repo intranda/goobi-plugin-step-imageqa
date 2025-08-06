@@ -58,7 +58,7 @@
 
                 <div class="ms-3 me-3 d-inline">
                     <button
-                        id="txtMoveTo1"
+                        jsf:id="txtMoveTo1"
                         type="button"
                         class="btn btn-link text-black"
                         onclick="document.getElementById(this.id).nextSibling.style.display='inline';
@@ -74,7 +74,7 @@
                         required="true"
                         id="txtMoveTo2" pt:data-input="thumbsMoveTo"
                         onblur="document.getElementById(this.id).style.display='none';document.getElementById(this.id).previousSibling.style.display='inline';"
-                        onkeypress="copyValue(this,event);" />
+                        onkeypress="clickGoToImageButton(event);" />
                     <h:commandButton
                         action="#{NavigationForm.Reload}"
                         value="go"

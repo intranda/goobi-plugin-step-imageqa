@@ -37,7 +37,7 @@
                     aria-label="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.lastImage:msgs.firstImage}"
 					title="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.lastImage:msgs.firstImage}">
 					<i class="fa fa-angle-double-left"></i>
-					<f:ajax execute="@form" render="@form :qaform:bigimage" onevent="freeJSResources"/>
+					<f:ajax execute="@form" render="@form :qaform:bigimageWrapper:bigimage" onevent="freeJSResources"/>
 				</button>
 
 				<button
@@ -50,7 +50,7 @@
 					<span>
                         <h:outputText value=" #{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.lw_nextImage:msgs.lw_previousImage}" />
                     </span>
-					<f:ajax execute="@form" render="@form :qaform:bigimage" onevent="freeJSResources"/>
+					<f:ajax execute="@form" render="@form :qaform:bigimageWrapper:bigimage" onevent="freeJSResources"/>
 				</button>
 
 				<div class="ms-3 me-3 d-inline">
@@ -58,7 +58,7 @@
                     <button
 						type="button"
 						class="btn btn-link text-black"
-						id="txtImageMoveTo1"
+						jsf:id="txtImageMoveTo1"
                         onclick="document.getElementById(this.id).nextSibling.style.display='inline';
                         document.getElementById(this.id).style.display='none';
                         document.getElementById(this.id).nextSibling.focus();
@@ -66,11 +66,20 @@
 						#{AktuelleSchritteForm.myPlugin.imageIndex +1} #{msgs.von}  #{AktuelleSchritteForm.myPlugin.sizeOfImageList}
 					</button>
                     <!-- JUMP TO PAGE -->
-                    <h:inputText value="#{AktuelleSchritteForm.myPlugin.imageMoveTo}" style="display:none;font-size:9px;width:30px"
-                        required="true" id="txtImageMoveTo2" pt:data-input="imageMoveTo"
+                    <h:inputText
+						value="#{AktuelleSchritteForm.myPlugin.imageMoveTo}"
+						style="display:none;font-size:9px;width:30px"
+                        required="true"
+						id="txtImageMoveTo2"
+						pt:data-input="imageMoveTo"
                         onblur="document.getElementById(this.id).style.display='none';document.getElementById(this.id).previousSibling.style.display='inline';"
-                        onkeypress="copyValue(this,event);" />
-                    <h:commandButton action="#{NavigationForm.Reload}" value="go" style="display:none" />
+                        onkeypress="clickGoToImageButton(event);" />
+                    <h:commandButton
+						id="cmdMoveTo"
+                        style="display:none"
+						action="#{NavigationForm.Reload}" value="go">
+						<f:ajax execute="txtImageMoveTo2" render="@form :qaform:bigimageWrapper:bigimage" onevent="freeJSResources"/>
+					</h:commandButton>
 				</div>
 
 				<button
@@ -83,7 +92,7 @@
                         <h:outputText value="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.lw_previousImage:msgs.lw_nextImage} " />
                     </span>
 					<i class="fa fa-angle-right ms-2"></i>
-					<f:ajax execute="@form" render="@form :qaform:bigimage" onevent="freeJSResources" />
+					<f:ajax execute="@form" render="@form :qaform:bigimageWrapper:bigimage" onevent="freeJSResources" />
 				</button>
 
 				<button
@@ -92,7 +101,7 @@
                     aria-label="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.firstImage:msgs.lastImage}"
 					title="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.firstImage:msgs.lastImage}">
 					<i class="fa fa-angle-double-right"></i>
-					<f:ajax execute="@form" render="@form :qaform:bigimage" onevent="freeJSResources"/>
+					<f:ajax execute="@form" render="@form :qaform:bigimageWrapper:bigimage" onevent="freeJSResources"/>
 				</button>
 
 		</div>
