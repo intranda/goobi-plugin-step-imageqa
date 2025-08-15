@@ -63,22 +63,6 @@
     <ui:define name="content">
         <main>
             <link rel="stylesheet" href="imageQA.css" />
-<style>
-/* Thumbnails */
-.goobi-thumbnail {
-	float: left;
-	margin: 7px;
-	width: var(--thumbnail-width);
-    height: var(--thumbnail-height);
-}
-.goobi-thumbnail .goobi-thumbnail-image {
-	float: left;
-	width: 100%;
-	min-height: 100px;
-	overflow: hidden;
-	max-height: var(--thumbnail-width);
-}
-</style>
 
             <script
                 src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/static/reactiveX/rx.lite.min.js"></script>
@@ -255,7 +239,9 @@
                                 <!-- LIST ALL THUMBNAILS ON THE LEFT -->
                                 <div
                                     class="flex-container mt-5 mb-5"
-                                    dir="#{AktuelleSchritteForm.myPlugin.flowDir}">
+                                    dir="#{AktuelleSchritteForm.myPlugin.flowDir}"
+                                    role="region"
+                                    aria-label="Image thumbnails">
 
                                     <ui:repeat var="image"
                                         value="#{AktuelleSchritteForm.myPlugin.paginatorList}"
@@ -263,7 +249,9 @@
                                             <div
                                                 class="goobi-thumbnail #{AktuelleSchritteForm.myPlugin.image.imageName eq image.imageName?'img-active':'font-light'}"
                                                 dir="auto"
-                                                style="--thumbnail-width: #{AktuelleSchritteForm.myPlugin.thumbnailSize +2}px; --thumbnail-height: #{AktuelleSchritteForm.myPlugin.thumbnailSize + 55}px;">
+                                                style="--thumbnail-width: #{AktuelleSchritteForm.myPlugin.thumbnailSize +2}px; --thumbnail-height: #{AktuelleSchritteForm.myPlugin.thumbnailSize + 55}px;"
+                                                data-image-type="#{image.type}"
+                                                data-image-name="#{image.imageName}">
                                                 <div class="goobi-thumbnail-image">
 
                                                     <!-- THUMBNAIL DISPLAY -->
@@ -472,7 +460,7 @@
                                                                 title="#{msgs.plugin_intranda_step_imageQA_reorder_previous}"
                                                                 jsf:action="#{AktuelleSchritteForm.myPlugin.reorderPrevious(image)}"
                                                                 jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowReordering}"
-                                                                onclick="if (!confirm('#{msgs.wirklichAusfuehren}')) return false">
+                                                                data-confirm="#{msgs.wirklichAusfuehren}">
                                                             <i class="fa fa-caret-left" />
                                                         </button>
                                                         <button
@@ -480,7 +468,7 @@
                                                                 title="#{msgs.plugin_intranda_step_imageQA_reorder_next}"
                                                                 jsf:action="#{AktuelleSchritteForm.myPlugin.reorderNext(image)}"
                                                                 jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowReordering}"
-                                                                onclick="if (!confirm('#{msgs.wirklichAusfuehren}')) return false">
+                                                                data-confirm="#{msgs.wirklichAusfuehren}">
                                                             <i class="fa fa-caret-right" />
                                                         </button>
 
@@ -490,7 +478,7 @@
                                                             title="#{msgs.plugin_intranda_step_imageQA_delete} #{image.tooltip}"
                                                             jsf:action="#{AktuelleSchritteForm.myPlugin.deleteImage(image)}"
                                                             jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowDeletion}"
-                                                            onclick="if (!confirm('#{msgs.wirklichAusfuehren}')) return false">
+                                                            data-confirm="#{msgs.wirklichAusfuehren}">
                                                             <i class="fa fa-trash"></i>
                                                         </button>
                                                     </div>
@@ -503,7 +491,7 @@
                                                             title="#{msgs.plugin_intranda_step_imageQA_flipHorizontal} #{image.tooltip}"
                                                             jsf:action="#{AktuelleSchritteForm.myPlugin.flipHorizontal(image)}"
                                                             jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowFlipping}"
-                                                            onclick="if (!confirm('#{msgs.wirklichAusfuehren}')) return false">
+                                                            data-confirm="#{msgs.wirklichAusfuehren}">
                                                             <i class="fa fa-arrows-h"></i>
                                                         </button>
 
@@ -513,7 +501,7 @@
                                                             title="#{msgs.plugin_intranda_step_imageQA_flipVertical} #{image.tooltip}"
                                                             jsf:action="#{AktuelleSchritteForm.myPlugin.flipVertical(image)}"
                                                             jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowFlipping}"
-                                                            onclick="if (!confirm('#{msgs.wirklichAusfuehren}')) return false">
+                                                            data-confirm="#{msgs.wirklichAusfuehren}">
                                                             <i class="fa fa-arrows-v"></i>
                                                         </button>
 
@@ -523,7 +511,7 @@
                                                             title="#{msgs.plugin_intranda_step_imageQA_rotateLeft} #{image.tooltip}"
                                                             jsf:action="#{AktuelleSchritteForm.myPlugin.rotateLeft(image)}"
                                                             jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowRotation}"
-                                                            onclick="if (!confirm('#{msgs.wirklichAusfuehren}')) return false">
+                                                            data-confirm="#{msgs.wirklichAusfuehren}">
                                                             <i class="fa fa-undo"></i>
                                                         </button>
 
@@ -533,7 +521,7 @@
                                                             title="#{msgs.plugin_intranda_step_imageQA_rotateRight} #{image.tooltip}"
                                                             jsf:action="#{AktuelleSchritteForm.myPlugin.rotateRight(image)}"
                                                             jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowRotation}"
-                                                            onclick="if (!confirm('#{msgs.wirklichAusfuehren}')) return false">
+                                                            data-confirm="#{msgs.wirklichAusfuehren}">
                                                             <i class="fa fa-repeat"></i>
                                                         </button>
                                                     </div>
@@ -548,8 +536,9 @@
                                                 class="modal fade"
                                                 id="myModal-#{status.index}"
                                                 tabindex="-1"
-                                                aria-labelledby="exampleModalLabel"
-                                                aria-hidden="true">
+                                                aria-labelledby="myModalLabel-#{status.index}"
+                                                aria-hidden="true"
+                                                role="dialog">
                                                 <div class="modal-dialog">
                                                     <div class="modal-content">
 
@@ -602,7 +591,7 @@
                                                                 title="#{msgs.uebernehmen}"
                                                                 jsf:rel="tooltip"
                                                                 class="btn btn-success">
-                                                                <i class="fa fa-floppy-o"></i>
+                                                                <span lass="fa fa-floppy-o" aria-hidden="true"></span>
                                                                 <span>
                                                                     <h:outputText value="#{msgs.uebernehmen}" />
                                                                 </span>
@@ -806,68 +795,75 @@
 
                                 <script type="text/javascript">
                                     //<![CDATA[
-                                    // Configuration for image viewer
-                                    var configViewer = {
-                                        global: {
-                                            divId: 'mainImage',
-                                            useTiles: #{AktuelleSchritteForm.myPlugin.useTiles},
-                                            footerHeight: 0,
-                                            adaptContainerHeight: true,
-                                            zoomSlider: "#zoomSlider",
-                                            zoomSliderHandle: "#zoomSlider .zoom-slider-handle",
-                                            zoomSliderLabel: "#zoomSliderLabel input",
-                                            webApiToken: '#{AktuelleSchritteForm.myPlugin.imageWebApiToken}',
-                                            imageSizes: #{AktuelleSchritteForm.myPlugin.displaySizes},
-                                            tileSizes: #{AktuelleSchritteForm.myPlugin.tileSize}
-                                        },
-                                        image: {
-                                            mimeType: "image/jpeg",
-                                            tileSource: "#{AktuelleSchritteForm.myPlugin.image.url}"
-                                        }
-                                    };
-
-                                    var worldConfig = {
-                                        controls: {
-                                            xAxis: {
-                                                rotateLeft: '#rotate-left-x',
-                                                rotateRight: '#rotate-right-x'
+                                    function setupImageQAViewer() {
+                                        const configViewer = {
+                                            global: {
+                                                divId: 'mainImage',
+                                                useTiles: #{AktuelleSchritteForm.myPlugin.useTiles},
+                                                footerHeight: 0,
+                                                adaptContainerHeight: true,
+                                                zoomSlider: "#zoomSlider",
+                                                zoomSliderHandle: "#zoomSlider .zoom-slider-handle",
+                                                zoomSliderLabel: "#zoomSliderLabel input",
+                                                webApiToken: '#{AktuelleSchritteForm.myPlugin.imageWebApiToken}',
+                                                imageSizes: #{AktuelleSchritteForm.myPlugin.displaySizes},
+                                                tileSizes: #{AktuelleSchritteForm.myPlugin.tileSize}
                                             },
-                                           yAxis: {
-                                                rotateLeft: '#rotate-left-y',
-                                                rotateRight: '#rotate-right-y'
-                                            },
-                                           zAxis: {
-                                                rotateLeft: '#rotate-left-z',
-                                                rotateRight: '#rotate-right-z'
-                                            },
-                                            position: {
-                                                reset: '#reset-position'
-                                            },
-                                            zoom: {
-                                                resetZoom: '#reset#zoom'
+                                            image: {
+                                                mimeType: "image/jpeg",
+                                                tileSource: "#{AktuelleSchritteForm.myPlugin.image.url}"
                                             }
-                                        },
-                                        container: {
-                                            id: "mainImage"
+                                        };
+
+                                        const worldConfig = {
+                                            controls: {
+                                                xAxis: {
+                                                    rotateLeft: '#rotate-left-x',
+                                                    rotateRight: '#rotate-right-x'
+                                                },
+                                               yAxis: {
+                                                    rotateLeft: '#rotate-left-y',
+                                                    rotateRight: '#rotate-right-y'
+                                                },
+                                               zAxis: {
+                                                    rotateLeft: '#rotate-left-z',
+                                                    rotateRight: '#rotate-right-z'
+                                                },
+                                                position: {
+                                                    reset: '#reset-position'
+                                                },
+                                                zoom: {
+                                                    resetZoom: '#reset#zoom'
+                                                }
+                                            },
+                                            container: {
+                                                id: "mainImage"
+                                            }
+                                        };
+
+                                        // Set up configuration for ImageQA functions
+                                        window.imageQAConfig = {
+                                            thumbnailSize: '#{AktuelleSchritteForm.myPlugin.thumbnailSize}',
+                                            shortcutPrefix: '#{LoginForm.myBenutzer.shortcutPrefix}',
+                                            confirmMessage: '#{msgs.wirklichAusfuehren}'
+                                        };
+
+                                        // Initialize viewer with configuration
+                                        const viewerConfig = {
+                                            mediaType: "#{AktuelleSchritteForm.myPlugin.image.type}",
+                                            viewer: configViewer,
+                                            world: worldConfig,
+                                            objectUrl: "#{AktuelleSchritteForm.myPlugin.image.objectUrl}",
+                                            persistZoom: #{AktuelleSchritteForm.myPlugin.persistZoom}
+                                        };
+
+                                        // Check if initialization function exists before calling
+                                        if (typeof initializeImageViewer === 'function') {
+                                            initializeImageViewer(viewerConfig);
                                         }
-                                    };
+                                    }
 
-                                    // Set up configuration for ImageQA functions
-                                    window.imageQAConfig = {
-                                        thumbnailSize: '#{AktuelleSchritteForm.myPlugin.thumbnailSize}',
-                                        shortcutPrefix: '#{LoginForm.myBenutzer.shortcutPrefix}'
-                                    };
-
-                                    // Initialize viewer with configuration
-                                    var viewerConfig = {
-                                        mediaType: "#{AktuelleSchritteForm.myPlugin.image.type}",
-                                        viewer: configViewer,
-                                        world: worldConfig,
-                                        objectUrl: "#{AktuelleSchritteForm.myPlugin.image.objectUrl}",
-                                        persistZoom: #{AktuelleSchritteForm.myPlugin.persistZoom}
-                                    };
-
-                                    initializeImageViewer(viewerConfig);
+                                    setupImageQAViewer();
                                     //]]>
                                 </script>
                             </h:panelGroup>
