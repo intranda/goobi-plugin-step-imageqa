@@ -121,6 +121,9 @@
             <script
                 src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/static/objectView.min.js"></script>
 
+            <!-- ImageQA Plugin JavaScript -->
+            <script src="ImageQAPlugin.js"></script>
+
             <h:form id="qaform">
 
                 <!-- BIG BOX -->
@@ -802,7 +805,8 @@
                                 <!-- // IMAGE AND OBJECT DISPLAY ON THE RIGHT -->
 
                                 <script type="text/javascript">
-                              		//<![CDATA[
+                                    //<![CDATA[
+                                    // Configuration for image viewer
                                     var configViewer = {
                                         global: {
                                             divId: 'mainImage',
@@ -819,123 +823,53 @@
                                         image: {
                                             mimeType: "image/jpeg",
                                             tileSource: "#{AktuelleSchritteForm.myPlugin.image.url}"
-                                            // tileSource : [#{AktuelleSchritteForm.myPlugin.image.imageLevels}],
-                                            // originalImageWidth: "#{AktuelleSchritteForm.myPlugin.image.size.width}",
-                                            // originalImageHeight: "#{AktuelleSchritteForm.myPlugin.image.size.height}",
                                         }
                                     };
 
                                     var worldConfig = {
-                                            controls: {
-                                                xAxis: {
-                                                    rotateLeft: '#rotate-left-x',
-                                                    rotateRight: '#rotate-right-x'
-                                                },
-                                               yAxis: {
-                                                    rotateLeft: '#rotate-left-y',
-                                                    rotateRight: '#rotate-right-y'
-                                                },
-                                               zAxis: {
-                                                    rotateLeft: '#rotate-left-z',
-                                                    rotateRight: '#rotate-right-z'
-                                                },
-                                                position: {
-                                                    reset: '#reset-position'
-                                                },
-                                                zoom: {
-                                                    resetZoom: '#reset#zoom'
-                                                }
+                                        controls: {
+                                            xAxis: {
+                                                rotateLeft: '#rotate-left-x',
+                                                rotateRight: '#rotate-right-x'
                                             },
-                                            container: {
-                                                id: "mainImage"
+                                           yAxis: {
+                                                rotateLeft: '#rotate-left-y',
+                                                rotateRight: '#rotate-right-y'
                                             },
-                                     };
-
-                                    var mediaType = "#{AktuelleSchritteForm.myPlugin.image.type}";
-                                    if(mediaType == "image") {
-
-                                    	//init zoom persistence
-                                    	let imageZoomPersistenzeId = $( '#persistenceId' ).val();
-                                        if(#{AktuelleSchritteForm.myPlugin.persistZoom} && imageZoomPersistenzeId && imageZoomPersistenzeId.length > 0) {
-                                            console.log("persist image zoom with id ", imageZoomPersistenzeId);
-                                            configViewer.global.persistenceId = imageZoomPersistenzeId;
-                                            configViewer.global.persistZoom =  true;
-                                            configViewer.global.persistRotation = true;
-                                        }
-
-                                        var viewImage = new ImageView.Image( configViewer );
-                                        viewImage.load()
-                                        .then(function(image) {
-                                            image.onFirstTileLoaded()
-                                            .then(function() {
-                                                $('#ajaxloader_image').fadeOut(800);
-                                            })
-                                            .catch(function() {
-                                                $('#ajaxloader_image').fadeOut(800);
-                                            })
-                                        })
-                                        .catch(function(error){
-                                            console.error( 'Error opening image', error );
-                                            $('#ajaxloader_image').fadeOut(800);
-                                            $('#' + configViewer.global.divId).html( 'Failed to load image: "' + error + '"' );
-                                        });
-
-                                    } else if(mediaType == "object") {
-                                       $('#ajaxloader_image').show();
-                                        var world = WorldGenerator.create(worldConfig);
-                                        world.loadObject({
-                                             url: "#{AktuelleSchritteForm.myPlugin.image.objectUrl}",
-                                             position: { x:0, y:0, z:-0 },
-                                             rotation:  { x:0, y:0, z:0 },
-                                             size:  10,
-                                             material: {
-                                                    color: 0x44bb33
-                                                },
-                                            focus: true,
-                                            onTick: function(object, time) {
-                                                if(object) {
-                                                // object.rotation.set(0,  Math.PI/180 * time, 0);
-                                                }
+                                           zAxis: {
+                                                rotateLeft: '#rotate-left-z',
+                                                rotateRight: '#rotate-right-z'
+                                            },
+                                            position: {
+                                                reset: '#reset-position'
+                                            },
+                                            zoom: {
+                                                resetZoom: '#reset#zoom'
                                             }
-                                         }).then(function(object) {
-                                             $('#ajaxloader_image').fadeOut(2000);
-                                            world.render();
-                                         }).catch(function(error) {
-                                            $('#ajaxloader_image').fadeOut(2000);
-                                             console.err("failed to load: ", error);
-                                         })
-
-                                    } else if(mediaType == "x3dom") {
-                                        var objectUrl = "#{AktuelleSchritteForm.myPlugin.image.objectUrl}";
-                                       $('#ajaxloader_image').show();
-                                            new X3DLoader().load($('#mainImage'), objectUrl,
-                                                function(){
-                                                    $('#ajaxloader_image').fadeOut(2000);
-                                                    // console.log("loaded")
-                                                },
-                                               function(){
-                                                    // console.log("progress");
-                                                },
-                                               function(error){
-                                                   $('#ajaxloader_image').fadeOut(2000);
-                                                   console.err("error", error);
-                                                })
-                                    }
-
-                                     function freeJSResources(data) {
-                                            if(!data || data.status == 'begin') {
-                                                if(viewImage) {
-                                                    // console.log("closing OpenSeadragon viewer");
-                                                    viewImage.close();
-                                                }
-                                                if(world) {
-                                                    // console.log("disposing 3d scene");
-                                                    world.dispose();
-                                                }
-                                            }
+                                        },
+                                        container: {
+                                            id: "mainImage"
                                         }
-                                   		//]]>
-                                    </script>
+                                    };
+
+                                    // Set up configuration for ImageQA functions
+                                    window.imageQAConfig = {
+                                        thumbnailSize: '#{AktuelleSchritteForm.myPlugin.thumbnailSize}',
+                                        shortcutPrefix: '#{LoginForm.myBenutzer.shortcutPrefix}'
+                                    };
+
+                                    // Initialize viewer with configuration
+                                    var viewerConfig = {
+                                        mediaType: "#{AktuelleSchritteForm.myPlugin.image.type}",
+                                        viewer: configViewer,
+                                        world: worldConfig,
+                                        objectUrl: "#{AktuelleSchritteForm.myPlugin.image.objectUrl}",
+                                        persistZoom: #{AktuelleSchritteForm.myPlugin.persistZoom}
+                                    };
+
+                                    initializeImageViewer(viewerConfig);
+                                    //]]>
+                                </script>
                             </h:panelGroup>
                         </h:panelGroup>
                         <!-- // RIGHT AREA FOR BIG DISPLAY OF IMAGES, VIDEO, 3D AND AUDIO -->
@@ -984,128 +918,6 @@
                 <!-- // ACTION AREA BELOW -->
 
             </h:form>
-
-
-            <script type="text/javascript">
-
-        	window.onload = function() {
-		    	loadImages();
-		    }
-
-			function loadThumbnails() {
-				var height = parseInt('#{AktuelleSchritteForm.myPlugin.thumbnailSize}');
-				if (height) {
-		     		$('.goobi-thumbnail-image').css('height', (height + 25) + 'px');
-		    		$('.goobi-thumbnail-image .thumb').css('max-height', height + 'px');
-		    		$('.goobi-thumbnail-image .thumb canvas').css('max-height', height + 'px');
-		    		$('.goobi-thumbnail-image').css('max-width', (height) + 'px');
-				}
-			}
-
-			$( document ).ready(function() {
-				loadThumbnails();
-			});
-
-			faces.ajax.addOnEvent(function(data) {
-		    	var ajaxstatus = data.status; // Can be "begin", "complete" and "success"
-		      	switch (ajaxstatus) {
-		        	case "success": // This is called when ajax response is successfully processed.
-		            	loadImages();
-		            	loadThumbnails();
-		              	break;
-		      		}
-			});
-
-            const clickGoToImageButton = (event) => {
-                syncValues(event.target);
-                if(event.key === 'Enter' || event.keyCode === 13) {
-                    event.preventDefault();
-                    let btn;
-                    const element = event.target;
-                    if (element.id.endsWith('second_image:txtImageMoveTo2')) {
-                        btn = document.querySelector('[id$="first_image:cmdMoveTo"]');
-                    } else if (element.id.endsWith('first_image:txtImageMoveTo2')) {
-                        btn = document.querySelector('[id$="second_image:cmdMoveTo"]');
-                    } else if (element.id.endsWith('second:txtMoveTo2')) {
-                        btn = document.querySelector('[id$="first:cmdMoveTo"]');
-                    } else if (element.id.endsWith('first:txtMoveTo2')) {
-                        btn = document.querySelector('[id$="second:cmdMoveTo"]');
-                    }
-                    if (btn) {
-                        btn.click();
-                    }
-                }
-            };
-
-            const syncValues = (element) => {
-                let otherInput;
-                if (element.id.endsWith('second_image:txtImageMoveTo2')) {
-                    otherInput = document.querySelector('[id$="first_image:txtImageMoveTo2"]');
-                } else if (element.id.endsWith('first_image:txtImageMoveTo2')) {
-                    otherInput = document.querySelector('[id$="second_image:txtImageMoveTo2"]');
-                } else if (element.id.endsWith('second:txtMoveTo2')) {
-                    otherInput = document.querySelector('[id$="first:txtMoveTo2"]');
-                } else if (element.id.endsWith('first:txtMoveTo2')) {
-                    otherInput = document.querySelector('[id$="second:txtMoveTo2"]');
-                }
-                if (otherInput) {
-                    otherInput.value = element.value;
-                }
-            }
-
-			function copyValue(element, e) {
-		    	console.log(element.id);
-		    	console.log("data attr ", element.dataset.input);
-		    	if(element.dataset.input) {
-		    		document.querySelectorAll("[data-input='"+element.dataset.input+"']").forEach(input => input.value = element.value );
-		    	} else if (element.id =='qaform:first:txtMoveTo2') {
-		        	document.getElementById('qaform:second:txtMoveTo2').value = element.value;
-		    	} else if (element.id =='qaform:second:txtMoveTo2'){
-		        	document.getElementById('qaform:first:txtMoveTo2').value = element.value;
-		    	} else if (element.id =='qaform:first_image:txtImageMoveTo2') {
-		        	document.getElementById('qaform:second_image:txtImageMoveTo2').value = element.value;
-		    	} else {
-		        	document.getElementById('qaform:first_image:txtImageMoveTo2').value = element.value;
-		    	}
-
-			    const keycode = e.keyCode;
-
-				if (keycode == 13) {
-                    const btn = document.querySelector('[id$="cmdImageMoveTo"]');
-                    if (btn) {
-                        btn.click();
-                    }
-					return false;
-				} else
-					return true;
-			}
-
-			$(document).bind('keyup', '#{LoginForm.myBenutzer.shortcutPrefix}+right', function() {
-            	var myButton = document.getElementById("qaform:first_image:imageNext");
-            	if (myButton!=null) {
-            		myButton.click();
-            	}
-            });
-
-            $(document).bind('keyup', '#{LoginForm.myBenutzer.shortcutPrefix}+left', function() {
-            	var myButton = document.getElementById("qaform:first_image:imageBack");
-            	if (myButton!=null) {
-            		myButton.click();
-            	}
-            });
-
-         	// Find the right method, call on correct element
-            function launchFullScreen(element) {
-              if(element.requestFullScreen) {
-                element.requestFullScreen();
-              } else if(element.mozRequestFullScreen) {
-                element.mozRequestFullScreen();
-              } else if(element.webkitRequestFullScreen) {
-                element.webkitRequestFullScreen();
-              }
-            }
-
-	</script>
 
         </main>
     </ui:define>
