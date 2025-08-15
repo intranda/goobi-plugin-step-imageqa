@@ -762,14 +762,14 @@
 
 
                                                 <!-- IMAGE COMMENTS -->
-                                                <div
+                                                <h:panelGroup
+                                                    rendered="#{AktuelleSchritteForm.myPlugin.showImageComments}"
+                                                    layout="block"
                                                     id="imageCommentArea"
                                                     class="grow-wrap mt-3">
                                                     <!-- TEXTAREA -->
                                                     <h:inputTextarea
                                                         id="Comment"
-                                                        style="height: 50px;"
-                                                        rendered="#{AktuelleSchritteForm.myPlugin.showImageComments}"
                                                         styleClass="form-control"
                                                         value="#{AktuelleSchritteForm.myPlugin.commentPropertyForImage}"
                                                         disabled="false"
@@ -779,7 +779,7 @@
                                                             execute="@form"
                                                             event="valueChange" />
                                                     </h:inputTextarea>
-                                                </div>
+                                                </h:panelGroup>
                                                 <!-- // IMAGE COMMENTS -->
 
                                             </div>
