@@ -15,7 +15,6 @@
 
     // Cache frequently accessed DOM elements
     const domCache = {
-        ajaxLoader: null,
         persistenceId: null,
         mainImage: null,
         thumbnailImages: null,
@@ -33,7 +32,6 @@
      */
     const initializeDOMCache = () => {
         // Use modern DOM methods instead of jQuery where possible
-        domCache.ajaxLoader = document.getElementById('ajaxloader_image');
         domCache.persistenceId = document.getElementById('persistenceId');
         domCache.mainImage = document.getElementById('mainImage');
         domCache.imageButtons.next = document.getElementById("qaform:first_image:imageNext");
@@ -62,42 +60,6 @@
         } else {
             callback();
         }
-    };
-
-    /**
-     * Modern fadeOut implementation
-     */
-    const fadeOut = (element, duration = 800) => {
-        if (!element) return Promise.resolve();
-
-        return new Promise(resolve => {
-            element.style.transition = `opacity ${duration}ms`;
-            element.style.opacity = '0';
-
-            setTimeout(() => {
-                element.style.display = 'none';
-                resolve();
-            }, duration);
-        });
-    };
-
-    /**
-     * Modern fadeIn implementation
-     */
-    const fadeIn = (element, duration = 800) => {
-        if (!element) return Promise.resolve();
-
-        return new Promise(resolve => {
-            element.style.display = 'block';
-            element.style.opacity = '0';
-            element.style.transition = `opacity ${duration}ms`;
-
-            // Force reflow
-            element.offsetHeight;
-
-            element.style.opacity = '1';
-            setTimeout(resolve, duration);
-        });
     };
 
     // Initialize on window load
@@ -340,20 +302,10 @@
 
         window.viewImage = new ImageView.Image(config.viewer);
 
-        // Cache ajax loader element
-        const ajaxLoader = domCache.ajaxLoader || document.getElementById('ajaxloader_image');
-
         try {
             const image = await window.viewImage.load();
-            try {
-                await image.onFirstTileLoaded();
-                await fadeOut(ajaxLoader, 800);
-            } catch {
-                await fadeOut(ajaxLoader, 800);
-            }
         } catch (error) {
             console.error('Error opening image', error);
-            await fadeOut(ajaxLoader, 800);
             const mainImageElement = domCache.mainImage || document.getElementById(config.viewer.global.divId);
             if (mainImageElement) {
                 mainImageElement.innerHTML = `Failed to load image: "${error}"`;
@@ -365,10 +317,6 @@
      * Initialize 3D object view
      */
     const initializeObjectView = async (config) => {
-        const ajaxLoader = domCache.ajaxLoader || document.getElementById('ajaxloader_image');
-        if (ajaxLoader) {
-            ajaxLoader.style.display = 'block';
-        }
 
         window.world = WorldGenerator.create(config.world);
 
@@ -389,10 +337,8 @@
                 }
             });
 
-            await fadeOut(ajaxLoader, 2000);
             window.world.render();
         } catch (error) {
-            await fadeOut(ajaxLoader, 2000);
             console.error("failed to load: ", error);
         }
     };
@@ -401,23 +347,16 @@
      * Initialize X3DOM view
      */
     const initializeX3DOMView = (config) => {
-        const ajaxLoader = domCache.ajaxLoader || document.getElementById('ajaxloader_image');
         const mainImage = domCache.mainImage || document.getElementById('mainImage');
-
-        if (ajaxLoader) {
-            ajaxLoader.style.display = 'block';
-        }
 
         new X3DLoader().load(mainImage, config.objectUrl,
             async function() {
-                await fadeOut(ajaxLoader, 2000);
                 debugLog("X3DOM loaded successfully");
             },
             function() {
                 debugLog("X3DOM loading progress");
             },
             async function(error) {
-                await fadeOut(ajaxLoader, 2000);
                 console.error("X3DOM error", error);
             });
     };
