@@ -273,6 +273,11 @@
             return;
         }
 
+        if (!config.viewer || !config.viewer.global || !config.viewer.global.divId) {
+            debugLog("Invalid viewer configuration - missing divId");
+            return;
+        }
+
         const mediaType = config.mediaType;
 
         if (mediaType === "image") {
@@ -289,6 +294,13 @@
      * Modernized to reduce jQuery dependency and use native DOM methods
      */
     const initializeImageView = async (config) => {
+        // Check if target element exists before proceeding
+        const targetElement = document.getElementById(config.viewer.global.divId);
+        if (!targetElement) {
+            debugLog("Target element not found:", config.viewer.global.divId);
+            return;
+        }
+
         // Init zoom persistence - use cached element or fallback to DOM query
         const persistenceIdElement = domCache.persistenceId || document.getElementById('persistenceId');
         let imageZoomPersistenceId = persistenceIdElement?.value;
@@ -300,10 +312,10 @@
             config.viewer.global.persistRotation = true;
         }
 
-        window.viewImage = new ImageView.Image(config.viewer);
-
         try {
+            window.viewImage = new ImageView.Image(config.viewer);
             const image = await window.viewImage.load();
+            await image.onFirstTileLoaded();
         } catch (error) {
             console.error('Error opening image', error);
             const mainImageElement = domCache.mainImage || document.getElementById(config.viewer.global.divId);
