@@ -368,3 +368,50 @@
 	text-align: right;
 	font-size: 12px;
 }
+
+:root {
+    --thumbnail-transition: all 0.2s ease;
+    --thumbnail-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    --thumbnail-hover-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.goobi-thumbnail {
+    box-shadow: var(--thumbnail-shadow);
+    display: flex;
+    flex-direction: column;
+    margin: 7px;
+    width: var(--thumbnail-width);
+    height: var(--thumbnail-height);
+    transition: var(--thumbnail-transition);
+    will-change: transform, box-shadow;
+}
+
+.goobi-thumbnail:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--thumbnail-hover-shadow);
+}
+
+.goobi-thumbnail .goobi-thumbnail-image {
+    flex: 1;
+    width: 100%;
+    min-height: 100px;
+    overflow: hidden;
+    max-height: var(--thumbnail-width);
+}
+
+/* Performance optimization: Use transform instead of changing layout properties */
+.goobi-thumbnail.img-active {
+    transform: scale(1.05);
+    box-shadow: var(--thumbnail-hover-shadow);
+}
+
+.thumb-canvas {
+    max-width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
+/* Loading states */
+.goobi-thumbnail[data-loading="true"] {
+    opacity: 0.7;
+}
