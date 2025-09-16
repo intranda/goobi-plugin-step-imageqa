@@ -158,14 +158,14 @@ previousImage() {
 loadCurrentImage() {
 	var infoJson = this.infoJsonCache[this.imageIndex];
 	if(infoJson) {
-		this.viewImage.setTileSource(infoJson)
+		this.viewImage.load(infoJson)
 		.then(() => {
-			this.viewImage.controls.persistence = new ImageView.Controls.Persistence(this.viewImage.config, this.viewImage);
+			this.zoom.goHome();
 		})
 	} else {
-		this.viewImage.setTileSource(this.currentImage().url)
+		this.viewImage.load(this.currentImage().url)
 		.then(() => {
-			this.viewImage.controls.persistence = new ImageView.Controls.Persistence(this.viewImage.config, this.viewImage);
+			this.zoom.goHome();
 		})
 	}
 }
@@ -212,53 +212,51 @@ loadInitialImage() {
 			response.json().then(infoJson => {
 				console.log("use tiles:", this.useTiles);
 // 				infoJson.sizes = this.imageSizes;
-				var configViewer = {
-				    global: {
-				    	divId: 'mainImage',
-				        useTiles: this.useTiles,
-				        footerHeight: 0,
-				        adaptContainerHeight: false,
-				        zoomSlider: "#zoomSlider",
-				        zoomSliderHandle: "#zoomSlider .zoom-slider-handle",
-				        zoomSliderLabel: "#zoomSliderLabel input",
-// 			            imageSizes: this.imageSizes,
-			            tileSizes: this.tileSizes,
-				    },
-				    image: {
-				        mimeType: "image/jpeg",
-				        tileSource: infoJson
-				    }
-				};
+				const configViewer = {
+                	imageView: {                                        		
+                 		element: "#mainImage",
+                 		fittingMode: "fixed",
+                	},
+                 	controls : {
+                		zoomSlider: "#zoomSlider",
+                     	zoomSliderHandle: "#zoomSlider .zoom-slider-handle",
+                     	zoomSliderLabel: "#zoomSliderLabel input",
+                     	rotateLeftButton: "#mainImageRotateLeft",
+                     	rotateRightButton: "#mainImageRotateRight",
+                     	resetViewButton:"#mainImageResetView"
+                 	},
+                 	persistence: {
+                 		persistZoom: true,
+                	},
+                 	tileSource : infoJson
+                };
 
 				let imageZoomPersistenzeId = $( '#persistenceId' ).val();
                 if(this.opts.persistZoom && imageZoomPersistenzeId && imageZoomPersistenzeId.length > 0) {
                     console.log("persist image zoom with id ", imageZoomPersistenzeId);
-                    configViewer.global.persistenceId = imageZoomPersistenzeId;
-                    configViewer.global.persistZoom =  true;
-                    configViewer.global.persistRotation = true;
+                    configViewer.persistence.persistenceId = imageZoomPersistenzeId;
+                    configViewer.persistence.persistZoom =  true;
                 }
 
-			    this.viewImage = new ImageView.Image( configViewer );
-			    this.viewImage.load()
-			    .then((image) => {
-				    this.viewImage.viewer.blendTime = 0.0;
-			    	console.log(this.viewImage.viewer.drawer.getOpacity())
-			        image.onFirstTileLoaded()
-			        .then(function() {
-			        	$('#ajaxloader_image').fadeOut(800);
-			        	resolve();
-			        })
-			        .catch(function() {
-			            $('#ajaxloader_image').fadeOut(800);
-			            reject();
-			        })
+                console.log("load viewer with ", configViewer.imageView, configViewer.tileSource);
+			    this.viewImage = new ImageView.Image( configViewer.imageView );
+			    
+			    this.zoom = new ImageView.Controls.Zoom(this.viewImage);
+	            this.zoom.setInput(configViewer.controls.zoomSliderLabel);
+	            //this.rotation = new ImageView.Controls.Rotation(this.viewImage);
+			    
+			    this.viewImage.load(configViewer.tileSource)
+			    .then((e) => {
+				    this.viewImage.openseadragon.blendTime = 0.0;
+		        	$('#ajaxloader_image').fadeOut(800);
+		        	resolve();
 			    })
-			    .catch(function(error){
-			        console.error( 'Error opening image', error );
-			        $('#ajaxloader_image').fadeOut(800);
-			        $('#' + configViewer.global.divId).html( 'Failed to load image: "' + error + '"' );
-			        reject();
-			    });
+		        .catch(error => {	        		
+		        	console.error( 'Error opening image', error );
+			        $(configViewer.imageView.element).html( 'Failed to load image: "' + error + '"' );
+		            $('#ajaxloader_image').fadeOut(800);
+		            reject();
+		        })
 			})
 
 		})

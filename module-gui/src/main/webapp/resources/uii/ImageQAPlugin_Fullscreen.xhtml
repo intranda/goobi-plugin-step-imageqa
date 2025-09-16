@@ -36,11 +36,10 @@
         <link
             rel="stylesheet"
             href="imageQA_Fullscreen.css" />
-        <script src="#{HelperForm.applicationWebsiteUrl}uii/template/js/static/reactiveX/rx.lite.min.js"></script>
-        <script src="#{HelperForm.applicationWebsiteUrl}uii/template/js/static/q-promises/q.min.js"></script>
+        <script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/static/reactiveX/rxjs.umd.min.js"></script>
 
-        <script src="#{HelperForm.applicationWebsiteUrl}uii/template/js/static/openseadragon/openseadragon.min.js"></script>
-        <script src="#{HelperForm.applicationWebsiteUrl}uii/template/js/static/openseadragon/openseadragon-viewerinputhook.js"></script>
+        <script
+            src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/static/openseadragon/openseadragon.min.js"></script>
 
         <!-- 3D-Models -->
         <script
@@ -78,7 +77,7 @@
             src="#{HelperForm.applicationWebsiteUrl}uii/template/js/static/three/dependencies/inflate.min.js"></script>
         <script src="#{HelperForm.applicationWebsiteUrl}uii/template/js/static/x3dom/x3dom.js"></script>
 
-        <script src="#{HelperForm.applicationWebsiteUrl}uii/template/js/static/imageView.min.js"></script>
+		<script src="#{request.contextPath}/resources/js/dist/imageView.min.js?v=#{HelperForm.buildVersion}"></script>
         <script src="#{HelperForm.applicationWebsiteUrl}uii/template/js/static/objectView.min.js"></script>
         <main>
             <h:form id="qaform">
@@ -98,26 +97,24 @@
                             <script type="text/javascript">
                           //<![CDATA[
                             	var configViewer = {
-                            			    global: {
-                            			    	divId: 'mainImage',
-                            			        useTiles: #{AktuelleSchritteForm.myPlugin.useTilesFullscreen},
-                            			        footerHeight: 0,
-                            			        adaptContainerHeight: false,
-                            			        zoomSlider: "#zoomSlider",
-                            			        zoomSliderHandle: "#zoomSlider .zoom-slider-handle",
-                            			        zoomSliderLabel: "#zoomSliderLabel input",
-                                                webApiToken: '#{AktuelleSchritteForm.myPlugin.imageWebApiToken}',
-                                                imageSizes: #{AktuelleSchritteForm.myPlugin.displaySizes},
-                                                tileSizes: #{AktuelleSchritteForm.myPlugin.tileSize}
-                            			    },
-                            			    image: {
-                            			        mimeType: "image/jpeg",
-                            			        tileSource: "#{AktuelleSchritteForm.myPlugin.image.url}"
-//                             			        tileSource : [#{AktuelleSchritteForm.myPlugin.image.imageLevels}],
-//                              			   		originalImageWidth: "#{AktuelleSchritteForm.myPlugin.image.size.width}",
-//                              			   		originalImageHeight: "#{AktuelleSchritteForm.myPlugin.image.size.height}",
-                            			    }
-                            			};
+                                   	imageView: {                                        		
+                                    	element: "#mainImage",
+                                    	fittingMode: "fixed",
+                                   	},
+                                    controls : {
+                                   		zoomSlider: "#zoomSlider",
+                                        zoomSliderHandle: "#zoomSlider .zoom-slider-handle",
+                                        zoomSliderLabel: "#zoomSliderLabel input",
+                                        rotateLeftButton: "#mainImageRotateLeft",
+                                        rotateRightButton: "#mainImageRotateRight",
+                                        resetViewButton:"#mainImageResetView"
+                                    },
+                                    persistence: {
+                                    	persistZoom: true,
+                                    },
+                                    tileSource : "#{AktuelleSchritteForm.myPlugin.image.url}"
+                                 };
+                            			
 
                                     	var worldConfig = {
 									 			controls: {
@@ -152,26 +149,23 @@
 	                                    	let imageZoomPersistenzeId = $( '#persistenceId' ).val();
 	                                        if(#{AktuelleSchritteForm.myPlugin.persistZoom} && imageZoomPersistenzeId && imageZoomPersistenzeId.length > 0) {
 	                                            console.log("persist image zoom with id ", imageZoomPersistenzeId);
-	                                            configViewer.global.persistenceId = imageZoomPersistenzeId;
-	                                            configViewer.global.persistZoom =  true;
-	                                            configViewer.global.persistRotation = true;
+	                                            configViewer.persistence.persistenceId = imageZoomPersistenzeId;
 	                                        }
-
-										    var viewImage = new ImageView.Image( configViewer );
-										    viewImage.load()
-										    .then(function(image) {
-										        image.onFirstTileLoaded()
-										        .then(function() {
-										        	$('#ajaxloader_image').fadeOut(800);
-										        })
-										        .catch(function() {
-										            $('#ajaxloader_image').fadeOut(800);
-										        })
+											
+										    var viewImage = new ImageView.Image( configViewer.imageView );
+										    
+										    var zoom = new ImageView.Controls.Zoom(viewImage);
+								            //this.rotation = new ImageView.Controls.Rotation(this.viewImage);
+										    
+										    viewImage.load(configViewer.tileSource)
+										    .then( e => {
+									            zoom.setInput(configViewer.controls.zoomSliderLabel);
+										    	$('#ajaxloader_image').fadeOut(800);
 										    })
-										    .catch(function(error){
+										    .catch((error) => {
 										        console.error( 'Error opening image', error );
 										        $('#ajaxloader_image').fadeOut(800);
-										        $('#' + configViewer.global.divId).html( 'Failed to load image: "' + error + '"' );
+										        $(configViewer.imageView.element).html( 'Failed to load image: "' + error + '"' );
 										    });
 
 									 	} else if(mediaType == "object") {
@@ -478,16 +472,6 @@
 	       window.onload = function() {
 		    	launchIntoFullscreen(document.documentElement); // the whole page
 		    }
-
-			faces.ajax.addOnEvent(function(data) {
-			    var ajaxstatus = data.status; // Can be "begin", "complete" and "success"
-
-			      switch (ajaxstatus) {
-			          case "success": // This is called when ajax response is successfully processed.
-			              break;
-			      }
-
-			});
 
 			function copyValue(element, e) {
 			    console.log(element.id);
