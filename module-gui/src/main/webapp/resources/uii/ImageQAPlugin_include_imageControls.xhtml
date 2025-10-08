@@ -36,9 +36,8 @@
                     <li>
                         <span
                             class="btn btn-blank me-1"
-                            title="#{msg.rotateLeft}"
-                            jsf:rendered="#{! AktuelleSchritteForm.myPlugin.allowPersistentRotation}"
-                            onclick="viewImage.controls.rotateLeft();">
+                            title="#{msg.rotateLeft}" id="mainImageRotateLeft"
+                            jsf:rendered="#{! AktuelleSchritteForm.myPlugin.allowPersistentRotation}">
                             <i class="fa fa-undo"></i>
                         </span>
                         <button
@@ -52,9 +51,8 @@
                     <li>
                         <span
                             class="btn btn-blank me-3"
-                            title="#{msg.rotateRight}"
-                            jsf:rendered="#{! AktuelleSchritteForm.myPlugin.allowPersistentRotation}"
-                            onclick="viewImage.controls.rotateRight();">
+                            title="#{msg.rotateRight}" id="mainImageRotateRight"
+                            jsf:rendered="#{! AktuelleSchritteForm.myPlugin.allowPersistentRotation}">
                             <i class="fa fa-repeat"></i>
                         </span>
                         <button
@@ -93,8 +91,7 @@
                     <li>
                         <span
                             class="btn btn-blank me-1"
-                            title="#{msg.resetImage}"
-                            onclick="viewImage.controls.reset(true);">
+                            title="#{msg.resetImage}" id="mainImageResetView">
                             <i class="fa fa-refresh"></i>
                         </span>
                     </li>

@@ -25,7 +25,7 @@
     };
 
     // Debug mode flag
-    const DEBUG_MODE = false;
+    const DEBUG_MODE = true;
 
     /**
      * Initialize DOM cache for frequently accessed elements
@@ -272,8 +272,7 @@
             console.error('Image viewer configuration is required');
             return;
         }
-
-        if (!config.viewer || !config.viewer.global || !config.viewer.global.divId) {
+        if (!config.viewer?.imageView?.element) {
             debugLog("Invalid viewer configuration - missing divId");
             return;
         }
@@ -281,7 +280,7 @@
         const mediaType = config.mediaType;
 
         if (mediaType === "image") {
-            initializeImageView(config);
+            initializeImageView(config.viewer);
         } else if (mediaType === "object") {
             initializeObjectView(config);
         } else if (mediaType === "x3dom") {
@@ -295,9 +294,10 @@
      */
     const initializeImageView = async (config) => {
         // Check if target element exists before proceeding
-        const targetElement = document.getElementById(config.viewer.global.divId);
+        debugLog("initializeImageView", config);
+        const targetElement = document.querySelector(config.imageView.element);
         if (!targetElement) {
-            debugLog("Target element not found:", config.viewer.global.divId);
+            debugLog("Target element not found:", config.imageView.element);
             return;
         }
 
@@ -305,24 +305,39 @@
         const persistenceIdElement = domCache.persistenceId || document.getElementById('persistenceId');
         let imageZoomPersistenceId = persistenceIdElement?.value;
 
-        if (config.persistZoom && imageZoomPersistenceId && imageZoomPersistenceId.length > 0) {
+        if (config.persistence.persistZoom && imageZoomPersistenceId && imageZoomPersistenceId.length > 0) {
             debugLog("persist image zoom with id ", imageZoomPersistenceId);
-            config.viewer.global.persistenceId = imageZoomPersistenceId;
-            config.viewer.global.persistZoom = true;
-            config.viewer.global.persistRotation = true;
+            config.persistence.persistenceId = imageZoomPersistenceId;
         }
 
+        const viewImage = {};
         try {
-            window.viewImage = new ImageView.Image(config.viewer);
-            const image = await window.viewImage.load();
-            await image.onFirstTileLoaded();
+            debugLog("opening image with ", config.tileSource);
+            viewImage.image = new ImageView.Image(config.imageView);
+
+            viewImage.zoom = new ImageView.Controls.Zoom(viewImage.image);
+            viewImage.zoom.setSlider(config.controls.zoomSlider);
+            viewImage.rotation = new ImageView.Controls.Rotation(viewImage.image);
+
+            rxjs.fromEvent(document.querySelector(config.controls.rotateLeftButton), "click").subscribe(e => viewImage.rotation.rotateLeft());
+            rxjs.fromEvent(document.querySelector(config.controls.rotateRightButton), "click").subscribe(e => viewImage.rotation.rotateRight());
+            rxjs.fromEvent(document.querySelector(config.controls.resetViewButton), "click").subscribe(e => {viewImage.rotation.rotateTo(0);viewImage.zoom.goHome();});
+
+            viewImage.close = () => {
+                viewImage.zoom.close();
+                viewImage.image.close();
+            }
+
+            await viewImage.image.load(config.tileSource);
+            debugLog("image opened");
         } catch (error) {
             console.error('Error opening image', error);
-            const mainImageElement = domCache.mainImage || document.getElementById(config.viewer.global.divId);
+            const mainImageElement = domCache.mainImage || document.querySelector(config.imageView.element);
             if (mainImageElement) {
                 mainImageElement.innerHTML = `Failed to load image: "${error}"`;
             }
         }
+        window.viewImage = viewImage;
     };
 
     /**

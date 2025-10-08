@@ -64,15 +64,10 @@
         <main>
             <link rel="stylesheet" href="imageQA.css" />
 
-            <script
-                src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/static/reactiveX/rx.lite.min.js"></script>
-            <script
-                src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/static/q-promises/q.min.js"></script>
+            <script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/static/reactiveX/rxjs.umd.min.js"></script>
 
             <script
                 src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/static/openseadragon/openseadragon.min.js"></script>
-            <script
-                src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/static/openseadragon/openseadragon-viewerinputhook.js"></script>
 
             <!-- 3D-Models -->
             <script type="text/javascript"
@@ -100,8 +95,9 @@
             <script
                 src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/static/x3dom/x3dom.js"></script>
 
-            <script
-                src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/static/imageView.min.js"></script>
+            <!-- OPEN SEADRAGON AND IMAGE VIEW -->
+	        <script src="#{request.contextPath}/resources/js/dist/imageView.min.js?v=#{HelperForm.buildVersion}"></script>
+	        
             <script
                 src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/static/objectView.min.js"></script>
 
@@ -787,22 +783,22 @@
                                     //<![CDATA[
                                     function setupImageQAViewer() {
                                         const configViewer = {
-                                            global: {
-                                                divId: 'mainImage',
-                                                useTiles: #{AktuelleSchritteForm.myPlugin.useTiles},
-                                                footerHeight: 0,
-                                                adaptContainerHeight: true,
-                                                zoomSlider: "#zoomSlider",
-                                                zoomSliderHandle: "#zoomSlider .zoom-slider-handle",
-                                                zoomSliderLabel: "#zoomSliderLabel input",
-                                                webApiToken: '#{AktuelleSchritteForm.myPlugin.imageWebApiToken}',
-                                                imageSizes: #{AktuelleSchritteForm.myPlugin.displaySizes},
-                                                tileSizes: #{AktuelleSchritteForm.myPlugin.tileSize}
-                                            },
-                                            image: {
-                                                mimeType: "image/jpeg",
-                                                tileSource: "#{AktuelleSchritteForm.myPlugin.image.url}"
-                                            }
+                                        	imageView: {                                        		
+	                                        	element: "#mainImage",
+	                                        	fittingMode: "toWidth",
+                                        	},
+	                                        controls : {
+	                                       		zoomSlider: "#zoomSlider",
+	                                            zoomSliderHandle: "#zoomSlider .zoom-slider-handle",
+	                                            zoomSliderLabel: "#zoomSliderLabel input",
+	                                            rotateLeftButton: "#mainImageRotateLeft",
+	                                            rotateRightButton: "#mainImageRotateRight",
+	                                            resetViewButton:"#mainImageResetView"
+	                                        },
+	                                        persistence: {
+	                                        	persistZoom: true,
+	                                        },
+	                                        tileSource : "#{AktuelleSchritteForm.myPlugin.image.url}"
                                         };
 
                                         const worldConfig = {

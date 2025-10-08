@@ -42,15 +42,14 @@
 				value="#{AktuelleSchritteForm.myPlugin.title.concat('_fullscreen_').concat(AktuelleSchritteForm.myPlugin.process.id)}" />
 
 		</main>
-			<script
-				src="#{HelperForm.applicationWebsiteUrl}uii/template/js/static/q-promises/q.min.js"></script>
+				
+			<script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/static/reactiveX/rxjs.umd.min.js"></script>
 
-			<script
-				src="#{HelperForm.applicationWebsiteUrl}uii/template/js/static/imageView.min.js"></script>
-			<script
-				src="#{HelperForm.applicationWebsiteUrl}uii/template/js/static/openseadragon/openseadragon.min.js"></script>
-			<script
-				src="#{HelperForm.applicationWebsiteUrl}uii/template/js/static/openseadragon/openseadragon-viewerinputhook.js"></script>
+        	<script
+            	src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/static/openseadragon/openseadragon.min.js"></script>
+
+			<script src="#{request.contextPath}/resources/js/dist/imageView.min.js?v=#{HelperForm.buildVersion}"></script>
+
 
 			<script src="#{HelperForm.applicationWebsiteUrl}uii/template/js/static/riot+compiler.min.js" type="text/javascript"></script>
 			<script src="ImageQAPlugin_fullscreen.tag" type="riot/tag"></script>
