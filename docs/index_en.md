@@ -3,6 +3,10 @@ title: Quality control of images
 identifier: intranda_step_imageQA
 published: true
 description: With the plugin for the quality control of images, images can be checked in detail for their quality
+keywords:
+    - Goobi workflow
+    - Plugin
+    - Step Plugin
 ---
 ## Introduction
 This plugin is used to visually check the quality of images. It allows different views of images as thumbnails, in large display or even in full screen mode. In addition, the full text of the image can be displayed and various functions for download or image manipulation can be activated. ​
