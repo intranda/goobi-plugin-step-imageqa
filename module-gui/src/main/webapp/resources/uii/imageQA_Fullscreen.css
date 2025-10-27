@@ -70,9 +70,11 @@ br {
 	font-size: 0px;
 }
 
-#ocrText {
+.ocr-text {
+	color: white;
 	max-height: 100vh;
 	overflow-y: auto;
+	padding: 3rem;
 }
 
 .fullscreen-control {
