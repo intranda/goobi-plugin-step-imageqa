@@ -80,6 +80,7 @@ br {
 .fullscreen-control {
 	--bs-body-color: #aaa;
 	background: rgba(0,0,0,0.6);
+	border: 1px solid rgba(0,0,0,0.6)
 	color: #aaa;
 	font-size: 0.625rem;
 	padding: 1em;
@@ -88,5 +89,6 @@ br {
 
 .fullscreen-control:hover {
 	background: rgba(255,255,255,0.1);
+	border: 1px solid rgba(0,0,0,0.6);
 	color: white;
 }
