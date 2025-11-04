@@ -80,7 +80,9 @@
 		<script src="#{request.contextPath}/resources/js/dist/imageView.min.js?v=#{HelperForm.buildVersion}"></script>
         <script src="#{HelperForm.applicationWebsiteUrl}uii/template/js/static/objectView.min.js"></script>
         <main>
-            <h:form id="qaform">
+            <h:form
+                id="qaform"
+                styleClass="#{AktuelleSchritteForm.myPlugin.displayOCR ? 'row' : ''}">
                 <!-- big image -->
                 <div class="#{AktuelleSchritteForm.myPlugin.displayOCR ? 'col-sm-9' : ''}">
                     <div class="row">

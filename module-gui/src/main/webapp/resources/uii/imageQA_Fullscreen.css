@@ -70,14 +70,17 @@ br {
 	font-size: 0px;
 }
 
-#ocrText {
+.ocr-text {
+	color: white;
 	max-height: 100vh;
 	overflow-y: auto;
+	padding: 3rem;
 }
 
 .fullscreen-control {
 	--bs-body-color: #aaa;
 	background: rgba(0,0,0,0.6);
+	border: 1px solid rgba(0,0,0,0.6);
 	color: #aaa;
 	font-size: 0.625rem;
 	padding: 1em;
@@ -85,6 +88,9 @@ br {
 }
 
 .fullscreen-control:hover {
-	background: rgba(255,255,255,0.1);
+	background: rgba(0,0,0,0.8);
+	border: 1px solid rgba(255,255,255,0.5);
 	color: white;
+	box-shadow: 0 2px 12px rgba(0,0,0,0.6), 0 0 0 1px rgba(0,0,0,0.8);
+	backdrop-filter: blur(4px);
 }

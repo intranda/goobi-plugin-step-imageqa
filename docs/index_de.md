@@ -3,6 +3,10 @@ title: Qualitätskontrolle von Bildern
 identifier: intranda_step_imageQA
 published: true
 description: Mit dem Plugin für die Qualitätskontrolle von Bildern lassen sich Bilder im Detail auf Ihre Qualität prüfen
+keywords:
+    - Goobi workflow
+    - Plugin
+    - Step Plugin
 ---
 ## Einführung
 Diese Plugin dient zur visuellen Prüfung der Qualität von Bildern. Es erlaubt verschiedene Sichten auf Bilder als Thumbnails, in großer Anzeige oder auch in einem Vollbildmodus. Darüber hinaus lassen sich parallel zur Bildanzeige ebenso der ggf. vorhandene Volltext einblenden und verschiedene Funktionen für einen Download oder zur Bildmanipulation aktivieren.
