@@ -19,6 +19,7 @@ package de.intranda.goobi;
  * 
  */
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,6 +28,7 @@ import java.util.List;
 import org.apache.commons.io.FilenameUtils;
 import org.goobi.beans.Process;
 
+import de.sub.goobi.forms.HelperForm;
 import de.sub.goobi.helper.exceptions.DAOException;
 import de.sub.goobi.helper.exceptions.SwapException;
 import de.sub.goobi.metadaten.Image;
@@ -150,6 +152,27 @@ public class SelectableImage extends Image {
         for (NamePart namePart : newNameParts) {
             this.nameParts.add(new NamePart(namePart));
         }
+    }
+
+    public static String createThumbnailUrl(Process process, int size, String imageFolderName, String filename) {
+
+        String thumbsFolderName = imageFolderName + "_" + size;
+        String thumbsImageName = filename.replaceAll("(i?)\\.\\w{2,4}$", ".jpg");
+
+        try {
+            Path thumbsPath = Path.of(process.getThumbsDirectory(), thumbsFolderName, thumbsImageName);
+            if (Files.exists(thumbsPath)) {
+                String servletUrl = new HelperForm().getServletPathWithHostAsUrl();
+                String thumbsUrl =
+                        "%s/api/process/thumbs/%s/%s/%s/full/max/0/default.jpg"
+                                .formatted(servletUrl, process.getId(), thumbsFolderName, thumbsImageName);
+
+                return thumbsUrl;
+            }
+        } catch (IOException | SwapException e) {
+            //ignore
+        }
+        return Image.createThumbnailUrl(process, size, imageFolderName, filename);
     }
 
 }
