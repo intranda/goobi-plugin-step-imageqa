@@ -40,6 +40,7 @@ import lombok.Setter;
 public class SelectableImage extends Image {
 
     private static final String NAMEPART_SEPARATOR = "_";
+    private static final int LARGE_THUMBNAIL_SIZE_FACTOR = 3;
 
     private boolean selected;
     private String namePrefix;
@@ -151,6 +152,16 @@ public class SelectableImage extends Image {
         this.nameParts = new ArrayList<>();
         for (NamePart namePart : newNameParts) {
             this.nameParts.add(new NamePart(namePart));
+        }
+    }
+
+    public void createThumbnailUrls(int size, Process process, String imageFoldername, String filename) {
+        //handle pdfs like images since they can be read as such by the contentServer
+        if (Type.image.equals(this.getType()) || Type.pdf.equals(this.getType())) {
+            this.thumbnailUrl = createThumbnailUrl(process, size, imageFoldername, filename);
+            this.largeThumbnailUrl = createThumbnailUrl(process, size * LARGE_THUMBNAIL_SIZE_FACTOR, imageFoldername, filename);
+        } else {
+            super.createThumbnailUrls(size, process, imageFoldername, filename);
         }
     }
 
