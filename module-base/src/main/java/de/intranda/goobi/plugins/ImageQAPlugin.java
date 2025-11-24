@@ -1188,6 +1188,23 @@ public class ImageQAPlugin implements IStepPlugin {
             imageFolderURI = S3FileUtils.string2Prefix(imageFolderURI);
         }
 
+        executeCommand(commandParameter, imageURI, imageFolderURI);
+
+        //execute for thumbnail images as well
+        if (myimage instanceof SelectableImage sImage) {
+            List<Path> thumbnails = sImage.getThumbnailFiles();
+            for (Path thumbPath : thumbnails) {
+                executeCommand(commandParameter, thumbPath.toAbsolutePath().toString(), thumbPath.getParent().toAbsolutePath().toString());
+            }
+        }
+
+        allImages = new ArrayList<>();
+        initialize(this.step, returnPath);
+
+        setImageIndex(myindex);
+    }
+
+    void executeCommand(List<String> commandParameter, String imageURI, String imageFolderURI) {
         List<String> commandLine = new ArrayList<>();
         for (String parameter : commandParameter) {
             commandLine.add(parameter.replace("IMAGE_FILE", imageURI).replace("IMAGE_FOLDER", imageFolderURI));
@@ -1211,11 +1228,6 @@ public class ImageQAPlugin implements IStepPlugin {
             log.error("InterruptedException in callScript()", e);
             Helper.setFehlerMeldung("Command '" + commandLine + "' is interrupted in callScript()!");
         }
-
-        allImages = new ArrayList<>();
-        initialize(this.step, returnPath);
-
-        setImageIndex(myindex);
     }
 
     public void selectAllImagesOnCurrentPage() {
