@@ -19,7 +19,6 @@ package de.intranda.goobi;
  * 
  */
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,6 +28,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.goobi.beans.Process;
 
 import de.sub.goobi.forms.HelperForm;
+import de.sub.goobi.helper.StorageProvider;
 import de.sub.goobi.helper.exceptions.DAOException;
 import de.sub.goobi.helper.exceptions.SwapException;
 import de.sub.goobi.metadaten.Image;
@@ -40,11 +40,14 @@ import lombok.Setter;
 public class SelectableImage extends Image {
 
     private static final String NAMEPART_SEPARATOR = "_";
+    private static final int LARGE_THUMBNAIL_SIZE_FACTOR = 3;
 
     private boolean selected;
     private String namePrefix;
     private List<NamePart> nameParts = new ArrayList<>();
     private String pageCounterLabel;
+    private final Path thumbnailFolder;
+    private final String imageFolderName;
 
     /**
      * @param process
@@ -61,17 +64,23 @@ public class SelectableImage extends Image {
             throws IOException, InterruptedException, SwapException, DAOException {
         super(process, imageFolderName, filename, order, thumbnailSize);
         this.selected = false;
+        this.thumbnailFolder = Path.of(process.getThumbsDirectory());
+        this.imageFolderName = Path.of(imageFolderName).getFileName().toString();
     }
 
     public SelectableImage(Path imagePath, int order, Integer thumbnailSize) throws IOException {
         super(imagePath, order, thumbnailSize);
         this.selected = false;
+        this.thumbnailFolder = null;
+        this.imageFolderName = imagePath.getParent().getFileName().toString();
     }
 
     @Deprecated
     public SelectableImage(String imageName, int order, String thumbnailUrl, String largeThumbnailUrl, String tooltip) {
         super(imageName, order, thumbnailUrl, largeThumbnailUrl, tooltip);
         this.selected = false;
+        this.thumbnailFolder = null;
+        this.imageFolderName = null;
     }
 
     public String getImageNameShort() {
@@ -154,6 +163,16 @@ public class SelectableImage extends Image {
         }
     }
 
+    public void createThumbnailUrls(int size, Process process, String imageFoldername, String filename) {
+        //handle pdfs like images since they can be read as such by the contentServer
+        if (Type.image.equals(this.getType()) || Type.pdf.equals(this.getType())) {
+            this.thumbnailUrl = createThumbnailUrl(process, size, imageFoldername, filename);
+            this.largeThumbnailUrl = createThumbnailUrl(process, size * LARGE_THUMBNAIL_SIZE_FACTOR, imageFoldername, filename);
+        } else {
+            super.createThumbnailUrls(size, process, imageFoldername, filename);
+        }
+    }
+
     public static String createThumbnailUrl(Process process, int size, String imageFolderName, String filename) {
 
         String thumbsFolderName = imageFolderName + "_" + size;
@@ -161,7 +180,7 @@ public class SelectableImage extends Image {
 
         try {
             Path thumbsPath = Path.of(process.getThumbsDirectory(), thumbsFolderName, thumbsImageName);
-            if (Files.exists(thumbsPath)) {
+            if (StorageProvider.getInstance().isFileExists(thumbsPath)) {
                 String servletUrl = new HelperForm().getServletPathWithHostAsUrl();
                 String thumbsUrl =
                         "%s/api/process/thumbs/%s/%s/%s/full/max/0/default.jpg"
@@ -173,6 +192,23 @@ public class SelectableImage extends Image {
             //ignore
         }
         return Image.createThumbnailUrl(process, size, imageFolderName, filename);
+    }
+
+    public List<Path> getThumbnailFiles() {
+        List<Path> thumbs = new ArrayList<>();
+        if (this.thumbnailFolder != null && this.imageFolderName != null) {
+            List<Path> thumbFolders = StorageProvider.getInstance()
+                    .listFiles(this.thumbnailFolder.toAbsolutePath().toString(),
+                            path -> path.getFileName().toString().matches(this.imageFolderName + "_\\d+"));
+            String thumbImageName = this.getImageName().replaceAll("(i?)\\.\\w{2,4}$", ".jpg");
+            for (Path folder : thumbFolders) {
+                Path thumbnail = folder.resolve(thumbImageName);
+                if (StorageProvider.getInstance().isFileExists(thumbnail)) {
+                    thumbs.add(thumbnail);
+                }
+            }
+        }
+        return thumbs;
     }
 
 }
