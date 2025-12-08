@@ -122,6 +122,7 @@
                             loadThumbnails();
                             setupLazyImageLoading();
                         }, 50);
+                        updateCheckboxToggles(sourceEl);
                         break;
                 }
             });
@@ -446,6 +447,18 @@
             ctx.drawImage(this, 0, 0);
         };
         img.src = canvas.dataset.image_small;
+    };
+
+    const updateCheckboxToggles = (sourceEl) => {
+        if (!sourceEl || !sourceEl.dataset.updateToggle) return;
+
+        const active = sourceEl.dataset.updateToggle === 'select';
+        const toggleButtons = document.querySelectorAll('.thumbnail-control.checkbox');
+
+        toggleButtons.forEach(button => {
+            const checkbox = button.querySelector('input[type="checkbox"]');
+            checkbox.checked = active;
+        });
     };
 
     // Initialize when DOM is ready

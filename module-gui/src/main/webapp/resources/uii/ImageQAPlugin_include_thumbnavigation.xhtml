@@ -183,11 +183,13 @@
                             <button
                                 class="dropdown-item"
                                 jsf:action="#{AktuelleSchritteForm.myPlugin.selectAllImages}"
-                                jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowSelectionAll}">
+                                jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowSelectionAll}"
+                                data-update-toggle="select">
                                 <i class="fa fa-check-square-o imageqa-thumb-massbutton"></i>
                                 <span>
                                     <h:outputText value="#{msgs.plugin_intranda_step_imageQA_selectAllImages}" />
                                 </span>
+                                <f:ajax />
                             </button>
                         </li>
 
@@ -196,11 +198,13 @@
                             <button
                                 class="dropdown-item"
                                 jsf:action="#{AktuelleSchritteForm.myPlugin.unselectAllImages}"
-                                jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowSelectionAll}">
+                                jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowSelectionAll}"
+                                data-update-toggle="unselect">
                                 <i class="fa fa-square-o imageqa-thumb-massbutton"></i>
                                 <span>
                                     <h:outputText value="#{msgs.plugin_intranda_step_imageQA_unselectAllImages}" />
                                 </span>
+                                <f:ajax />
                             </button>
                         </li>
 
