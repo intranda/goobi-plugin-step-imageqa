@@ -108,6 +108,7 @@
 
                 <!-- BIG BOX -->
                 <intranda:box
+                    id="imageQABox"
                     boxType="neutral"
                     boxTitle="false"
                     boxForm="false">
@@ -220,7 +221,9 @@
                         <!-- LEFT AREA FOR THUMBNAILS -->
                         <div
                             class="#{AktuelleSchritteForm.myPlugin.thumbnailsOnly ? 'col-sm-12' : AktuelleSchritteForm.myPlugin.displayOCR ? 'col-sm-5' : 'col-sm-7'} col-xs-12">
-                            <h:panelGroup layout="block"
+                            <h:panelGroup
+                                id="thumbnailArea"
+                                layout="block"
                                 rendered="#{AktuelleSchritteForm.myPlugin.sizeOfImageList gt 0}">
 
                                 <!-- THUMB PAGINATOR ON TOP -->
@@ -243,6 +246,7 @@
                                         value="#{AktuelleSchritteForm.myPlugin.paginatorList}"
                                         varStatus="status">
                                             <div
+                                                jsf:id="thumbnail_#{status.index}"
                                                 class="goobi-thumbnail #{AktuelleSchritteForm.myPlugin.image.imageName eq image.imageName?'img-active':'font-light'}"
                                                 dir="auto"
                                                 style="--thumbnail-width: #{AktuelleSchritteForm.myPlugin.thumbnailSize +2}px; --thumbnail-height: #{AktuelleSchritteForm.myPlugin.thumbnailSize + 55}px;"
@@ -783,7 +787,7 @@
                                     //<![CDATA[
                                     function setupImageQAViewer() {
                                         const configViewer = {
-                                        	imageView: {                                        		
+                                        	imageView: {
 	                                        	element: "#mainImage",
 	                                        	fittingMode: "toWidth",
                                         	},
