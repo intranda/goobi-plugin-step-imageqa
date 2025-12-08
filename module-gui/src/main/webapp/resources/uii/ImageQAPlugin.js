@@ -320,14 +320,26 @@
             viewImage.zoom.setSlider(config.controls.zoomSlider);
             viewImage.rotation = new ImageView.Controls.Rotation(viewImage.image);
 
-            rxjs.fromEvent(document.querySelector(config.controls.rotateLeftButton), "click").subscribe(e => viewImage.rotation.rotateLeft());
-            rxjs.fromEvent(document.querySelector(config.controls.rotateRightButton), "click").subscribe(e => viewImage.rotation.rotateRight());
-            rxjs.fromEvent(document.querySelector(config.controls.resetViewButton), "click").subscribe(e => {viewImage.rotation.rotateTo(0);viewImage.zoom.goHome();});
+            // Setup rotation controls with null checks
+            const rotateLeftBtn = document.querySelector(config.controls.rotateLeftButton);
+            if (rotateLeftBtn) {
+                rxjs.fromEvent(rotateLeftBtn, "click").subscribe(e => viewImage.rotation.rotateLeft());
+            }
+
+            const rotateRightBtn = document.querySelector(config.controls.rotateRightButton);
+            if (rotateRightBtn) {
+                rxjs.fromEvent(rotateRightBtn, "click").subscribe(e => viewImage.rotation.rotateRight());
+            }
+
+            const resetViewBtn = document.querySelector(config.controls.resetViewButton);
+            if (resetViewBtn) {
+                rxjs.fromEvent(resetViewBtn, "click").subscribe(e => {viewImage.rotation.rotateTo(0);viewImage.zoom.goHome();});
+            }
 
             viewImage.close = () => {
                 viewImage.zoom.close();
                 viewImage.image.close();
-            }
+            };
 
             await viewImage.image.load(config.tileSource);
             debugLog("image opened");
