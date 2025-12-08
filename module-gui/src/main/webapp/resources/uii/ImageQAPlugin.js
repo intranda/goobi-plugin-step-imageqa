@@ -120,7 +120,12 @@
                         // Add a small delay to ensure DOM updates are complete
                         setTimeout(() => {
                             loadThumbnails();
-                            setupLazyImageLoading();
+                            const canvases = document.querySelectorAll('.thumb-canvas');
+                            canvases.forEach(canvas => {
+                                if (canvas.dataset.image_small) {
+                                    loadThumbnailImage(canvas);
+                                }
+                            });
                         }, 50);
                         setupConfirmationHandlers();
                         updateCheckboxToggles(sourceEl);
