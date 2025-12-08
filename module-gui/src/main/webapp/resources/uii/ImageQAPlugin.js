@@ -115,6 +115,7 @@
         if (typeof faces !== 'undefined') {
             faces.ajax.addOnEvent(function(data) {
                 const ajaxstatus = data.status; // Can be "begin", "complete" and "success"
+                const sourceEl = data.source;
                 switch (ajaxstatus) {
                     case "success": // This is called when ajax response is successfully processed.
                         // Add a small delay to ensure DOM updates are complete
@@ -129,6 +130,10 @@
                         }, 50);
                         setupConfirmationHandlers();
                         updateCheckboxToggles(sourceEl);
+                        if (sourceEl && sourceEl.classList.contains('thumbnail-control-rotate')) {
+                            const imageName = sourceEl.dataset.imageControl;
+                            reloadImageAfterRotation(imageName);
+                        }
                         break;
                 }
             });
@@ -493,6 +498,46 @@
             const checkbox = button.querySelector('input[type="checkbox"]');
             checkbox.checked = active;
         });
+    };
+
+    /**
+     * Reload image after rotation to force cache refresh
+     * This function is called from JSF AJAX oncomplete
+     */
+    const reloadImageAfterRotation = (imageName = '') => {
+        const currentImage = document.querySelector('[id$=currentImageName').value;
+
+        if (!currentImage || imageName === '' || currentImage !== imageName) {
+            return;
+        }
+
+        // Close existing viewer if it exists
+        if (window.viewImage && typeof window.viewImage.close === 'function') {
+            try {
+                window.viewImage.close();
+            } catch (error) {
+                console.warn("Error closing existing viewer:", error);
+            }
+        }
+
+        // Clear the main image container to force complete refresh
+        const mainImageElement = document.getElementById('mainImage');
+        if (mainImageElement) {
+            mainImageElement.innerHTML = '';
+        }
+
+        // Small delay to ensure AJAX updates are complete and DOM is updated
+        setTimeout(() => {
+            // Reload thumbnails to show rotated thumbnail image
+            loadThumbnails();
+
+            // Re-setup the viewer which will reload the image with cache-busting
+            if (typeof setupImageQAViewer === 'function') {
+                setupImageQAViewer();
+            } else {
+                console.warn("setupImageQAViewer function not found");
+            }
+        }, 250);
     };
 
     // Initialize when DOM is ready

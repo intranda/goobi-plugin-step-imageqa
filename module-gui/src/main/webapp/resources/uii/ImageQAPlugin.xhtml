@@ -407,7 +407,8 @@
                                                             title="#{msgs.plugin_intranda_step_imageQA_rotateLeft} #{image.tooltip}"
                                                             jsf:action="#{AktuelleSchritteForm.myPlugin.rotateLeft(image)}"
                                                             jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowRotation}"
-                                                            data-confirm="#{msgs.wirklichAusfuehren}">
+                                                            data-confirm="#{msgs.wirklichAusfuehren}"
+                                                            data-image-control="#{image.imageName}">
                                                             <i class="fa fa-undo"></i>
                                                             <f:ajax execute="@form" render=":qaform:imageQABox:thumbnailArea" />
                                                         </button>
@@ -417,7 +418,8 @@
                                                             title="#{msgs.plugin_intranda_step_imageQA_rotateRight} #{image.tooltip}"
                                                             jsf:action="#{AktuelleSchritteForm.myPlugin.rotateRight(image)}"
                                                             jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowRotation}"
-                                                            data-confirm="#{msgs.wirklichAusfuehren}">
+                                                            data-confirm="#{msgs.wirklichAusfuehren}"
+                                                            data-image-control="#{image.imageName}">
                                                             <i class="fa fa-repeat"></i>
                                                             <f:ajax execute="@form" render=":qaform:imageQABox:thumbnailArea" />
                                                         </button>
@@ -620,6 +622,9 @@
 													type="hidden"
 						                            id="persistenceId"
 						                            value="#{AktuelleSchritteForm.myPlugin.title.concat('_').concat(AktuelleSchritteForm.myPlugin.process.id)}" />
+                                                <h:inputHidden
+                                                    id="currentImageName"
+                                                    value="#{AktuelleSchritteForm.myPlugin.image.imageName}" />
 
                                                 <!-- PAGINATION FOR OBJECT AT BOTTOM -->
                                                 <div class="d-flex justify-content-between mt-3">
