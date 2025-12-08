@@ -40,7 +40,7 @@
                     <i class="fa fa-angle-double-left"></i>
                     <f:ajax
                         execute="@form"
-                        render="@form :qaform" />
+                        render="qaform:imageQABox:thumbnailArea" />
                 </button>
                 <button
                     class="btn btn-neutral-600"
@@ -50,7 +50,7 @@
                     <i class="fa fa-angle-left"></i>
                     <f:ajax
                         execute="@form"
-                        render="@form :qaform" />
+                        render="qaform:imageQABox:thumbnailArea" />
                     <span>
                         <h:outputText value="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.pageNext:msgs.pagePrevious}" />
                     </span>
@@ -94,7 +94,7 @@
                     <i class="fa fa-angle-right ms-2"></i>
                     <f:ajax
                         execute="@form"
-                        render="@form :qaform" />
+                        render="qaform:imageQABox:thumbnailArea" />
                 </button>
                 <button
                     class="btn btn-blank ms-3"
@@ -104,7 +104,7 @@
                     <i class="fa fa-angle-double-right"></i>
                     <f:ajax
                         execute="@form"
-                        render="@form :qaform" />
+                        render="qaform:imageQABox:thumbnailArea" />
                 </button>
             </ui:fragment>
             <!-- // PAGINATOR -->
