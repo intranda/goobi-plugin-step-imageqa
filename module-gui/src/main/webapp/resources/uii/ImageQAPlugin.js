@@ -313,7 +313,15 @@
 
         const viewImage = {};
         try {
-            debugLog("opening image with ", config.tileSource);
+            // Add cache-busting timestamp to force reload after rotation
+            let tileSource = config.tileSource;
+            if (tileSource) {
+                const cacheBuster = new Date().getTime();
+                const separator = tileSource.includes('?') ? '&' : '?';
+                tileSource = `${tileSource}${separator}_t=${cacheBuster}`;
+            }
+
+            debugLog("opening image with ", tileSource);
             viewImage.image = new ImageView.Image(config.imageView);
 
             viewImage.zoom = new ImageView.Controls.Zoom(viewImage.image);
@@ -341,7 +349,7 @@
                 viewImage.image.close();
             };
 
-            await viewImage.image.load(config.tileSource);
+            await viewImage.image.load(tileSource);
             debugLog("image opened");
         } catch (error) {
             console.error('Error opening image', error);
@@ -462,7 +470,12 @@
             canvas.height = this.height;
             ctx.drawImage(this, 0, 0);
         };
-        img.src = canvas.dataset.image_small;
+
+        // Add cache-busting timestamp to force reload after rotation
+        let imageSrc = canvas.dataset.image_small;
+        const cacheBuster = new Date().getTime();
+        const separator = imageSrc.includes('?') ? '&' : '?';
+        img.src = `${imageSrc}${separator}_t=${cacheBuster}`;
     };
 
     const updateCheckboxToggles = (sourceEl) => {
