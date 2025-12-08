@@ -115,13 +115,16 @@
             	jsf:id="confirm"
                 class="btn btn-blank"
                 style="margin:0 50px;"
-                jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowDeletion or AktuelleSchritteForm.myPlugin.allowRotation or AktuelleSchritteForm.myPlugin.allowRenaming}">
+                type="button"
+                jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowDeletion or AktuelleSchritteForm.myPlugin.allowRotation or AktuelleSchritteForm.myPlugin.allowRenaming}"
+                data-confirm-state="#{NavigationForm.uiStatus.plugin_qa_confirmation}">
                 <i class="fa #{NavigationForm.uiStatus.plugin_qa_confirmation == false?'fa fa-square-o':'fa fa-check-square-o'} margin-right-5" />
                 <span>
                     <h:outputText
                         styleClass=""
                         value="#{msgs.plugin_intranda_step_imageQA_confirmImageManipulation}" />
                 </span>
+                <f:ajax render="@this" />
                 <f:setPropertyActionListener
                     value="#{NavigationForm.uiStatus.plugin_qa_confirmation == false?true:false}"
                     target="#{NavigationForm.uiStatus.plugin_qa_confirmation}" />
@@ -214,7 +217,7 @@
                                 class="dropdown-item"
                                 jsf:action="#{AktuelleSchritteForm.myPlugin.deleteSelection}"
                                 jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowSelection and AktuelleSchritteForm.myPlugin.allowDeletion}"
-                                onclick="if (!confirm('#{msgs.wirklichAusfuehren}')) return false">
+                                data-confirm="#{msgs.wirklichAusfuehren}">
                                 <i class="fa fa-trash imageqa-thumb-massbutton"></i>
                                 <span>
                                     <h:outputText value="#{msgs.plugin_intranda_step_imageQA_deleteSelection}" />
@@ -228,7 +231,7 @@
                                 class="dropdown-item"
                                 jsf:action="#{AktuelleSchritteForm.myPlugin.flipSelectionHorizontal}"
                                 jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowSelection and AktuelleSchritteForm.myPlugin.allowFlipping}"
-                                onclick="if (!confirm('#{msgs.wirklichAusfuehren}')) return false">
+                                data-confirm="#{msgs.wirklichAusfuehren}">
                                 <i class="fa fa-arrows-h imageqa-thumb-massbutton"></i>
                                 <span>
                                     <h:outputText value="#{msgs.plugin_intranda_step_imageQA_flipHorizontalSelection}" />
@@ -242,7 +245,7 @@
                                 class="dropdown-item"
                                 jsf:action="#{AktuelleSchritteForm.myPlugin.flipSelectionVertical}"
                                 jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowSelection and AktuelleSchritteForm.myPlugin.allowFlipping}"
-                                onclick="if (!confirm('#{msgs.wirklichAusfuehren}')) return false">
+                                data-confirm="#{msgs.wirklichAusfuehren}">
                                 <i class="fa fa-arrows-v imageqa-thumb-massbutton"></i>
                                 <span>
                                     <h:outputText value="#{msgs.plugin_intranda_step_imageQA_flipVerticalSelection}" />
@@ -256,7 +259,8 @@
                                 class="dropdown-item"
                                 jsf:action="#{AktuelleSchritteForm.myPlugin.rotateSelectionLeft}"
                                 jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowSelection and AktuelleSchritteForm.myPlugin.allowRotation}"
-                                onclick="if (!confirm('#{msgs.wirklichAusfuehren}')) return false">
+                                data-confirm="#{msgs.wirklichAusfuehren}"
+                                type="button">
                                 <i class="fa fa-undo imageqa-thumb-massbutton"></i>
                                 <span>
                                     <h:outputText value="#{msgs.plugin_intranda_step_imageQA_rotateLefteSelection}" />
@@ -270,7 +274,8 @@
                                 class="dropdown-item"
                                 jsf:action="#{AktuelleSchritteForm.myPlugin.rotateSelectionRight}"
                                 jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowSelection and AktuelleSchritteForm.myPlugin.allowRotation}"
-                                onclick="if (!confirm('#{msgs.wirklichAusfuehren}')) return false">
+                                data-confirm="#{msgs.wirklichAusfuehren}"
+                                type="button">
                                 <i class="fa fa-repeat imageqa-thumb-massbutton"></i>
                                 <span>
                                     <h:outputText value="#{msgs.plugin_intranda_step_imageQA_rotateRighteSelection}" />
@@ -284,7 +289,7 @@
                                 class="dropdown-item"
                                 jsf:action="#{AktuelleSchritteForm.myPlugin.downloadSelectedImages}"
                                 jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowSelection and AktuelleSchritteForm.myPlugin.allowDownload}"
-                                onclick="if (!confirm('#{msgs.wirklichAusfuehren}')) return false">
+                                data-confirm="#{msgs.wirklichAusfuehren}">
                                 <i class="fa fa-download imageqa-thumb-massbutton"></i>
                                 <span>
                                     <h:outputText value="#{msgs.plugin_intranda_step_imageQA_downloadSelectedImages}" />
@@ -298,7 +303,7 @@
                                 class="dropdown-item"
                                 jsf:action="#{AktuelleSchritteForm.myPlugin.downloadSelectedImagesAsPdf}"
                                 jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowSelection and AktuelleSchritteForm.myPlugin.allowDownloadAsPdf}"
-                                onclick="if (!confirm('#{msgs.wirklichAusfuehren}')) return false">
+                                data-confirm="#{msgs.wirklichAusfuehren}">
                                 <i class="fa fa-file-pdf-o imageqa-thumb-massbutton"></i>
                                 <span>
                                     <h:outputText

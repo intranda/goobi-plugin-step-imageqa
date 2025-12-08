@@ -323,124 +323,20 @@
                                                     <h:outputText value="#{image.imageNameShort}"></h:outputText>
                                                 </div>
 
-                                                <!-- BUTTONS UNDER THUMB WITHOUT CONFIRMATION-->
-                                                <h:panelGroup
-                                                    styleClass="goobi-thumbnail-controls"
-                                                    rendered="#{NavigationForm.uiStatus.plugin_qa_confirmation == false}">
-
-                                                    <div class="goobi-thumbnail-controls-left">
-
-                                                        <!-- CHECKBOX FOR SELECTION -->
-                                                        <h:panelGroup
-                                                            rendered="#{AktuelleSchritteForm.myPlugin.allowSelection}">
-                                                            <span class="btn btn-blank thumbnail-control checkbox">
-                                                                <label class="control checkbox"> <h:selectBooleanCheckbox
-                                                                        value="#{image.selected}" /> <span
-                                                                        class="control-indicator">
-                                                                        <i class="fa fa fa-check-square-o"></i> <i
-                                                                            class="fa fa fa-square-o"></i>
-                                                                    </span>
-                                                                </label>
-                                                            </span>
-                                                        </h:panelGroup>
-
-                                                        <!--  MODAL FOR RENAMING  -->
-                                                        <button
-                                                                jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowRenaming}"
-                                                                title="#{msgs.plugin_intranda_step_imageQA_rename} #{image.tooltip}"
-                                                                class="btn btn-blank thumbnail-control rename"
-                                                                data-bs-toggle="modal"
-                                                                data-bs-target="#myModal-#{status.index}">
-                                                            <i class="fa fa-pencil" />
-                                                        </button>
-
-                                                        <!--  REORDERING BUTTONS  -->
-                                                        <button
-                                                                class="btn btn-blank thumbnail-control reorder-previous"
-                                                                title="#{msgs.plugin_intranda_step_imageQA_reorder_previous}"
-                                                                jsf:action="#{AktuelleSchritteForm.myPlugin.reorderPrevious(image)}"
-                                                                jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowReordering}">
-                                                            <i class="fa fa-caret-left" />
-                                                        </button>
-                                                        <button
-                                                                class="btn btn-blank thumbnail-control reorder-next"
-                                                                title="#{msgs.plugin_intranda_step_imageQA_reorder_next}"
-                                                                jsf:action="#{AktuelleSchritteForm.myPlugin.reorderNext(image)}"
-                                                                jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowReordering}">
-                                                            <i class="fa fa-caret-right" />
-                                                        </button>
-
-                                                        <!-- DELETE BUTTON -->
-                                                        <button
-                                                            class="btn btn-blank thumbnail-control delete"
-                                                            title="#{msgs.plugin_intranda_step_imageQA_delete} #{image.tooltip}"
-                                                            jsf:action="#{AktuelleSchritteForm.myPlugin.deleteImage(image)}"
-                                                            jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowDeletion}">
-                                                            <i class="fa fa-trash"></i>
-                                                        </button>
-                                                    </div>
-
-                                                    <div class="goobi-thumbnail-controls-right">
-
-                                                        <!-- FLIP BUTTON -->
-                                                        <button
-                                                            class="btn btn-blank thumbnail-control flip-horizontal"
-                                                            title="#{msgs.plugin_intranda_step_imageQA_flipHorizontal} #{image.tooltip}"
-                                                            jsf:action="#{AktuelleSchritteForm.myPlugin.flipHorizontal(image)}"
-                                                            jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowFlipping}">
-                                                            <i class="fa fa-arrows-h"></i>
-                                                        </button>
-
-                                                        <!-- FLOP BUTTON -->
-                                                        <button
-                                                            class="btn btn-blank thumbnail-control flip-vertical"
-                                                            title="#{msgs.plugin_intranda_step_imageQA_flipVertical} #{image.tooltip}"
-                                                            jsf:action="#{AktuelleSchritteForm.myPlugin.flipVertical(image)}"
-                                                            jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowFlipping}">
-                                                            <i class="fa fa-arrows-v"></i>
-                                                        </button>
-
-                                                        <!-- ROTATE LEFT BUTTON -->
-                                                        <button
-                                                            class="btn btn-blank thumbnail-control rotate-left"
-                                                            title="#{msgs.plugin_intranda_step_imageQA_rotateLeft} #{image.tooltip}"
-                                                            jsf:action="#{AktuelleSchritteForm.myPlugin.rotateLeft(image)}"
-                                                            jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowRotation}">
-                                                            <i class="fa fa-undo"></i>
-                                                        </button>
-
-                                                        <!-- ROTATE RIGHT BUTTON -->
-                                                        <button
-                                                            class="btn btn-blank thumbnail-control rotate-right"
-                                                            title="#{msgs.plugin_intranda_step_imageQA_rotateRight} #{image.tooltip}"
-                                                            jsf:action="#{AktuelleSchritteForm.myPlugin.rotateRight(image)}"
-                                                            jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowRotation}">
-                                                            <i class="fa fa-repeat"></i>
-                                                        </button>
-                                                    </div>
-                                                </h:panelGroup>
-                                                <!-- // BUTTONS UNDER THUMB WITHOUT CONFIRMATION -->
-
-
-                                                <!-- BUTTONS UNDER THUMB WITH CONFIRMATION -->
-                                                <h:panelGroup
-                                                    styleClass="goobi-thumbnail-controls"
-                                                    rendered="#{NavigationForm.uiStatus.plugin_qa_confirmation != false}">
+                                                <!-- BUTTONS UNDER THUMB -->
+                                                <div class="goobi-thumbnail-controls">
                                                     <div class="goobi-thumbnail-controls-left pull-left">
 
                                                         <!-- CHECKBOX FOR SELECTION -->
                                                         <h:panelGroup
                                                             rendered="#{AktuelleSchritteForm.myPlugin.allowSelection}">
-                                                            <span class="btn btn-blank thumbnail-control checkbox">
-                                                                <label class="control checkbox"> <h:selectBooleanCheckbox
-                                                                        value="#{image.selected}" /> <span
-                                                                        class="control-indicator">
-                                                                        <i class="fa fa fa-check-square-o"></i> <i
-                                                                            class="fa fa fa-square-o"></i>
-                                                                    </span>
-                                                                </label>
-
-                                                            </span>
+                                                            <label class="control btn btn-blank thumbnail-control checkbox"> <h:selectBooleanCheckbox
+                                                                    value="#{image.selected}" /> <span
+                                                                    class="control-indicator">
+                                                                    <i class="fa fa fa-check-square-o"></i> <i
+                                                                        class="fa fa fa-square-o"></i>
+                                                                </span>
+                                                            </label>
                                                         </h:panelGroup>
 
                                                         <!--  BUTTON FOR RENAMING INSIDE OF MODAL  -->
@@ -524,9 +420,9 @@
                                                             data-confirm="#{msgs.wirklichAusfuehren}">
                                                             <i class="fa fa-repeat"></i>
                                                         </button>
-                                                    </div>
-                                                </h:panelGroup>
-                                                <!-- BUTTONS UNDER THUMB WITH CONFIRMATION -->
+                                                   </div>
+                                                </div>
+                                                <!-- BUTTONS UNDER THUMB -->
 
                                             </div>
 

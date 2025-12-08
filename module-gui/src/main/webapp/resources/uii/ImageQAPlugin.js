@@ -122,6 +122,7 @@
                             loadThumbnails();
                             setupLazyImageLoading();
                         }, 50);
+                        setupConfirmationHandlers();
                         updateCheckboxToggles(sourceEl);
                         break;
                 }
@@ -408,20 +409,23 @@
 
     /**
      * Confirmation dialog handler
+     * Using a named function to prevent duplicate event listeners
      */
-    const setupConfirmationHandlers = () => {
-        // Use event delegation for better performance
-        document.addEventListener('click', (event) => {
-            const target = event.target.closest('[data-confirm]');
-            if (target && target.hasAttribute('data-confirm')) {
-                const message = target.getAttribute('data-confirm') || 'Are you sure?';
-                if (!confirm(message)) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                    return false;
-                }
+    const confirmationClickHandler = (event) => {
+        const confirmState = document.querySelector('[data-confirm-state]');
+        if (confirmState && confirmState.dataset.confirmState === 'false') {
+            return;
+        }
+
+        const target = event.target.closest('[data-confirm]');
+        if (target && target.hasAttribute('data-confirm')) {
+            const message = target.getAttribute('data-confirm') || 'Are you sure?';
+            if (!confirm(message)) {
+                event.preventDefault();
+                event.stopPropagation();
+                return false;
             }
-        });
+        }
     };
 
     /**
