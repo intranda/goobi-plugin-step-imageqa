@@ -505,7 +505,7 @@
      * This function is called from JSF AJAX oncomplete
      */
     const reloadImageAfterRotation = (imageName = '') => {
-        const currentImage = document.querySelector('[id$=currentImageName').value;
+        const currentImage = document.querySelector('[id$=currentImageName]')?.value;
 
         if (!currentImage || imageName === '' || currentImage !== imageName) {
             return;
