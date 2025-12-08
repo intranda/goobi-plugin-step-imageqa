@@ -67,7 +67,6 @@
         // Add a small delay to ensure DOM is fully rendered
         setTimeout(() => {
             loadThumbnails();
-            setupLazyImageLoading();
         }, 100);
     });
 
@@ -425,31 +424,12 @@
     };
 
     /**
-     * Image loading handler for thumbnails
-     * Uses Intersection Observer for lazy loading
+     * Setup confirmation handlers
+     * Removes existing listener before adding to prevent accumulation
      */
-    const setupLazyImageLoading = () => {
-        const canvases = document.querySelectorAll('.thumb-canvas');
-
-        if ('IntersectionObserver' in window) {
-            const imageObserver = new IntersectionObserver((entries, observer) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        const canvas = entry.target;
-                        loadThumbnailImage(canvas);
-                        observer.unobserve(canvas);
-                    }
-                });
-            });
-
-            // Observe all thumbnail canvases
-            canvases.forEach(canvas => {
-                imageObserver.observe(canvas);
-            });
-        } else {
-            // Fallback for older browsers
-            canvases.forEach(loadThumbnailImage);
-        }
+    const setupConfirmationHandlers = () => {
+        document.removeEventListener('click', confirmationClickHandler, true);
+        document.addEventListener('click', confirmationClickHandler, true);
     };
 
     /**
@@ -478,7 +458,6 @@
         setupAjaxEvents();
         setupKeyboardShortcuts();
         setupConfirmationHandlers();
-        setupLazyImageLoading();
     });
 
     // Expose necessary functions globally for JSF callbacks
