@@ -67,7 +67,6 @@
         // Add a small delay to ensure DOM is fully rendered
         setTimeout(() => {
             loadThumbnails();
-            setupLazyImageLoading();
         }, 100);
     });
 
@@ -116,13 +115,25 @@
         if (typeof faces !== 'undefined') {
             faces.ajax.addOnEvent(function(data) {
                 const ajaxstatus = data.status; // Can be "begin", "complete" and "success"
+                const sourceEl = data.source;
                 switch (ajaxstatus) {
                     case "success": // This is called when ajax response is successfully processed.
                         // Add a small delay to ensure DOM updates are complete
                         setTimeout(() => {
                             loadThumbnails();
-                            setupLazyImageLoading();
+                            const canvases = document.querySelectorAll('.thumb-canvas');
+                            canvases.forEach(canvas => {
+                                if (canvas.dataset.image_small) {
+                                    loadThumbnailImage(canvas);
+                                }
+                            });
                         }, 50);
+                        setupConfirmationHandlers();
+                        updateCheckboxToggles(sourceEl);
+                        if (sourceEl && sourceEl.classList.contains('thumbnail-control-rotate')) {
+                            const imageName = sourceEl.dataset.imageControl;
+                            reloadImageAfterRotation(imageName);
+                        }
                         break;
                 }
             });
@@ -312,23 +323,43 @@
 
         const viewImage = {};
         try {
-            debugLog("opening image with ", config.tileSource);
+            // Add cache-busting timestamp to force reload after rotation
+            let tileSource = config.tileSource;
+            if (tileSource) {
+                const cacheBuster = new Date().getTime();
+                const separator = tileSource.includes('?') ? '&' : '?';
+                tileSource = `${tileSource}${separator}_t=${cacheBuster}`;
+            }
+
+            debugLog("opening image with ", tileSource);
             viewImage.image = new ImageView.Image(config.imageView);
 
             viewImage.zoom = new ImageView.Controls.Zoom(viewImage.image);
             viewImage.zoom.setSlider(config.controls.zoomSlider);
             viewImage.rotation = new ImageView.Controls.Rotation(viewImage.image);
 
-            rxjs.fromEvent(document.querySelector(config.controls.rotateLeftButton), "click").subscribe(e => viewImage.rotation.rotateLeft());
-            rxjs.fromEvent(document.querySelector(config.controls.rotateRightButton), "click").subscribe(e => viewImage.rotation.rotateRight());
-            rxjs.fromEvent(document.querySelector(config.controls.resetViewButton), "click").subscribe(e => {viewImage.rotation.rotateTo(0);viewImage.zoom.goHome();});
+            // Setup rotation controls with null checks
+            const rotateLeftBtn = document.querySelector(config.controls.rotateLeftButton);
+            if (rotateLeftBtn) {
+                rxjs.fromEvent(rotateLeftBtn, "click").subscribe(e => viewImage.rotation.rotateLeft());
+            }
+
+            const rotateRightBtn = document.querySelector(config.controls.rotateRightButton);
+            if (rotateRightBtn) {
+                rxjs.fromEvent(rotateRightBtn, "click").subscribe(e => viewImage.rotation.rotateRight());
+            }
+
+            const resetViewBtn = document.querySelector(config.controls.resetViewButton);
+            if (resetViewBtn) {
+                rxjs.fromEvent(resetViewBtn, "click").subscribe(e => {viewImage.rotation.rotateTo(0);viewImage.zoom.goHome();});
+            }
 
             viewImage.close = () => {
                 viewImage.zoom.close();
                 viewImage.image.close();
-            }
+            };
 
-            await viewImage.image.load(config.tileSource);
+            await viewImage.image.load(tileSource);
             debugLog("image opened");
         } catch (error) {
             console.error('Error opening image', error);
@@ -408,48 +439,32 @@
 
     /**
      * Confirmation dialog handler
+     * Using a named function to prevent duplicate event listeners
      */
-    const setupConfirmationHandlers = () => {
-        // Use event delegation for better performance
-        document.addEventListener('click', (event) => {
-            const target = event.target.closest('[data-confirm]');
-            if (target && target.hasAttribute('data-confirm')) {
-                const message = target.getAttribute('data-confirm') || 'Are you sure?';
-                if (!confirm(message)) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                    return false;
-                }
+    const confirmationClickHandler = (event) => {
+        const confirmState = document.querySelector('[data-confirm-state]');
+        if (confirmState && confirmState.dataset.confirmState === 'false') {
+            return;
+        }
+
+        const target = event.target.closest('[data-confirm]');
+        if (target && target.hasAttribute('data-confirm')) {
+            const message = target.getAttribute('data-confirm') || 'Are you sure?';
+            if (!confirm(message)) {
+                event.preventDefault();
+                event.stopPropagation();
+                return false;
             }
-        });
+        }
     };
 
     /**
-     * Image loading handler for thumbnails
-     * Uses Intersection Observer for lazy loading
+     * Setup confirmation handlers
+     * Removes existing listener before adding to prevent accumulation
      */
-    const setupLazyImageLoading = () => {
-        const canvases = document.querySelectorAll('.thumb-canvas');
-
-        if ('IntersectionObserver' in window) {
-            const imageObserver = new IntersectionObserver((entries, observer) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        const canvas = entry.target;
-                        loadThumbnailImage(canvas);
-                        observer.unobserve(canvas);
-                    }
-                });
-            });
-
-            // Observe all thumbnail canvases
-            canvases.forEach(canvas => {
-                imageObserver.observe(canvas);
-            });
-        } else {
-            // Fallback for older browsers
-            canvases.forEach(loadThumbnailImage);
-        }
+    const setupConfirmationHandlers = () => {
+        document.removeEventListener('click', confirmationClickHandler, true);
+        document.addEventListener('click', confirmationClickHandler, true);
     };
 
     /**
@@ -465,7 +480,64 @@
             canvas.height = this.height;
             ctx.drawImage(this, 0, 0);
         };
-        img.src = canvas.dataset.image_small;
+
+        // Add cache-busting timestamp to force reload after rotation
+        let imageSrc = canvas.dataset.image_small;
+        const cacheBuster = new Date().getTime();
+        const separator = imageSrc.includes('?') ? '&' : '?';
+        img.src = `${imageSrc}${separator}_t=${cacheBuster}`;
+    };
+
+    const updateCheckboxToggles = (sourceEl) => {
+        if (!sourceEl || !sourceEl.dataset.updateToggle) return;
+
+        const active = sourceEl.dataset.updateToggle === 'select';
+        const toggleButtons = document.querySelectorAll('.thumbnail-control.checkbox');
+
+        toggleButtons.forEach(button => {
+            const checkbox = button.querySelector('input[type="checkbox"]');
+            checkbox.checked = active;
+        });
+    };
+
+    /**
+     * Reload image after rotation to force cache refresh
+     * This function is called from JSF AJAX oncomplete
+     */
+    const reloadImageAfterRotation = (imageName = '') => {
+        const currentImage = document.querySelector('[id$=currentImageName]')?.value;
+
+        if (!currentImage || imageName === '' || currentImage !== imageName) {
+            return;
+        }
+
+        // Close existing viewer if it exists
+        if (window.viewImage && typeof window.viewImage.close === 'function') {
+            try {
+                window.viewImage.close();
+            } catch (error) {
+                console.warn("Error closing existing viewer:", error);
+            }
+        }
+
+        // Clear the main image container to force complete refresh
+        const mainImageElement = document.getElementById('mainImage');
+        if (mainImageElement) {
+            mainImageElement.innerHTML = '';
+        }
+
+        // Small delay to ensure AJAX updates are complete and DOM is updated
+        setTimeout(() => {
+            // Reload thumbnails to show rotated thumbnail image
+            loadThumbnails();
+
+            // Re-setup the viewer which will reload the image with cache-busting
+            if (typeof setupImageQAViewer === 'function') {
+                setupImageQAViewer();
+            } else {
+                console.warn("setupImageQAViewer function not found");
+            }
+        }, 250);
     };
 
     // Initialize when DOM is ready
@@ -478,7 +550,6 @@
         setupAjaxEvents();
         setupKeyboardShortcuts();
         setupConfirmationHandlers();
-        setupLazyImageLoading();
     });
 
     // Expose necessary functions globally for JSF callbacks
