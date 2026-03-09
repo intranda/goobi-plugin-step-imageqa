@@ -103,6 +103,22 @@
 
             <!-- ImageQA Plugin JavaScript -->
             <script src="ImageQAPlugin.js"></script>
+            <script>
+                function handleThumbnailClick(e) {
+                    if (e.status === 'begin') {
+                        var thumb = e.source.closest('.goobi-thumbnail');
+                        document.querySelectorAll('.goobi-thumbnail.img-active').forEach(function(el) {
+                            el.classList.remove('img-active');
+                            el.classList.add('font-light');
+                        });
+                        if (thumb) {
+                            thumb.classList.remove('font-light');
+                            thumb.classList.add('img-active');
+                        }
+                    }
+                    freeJSResources(e);
+                }
+            </script>
 
             <h:form id="qaform">
 
@@ -307,9 +323,9 @@
                                                                 value="#{image.order -1}"
                                                                 target="#{AktuelleSchritteForm.myPlugin.imageIndex}" />
                                                             <f:ajax
-                                                                execute="@form"
-                                                                render="@form :qaform:bigimageWrapper:bigimage"
-                                                                onevent="freeJSResources"
+                                                                execute="@this"
+                                                                render="qaform:imageQABox:bigimageWrapper"
+                                                                onevent="handleThumbnailClick"
                                                                 disabled="#{AktuelleSchritteForm.myPlugin.thumbnailsOnly}" />
                                                         </button>
                                                     </div>
