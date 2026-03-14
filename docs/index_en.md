@@ -68,7 +68,7 @@ The configuration of the plugin is structured as follows:
     <config>
         <!-- define plugin type in which screen the plugin is displayed, allowed values are 'part', 'full' (default) or 'both' -->
         <guiType>full</guiType>
-        <!-- which projects to use for (can be more then one, otherwise use *) -->
+        <!-- which projects to use for (can be more than one, otherwise use *) -->
         <project>*</project>
         <step>*</step>
         <!-- which images to use , possible values are master|main|jpeg|source|... -->
@@ -128,7 +128,7 @@ The configuration of the plugin is structured as follows:
     </config>
 ​
     <config>
-        <!-- which projects to use for (can be more then one, otherwise use *) -->
+        <!-- which projects to use for (can be more than one, otherwise use *) -->
         <project>My special project</project>
         <project>Archive_Project</project>
         <step>MasterQA</step>
