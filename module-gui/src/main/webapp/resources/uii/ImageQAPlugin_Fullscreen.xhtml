@@ -387,15 +387,17 @@
                     <!-- image number -->
                     <div
                         class="fullscreen-control"
-                        style="bottom: 0px; right:0px;">
-                        <h:outputText
-                            id="txtImageMoveTo1"
-                            styleClass="font-white"
-                            value="#{AktuelleSchritteForm.myPlugin.imageIndex +1} #{msgs.von}  #{AktuelleSchritteForm.myPlugin.sizeOfImageList}"
+                        style="bottom: 0.5rem; right: 0.75rem;">
+                        <button
+                            type="button"
+                            jsf:id="txtImageMoveTo1"
+                            style="color: #fff; background: transparent; border: 0; padding: 0; outline: none; box-shadow: none; cursor: pointer;"
                             onclick="document.getElementById(this.id).nextSibling.style.display='inline';
 	                    document.getElementById(this.id).style.display='none';
 	                    document.getElementById(this.id).nextSibling.focus();
-	                    document.getElementById(this.id).nextSibling.select();" />
+	                    document.getElementById(this.id).nextSibling.select();">
+                            #{AktuelleSchritteForm.myPlugin.imageIndex +1} #{msgs.von}  #{AktuelleSchritteForm.myPlugin.sizeOfImageList}
+                        </button>
                         <!-- jump to page -->
                         <h:inputText
                             value="#{AktuelleSchritteForm.myPlugin.imageMoveTo}"
