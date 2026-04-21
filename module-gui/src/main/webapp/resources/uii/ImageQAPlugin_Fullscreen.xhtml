@@ -405,7 +405,7 @@
                             required="true"
                             id="txtImageMoveTo2" pt:data-input="imageMoveTo"
                             onblur="document.getElementById(this.id).style.display='none';document.getElementById(this.id).previousSibling.style.display='inline';"
-                            onkeypress="copyValue(this,event);" />
+                            onkeypress="return copyValue(this,event);" />
                         <h:commandButton
                             action="#{NavigationForm.Reload}"
                             value="go"
