@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<!--
+ Layout regression test for the thumbnail strip on the left side of the ImageQA
+ plugin. Reproduces the structure rendered by ImageQAPlugin.xhtml, loads the
+ production CSS and JavaScript, and asserts that the inner image area fills the
+ wrapper width so no "right border" appears cropped.
+
+ The wrapper width and thumbnail size are passed in via URL parameters so the
+ Java runner can derive them from the actual ImageQAPlugin.xhtml inline style.
+ That keeps the test honest: re-introducing a "thumbnailSize + 2" mismatch in
+ the xhtml will resurface the failure.
+
+ Result is written to document.title and body[data-test-result] so a headless
+ chromium runner can read it via --dump-dom. Open in a real browser for visual
+ inspection.
+-->
+<html>
+<head>
+<meta charset="utf-8" />
+<title>RUNNING</title>
+<link rel="stylesheet" href="../../../main/webapp/resources/uii/imageQA.css" />
+<style>
+  body { font-family: sans-serif; padding: 20px; background: #eee; }
+  /* Minimal Bootstrap .btn approximation - matches default padding used in the
+     real app so the test reflects production layout. */
+  .btn {
+      display: inline-block;
+      padding: 6px 12px;
+      border: 1px solid transparent;
+      text-align: center;
+      background: transparent;
+      cursor: pointer;
+  }
+  .border-0 { border: 0 !important; }
+</style>
+</head>
+<body>
+<h2>Thumbnail layout regression test</h2>
+
+<div class="flex-container" id="thumbs"></div>
+
+<pre id="report" style="background:#fff;padding:10px;margin-top:20px;"></pre>
+
+<script>
+  // Read parameters injected by the Java runner so the test mirrors the actual
+  // values produced by ImageQAPlugin.xhtml + ImageQAPlugin.js.
+  const params = new URLSearchParams(window.location.search);
+  const thumbnailSize = parseInt(params.get('thumbnailSize') || '200', 10);
+  const wrapperWidth = parseInt(params.get('wrapperWidth') || String(thumbnailSize), 10);
+  const wrapperHeight = thumbnailSize + 55;
+
+  // Build the thumbnail node mirroring ImageQAPlugin.xhtml's structure.
+  const container = document.getElementById('thumbs');
+  container.innerHTML =
+    '<div class="goobi-thumbnail font-light" dir="auto"' +
+    '     style="--thumbnail-width: ' + wrapperWidth + 'px;' +
+    '            --thumbnail-height: ' + wrapperHeight + 'px;"' +
+    '     data-image-name="sample.jpg">' +
+    '  <div class="goobi-thumbnail-image">' +
+    '    <div class="thumb text-center">' +
+    '      <button class="border-0 btn" type="button">' +
+    '        <canvas class="thumb-canvas" id="thumbnail-0"' +
+    '                width="' + thumbnailSize + '" height="150"></canvas>' +
+    '      </button>' +
+    '    </div>' +
+    '  </div>' +
+    '  <div class="goobi-thumbnail-caption">sample.jpg</div>' +
+    '  <div class="goobi-thumbnail-controls"></div>' +
+    '</div>';
+
+  // Configure the plugin JS as the real page does.
+  window.imageQAConfig = {
+    thumbnailSize: String(thumbnailSize),
+    shortcutPrefix: '',
+    confirmMessage: ''
+  };
+</script>
+<script src="../../../main/webapp/resources/uii/ImageQAPlugin.js"></script>
+<script>
+  function runAssertions() {
+    const thumb = document.querySelector('.goobi-thumbnail');
+    const imgArea = thumb.querySelector('.goobi-thumbnail-image');
+    const tRect = thumb.getBoundingClientRect();
+    const iRect = imgArea.getBoundingClientRect();
+    const rightGap = Math.round(tRect.right - iRect.right);
+
+    const lines = [];
+    lines.push('thumbnailSize=' + thumbnailSize + ', wrapperWidth=' + wrapperWidth);
+    lines.push('outer (.goobi-thumbnail):       width=' + tRect.width + ', right=' + tRect.right);
+    lines.push('inner (.goobi-thumbnail-image): width=' + iRect.width + ', right=' + iRect.right);
+    lines.push('right gap = ' + rightGap + 'px (must be 0 - any gap looks like a missing right border)');
+
+    const result = rightGap === 0
+      ? 'PASS'
+      : 'FAIL: right gap = ' + rightGap + 'px';
+
+    document.title = result;
+    document.body.setAttribute('data-test-result', result);
+    document.getElementById('report').innerText = lines.concat(['', result]).join('\n');
+  }
+
+  // Allow the plugin's window-load handler (which calls loadThumbnails after
+  // 100ms) to run first, then assert.
+  window.addEventListener('load', () => setTimeout(runAssertions, 300));
+</script>
+</body>
+</html>
