@@ -49,7 +49,9 @@
   const wrapperWidth = parseInt(params.get('wrapperWidth') || String(thumbnailSize), 10);
   const wrapperHeight = thumbnailSize + 55;
 
-  // Build the thumbnail node mirroring ImageQAPlugin.xhtml's structure.
+  // Portrait bitmap (taller than wide) so a width-side resize regression
+  // can't be masked by a square/landscape source.
+  const bitmapHeight = thumbnailSize + 10;
   const container = document.getElementById('thumbs');
   container.innerHTML =
     '<div class="goobi-thumbnail font-light" dir="auto"' +
@@ -60,7 +62,7 @@
     '    <div class="thumb text-center">' +
     '      <button class="border-0 btn" type="button">' +
     '        <canvas class="thumb-canvas" id="thumbnail-0"' +
-    '                width="' + thumbnailSize + '" height="150"></canvas>' +
+    '                width="' + thumbnailSize + '" height="' + bitmapHeight + '"></canvas>' +
     '      </button>' +
     '    </div>' +
     '  </div>' +
@@ -80,19 +82,40 @@
   function runAssertions() {
     const thumb = document.querySelector('.goobi-thumbnail');
     const imgArea = thumb.querySelector('.goobi-thumbnail-image');
+    const canvas = thumb.querySelector('canvas.thumb-canvas');
     const tRect = thumb.getBoundingClientRect();
     const iRect = imgArea.getBoundingClientRect();
-    const rightGap = Math.round(tRect.right - iRect.right);
+    const cRect = canvas.getBoundingClientRect();
+    const wrapperImageGap = Math.round(tRect.right - iRect.right);
+    // Sub-pixel rounding can leave ~0.5px on HiDPI displays, so allow <= 1px.
+    const canvasLeftGap = iRect.left - cRect.left;
+    const canvasRightGap = iRect.right - cRect.right;
+    const canvasGapMax = Math.max(Math.abs(canvasLeftGap), Math.abs(canvasRightGap));
+    const CANVAS_GAP_TOLERANCE_PX = 1;
 
     const lines = [];
     lines.push('thumbnailSize=' + thumbnailSize + ', wrapperWidth=' + wrapperWidth);
-    lines.push('outer (.goobi-thumbnail):       width=' + tRect.width + ', right=' + tRect.right);
-    lines.push('inner (.goobi-thumbnail-image): width=' + iRect.width + ', right=' + iRect.right);
-    lines.push('right gap = ' + rightGap + 'px (must be 0 - any gap looks like a missing right border)');
+    lines.push('outer  (.goobi-thumbnail):       width=' + tRect.width + ', right=' + tRect.right);
+    lines.push('inner  (.goobi-thumbnail-image): width=' + iRect.width + ', right=' + iRect.right);
+    lines.push('canvas (.thumb-canvas):          width=' + cRect.width + ', left=' + cRect.left + ', right=' + cRect.right);
+    lines.push('wrapper-vs-image right gap = ' + wrapperImageGap + 'px (must be 0)');
+    lines.push('image-vs-canvas left gap  = ' + canvasLeftGap.toFixed(2) + 'px');
+    lines.push('image-vs-canvas right gap = ' + canvasRightGap.toFixed(2) + 'px');
+    lines.push('(canvas gap must be <= ' + CANVAS_GAP_TOLERANCE_PX + 'px - any larger gap '
+        + 'looks to the user like a cropped image edge)');
 
-    const result = rightGap === 0
-      ? 'PASS'
-      : 'FAIL: right gap = ' + rightGap + 'px';
+    const canvasInlineMaxHeight = canvas.style.maxHeight;
+    lines.push('canvas.style.maxHeight = "' + canvasInlineMaxHeight + '" (must be empty)');
+
+    let result = 'PASS';
+    if (wrapperImageGap !== 0) {
+      result = 'FAIL: wrapper-vs-image right gap = ' + wrapperImageGap + 'px';
+    } else if (canvasGapMax > CANVAS_GAP_TOLERANCE_PX) {
+      result = 'FAIL: canvas gap = ' + canvasGapMax.toFixed(2) + 'px (max '
+          + CANVAS_GAP_TOLERANCE_PX + 'px)';
+    } else if (canvasInlineMaxHeight) {
+      result = 'FAIL: canvas got inline max-height "' + canvasInlineMaxHeight + '"';
+    }
 
     document.title = result;
     document.body.setAttribute('data-test-result', result);

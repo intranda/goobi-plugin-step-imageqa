@@ -62,7 +62,7 @@
 
     <ui:define name="content">
         <main>
-            <link rel="stylesheet" href="imageQA.css" />
+            <link rel="stylesheet" href="imageQA.css?v=#{HelperForm.buildVersion}" />
 
             <script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/static/reactiveX/rxjs.umd.min.js"></script>
 
@@ -102,7 +102,7 @@
                 src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/static/objectView.min.js"></script>
 
             <!-- ImageQA Plugin JavaScript -->
-            <script src="ImageQAPlugin.js"></script>
+            <script src="ImageQAPlugin.js?v=#{HelperForm.buildVersion}"></script>
             <script>
                 function handleThumbnailClick(e) {
                     if (e.status === 'begin') {

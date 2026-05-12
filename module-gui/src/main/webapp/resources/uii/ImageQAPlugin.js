@@ -80,14 +80,16 @@
             // Use modern DOM methods instead of jQuery
             const thumbnailImages = document.querySelectorAll('.goobi-thumbnail-image');
             const thumbs = document.querySelectorAll('.goobi-thumbnail-image .thumb');
-            const canvases = document.querySelectorAll('.goobi-thumbnail-image .thumb canvas');
 
             // Apply all changes in a single batch to minimize reflow
             const heightPx = `${height + 25}px`;
             const maxHeightPx = `${height}px`;
             const maxWidthPx = `${height}px`;
 
-            // Batch DOM updates using requestAnimationFrame for better performance
+            // Setting max-height on the canvas itself would force a proportional
+            // width down-scale for portrait bitmaps and anti-alias away the
+            // rightmost pixel column; the wrapper's overflow:hidden handles
+            // vertical overspill instead.
             requestAnimationFrame(() => {
                 thumbnailImages.forEach(img => {
                     img.style.height = heightPx;
@@ -96,10 +98,6 @@
 
                 thumbs.forEach(thumb => {
                     thumb.style.maxHeight = maxHeightPx;
-                });
-
-                canvases.forEach(canvas => {
-                    canvas.style.maxHeight = maxHeightPx;
                 });
             });
 

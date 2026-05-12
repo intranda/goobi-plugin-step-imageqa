@@ -32,23 +32,10 @@ import org.junit.Test;
 
 /**
  * Headless-browser regression test for the thumbnail strip layout in
- * {@code ImageQAPlugin.xhtml}.
+ * {@code ImageQAPlugin.xhtml}. Asserts the inner image area fills the wrapper
+ * exactly and the canvas fills the image area within sub-pixel tolerance.
  *
- * The test extracts the {@code --thumbnail-width} formula from the actual
- * {@code ImageQAPlugin.xhtml}, evaluates it for a fixed {@code thumbnailSize},
- * and renders {@code module-gui/src/test/resources/uii/thumbnail-layout-test.html}
- * (which loads the production {@code imageQA.css} and {@code ImageQAPlugin.js})
- * with headless {@code chromium}. It then asserts the inner image area fills
- * the outer wrapper exactly. Any gap looks to the user like a cropped right
- * border on every thumbnail.
- *
- * Re-introducing a {@code thumbnailSize + 2} (or any other non-zero offset)
- * mismatch between the xhtml wrapper width and the JS-set inner max-width will
- * fail this test.
- *
- * The test is skipped when no headless-capable {@code chromium} binary is on
- * the path so the build still passes in environments without a browser
- * (the project's CI Docker image).
+ * Skipped when no headless-capable {@code chromium} binary is on the path.
  */
 public class ThumbnailLayoutTest {
 
@@ -129,16 +116,23 @@ public class ThumbnailLayoutTest {
     }
 
     private static String findChromium() {
-        for (String candidate : new String[] { "chromium", "chromium-browser", "google-chrome", "chrome" }) {
-            String pathEnv = System.getenv("PATH");
-            if (pathEnv == null) {
-                continue;
-            }
-            for (String dir : pathEnv.split(File.pathSeparator)) {
-                File f = new File(dir, candidate);
-                if (f.canExecute()) {
-                    return f.getAbsolutePath();
+        String pathEnv = System.getenv("PATH");
+        if (pathEnv != null) {
+            for (String candidate : new String[] { "chromium", "chromium-browser", "google-chrome", "chrome" }) {
+                for (String dir : pathEnv.split(File.pathSeparator)) {
+                    File f = new File(dir, candidate);
+                    if (f.canExecute()) {
+                        return f.getAbsolutePath();
+                    }
                 }
+            }
+        }
+        for (String macPath : new String[] {
+                "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+                "/Applications/Chromium.app/Contents/MacOS/Chromium" }) {
+            File f = new File(macPath);
+            if (f.canExecute()) {
+                return f.getAbsolutePath();
             }
         }
         return null;
