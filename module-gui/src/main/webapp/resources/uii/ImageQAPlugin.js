@@ -67,6 +67,11 @@
         // Add a small delay to ensure DOM is fully rendered
         setTimeout(() => {
             loadThumbnails();
+            document.querySelectorAll('.thumb-canvas').forEach(canvas => {
+                if (canvas.dataset.image_small) {
+                    loadThumbnailImage(canvas, false);
+                }
+            });
         }, 100);
     });
 
@@ -117,18 +122,19 @@
                 switch (ajaxstatus) {
                     case "success": // This is called when ajax response is successfully processed.
                         // Add a small delay to ensure DOM updates are complete
+                        const isRotation = sourceEl && sourceEl.classList.contains('thumbnail-control-rotate');
                         setTimeout(() => {
                             loadThumbnails();
                             const canvases = document.querySelectorAll('.thumb-canvas');
                             canvases.forEach(canvas => {
                                 if (canvas.dataset.image_small) {
-                                    loadThumbnailImage(canvas);
+                                    loadThumbnailImage(canvas, isRotation);
                                 }
                             });
                         }, 50);
                         setupConfirmationHandlers();
                         updateCheckboxToggles(sourceEl);
-                        if (sourceEl && sourceEl.classList.contains('thumbnail-control-rotate')) {
+                        if (isRotation) {
                             const imageName = sourceEl.dataset.imageControl;
                             reloadImageAfterRotation(imageName);
                         }
@@ -310,6 +316,17 @@
             return;
         }
 
+        // Close the existing viewer here rather than at AJAX begin, so the old
+        // image stays visible during the server round-trip and disappears only
+        // when the new viewer is ready to take over.
+        if (window.viewImage) {
+            debugLog("closing OpenSeadragon viewer");
+            try {
+                window.viewImage.close();
+            } catch (e) {}
+            window.viewImage = null;
+        }
+
         // Init zoom persistence - use cached element or fallback to DOM query
         const persistenceIdElement = domCache.persistenceId || document.getElementById('persistenceId');
         let imageZoomPersistenceId = persistenceIdElement?.value;
@@ -323,7 +340,8 @@
         try {
             // Add cache-busting timestamp to force reload after rotation
             let tileSource = config.tileSource;
-            if (tileSource) {
+            if (tileSource && window.imageQACacheBust) {
+                window.imageQACacheBust = false;
                 const cacheBuster = new Date().getTime();
                 const separator = tileSource.includes('?') ? '&' : '?';
                 tileSource = `${tileSource}${separator}_t=${cacheBuster}`;
@@ -422,11 +440,8 @@
      */
     const freeJSResources = (data) => {
         if(!data || data.status === 'begin') {
-            if(window.viewImage) {
-                debugLog("closing OpenSeadragon viewer");
-                window.viewImage.close();
-                window.viewImage = null; // Explicitly clear reference
-            }
+            // OSD viewer is closed in initializeImageView right before the new viewer
+            // is created, so the old image stays visible during the AJAX round-trip.
             if(window.world) {
                 debugLog("disposing 3d scene");
                 window.world.dispose();
@@ -468,8 +483,9 @@
     /**
      * Load individual thumbnail image
      */
-    const loadThumbnailImage = (canvas) => {
+    const loadThumbnailImage = (canvas, forceCacheBust = false) => {
         if (!canvas.dataset.image_small) return;
+        if (!forceCacheBust && canvas.dataset.loaded === 'true') return;
 
         const img = new Image();
         img.onload = function() {
@@ -477,13 +493,17 @@
             canvas.width = this.width;
             canvas.height = this.height;
             ctx.drawImage(this, 0, 0);
+            canvas.dataset.loaded = 'true';
         };
 
         // Add cache-busting timestamp to force reload after rotation
         let imageSrc = canvas.dataset.image_small;
-        const cacheBuster = new Date().getTime();
-        const separator = imageSrc.includes('?') ? '&' : '?';
-        img.src = `${imageSrc}${separator}_t=${cacheBuster}`;
+        if (forceCacheBust) {
+            const cacheBuster = new Date().getTime();
+            const separator = imageSrc.includes('?') ? '&' : '?';
+            imageSrc = `${imageSrc}${separator}_t=${cacheBuster}`;
+        }
+        img.src = imageSrc;
     };
 
     const updateCheckboxToggles = (sourceEl) => {
@@ -530,10 +550,12 @@
             loadThumbnails();
 
             // Re-setup the viewer which will reload the image with cache-busting
+            window.imageQACacheBust = true;
             if (typeof setupImageQAViewer === 'function') {
                 setupImageQAViewer();
             } else {
                 console.warn("setupImageQAViewer function not found");
+                window.imageQACacheBust = false;
             }
         }, 250);
     };
