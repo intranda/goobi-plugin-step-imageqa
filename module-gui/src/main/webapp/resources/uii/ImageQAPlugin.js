@@ -112,6 +112,36 @@
     };
 
     /**
+     * Sync the img-active / font-light classes on the thumbnail list to match
+     * the currently displayed image.  Called after every AJAX success so that
+     * button-based navigation (prev / next / first / last) keeps the highlight
+     * in sync without re-rendering the thumbnail panel.
+     */
+    let lastActiveThumbnailName = null;
+
+    const updateActiveThumbnail = () => {
+        const currentImageName = document.querySelector('[id$="currentImageName"]')?.value;
+        if (!currentImageName) return;
+
+        const imageChanged = currentImageName !== lastActiveThumbnailName;
+        lastActiveThumbnailName = currentImageName;
+
+        let activeThumb = null;
+        document.querySelectorAll('.goobi-thumbnail').forEach(thumb => {
+            const isActive = thumb.dataset.imageName === currentImageName;
+            thumb.classList.toggle('img-active', isActive);
+            thumb.classList.toggle('font-light', !isActive);
+            if (isActive) activeThumb = thumb;
+        });
+
+        // Only scroll when the user actually navigated to a different image,
+        // not on rotation / pagination / select-all AJAX calls.
+        if (activeThumb && imageChanged) {
+            activeThumb.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+    };
+
+    /**
      * Handle AJAX events for JSF
      */
     const setupAjaxEvents = () => {
@@ -123,6 +153,7 @@
                     case "success": // This is called when ajax response is successfully processed.
                         // Add a small delay to ensure DOM updates are complete
                         const isRotation = sourceEl && sourceEl.classList.contains('thumbnail-control-rotate');
+                        updateActiveThumbnail();
                         setTimeout(() => {
                             loadThumbnails();
                             const canvases = document.querySelectorAll('.thumb-canvas');
@@ -292,6 +323,15 @@
             return;
         }
 
+        // Close the existing OSD viewer before initializing whatever comes next.
+        // Done here (not in initializeImageView) so it also runs when navigating
+        // to a 3D object or X3DOM scene, preventing a memory leak.
+        if (window.viewImage) {
+            debugLog("closing OpenSeadragon viewer");
+            try { window.viewImage.close(); } catch (e) {}
+            window.viewImage = null;
+        }
+
         const mediaType = config.mediaType;
 
         if (mediaType === "image") {
@@ -314,17 +354,6 @@
         if (!targetElement) {
             debugLog("Target element not found:", config.imageView.element);
             return;
-        }
-
-        // Close the existing viewer here rather than at AJAX begin, so the old
-        // image stays visible during the server round-trip and disappears only
-        // when the new viewer is ready to take over.
-        if (window.viewImage) {
-            debugLog("closing OpenSeadragon viewer");
-            try {
-                window.viewImage.close();
-            } catch (e) {}
-            window.viewImage = null;
         }
 
         // Init zoom persistence - use cached element or fallback to DOM query
