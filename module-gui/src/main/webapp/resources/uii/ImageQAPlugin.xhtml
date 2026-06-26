@@ -104,6 +104,7 @@
             <!-- ImageQA Plugin JavaScript -->
             <script src="ImageQAPlugin.js?v=#{HelperForm.buildVersion}"></script>
             <script>
+                //<![CDATA[
                 function handleThumbnailClick(e) {
                     if (e.status === 'begin') {
                         var thumb = e.source.closest('.goobi-thumbnail');
@@ -114,10 +115,19 @@
                         if (thumb) {
                             thumb.classList.remove('font-light');
                             thumb.classList.add('img-active');
+
+                            var tileSource = thumb.dataset.tileSource;
+                            if (thumb.dataset.imageType === 'image' && tileSource && window.viewImage && window.viewImage.image) {
+                                window.viewImage.image.load(tileSource);
+                            }
+
+                            var nameInput = document.querySelector('[id$="currentImageName"]');
+                            if (nameInput) nameInput.value = thumb.dataset.imageName;
                         }
                     }
                     freeJSResources(e);
                 }
+                //]]>
             </script>
 
             <h:form id="qaform">
@@ -267,7 +277,8 @@
                                                 dir="auto"
                                                 style="--thumbnail-width: #{AktuelleSchritteForm.myPlugin.thumbnailSize}px; --thumbnail-height: #{AktuelleSchritteForm.myPlugin.thumbnailSize + 55}px;"
                                                 data-image-type="#{image.type}"
-                                                data-image-name="#{image.imageName}">
+                                                data-image-name="#{image.imageName}"
+                                                data-tile-source="#{image.url}">
                                                 <div class="goobi-thumbnail-image">
 
                                                     <!-- THUMBNAIL DISPLAY -->
@@ -324,7 +335,7 @@
                                                                 target="#{AktuelleSchritteForm.myPlugin.imageIndex}" />
                                                             <f:ajax
                                                                 execute="@this"
-                                                                render="qaform:imageQABox:bigimageWrapper"
+                                                                render="qaform:imageQABox:bigimage:currentImageName qaform:imageQABox:first_image:imageNavigation qaform:imageQABox:second_image:imageNavigation"
                                                                 onevent="handleThumbnailClick"
                                                                 disabled="#{AktuelleSchritteForm.myPlugin.thumbnailsOnly}" />
                                                         </button>

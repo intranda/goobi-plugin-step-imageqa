@@ -30,7 +30,7 @@
 
 	<composite:implementation>
 		<!-- navigation for big image -->
-		<div class="image-navigation">
+		<h:panelGroup id="imageNavigation" layout="block" styleClass="image-navigation">
 				<button
 					jsf:action="#{AktuelleSchritteForm.myPlugin.imageLeftmost}"
 					class="btn btn-blank me-3"
@@ -104,7 +104,7 @@
 					<f:ajax execute="@this" render="qaform:imageQABox:bigimageWrapper" onevent="freeJSResources"/>
 				</button>
 
-		</div>
+		</h:panelGroup>
 		<!-- // navigation for big image -->
 
 	</composite:implementation>
