@@ -375,6 +375,7 @@
 
             viewImage.zoom = new ImageView.Controls.Zoom(viewImage.image);
             viewImage.zoom.setSlider(config.controls.zoomSlider);
+            viewImage.zoom.setInput(config.controls.zoomSliderLabel);
             viewImage.rotation = new ImageView.Controls.Rotation(viewImage.image);
 
             const ZOOM_STORAGE_KEY = 'goobi.imageView.persistence.imageqa-zoom';
