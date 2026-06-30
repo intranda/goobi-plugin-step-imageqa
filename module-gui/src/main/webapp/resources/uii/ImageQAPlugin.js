@@ -15,7 +15,6 @@
 
     // Cache frequently accessed DOM elements
     const domCache = {
-        persistenceId: null,
         mainImage: null,
         thumbnailImages: null,
         imageButtons: {
@@ -27,12 +26,16 @@
     // Debug mode flag
     const DEBUG_MODE = true;
 
+    // Zoom persistence toggle state — backed by localStorage so it survives page reloads
+    const imageQAState = {
+        persistZoom: localStorage.getItem('imageQA_persistZoom') !== 'false',
+    };
+
     /**
      * Initialize DOM cache for frequently accessed elements
      */
     const initializeDOMCache = () => {
         // Use modern DOM methods instead of jQuery where possible
-        domCache.persistenceId = document.getElementById('persistenceId');
         domCache.mainImage = document.getElementById('mainImage');
         domCache.imageButtons.next = document.getElementById("qaform:first_image:imageNext");
         domCache.imageButtons.back = document.getElementById("qaform:first_image:imageBack");
@@ -356,15 +359,6 @@
             return;
         }
 
-        // Init zoom persistence - use cached element or fallback to DOM query
-        const persistenceIdElement = domCache.persistenceId || document.getElementById('persistenceId');
-        let imageZoomPersistenceId = persistenceIdElement?.value;
-
-        if (config.persistence.persistZoom && imageZoomPersistenceId && imageZoomPersistenceId.length > 0) {
-            debugLog("persist image zoom with id ", imageZoomPersistenceId);
-            config.persistence.persistenceId = imageZoomPersistenceId;
-        }
-
         const viewImage = {};
         try {
             // Add cache-busting timestamp to force reload after rotation
@@ -382,6 +376,34 @@
             viewImage.zoom = new ImageView.Controls.Zoom(viewImage.image);
             viewImage.zoom.setSlider(config.controls.zoomSlider);
             viewImage.rotation = new ImageView.Controls.Rotation(viewImage.image);
+
+            const ZOOM_STORAGE_KEY = 'goobi.imageView.persistence.imageqa-zoom';
+            viewImage.image.onOpened.subscribe(() => {
+                if (!imageQAState.persistZoom) {
+                    debugLog("zoom persistence: restore skipped (disabled by toggle)");
+                    return;
+                }
+                try {
+                    const saved = sessionStorage.getItem(ZOOM_STORAGE_KEY);
+                    if (saved) {
+                        const position = JSON.parse(saved);
+                        debugLog("zoom persistence: restoring position", position);
+                        viewImage.zoom.setPosition(position);
+                    } else {
+                        debugLog("zoom persistence: no saved position found");
+                    }
+                } catch (e) {
+                    debugLog("zoom persistence: error reading from sessionStorage", e);
+                }
+            });
+            viewImage.image.onUpdate.pipe(
+                rxjs.operators.auditTime(100)
+            ).subscribe(() => {
+                if (!imageQAState.persistZoom) return;
+                const position = viewImage.zoom.getPosition();
+                debugLog("zoom persistence: saving position", position);
+                sessionStorage.setItem(ZOOM_STORAGE_KEY, JSON.stringify(position));
+            });
 
             // Setup rotation controls with null checks
             const rotateLeftBtn = document.querySelector(config.controls.rotateLeftButton);
@@ -462,6 +484,31 @@
             async function(error) {
                 console.error("X3DOM error", error);
             });
+    };
+
+    /**
+     * Toggle zoom persistence on/off and update the button icon accordingly
+     */
+    const toggleZoomPersistence = () => {
+        imageQAState.persistZoom = !imageQAState.persistZoom;
+        localStorage.setItem('imageQA_persistZoom', String(imageQAState.persistZoom));
+        if (!imageQAState.persistZoom) {
+            sessionStorage.removeItem('goobi.imageView.persistence.imageqa-zoom');
+            debugLog("zoom persistence: disabled, saved position cleared");
+        } else {
+            debugLog("zoom persistence: enabled");
+        }
+        updateZoomToggleUI();
+    };
+
+    const updateZoomToggleUI = () => {
+        const btn = document.getElementById('zoomLockToggle');
+        const icon = document.getElementById('zoomLockIcon');
+        if (!btn || !icon) return;
+
+        const active = imageQAState.persistZoom;
+        icon.className = active ? 'fa fa-lock' : 'fa fa-unlock';
+        btn.classList.toggle('active', active);
     };
 
     /**
@@ -599,6 +646,7 @@
         setupAjaxEvents();
         setupKeyboardShortcuts();
         setupConfirmationHandlers();
+        updateZoomToggleUI();
     });
 
     // Expose necessary functions globally for JSF callbacks
@@ -608,5 +656,6 @@
     window.clickGoToImageButton = clickGoToImageButton;
     window.launchFullScreen = launchFullScreen;
     window.loadThumbnails = loadThumbnails;
+    window.toggleZoomPersistence = toggleZoomPersistence;
 
 })(); // End IIFE

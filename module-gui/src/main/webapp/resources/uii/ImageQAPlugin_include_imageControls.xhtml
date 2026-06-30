@@ -105,6 +105,15 @@
                         </div>
                         <input id="zoomSlider" aria-label="zoomSlider" class="zoom-slider" type="range" min="0" max="1" step="0.01"/>
                     </li>
+                    <li>
+                        <button
+                            id="zoomLockToggle"
+                            type="button"
+                            class="btn btn-blank me-1"
+                            onclick="toggleZoomPersistence()">
+                            <i id="zoomLockIcon" class="fa fa-lock"></i>
+                        </button>
+                    </li>
                 </ul>
             </nav>
         </div>
