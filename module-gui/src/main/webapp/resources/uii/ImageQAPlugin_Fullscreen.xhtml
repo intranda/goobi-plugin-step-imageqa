@@ -147,18 +147,26 @@
 									 	var mediaType = "#{AktuelleSchritteForm.myPlugin.image.type}";
 									 	if(mediaType == "image") {
 
-									 		//init zoom persistence
-	                                    	let imageZoomPersistenzeId = $( '#persistenceId' ).val();
-	                                        if(#{AktuelleSchritteForm.myPlugin.persistZoom} && imageZoomPersistenzeId && imageZoomPersistenzeId.length > 0) {
-	                                            console.log("persist image zoom with id ", imageZoomPersistenzeId);
-	                                            configViewer.persistence.persistenceId = imageZoomPersistenzeId;
-	                                        }
-											
 										    var viewImage = new ImageView.Image( configViewer.imageView );
-										    
 										    var zoom = new ImageView.Controls.Zoom(viewImage);
-								            //this.rotation = new ImageView.Controls.Rotation(this.viewImage);
-										    
+
+										    var ZOOM_STORAGE_KEY = 'goobi.imageView.persistence.imageqa-zoom';
+										    var persistZoom = localStorage.getItem('imageQA_persistZoom') !== 'false';
+
+										    viewImage.onOpened.subscribe(function() {
+										        if (!persistZoom) return;
+										        try {
+										            var saved = sessionStorage.getItem(ZOOM_STORAGE_KEY);
+										            if (saved) { zoom.setPosition(JSON.parse(saved)); }
+										        } catch (e) {}
+										    });
+										    viewImage.onUpdate.pipe(
+										        rxjs.operators.auditTime(100)
+										    ).subscribe(function() {
+										        if (!persistZoom) return;
+										        sessionStorage.setItem(ZOOM_STORAGE_KEY, JSON.stringify(zoom.getPosition()));
+										    });
+
 										    viewImage.load(configViewer.tileSource)
 										    .then( e => {
 									            zoom.setInput(configViewer.controls.zoomSliderLabel);

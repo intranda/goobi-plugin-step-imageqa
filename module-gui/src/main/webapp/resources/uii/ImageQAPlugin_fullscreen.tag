@@ -231,27 +231,36 @@ loadInitialImage() {
                  	tileSource : infoJson
                 };
 
-				let imageZoomPersistenzeId = $( '#persistenceId' ).val();
-                if(this.opts.persistZoom && imageZoomPersistenzeId && imageZoomPersistenzeId.length > 0) {
-                    console.log("persist image zoom with id ", imageZoomPersistenzeId);
-                    configViewer.persistence.persistenceId = imageZoomPersistenzeId;
-                    configViewer.persistence.persistZoom =  true;
-                }
-
                 console.log("load viewer with ", configViewer.imageView, configViewer.tileSource);
 			    this.viewImage = new ImageView.Image( configViewer.imageView );
-			    
 			    this.zoom = new ImageView.Controls.Zoom(this.viewImage);
 	            this.zoom.setInput(configViewer.controls.zoomSliderLabel);
-	            //this.rotation = new ImageView.Controls.Rotation(this.viewImage);
-			    
+
+			    const ZOOM_STORAGE_KEY = 'goobi.imageView.persistence.imageqa-zoom';
+			    const persistZoom = localStorage.getItem('imageQA_persistZoom') !== 'false';
+			    const _zoom = this.zoom;
+
+			    this.viewImage.onOpened.subscribe(() => {
+			        if (!persistZoom) return;
+			        try {
+			            const saved = sessionStorage.getItem(ZOOM_STORAGE_KEY);
+			            if (saved) { _zoom.setPosition(JSON.parse(saved)); }
+			        } catch (e) {}
+			    });
+			    this.viewImage.onUpdate.pipe(
+			        rxjs.operators.auditTime(100)
+			    ).subscribe(() => {
+			        if (!persistZoom) return;
+			        sessionStorage.setItem(ZOOM_STORAGE_KEY, JSON.stringify(_zoom.getPosition()));
+			    });
+
 			    this.viewImage.load(configViewer.tileSource)
 			    .then((e) => {
 				    this.viewImage.openseadragon.blendTime = 0.0;
 		        	$('#ajaxloader_image').fadeOut(800);
 		        	resolve();
 			    })
-		        .catch(error => {	        		
+		        .catch(error => {
 		        	console.error( 'Error opening image', error );
 			        $(configViewer.imageView.element).html( 'Failed to load image: "' + error + '"' );
 		            $('#ajaxloader_image').fadeOut(800);
