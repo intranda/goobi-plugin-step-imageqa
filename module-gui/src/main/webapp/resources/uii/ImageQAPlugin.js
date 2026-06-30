@@ -503,12 +503,13 @@
 
     const updateZoomToggleUI = () => {
         const btn = document.getElementById('zoomLockToggle');
-        const icon = document.getElementById('zoomLockIcon');
-        if (!btn || !icon) return;
+        const iconLocked = btn?.querySelector('.zoom-locked');
+        const iconUnlocked = btn?.querySelector('.zoom-unlocked');
+        if (!btn || !iconLocked || !iconUnlocked) return;
 
         const active = imageQAState.persistZoom;
-        icon.className = active ? 'fa fa-lock' : 'fa fa-unlock';
-        btn.classList.toggle('active', active);
+        iconLocked.classList.toggle('d-none', !active);
+        iconUnlocked.classList.toggle('d-none', active);
     };
 
     /**
