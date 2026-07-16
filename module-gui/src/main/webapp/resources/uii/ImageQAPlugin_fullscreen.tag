@@ -12,21 +12,27 @@
 		class="fullscreen-control"
 		style="top:0; right:0;">
 		<button class="btn btn-outline" onclick={leave} aria-label="{msgs.imageDefaultDisplay}" title="{msgs.imageDefaultDisplay}" >
-			<i class="fa fa-close"></i>
+			<span class="icon-wrapper" aria-hidden="true">
+				<svg><use href="{GoobiIcons.iconHref('x')}" /></svg>
+			</span>
 		</button>
 	</div>
 	<!-- previous image -->
 	<button id="imageBack" class="btn btn-outline fullscreen-control" aria-label="{msgs.lw_previousImage}" title="{msgs.lw_previousImage}"
 		style="top:50vh; left:0;"
 		onclick={previousImage}>
-		<i class="fa fa-angle-left"></i>
+		<span class="icon-wrapper" aria-hidden="true">
+			<svg><use href="{GoobiIcons.iconHref('chevron-left')}" /></svg>
+		</span>
 	</button>
 
 	<!-- next image -->
 	<button id="imageNext" class="btn btn-outline fullscreen-control" aria-label="{msgs.lw_nextImage}" title="{msgs.lw_nextImage}"
 		style="top:50vh; right:0px;"
 		onclick={nextImage}>
-		<i class="fa fa-angle-right"></i>
+		<span class="icon-wrapper" aria-hidden="true">
+			<svg><use href="{GoobiIcons.iconHref('chevron-right')}" /></svg>
+		</span>
 	</button>
 
 	<!-- file name -->

@@ -27,6 +27,7 @@
     template="/uii/template/template_blank.html"
     xmlns:intranda="http://xmlns.jcp.org/jsf/composite/composites"
     xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+    xmlns:util="http://goobi.io/util"
     xmlns:jsf="http://xmlns.jcp.org/jsf">
 
     <link
@@ -99,7 +100,7 @@
                             <script type="text/javascript">
                           //<![CDATA[
                             	var configViewer = {
-                                   	imageView: {                                        		
+                                   	imageView: {
                                     	element: "#mainImage",
                                     	fittingMode: "fixed",
                                    	},
@@ -116,7 +117,7 @@
                                     },
                                     tileSource : "#{AktuelleSchritteForm.myPlugin.image.url}"
                                  };
-                            			
+
 
                                     	var worldConfig = {
 									 			controls: {
@@ -282,12 +283,14 @@
                                     <li><span
                                         class="btn font-size-s"
                                         id="rotate-left-x"
-                                        title="#{msg.rotateLeft}"> <i class="fa fa-undo"></i>
+                                        title="#{msg.rotateLeft}">
+                                        <util:icon icon="rotate" />
                                     </span></li>
                                     <li><span
                                         class="btn font-size-s"
                                         id="rotate-right-x"
-                                        title="#{msg.rotateRight}"> <i class="fa fa-repeat"></i>
+                                        title="#{msg.rotateRight}">
+                                        <util:icon icon="rotate-clockwise" />
                                     </span></li>
                                 </ul>
                                 <ul>
@@ -295,12 +298,14 @@
                                     <li><span
                                         class="btn font-size-s"
                                         id="rotate-left-y"
-                                        title="#{msg.rotateLeft}"> <i class="fa fa-undo"></i>
+                                        title="#{msg.rotateLeft}">
+                                        <util:icon icon="rotate" />
                                     </span></li>
                                     <li><span
                                         class="btn font-size-s"
                                         id="rotate-right-y"
-                                        title="#{msg.rotateRight}"> <i class="fa fa-repeat"></i>
+                                        title="#{msg.rotateRight}">
+                                        <util:icon icon="rotate-clockwise" />
                                     </span></li>
                                 </ul>
                                 <ul>
@@ -308,12 +313,14 @@
                                     <li><span
                                         class="btn font-size-s"
                                         id="rotate-left-z"
-                                        title="#{msg.rotateLeft}"> <i class="fa fa-undo"></i>
+                                        title="#{msg.rotateLeft}">
+                                        <util:icon icon="rotate" />
                                     </span></li>
                                     <li><span
                                         class="btn font-size-s"
                                         id="rotate-right-z"
-                                        title="#{msg.rotateRight}"> <i class="fa fa-repeat"></i>
+                                        title="#{msg.rotateRight}">
+                                        <util:icon icon="rotate-clockwise" />
                                     </span></li>
                                 </ul>
                                 <ul>
@@ -335,7 +342,7 @@
                             title="#{msgs.mets_showOcrForCurrentImage}"
                             aria-label="#{msgs.mets_showOcrForCurrentImage}"
                             jsf:action="#{AktuelleSchritteForm.myPlugin.toggleOCR()}">
-                            <i class="fa fa-file-text-o"></i>
+                            <util:icon icon="file-text" />
                         </button>
                         <!-- exit fullscreen -->
                         <button
@@ -343,7 +350,7 @@
                             jsf:action="ImageQAPlugin"
                             aria-label="#{msgs.imageDefaultDisplay}"
                             title="#{msgs.imageDefaultDisplay}">
-                            <i class="fa fa-close"></i>
+                            <util:icon icon="x" />
                         </button>
                     </div>
                     <!-- previous image -->
@@ -353,9 +360,7 @@
                         aria-label="#{msgs.lw_previousImage}"
                         title="#{msgs.lw_previousImage}"
                         style="position:absolute;top:50vh; left:0px; height:50px;">
-                        <span
-                            class="fa fa-chevron-left"
-                            aria-hidden="true" />
+                        <util:icon icon="chevron-left" />
                         <f:ajax
                             execute="@form"
                             render="@form"
@@ -372,9 +377,7 @@
                         aria-label="#{msgs.lw_nextImage}"
                         title="#{msgs.lw_nextImage}"
                         style="position:absolute;top:50vh; right:0px; height:50px;">
-                        <span
-                            class="fa fa-chevron-right"
-                            aria-hidden="true" />
+                        <util:icon icon="chevron-right" />
                         <f:ajax
                             execute="@form"
                             render="@form"
@@ -427,7 +430,7 @@
                         	jsf:id="firstImg"
                             class="btn btn-outline font-size-s margin-right-10"
                             title="#{msgs.firstImage}">
-                            <i class="fa fa-double-angle-left"></i>
+                            <util:icon icon="chevrons-left" />
                             <f:ajax
                                 execute="@form"
                                 render="@form" />
@@ -439,7 +442,7 @@
                         	jsf:id="lastImg"
                             class="btn btn-outline font-size-s"
                             title="#{msgs.lastImage}">
-                            <i class="fa fa-double-angle-right"></i>
+                            <util:icon icon="chevrons-right" />
                             <f:ajax
                                 execute="@form"
                                 render="@form" />

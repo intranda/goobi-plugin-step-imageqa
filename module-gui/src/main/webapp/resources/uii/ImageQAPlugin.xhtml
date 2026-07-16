@@ -26,6 +26,7 @@
     template="/uii/template/template.html"
     xmlns:intranda="http://xmlns.jcp.org/jsf/composite/composites"
     xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+    xmlns:util="http://goobi.io/util"
     xmlns:jsf="http://xmlns.jcp.org/jsf">
 
     <ui:param name="myPageTitle"
@@ -142,7 +143,7 @@
                     <!-- BOX TITLE WITH BUTTONS -->
                     <intranda:boxTitle
                         title="#{AktuelleSchritteForm.myPlugin.step.titel}"
-                        icon="fa-puzzle-piece">
+                        icon="puzzle">
 
                         <div class="actions d-flex">
 
@@ -169,7 +170,7 @@
                                     class="btn d-flex align-items-center btn--title-action"
                                     jsf:id="changefolder"
                                     jsf:action="#{AktuelleSchritteForm.myPlugin.changeFolder}">
-                                    <i class="fa fa-folder-open-o"></i>
+                                    <util:icon icon="folder-open" />
                                     <span>
                                         <h:outputText value="#{msgs.plugin_fileUpload_changeFolder}" />
                                     </span>
@@ -183,7 +184,7 @@
                                 title="#{msgs.imageFullscreen}"
                                 jsf:action="ImageQAPlugin_JSFullscreen"
                                 jsf:rendered="#{AktuelleSchritteForm.myPlugin.thumbnailsOnly and AktuelleSchritteForm.myPlugin.useJSFullscreen}">
-                                <i class="fa fa-arrows-alt"></i>
+                                <util:icon icon="arrows-maximize" />
                             </button>
 
                              <!-- REGULAR FULLSCREEN BUTTON -->
@@ -192,7 +193,7 @@
                                 title="#{msgs.imageFullscreen}"
                                 jsf:action="ImageQAPlugin_Fullscreen"
                                 jsf:rendered="#{AktuelleSchritteForm.myPlugin.thumbnailsOnly and not AktuelleSchritteForm.myPlugin.useJSFullscreen}">
-                                <i class="fa fa-arrows-alt"></i>
+                                <util:icon icon="arrows-maximize" />
                             </button>
 
                             <!-- RELOAD BUTTON -->
@@ -200,7 +201,7 @@
                                 aria-label="#{msgs.reload}"
                                 jsf:action="#{NavigationForm.Reload}"
                                 class="btn d-flex align-items-center btn--title-action">
-                                <i class="fa fa-refresh" />
+                                <util:icon icon="refresh" />
                             </button>
 
                              <!-- LEAVE AND FINISH TASK BUTTON -->
@@ -209,7 +210,7 @@
                                 class="btn d-flex align-items-center btn--title-action"
                                 jsf:rendered="#{NavigationForm.uiStatus.pluginSimulation != true and AktuelleSchritteForm.myPlugin.allowTaskFinishButtons == true}"
                                 title="#{msgs.task_leavePluginAndFinishTask}">
-                                <i class="fa fa-check" />
+                                <util:icon icon="check" />
                                 <f:setPropertyActionListener
                                     target="#{NavigationForm.uiStatus.pluginSimulation}"
                                     value="#{false}" />
@@ -221,7 +222,7 @@
                                 class="btn d-flex align-items-center btn--title-action"
                                 jsf:rendered="#{NavigationForm.uiStatus.pluginSimulation != true and AktuelleSchritteForm.myPlugin.allowTaskFinishButtons == true}"
                                 title="#{msgs.pluginLeave}">
-                                <i class="fa fa-close" />
+                                <util:icon icon="x" />
                                 <f:setPropertyActionListener
                                     target="#{NavigationForm.uiStatus.pluginSimulation}"
                                     value="#{false}" />
@@ -357,12 +358,17 @@
                                                         <!-- CHECKBOX FOR SELECTION -->
                                                         <h:panelGroup
                                                             rendered="#{AktuelleSchritteForm.myPlugin.allowSelection}">
-                                                            <label class="control btn btn-blank thumbnail-control checkbox"> <h:selectBooleanCheckbox
-                                                                    value="#{image.selected}" /> <span
-                                                                    class="control-indicator">
-                                                                    <i class="fa fa fa-check-square-o"></i> <i
-                                                                        class="fa fa fa-square-o"></i>
-                                                                </span>
+                                                            <label class="control btn btn-blank thumbnail-control checkbox">
+                                                                <h:panelGroup id="imageSelected">
+                                                                    <h:selectBooleanCheckbox
+                                                                        value="#{image.selected}">
+                                                                        <f:ajax
+                                                                            event="click"
+                                                                            execute="@this"
+                                                                            render="@parent" />
+                                                                    </h:selectBooleanCheckbox>
+                                                                    <util:icon icon="#{image.selected ? 'square-check' : 'square'}" />
+                                                                </h:panelGroup>
                                                             </label>
                                                         </h:panelGroup>
 
@@ -374,7 +380,7 @@
                                                             class="btn btn-blank thumbnail-control rename"
                                                             data-bs-toggle="modal"
                                                             data-bs-target="#myModal-#{status.index}">
-                                                          <i class="fa fa-pencil " />
+                                                            <util:icon icon="pencil" />
                                                         </button>
 
                                                         <!--  REORDERING BUTTONS  -->
@@ -384,7 +390,7 @@
                                                                 jsf:action="#{AktuelleSchritteForm.myPlugin.reorderPrevious(image)}"
                                                                 jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowReordering}"
                                                                 data-confirm="#{msgs.wirklichAusfuehren}">
-                                                            <i class="fa fa-caret-left" />
+                                                            <util:icon icon="caret-left" />
                                                         </button>
                                                         <button
                                                                 class="btn btn-blank thumbnail-control reorder-next"
@@ -392,7 +398,7 @@
                                                                 jsf:action="#{AktuelleSchritteForm.myPlugin.reorderNext(image)}"
                                                                 jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowReordering}"
                                                                 data-confirm="#{msgs.wirklichAusfuehren}">
-                                                            <i class="fa fa-caret-right" />
+                                                            <util:icon icon="caret-right" />
                                                         </button>
 
                                                         <!-- DELETE BUTTON -->
@@ -402,7 +408,7 @@
                                                             jsf:action="#{AktuelleSchritteForm.myPlugin.deleteImage(image)}"
                                                             jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowDeletion}"
                                                             data-confirm="#{msgs.wirklichAusfuehren}">
-                                                            <i class="fa fa-trash"></i>
+                                                            <util:icon icon="trash" />
                                                         </button>
                                                     </div>
 
@@ -415,7 +421,7 @@
                                                             jsf:action="#{AktuelleSchritteForm.myPlugin.flipHorizontal(image)}"
                                                             jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowFlipping}"
                                                             data-confirm="#{msgs.wirklichAusfuehren}">
-                                                            <i class="fa fa-arrows-h"></i>
+                                                            <util:icon icon="flip-horizontal" />
                                                         </button>
 
                                                         <!-- FLOP BUTTON -->
@@ -425,7 +431,7 @@
                                                             jsf:action="#{AktuelleSchritteForm.myPlugin.flipVertical(image)}"
                                                             jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowFlipping}"
                                                             data-confirm="#{msgs.wirklichAusfuehren}">
-                                                            <i class="fa fa-arrows-v"></i>
+                                                            <util:icon icon="flip-vertical" />
                                                         </button>
 
                                                         <!-- ROTATE LEFT BUTTON -->
@@ -436,7 +442,7 @@
                                                             jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowRotation}"
                                                             data-confirm="#{msgs.wirklichAusfuehren}"
                                                             data-image-control="#{image.imageName}">
-                                                            <i class="fa fa-undo"></i>
+                                                            <util:icon icon="rotate" />
                                                             <f:ajax execute="@form" render=":qaform:imageQABox:thumbnailArea" />
                                                         </button>
                                                         <!-- ROTATE RIGHT BUTTON -->
@@ -447,7 +453,7 @@
                                                             jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowRotation}"
                                                             data-confirm="#{msgs.wirklichAusfuehren}"
                                                             data-image-control="#{image.imageName}">
-                                                            <i class="fa fa-repeat"></i>
+                                                            <util:icon icon="rotate-clockwise" />
                                                             <f:ajax execute="@form" render=":qaform:imageQABox:thumbnailArea" />
                                                         </button>
                                                    </div>
@@ -517,7 +523,7 @@
                                                                 title="#{msgs.uebernehmen}"
                                                                 jsf:rel="tooltip"
                                                                 class="btn btn-success">
-                                                                <span lass="fa fa-floppy-o" aria-hidden="true"></span>
+                                                                <util:icon icon="device-floppy" />
                                                                 <span>
                                                                     <h:outputText value="#{msgs.uebernehmen}" />
                                                                 </span>
@@ -804,7 +810,7 @@
                         jsf:id="finishAndClose"
                         jsf:rendered="#{NavigationForm.uiStatus.pluginSimulation != true and AktuelleSchritteForm.myPlugin.allowTaskFinishButtons == true}"
                         jsf:action="#{AktuelleSchritteForm.SchrittDurchBenutzerAbschliessen}">
-                        <i class="fa fa-check"></i>
+                        <util:icon icon="check" />
                         <span>
                             <h:outputText value="#{msgs.task_leavePluginAndFinishTask}" />
                         </span>
@@ -819,7 +825,7 @@
                         class="btn btn-primary"
                         jsf:id="absenden"
                         jsf:action="#{AktuelleSchritteForm.myPlugin.cancel}">
-                        <i class="fa fa-close"></i>
+                        <util:icon icon="x" />
                         <span>
                             <h:outputText value="#{msgs.pluginLeave}" />
                         </span>

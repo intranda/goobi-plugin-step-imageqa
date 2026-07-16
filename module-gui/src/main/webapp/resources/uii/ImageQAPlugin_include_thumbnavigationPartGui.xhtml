@@ -1,27 +1,28 @@
-<!-- 
+<!--
  * This file is part of a plugin for Goobi - a Workflow tool for the support of mass digitization.
- * 
- * Visit the websites for more information. 
+ *
+ * Visit the websites for more information.
  *          - https://goobi.io
  *          - https://www.intranda.com
  *          - https://github.com/intranda/goobi
- * 
+ *
  * This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free
  * Software Foundation; either version 2 of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59
  * Temple Place, Suite 330, Boston, MA 02111-1307 USA
- * 
+ *
  -->
-<ui:composition xmlns="http://www.w3.org/1999/xhtml" 
-	xmlns:jsf="http://xmlns.jcp.org/jsf" 
-	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough" 
-	xmlns:ui="http://xmlns.jcp.org/jsf/facelets" 
-	xmlns:composite="http://xmlns.jcp.org/jsf/composite" 
-	xmlns:h="http://xmlns.jcp.org/jsf/html" 
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:jsf="http://xmlns.jcp.org/jsf"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:composite="http://xmlns.jcp.org/jsf/composite"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:util="http://goobi.io/util"
 	xmlns:f="http://xmlns.jcp.org/jsf/core" >
 
     <composite:interface>
@@ -63,33 +64,33 @@
                     class="btn btn-primary-400"
                     jsf:id="absenden"
                     jsf:action="#{AktuelleSchritteForm.myPlugin.changeFolder}">
-                    <i class="fa fa-folder-open-o"></i>
+                    <util:icon icon="folder-open" />
                     <span>
                         <h:outputText value="#{msgs.plugin_fileUpload_changeFolder}" />
                     </span>
                 </button>
             </span>
         </h:panelGroup>
-        
+
         <!-- navigation buttons for Thumbnail list -->
         <ui:fragment rendered="#{AktuelleSchritteForm.myPlugin.pageNumberLastPartGUI gt 1}">
             <div class="d-inline">
-                <button 
-               	   class="btn btn-blank me-3" 
-               	   jsf:action="#{AktuelleSchritteForm.myPlugin.cmdMoveFirst}" 
+                <button
+               	   class="btn btn-blank me-3"
+               	   jsf:action="#{AktuelleSchritteForm.myPlugin.cmdMoveFirst}"
               	   title="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.lastPage:msgs.firstPage}">
-                    <i class="fa fa-angle-double-left"></i>
+                    <util:icon icon="chevrons-left" />
                     <f:setPropertyActionListener target="#{AktuelleSchritteForm.myPlugin.displayMode}" value="part" />
-                    <!-- 
+                    <!--
                     <f:ajax execute="@form" render="@form :qaform" />
                     -->
                 </button>
-                <button 
-                	class="btn btn-primary-400" 
-           			jsf:action="#{AktuelleSchritteForm.myPlugin.cmdMovePrevious}" 
+                <button
+                	class="btn btn-primary-400"
+           			jsf:action="#{AktuelleSchritteForm.myPlugin.cmdMovePrevious}"
                 	title="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.pageNext:msgs.pagePrevious}">
-                    <i class="fa fa-angle-left"></i>
-                    <!-- 
+                    <util:icon icon="chevron-left" />
+                    <!--
                      <f:ajax execute="@form" render="@form :qaform" />
                      -->
                     <f:setPropertyActionListener target="#{AktuelleSchritteForm.myPlugin.displayMode}" value="part" />
@@ -97,46 +98,44 @@
                         <h:outputText value="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.pageNext:msgs.pagePrevious}" />
                     </span>
                 </button>
-    
+
                 <div class="ms-3 me-3 d-inline">
                     <h:outputText id="txtMoveTo1" value="#{msgs.seite} #{AktuelleSchritteForm.myPlugin.pageNumberCurrent} #{msgs.von} #{AktuelleSchritteForm.myPlugin.pageNumberLastPartGUI}" onclick="document.getElementById(this.id).nextSibling.style.display='inline';
-                    document.getElementById(this.id).style.display='none'; 
+                    document.getElementById(this.id).style.display='none';
                     document.getElementById(this.id).nextSibling.focus();
                     document.getElementById(this.id).nextSibling.select();" />
                     <!-- Seite direkt anspringen -->
                     <h:inputText value="#{AktuelleSchritteForm.myPlugin.txtMoveTo}" style="display:none;font-size:9px;width:30px" required="true" pt:data-input="thumbsMoveTo" id="txtMoveTo2" onblur="document.getElementById(this.id).style.display='none';document.getElementById(this.id).previousSibling.style.display='inline';" onkeypress="copyValue(this,event);" />
                     <h:commandButton action="#{NavigationForm.Reload}" value="go" style="display:none" id="cmdMoveTo" />
                 </div>
-    
-                <button 
-              	  class="btn btn-primary-400" 
-             	   jsf:action="#{AktuelleSchritteForm.myPlugin.cmdMoveNext}" 
+
+                <button
+              	  class="btn btn-primary-400"
+             	   jsf:action="#{AktuelleSchritteForm.myPlugin.cmdMoveNext}"
                 	title="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.pagePrevious:msgs.pageNext}">
                     <span>
                         <h:outputText value="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.pagePrevious:msgs.pageNext}" />
                     </span>
-                    <i class="fa fa-angle-right ms-2"></i>
+                    <util:icon icon="chevron-right" class="ms-2" />
                     <f:setPropertyActionListener target="#{AktuelleSchritteForm.myPlugin.displayMode}" value="part" />
-                    <!-- 
+                    <!--
                     <f:ajax execute="@form" render="@form :qaform" />
                     -->
                 </button>
-                
-                <button 
-                	class="btn btn-blank ms-3" 
-             	    jsf:action="#{AktuelleSchritteForm.myPlugin.cmdMoveLast}" 
+
+                <button
+                	class="btn btn-blank ms-3"
+             	    jsf:action="#{AktuelleSchritteForm.myPlugin.cmdMoveLast}"
             	    title="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.firstPage:msgs.lastPage}">
-                    <i class="fa fa-angle-double-right"></i>
+                    <util:icon icon="chevrons-right" />
                     <f:setPropertyActionListener target="#{AktuelleSchritteForm.myPlugin.displayMode}" value="part" />
-                    <!-- 
+                    <!--
                     <f:ajax execute="@form" render="@form :qaform" />
                     -->
                 </button>
             </div>
         </ui:fragment>
         <!-- // navigation buttons for Thumbnail list -->
-        
+
     </composite:implementation>
 </ui:composition>
-
-
