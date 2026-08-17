@@ -2,21 +2,21 @@ package de.intranda.goobi;
 
 /**
  * This file is part of a plugin for Goobi - a Workflow tool for the support of mass digitization.
- * 
- * Visit the websites for more information. 
+ *
+ * Visit the websites for more information.
  *          - https://goobi.io
  *          - https://www.intranda.com
  *          - https://github.com/intranda/goobi
- * 
+ *
  * This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free
  * Software Foundation; either version 2 of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59
  * Temple Place, Suite 330, Boston, MA 02111-1307 USA
- * 
+ *
  */
 import java.io.IOException;
 import java.nio.file.Path;
@@ -153,7 +153,7 @@ public class SelectableImage extends Image {
 
     /**
      * Set name parts to copy of given name parts
-     * 
+     *
      * @param newNameParts
      */
     public void setNameParts(List<NamePart> newNameParts) {
@@ -180,7 +180,10 @@ public class SelectableImage extends Image {
 
         try {
             Path thumbsPath = Path.of(process.getThumbsDirectory(), thumbsFolderName, thumbsImageName);
-            if (StorageProvider.getInstance().isFileExists(thumbsPath)) {
+            Path sourcePath = Path.of(process.getImagesDirectory(), imageFolderName, filename);
+            // Use pre-generated derivatives if they pass freshness check
+            if (StorageProvider.getInstance().isFileExists(thumbsPath)
+                    && StorageProvider.getInstance().getLastModifiedDate(thumbsPath) >= StorageProvider.getInstance().getLastModifiedDate(sourcePath)) {
                 String servletUrl = new HelperForm().getServletPathWithHostAsUrl();
                 String thumbsUrl =
                         "%s/api/process/thumbs/%s/%s/%s/full/max/0/default.jpg"
