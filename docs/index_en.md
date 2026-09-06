@@ -43,6 +43,14 @@ If you now enter the plugin by clicking on `Plugin: intranda image control`, you
 
 Here you can select the desired images to be viewed in higher quality. The large image on the right can be zoomed and rotated for display. You can navigate between the images using the same shortcut keys as in the METS editor in Goobi workflow. ​
 
+### Keeping the zoom level while paging
+
+When checking a series of images, the same part of the original is often the interesting one – a shelfmark in the margin, for example. So that it does not have to be zoomed in on again for every image, the image display keeps the chosen zoom level and the selected image detail when moving to the next image.
+
+This is controlled with the button showing a padlock in the toolbar of the image display. If the padlock is closed, the zoom level is retained; a click opens it, and every image is opened in the overall view again. The setting is stored in the browser and therefore also applies after a page reload as well as at the next login on the same machine. It works in the regular image display and in the full-screen display alike.
+
+The current zoom level is additionally shown on the zoom slider, so that it is always apparent how far the image is magnified.
+
 Images can also be displayed in a full-screen view for a larger view. In both the regular image display and the full-screen display, the associated full text can also be shown, provided that this has been generated in advance using OCR. ​
 
 ![Display in full screen mode with activated full text display](screen5.png)

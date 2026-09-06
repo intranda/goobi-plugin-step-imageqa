@@ -43,6 +43,14 @@ Betritt man nun das Plugin durch Klick auf `Plugin: intranda image control` so g
 
 Hier lassen sich gezielt die gewünschten Bilder auswählen, die in höherer Qualität betrachtet werden sollen. Das große Bild im rechten Bereich lässt sich zoomen und für die Anzeige rotieren. Eine Navigation zwischen den Bildern ist mit den gleichen Tastenkombinationen möglich, wie sie auch innerhalb des METS-Editors von Goobi workflow möglich ist.
 
+### Zoomstufe beim Blättern beibehalten
+
+Beim Prüfen einer Bildserie ist häufig immer dieselbe Stelle einer Vorlage interessant – etwa eine Signatur am Blattrand. Damit dafür nicht bei jedem Bild neu herangezoomt werden muss, behält die Bildanzeige die eingestellte Zoomstufe und den gewählten Bildausschnitt beim Wechsel zum nächsten Bild bei.
+
+Gesteuert wird das über die Schaltfläche mit dem Schloss-Symbol in der Werkzeugleiste der Bildanzeige. Ist das Schloss geschlossen, bleibt die Zoomstufe erhalten; ein Klick öffnet es, und jedes Bild wird wieder in der Gesamtansicht geöffnet. Die Einstellung wird im Browser gespeichert und gilt damit auch nach einem Neuladen der Seite sowie bei der nächsten Anmeldung an demselben Rechner. Sie wirkt in der regulären Bildanzeige und in der Vollbildanzeige gleichermaßen.
+
+Die aktuelle Zoomstufe wird zusätzlich am Zoom-Regler angezeigt, sodass jederzeit erkennbar ist, wie weit das Bild vergrößert ist.
+
 Zur größeren Anzeige lassen sich Bilder auch in einer Vollbildanzeige darstellen. Sowohl in der regulären Bildanzeige als auch in der Vollbildanzeige lässt sich hierbei ebenfalls der zugehörige Volltext einblenden, sofern dieser denn im Vorfeld mittels OCR erzeugt wurde.
 
 ![Bildanzeige im Vollbildmodus mit aktivierter Volltextanzeige](screen5.png)
