@@ -37,13 +37,16 @@
                     <li>
                         <span
                             class="btn btn-blank me-1"
-                            title="#{msg.rotateLeft}" id="mainImageRotateLeft"
+                            title="#{msgs.plugin_intranda_step_imageQA_rotateLeft}"
+                            data-bs-toggle="tooltip"
+                            id="mainImageRotateLeft"
                             jsf:rendered="#{! AktuelleSchritteForm.myPlugin.allowPersistentRotation}">
                             <util:icon icon="rotate" />
                         </span>
                         <button
                             class="btn btn-blank me-1"
-                            title="#{msg.rotateLeft}"
+                            title="#{msgs.plugin_intranda_step_imageQA_rotateLeft}"
+                            data-bs-toggle="tooltip"
                             jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowPersistentRotation}"
                             jsf:action="#{AktuelleSchritteForm.myPlugin.rotateCurrentImageToLeft}">
                             <util:icon icon="rotate" />
@@ -52,22 +55,26 @@
                     <li>
                         <span
                             class="btn btn-blank me-3"
-                            title="#{msg.rotateRight}" id="mainImageRotateRight"
+                            title="#{msgs.plugin_intranda_step_imageQA_rotateRight}"
+                            data-bs-toggle="tooltip"
+                            id="mainImageRotateRight"
                             jsf:rendered="#{! AktuelleSchritteForm.myPlugin.allowPersistentRotation}">
-                            <util:icon icon="rotate" />
+                            <util:icon icon="rotate-clockwise" />
                         </span>
                         <button
                             class="btn btn-blank me-3"
-                            title="#{msg.rotateRight}"
+                            title="#{msgs.plugin_intranda_step_imageQA_rotateRight}"
+                            data-bs-toggle="tooltip"
                             jsf:rendered="#{AktuelleSchritteForm.myPlugin.allowPersistentRotation}"
                             jsf:action="#{AktuelleSchritteForm.myPlugin.rotateCurrentImageToRight}">
-                            <util:icon icon="rotate" />
+                            <util:icon icon="rotate-clockwise" />
                         </button>
                     </li>
                     <li>
                         <button
                             class="btn btn-blank me-1"
                             title="#{msgs.imageFullscreen}"
+                            data-bs-toggle="tooltip"
                             jsf:action="ImageQAPlugin_Fullscreen"
                             jsf:rendered="#{! AktuelleSchritteForm.myPlugin.useJSFullscreen}">
                             <util:icon icon="arrows-maximize" />
@@ -75,6 +82,7 @@
                     	<button
                     		class="btn btn-blank me-1"
                     		title="#{msgs.imageFullscreen}"
+                            data-bs-toggle="tooltip"
 							jsf:action="ImageQAPlugin_JSFullscreen"
 							jsf:rendered="#{AktuelleSchritteForm.myPlugin.useJSFullscreen}">
                             <util:icon icon="arrows-maximize" />
@@ -85,6 +93,7 @@
                             class="btn btn-blank me-1"
                             jsf:rendered="#{AktuelleSchritteForm.myPlugin.displayOcrButton}"
                             title="Show OCR-result"
+                            data-bs-toggle="tooltip"
                             jsf:action="#{AktuelleSchritteForm.myPlugin.toggleOCR()}">
                             <util:icon icon="file-text" />
                         </button>
@@ -92,7 +101,9 @@
                     <li>
                         <span
                             class="btn btn-blank me-1"
-                            title="#{msg.resetImage}" id="mainImageResetView">
+                            title="#{msgs.resetImage}"
+                            data-bs-toggle="tooltip"
+                            id="mainImageResetView">
                             <util:icon icon="refresh" />
                         </span>
                     </li>
@@ -111,6 +122,8 @@
                             id="zoomLockToggle"
                             type="button"
                             class="btn btn-blank ms-1"
+                            title="#{msgs.plugin_intranda_step_imageQA_zoomLock}"
+                            data-bs-toggle="tooltip"
                             onclick="toggleZoomPersistence()">
                             <util:icon icon="lock" styleClass="zoom-locked" />
                             <util:icon icon="lock-open" styleClass="zoom-unlocked d-none" />
