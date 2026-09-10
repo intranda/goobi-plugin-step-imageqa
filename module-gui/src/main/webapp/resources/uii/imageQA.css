@@ -1,8 +1,5 @@
-.goobi-thumbnail .goobi-thumbnail-image a {
-	display: block;
-}
-
-.goobi-thumbnail .goobi-thumbnail-image a img {
+.goobi-thumbnail .goobi-thumbnail-image .thumbnails__thumb-placeholder,
+.goobi-thumbnail .goobi-thumbnail-image .thumb-canvas {
 	display: block;
 	max-width: 100%;
 	max-height: 175px;
