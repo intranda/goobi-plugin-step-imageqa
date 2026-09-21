@@ -336,7 +336,7 @@
                                                                 target="#{AktuelleSchritteForm.myPlugin.imageIndex}" />
                                                             <f:ajax
                                                                 execute="@this"
-                                                                render="qaform:imageQABox:bigimage:currentImageName qaform:imageQABox:first_image:imageNavigation qaform:imageQABox:second_image:imageNavigation"
+                                                                render="qaform:imageQABox:bigimage:currentImageName qaform:imageQABox:first_image:imageNavigation qaform:imageQABox:second_image:imageNavigation #{image.type ne 'image' or AktuelleSchritteForm.myPlugin.image.type ne 'image' ? 'qaform:imageQABox:bigimageWrapper' : ''}"
                                                                 onevent="handleThumbnailClick"
                                                                 disabled="#{AktuelleSchritteForm.myPlugin.thumbnailsOnly}" />
                                                         </button>
