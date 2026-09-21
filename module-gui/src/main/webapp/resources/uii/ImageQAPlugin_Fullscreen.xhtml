@@ -42,44 +42,10 @@
         <script
             src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/static/openseadragon/openseadragon.min.js"></script>
 
-        <!-- 3D-Models -->
-        <script
-            type="text/javascript"
-            src="#{HelperForm.applicationWebsiteUrl}uii/template/js/static/three/three.min.js"></script>
-        <script
-            type="text/javascript"
-            src="#{HelperForm.applicationWebsiteUrl}uii/template/js/static/three/loaders/OBJLoader.js"></script>
-        <script
-            type="text/javascript"
-            src="#{HelperForm.applicationWebsiteUrl}uii/template/js/static/three/loaders/MTLLoader.js"></script>
-        <script
-            type="text/javascript"
-            src="#{HelperForm.applicationWebsiteUrl}uii/template/js/static/three/loaders/PLYLoader.js"></script>
-        <script
-            type="text/javascript"
-            src="#{HelperForm.applicationWebsiteUrl}uii/template/js/static/three/loaders/STLLoader.js"></script>
-        <script
-            type="text/javascript"
-            src="#{HelperForm.applicationWebsiteUrl}uii/template/js/static/three/loaders/FBXLoader.js"></script>
-        <script
-            type="text/javascript"
-            src="#{HelperForm.applicationWebsiteUrl}uii/template/js/static/three/loaders/TDSLoader.js"></script>
-        <script
-            type="text/javascript"
-            src="#{HelperForm.applicationWebsiteUrl}uii/template/js/static/three/loaders/DRACOLoader.js"></script>
-        <script
-            type="text/javascript"
-            src="#{HelperForm.applicationWebsiteUrl}uii/template/js/static/three/loaders/GLTFLoader.js"></script>
-        <script
-            type="text/javascript"
-            src="#{HelperForm.applicationWebsiteUrl}uii/template/js/static/three/controls/OrbitControls.js"></script>
-        <script
-            type="text/javascript"
-            src="#{HelperForm.applicationWebsiteUrl}uii/template/js/static/three/dependencies/inflate.min.js"></script>
-        <script src="#{HelperForm.applicationWebsiteUrl}uii/template/js/static/x3dom/x3dom.js"></script>
-
 		<script src="#{request.contextPath}/resources/js/dist/imageView.min.js?v=#{HelperForm.buildVersion}"></script>
-        <script src="#{HelperForm.applicationWebsiteUrl}uii/template/js/static/objectView.min.js"></script>
+
+        <!-- 3D-Models -->
+        <ui:include src="/WEB-INF/includes/template/inc_3dScripts.xhtml" />
         <main>
             <h:form
                 id="qaform"
